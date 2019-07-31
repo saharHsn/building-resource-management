@@ -1,0 +1,81 @@
+<h3>Create Building</h3>
+<div [hidden]="submitted" style="width: 400px;">
+  <form (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="col-md-2 control-lable" for="buildingName">Building Name</label>
+        <div class="col-md-7">
+          <input type="text" [(ngModel)]="building.name" id="buildingName"
+                 class=" form-control input-sm" placeholder="Enter your building name"
+                 required
+                 ng-minlength="3"/>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="col-md-2 control-lable" for="fullAddress.postalAddress">Full Address</label>
+        <div class="col-md-7">
+          <input type="text" [(ngModel)]="building.fullAddress.postalAddress" id="fullAddress.postalAddress"
+                 class=" form-control input-sm" placeholder="Enter your full address"
+                 required
+                 ng-minlength="3"/>
+        </div>
+      </div>
+      <div class="" row>
+        <div class="col-md-7">
+          <div class="form-group col-md-12">
+            <label class="col-md-2 control-lable" for="fullAddress.postalCode">Postal Code</label>
+            <input type="text" [(ngModel)]="building.fullAddress.postalCode" id="fullAddress.postalCode"
+                   class=" form-control input-sm" placeholder="Enter your postal code"
+                   required
+                   ng-minlength="3"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="col-md-2 control-lable" for="buildingUsage">Building Usage</label>
+        <div class="col-md-7">
+          <input type="text" [(ngModel)]="building.usage" id="buildingUsage" class="form-control input-sm"
+                 placeholder="Enter your Building Usage." required/>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="col-md-2 control-lable" for="buildingUsage">Building Age</label>
+        <div class="col-md-7">
+          <input type="text" [(ngModel)]="building.age" id="buildingAge" class="form-control input-sm"
+                 placeholder="Enter your Building Age." required/>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="col-md-2 control-lable" for="buildingUsage">Building Area</label>
+        <div class="col-md-7">
+          <input type="text" [(ngModel)]="building.area" id="buildingArea" class="form-control input-sm"
+                 placeholder="Enter your Building Area." required/>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="col-md-2 control-lable" for="numberOfPeople">Building Area</label>
+        <div class="col-md-7">
+          <input type="text" [(ngModel)]="building.numberOfPeople" id="numberOfPeople" class="form-control input-sm"
+                 placeholder="Enter number Of People." required/>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit</button>
+  </form>
+</div>
+
+<div [hidden]="!submitted">
+  <h4>You submitted successfully!</h4>
+  <!-- <button class="btn btn-success" (click)="newBuilding()">Add</button> -->
+</div>

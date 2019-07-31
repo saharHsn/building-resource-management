@@ -1,0 +1,53 @@
+<h3>Create User</h3>
+<div [hidden]="submitted" style="width: 400px;">
+  <form (ngSubmit)="onSubmit()">
+    <input type="hidden" [(ngModel)]="user.id"/>
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="col-md-2 control-lable" for="emailAddress">Email Address</label>
+        <div class="col-md-7">
+          <input type="text" [(ngModel)]="ctrl.user.emailAddress" id="emailAddress"
+                 class="form-control input-sm"
+                 placeholder="Enter your email address." required ng-pattern="ctrl.email"/>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="col-md-2 control-lable" for="firstName">First Name</label>
+        <div class="col-md-7">
+          <input type="text" [(ngModel)]="ctrl.user.name" id="firstName"
+                 class="username form-control input-sm" placeholder="Enter your first name"
+                 required
+                 ng-minlength="3"/>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="col-md-2 control-lable" for="lastName">Last Name</label>
+        <div class="col-md-7">
+          <input type="text" [(ngModel)]="ctrl.user.name" id="lastName"
+                 class="username form-control input-sm" placeholder="Enter your last name"
+                 required
+                 ng-minlength="3"/>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="col-md-2 control-lable" for="job">Job</label>
+        <div class="col-md-7">
+          <input type="text" [(ngModel)]="ctrl.user.job" id="job" class="form-control input-sm"
+                 placeholder="Enter your Job." required/>
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-success">Submit</button>
+  </form>
+</div>
+
+<div [hidden]="!submitted">
+  <h4>You submitted successfully!</h4>
+  <!-- <button class="btn btn-success" (click)="newUser()">Add</button> -->
+</div>

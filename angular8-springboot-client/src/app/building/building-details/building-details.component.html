@@ -1,0 +1,20 @@
+<h2>Building Details</h2>
+
+<hr/>
+<div *ngIf="building">
+  <div>
+    <label><b>First Name: </b></label> {{building.firstName}}
+  </div>
+  <div>
+    <label><b>Last Name: </b></label> {{building.lastName}}
+  </div>
+  <div>
+    <label><b>Email Id: </b></label> {{building.emailId}}
+  </div>  
+</div>
+
+<br>
+<br>
+<button (click)="list()" class="btn btn-primary">Back to Building List</button><br>
+
+
