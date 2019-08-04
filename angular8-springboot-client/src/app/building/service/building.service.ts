@@ -20,7 +20,6 @@ export class BuildingService {
 
   createBuilding(building: Building): Observable<Object> {
     let formData: FormData  = this.createFormData(building, null, null);
-    console.log(formData.get("postalCode").toString());
     const req = new HttpRequest('POST', this.baseUrl, formData, {
       reportProgress: true,
       responseType: 'text'

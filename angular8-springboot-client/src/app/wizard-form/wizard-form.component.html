@@ -1,192 +1,233 @@
 <aw-wizard>
   <aw-wizard-step stepTitle="Customer Information">
-    <form #form="ngForm" (ngSubmit)="onSubmit()" name="myForm" class="form-horizontal">
+    <form #userForm="ngForm" (ngSubmit)="onSubmit()" name="myForm" class="form-horizontal">
       <input type="hidden" [(ngModel)]="user.id" name="userId"/>
       <div class="row">
         <div class="form-group col-md-12">
           <label class="col-md-2 control-lable" for="emailAddress">Email Address</label>
-          <div class="col-md-7">
+          <div class="col-md-6">
             <input type="text" [(ngModel)]="user.emailAddress" id="emailAddress" name="emailAddress"
-                   class="form-control input-sm" placeholder="Enter your email address." required ng-pattern="email"/>
+                   class="form-control input-sm" placeholder="Enter your email address." required ng-pattern="email"
+                   #email="ngModel"/>
+            <div [hidden]="email.valid || email.pristine"
+                 class="alert alert-danger">
+              Email is required
+            </div>
           </div>
         </div>
 
         <div class="form-group col-md-12">
           <label class="col-md-2 control-lable" for="firstName">First Name</label>
-          <div class="col-md-7">
+          <div class="col-md-6">
             <input type="text" [(ngModel)]="user.firstName" id="firstName" name="firstName"
                    class="form-control input-sm" placeholder="Enter your first name" required
-                   ng-minlength="3"/>
+                   ng-minlength="3" #firstName="ngModel"/>
+            <div [hidden]="firstName.valid || firstName.pristine"
+                 class="alert alert-danger">
+              First name is required
+            </div>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="form-group col-md-12">
           <label class="col-md-2 control-lable" for="lastName">Last Name</label>
-          <div class="col-md-7">
+          <div class="col-md-6">
             <input type="text" [(ngModel)]="user.lastName" id="lastName" name="lastName"
-                   class="form-control input-sm" placeholder="Enter your last name" required ng-minlength="3"/>
+                   class="form-control input-sm" placeholder="Enter your last name" required ng-minlength="3"
+                   #lastName="ngModel"/>
+            <div [hidden]="lastName.valid || lastName.pristine"
+                 class="alert alert-danger">
+              Last name is required
+            </div>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="form-group col-md-12">
           <label class="col-md-2 control-lable" for="job">Job</label>
-          <div class="col-md-7">
+          <div class="col-md-6">
             <input type="text" [(ngModel)]="user.job" id="job" name="job" class="form-control input-sm"
-                   placeholder="Enter your Job." required/>
+                   placeholder="Enter your Job."/>
           </div>
         </div>
       </div>
-    </form>
-    <br>
-    <span class="btn-group">
+
+      <br>
+      <span class="btn-group">
       <button class="btn btn-outline-secondary" type="button" [awGoToStep]="{stepIndex: 2}">Go directly to third Step<i
         class="fa fa-arrow-right"></i></button>
-      <button style='margin-right:12px; margin-left:12px;' class="btn btn-primary" type="button" awNextStep>Next step<i
+      <button style='margin-right:12px; margin-left:12px;' class="btn btn-primary" type="submit" awNextStep
+              [disabled]="!userForm.form.valid">Next step<i
         class="fa fa-arrow-right"></i></button>
+        <!--<button type="submit" class="btn btn-success" [disabled]="!heroForm.form.valid">Submit</button>-->
     </span>
-
+    </form>
   </aw-wizard-step>
   <aw-wizard-step stepTitle="Building Information" awOptionalStep>
-
-    <div class="row">
-      <div class="form-group col-md-12">
-        <label class="col-md-2 control-lable" for="buildingName">Building Name</label>
-        <div class="col-md-7">
-          <input type="text" [(ngModel)]="building.name" id="buildingName" name="buildingName"
-                 class=" form-control input-sm" placeholder="Enter your building name" required ng-minlength="3"/>
+    <form #buildingForm="ngForm" (ngSubmit)="onSubmit()" name="buildingForm" class="form-horizontal">
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label class="col-md-2 control-lable" for="buildingName">Building Name</label>
+          <div class="col-md-6">
+            <input type="text" [(ngModel)]="building.name" id="buildingName" name="buildingName"
+                   class=" form-control input-sm" placeholder="Enter your building name" ng-minlength="3"/>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="form-group col-md-12">
-        <label class="col-md-2 control-lable" for="postalAddress">Full Address</label>
-        <div class="col-md-7">
-          <input type="text" [(ngModel)]="building.postalAddress" id="postalAddress" name="postalAddress"
-                 class=" form-control input-sm" placeholder="Enter your full address" required ng-minlength="3"/>
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label class="col-md-2 control-lable" for="postalAddress">Full Address</label>
+          <div class="col-md-6">
+            <input type="text" [(ngModel)]="building.postalAddress" id="postalAddress" name="postalAddress"
+                   class=" form-control input-sm" placeholder="Enter your full address" required ng-minlength="3"
+                   #fullAddress="ngModel"/>
+          </div>
+          <div [hidden]="fullAddress.valid || fullAddress.pristine"
+               class="alert alert-danger">
+            Full address is required
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="form-group col-md-12">
-        <label class="col-md-2 control-lable" for="postalCode">Postal Code</label>
-        <div class="col-md-7">
-          <input type="text" [(ngModel)]="building.postalCode" id="postalCode" name="postalCode"
-                 class="form-control input-sm" placeholder="Enter your postal code" required ng-minlength="3"/>
+      <div class="row">
+
+        <div class="form-group col-md-12">
+          <label class="col-md-2 control-lable" for="postalCode">Postal Code</label>
+          <div class="col-md-6">
+            <input type="text" [(ngModel)]="building.postalCode" id="postalCode" name="postalCode"
+                   class="form-control input-sm" placeholder="Enter your postal code" required ng-minlength="3"
+                   #postalCode="ngModel"/>
+          </div>
+          <div [hidden]="postalCode.valid || postalCode.pristine"
+               class="alert alert-danger">
+            Postal code is required
+          </div>
         </div>
+
       </div>
-    </div>
 
-    <!--<app-input-slider [(inputSliderValue)]="inputSliderValue"></app-input-slider>-->
+      <div class="row">
+        <span class="btn-group col-md-12">
+          <div class="form-group col-md-3">
+            <label class="control-lable" for="buildingArea">Building Area</label>
+            <input type="text" [(ngModel)]="building.area" id="buildingArea" name="buildingArea"
+                   class="form-control input-sm" placeholder="Enter your Building Area." required
+                   #buildingArea="ngModel"/>
+            <div [hidden]="buildingArea.valid || buildingArea.pristine"
+                 class="alert alert-danger">
+              Building area is required
+            </div>
+          </div>
 
-    <div class="row">
-      <div class="form-group col-md-12">
-        <label class="col-md-2 control-lable" for="buildingUsage">Building Usage</label>
-        <div class="col-md-7">
-          <building-usage-component [(inputSliderValue)]="building.usage" id="buildingUsage"
-                                    name="buildingUsage"></building-usage-component>
-          <!--<building-usage-component [(ngModel)]="building.usage" id="buildingUsage" name="buildingUsage"></building-usage-component>-->
+          <div class="form-group col-md-3">
+             <label class="control-lable" for="numberOfPeople">Number Of People</label>
+            <input type="text" [(ngModel)]="building.numberOfPeople" id="numberOfPeople" name="numberOfPeople"
+                   class="form-control input-sm" placeholder="Enter number Of People."/>
+          </div>
+          </span>
+      </div>
+      <!--<app-input-slider [(inputSliderValue)]="inputSliderValue"></app-input-slider>-->
+
+      <div class="row">
+        <span class="btn-group col-md-8">
+
+          <div class="form-group col-md-4">
+            <label class="control-lable" for="buildingUsage">Building Usage</label>
+            <div>
+              <building-usage-component [(inputSliderValue)]="building.usage" id="buildingUsage"
+                                        name="buildingUsage"></building-usage-component>
+            </div>
+         </div>
+
+          <div class="form-group col-md-4">
+            <label class="control-lable" for="buildingAge">Building Age</label>
+            <div>
+              <building-age-component [(inputSliderValue)]="building.age" id="buildingAge"
+                                      name="buildingAge"></building-age-component>
+            </div>
+          </div>
+
+          <div class="form-group col-md-2">
+            <label class="control-lable" for="energyCertificate">Energy Certificate</label>
+            <div>
+              <energy-certificate-component [(inputSliderValue)]="building.energyCertificate" id="energyCertificate"
+                                            name="energyCertificate"></energy-certificate-component>
+            </div>
         </div>
+        </span>
       </div>
-    </div>
-
-    <div class="row">
-      <div class="form-group col-md-12">
-        <label class="col-md-2 control-lable" for="buildingAge">Building Age</label>
-        <div class="col-md-7">
-          <building-age-component [(inputSliderValue)]="building.age" id="buildingAge"
-                                  name="buildingAge"></building-age-component>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="form-group col-md-12">
-        <label class="col-md-2 control-lable" for="energyCertificate">Energy Certificate</label>
-        <div class="col-md-7">
-          <energy-certificate-component [(inputSliderValue)]="building.energyCertificate" id="energyCertificate"
-                                        name="energyCertificate"></energy-certificate-component>
-        </div>
-      </div>
-    </div>
 
 
-    <div class="row">
-      <div class="form-group col-md-12">
-        <label class="col-md-2 control-lable" for="buildingArea">Building Area</label>
-        <div class="col-md-7">
-          <input type="text" [(ngModel)]="building.area" id="buildingArea" name="buildingArea"
-                 class="form-control input-sm" placeholder="Enter your Building Area." required/>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="form-group col-md-12">
-        <label class="col-md-2 control-lable" for="numberOfPeople">Number Of People</label>
-        <div class="col-md-7">
-          <input type="text" [(ngModel)]="building.numberOfPeople" id="numberOfPeople" name="numberOfPeople"
-                 class="form-control input-sm" placeholder="Enter number Of People." required/>
-        </div>
-      </div>
-    </div>
-
-    <span class="btn-group">
+      <span class="btn-group">
       <button style='margin-right:12px; margin-left:12px;' class="btn btn-outline-secondary" type="button"
               awPreviousStep>Go to previous step<i class="fa fa-arrow-right"></i></button>
 
-      <button class="btn btn-primary" type="button" awNextStep>Go to next step<i class="fa fa-arrow-right"></i></button>
+      <button class="btn btn-primary" type="submit" awNextStep [disabled]="!buildingForm.form.valid">Go to next step<i
+        class="fa fa-arrow-right"></i></button>
     </span>
-
+    </form>
   </aw-wizard-step>
   <aw-wizard-step stepTitle="Upload Bill Files">
-
-    <div class="row">
-      <div class="form-group col-md-12">
-        <label class="col-md-2 control-lable" for="gasFile">Gas Bill</label>
-        <div class="col-md-7">
-          <input type="file" id="gasFile" name="gasFile" accept=".zip" placeholder="Upload Gas Bills Here."
-                 (change)="selectFile($event, 'Gas')">
+    <form #fileForm="ngForm" (ngSubmit)="onSubmit()" name="fileForm" class="form-horizontal">
+      <div class="row">
+        <div class="form-group col-md-12">
+          Please upload at least one type of bill in zip format
         </div>
       </div>
-    </div>
-
-    <div class="row">
-      <div class="form-group col-md-12">
-        <label class="col-md-2 control-lable" for="gasFile">Water Bill</label>
-        <div class="col-md-7">
-          <input type="file" id="waterFile" name="gasFile" accept=".zip" placeholder="Upload Water Bills Here."
-                 (change)="selectFile($event, 'Water')">
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label class="col-md-2 control-lable" for="gasFile">Gas Bill</label>
+          <div class="col-md-6">
+            <input #gasFile type="file" id="gasFile" name="gasFile" accept=".zip" placeholder="Upload Gas Bills Here."
+                   (change)="selectFile($event, 'Gas')">
+            <button [hidden]="!gasFile.value" class="remove-button"
+                    (click)="removeSelectedFile(gasFile)">X
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="form-group col-md-12">
-        <label class="col-md-2 control-lable" for="gasFile">Electricity Bill</label>
-        <div class="col-md-7">
-          <input type="file" id="electricityFile" name="electricityFile" accept=".zip" placeholder="Upload Electricity Bills Here."
-                 (change)="selectFile($event, 'Electricity')">
-          <!--<button class="btn btn-outline-secondary" type="button"
-                  [disabled]="!selectedFiles" (click)="upload('Electricity')">Upload
-          </button>-->
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label class="col-md-2 control-lable" for="gasFile">Water Bill</label>
+          <div class="col-md-6">
+            <input #waterFile type="file" id="waterFile" name="gasFile" accept=".zip" size="1 m"
+                   placeholder="Upload Water Bills Here."
+                   (change)="selectFile($event, 'Water')">
+            <button [hidden]="!waterFile.value" class="remove-button"
+                    (click)="removeSelectedFile(waterFile)">X
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <br/>
-    <span class="btn-group">
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label class="col-md-2 control-lable" for="gasFile">Electricity Bill</label>
+          <div class="col-md-6">
+            <input #electricityFile type="file" id="electricityFile" name="electricityFile" accept=".zip"
+                   placeholder="Upload Electricity Bills Here."
+                   (change)="selectFile($event, 'Electricity')">
+            <button [hidden]="!electricityFile.value" class="remove-button"
+                    (click)="removeSelectedFile(electricityFile)">X
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <br/>
+      <span class="btn-group">
       <button style='margin-right:12px; margin-left:12px;' class="btn btn-primary" type="button" awPreviousStep>Go to previous step
         <i class="fa fa-arrow-right"></i>
       </button>
 
-      <button type="submit" class="btn btn-success" (click)="finishFunction()">Finish
+      <button type="submit" class="btn btn-success" (click)="finishFunction()"
+              [disabled]="!gasFile && !electricityFile && !waterFile ">Finish
         <i class="fa fa-arrow-right"></i>
       </button>
     </span>
-
+    </form>
   </aw-wizard-step>
 </aw-wizard>

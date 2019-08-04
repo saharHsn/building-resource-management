@@ -1,5 +1,5 @@
 import {BehaviorSubject, Observable} from 'rxjs';
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {Building} from '../building/model/building';
 import {BuildingService} from '../building/service/building.service';
@@ -8,7 +8,6 @@ import {User} from '../user/user';
 import {BuildingFileService} from '../building/service/buildingFile.service';
 import {HttpClient, HttpResponse, HttpEventType} from '@angular/common/http';
 import {BillType} from '../building/enums/BillType';
-
 
 @Component({
   templateUrl: './wizard-form.component.html',
@@ -37,6 +36,13 @@ export class WizardFormComponent implements OnInit {
   waterFile: File;
   electricityFile: File;
 
+  @ViewChild('gasFile', null)
+  gasFileVariable: ElementRef;
+  @ViewChild('waterFile', null)
+  waterFileVariable: ElementRef;
+  @ViewChild('electricityFile', null)
+  electricityFileVariable: ElementRef;
+
   getUserInfo() {
     return this.userInfo.asObservable();
   }
@@ -50,8 +56,8 @@ export class WizardFormComponent implements OnInit {
   }
 
   onSubmit() {
-    this.submitted = true;
-    this.save();
+    //this.submitted = true;
+    // this.save();
   }
 
   save() {
@@ -69,7 +75,7 @@ export class WizardFormComponent implements OnInit {
     this.uploadFile(this.waterFile, '', BillType.Water);
     */
     // this.user = new User();
-    // this.building = new Building();
+    this.building = new Building();
   }
 
   private uploadFile(file: File, buildingId: string, billType: BillType) {
@@ -83,17 +89,34 @@ export class WizardFormComponent implements OnInit {
   finishFunction() {
     this.submitted = true;
     this.save();
+    this.submitted = false;
   }
 
   selectFile(event, billType: String) {
     this.selectedFiles = event.target.files;
     this.currentFile = this.selectedFiles.item(0);
+    if (this.currentFile.size > 3000000) {
+      alert("File is too big!");
+      this.currentFile = null;
+    }
     if (billType == 'Water') {
+      if (this.currentFile == null)
+        this.waterFileVariable.nativeElement.value = "";
       this.waterFile = this.currentFile;
     } else if (billType == 'Gas') {
+      if (this.currentFile == null) {
+        this.gasFileVariable.nativeElement.value = "";
+      }
       this.gasFile = this.currentFile;
     } else if (billType == 'Electricity') {
+      if (this.currentFile == null) {
+        this.electricityFileVariable.nativeElement.value = "";
+      }
       this.electricityFile = this.currentFile;
     }
+  }
+
+  removeSelectedFile(file: HTMLInputElement) {
+    file.value = "";
   }
 }
