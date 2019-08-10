@@ -14,6 +14,7 @@ import {BuildingUsageComponent} from "./building/enums/building-usage-component"
 import {EnergyCertificateComponent} from "./building/enums/energy-certificate-component";
 import {WizardFormComponent} from './wizard-form/wizard-form.component';
 import {HttpClientModule} from '@angular/common/http';
+import { TooltipModule } from 'ng2-tooltip-directive';
 
 import {ArchwizardModule} from 'angular-archwizard';
 
@@ -37,7 +38,8 @@ import {ArchwizardModule} from 'angular-archwizard';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    ArchwizardModule
+    ArchwizardModule,
+    TooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent]
