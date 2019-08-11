@@ -1,4 +1,4 @@
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {Building} from '../building/model/building';
@@ -6,7 +6,7 @@ import {BuildingService} from '../building/service/building.service';
 import {UserService} from '../user/user.service';
 import {User} from '../user/user';
 import {BuildingFileService} from '../building/service/buildingFile.service';
-import {HttpClient, HttpResponse, HttpEventType} from '@angular/common/http';
+import {HttpResponse} from '@angular/common/http';
 import {BillType} from '../building/enums/BillType';
 
 @Component({
@@ -69,6 +69,7 @@ export class WizardFormComponent implements OnInit {
     this.building.electricityBill = this.electricityFile;
     this.building.waterBill = this.waterFile;
     this.buildingService.createBuilding(this.building).subscribe(data => this.buildingInfo.next(data), error => console.log(error));
+
 
     /*this.uploadFile(this.gasFile, '', BillType.Gas);
     this.uploadFile(this.electricityFile, '', BillType.Electricity);

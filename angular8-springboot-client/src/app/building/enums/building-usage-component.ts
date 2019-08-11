@@ -7,7 +7,8 @@ import {BuildingUsage} from "./buildingUsage";
   template: `    
     <p>
       <!--Having the symbol as label and name as value:-->
-      <select [(ngModel)]="inputSliderValue" (ngModelChange)="inputSliderValueChange.emit(inputSliderValue)">
+      <select class="browser-default custom-select" [(ngModel)]="inputSliderValue"
+              (ngModelChange)="inputSliderValueChange.emit(inputSliderValue)">
         <option *ngFor="let bUsage of keys(buildingUsage)" [ngValue]="bUsage">{{buildingUsage[bUsage]}}</option>
       </select>
     </p>

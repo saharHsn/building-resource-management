@@ -5,37 +5,12 @@
 
       <div class="row">
 
-        <!--  <div class="form-group col-md-12">
-            <label class="col-md-2 control-lable" for="name">
-            </label>
-            <div class="col-md-6">
-              <input id="name" name="name" class="form-control"
-                     pattern="^[A-Za-z ]+$" required minlength="4" appForbiddenName="bob"
-                     [(ngModel)]="user.name" #name="ngModel"/>
-              <div *ngIf="name.invalid && (name.dirty || name.touched)"
-                   class="alert alert-danger">
-
-                <div *ngIf="name.errors.required">
-                  Name is required.
-                </div>
-                <div *ngIf="name.errors.pattern">
-                  Name is invalid.
-                </div>
-                <div *ngIf="name.errors.minlength">
-                  Name must be at least 4 characters long.
-                </div>
-                <div *ngIf="name.errors.forbiddenName">
-                  Name cannot be Bobi.
-                </div>
-              </div>
-            </div>
-          </div>-->
 
         <div class="form-group col-md-10">
           <label class="col-md-3 control-lable" for="emailAddress">Email Address</label>
           <div class="col-md-7">
             <input type="text" [(ngModel)]="user.emailAddress" id="emailAddress" name="emailAddress"
-                   class="form-control input-sm" placeholder="Enter your email address." required ng-pattern="email"
+                   class="form-control input-sm" placeholder="Enter your email address." required
                    #email="ngModel"/>
             <div [hidden]="email.valid || email.pristine"
                  class="text-danger">
@@ -56,8 +31,7 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="row">
+
         <div class="form-group col-md-10">
           <label class="col-md-3 control-lable" for="lastName">Last Name</label>
           <div class="col-md-7">
@@ -128,6 +102,8 @@
                    pattern="^[0-9]{4}-[0-9]{3}$"
                    class="form-control input-sm" placeholder="Enter your postal code" required tooltip="The zip code must have 4 digits with a - and 3
               more digits (XXXX-XXX)."
+                   theme="light"
+                   placement="top"
                    #postalCode="ngModel"/>
 
             <div *ngIf="postalCode.invalid && (postalCode.dirty || postalCode.touched)"
@@ -145,13 +121,15 @@
 
       </div>
 
-      <div class="row col-md-8">
+      <div class="row col-md-9">
         <!--<div class="col-md-12">-->
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-4">
           <label class="control-lable" for="buildingArea">Building Area</label>
           <input type="text" [(ngModel)]="building.area" id="buildingArea" name="buildingArea"
                  class="form-control input-sm" placeholder="Enter your Building Area." required
                  tooltip="The average area of your building in m2."
+                 theme="light"
+                 placement="top"
                  #buildingArea="ngModel"/>
           <div [hidden]="buildingArea.valid || buildingArea.pristine"
                class="text-danger">
@@ -159,10 +137,13 @@
           </div>
         </div>
 
-        <div class="form-group col-md-5">
+        <div class="form-group col-md-4">
           <label class="control-lable" for="numberOfPeople">Number Of People</label>
+
           <input [(ngModel)]="building.numberOfPeople"
                  tooltip="The average number of daily staffs/clients/guests in your building."
+                 theme="light"
+                 placement="top"
                  class="form-control input-sm" id="numberOfPeople"
                  name="numberOfPeople" placeholder="Enter number Of People." type="text">
         </div>
@@ -194,7 +175,9 @@
           <div class="col-md-7">
             <energy-certificate-component [(inputSliderValue)]="building.energyCertificate" id="energyCertificate"
                                           name="energyCertificate"
-                                          tooltip="You can ask your building manager for your building energy certificate."></energy-certificate-component>
+                                          tooltip="You can ask your building manager for your building energy certificate."
+                                          theme="light"
+                                          placement="right"></energy-certificate-component>
           </div>
         </div>
       </div>

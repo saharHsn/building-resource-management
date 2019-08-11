@@ -11,3 +11,13 @@
   border: none;
   background: none;
 }
+
+
+.my-select {
+  color: rgba(0, 0, 0, 0.87);
+  background-color: rgb(255, 255, 255);
+  border-radius: 2px;
+  border: 0px;
+}
+
+

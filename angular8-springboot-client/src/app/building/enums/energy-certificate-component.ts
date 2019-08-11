@@ -1,6 +1,4 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {BuildingAge} from "./buildingAge"
-import {BuildingUsage} from "./buildingUsage";
 import {EnergyCertificate} from "./energyCertificate";
 
 @Component({
@@ -8,7 +6,8 @@ import {EnergyCertificate} from "./energyCertificate";
   template: `
     <p>
       <!--Having the symbol as label and name as value:-->
-      <select [(ngModel)]="inputSliderValue" (ngModelChange)="inputSliderValueChange.emit(inputSliderValue)">
+      <select class="browser-default custom-select" [(ngModel)]="inputSliderValue"
+              (ngModelChange)="inputSliderValueChange.emit(inputSliderValue)">
         <option *ngFor="let energyCert of keys(energyCertificate)"
                 [ngValue]="energyCert">{{energyCertificate[energyCert]}}</option>
       </select>
