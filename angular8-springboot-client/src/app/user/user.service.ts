@@ -7,7 +7,7 @@ import {Observable} from 'rxjs';
 })
 export class UserService {
 
-  private baseUrl = 'http://localhost:8080/builtrix/v1/users';
+  private baseUrl = 'http://builtrixmetrics-env.qwzndp9hya.us-east-2.elasticbeanstalk.com/builtrix/v1/users';
 
   constructor(private http: HttpClient) { }
 

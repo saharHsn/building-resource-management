@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpRequest, HttpEvent} from '@angular/common/http';
-import { Observable } from "rxjs";
+import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
+import {Observable} from "rxjs";
 import {BillType} from "../enums/BillType";
 
 @Injectable({ providedIn: 'root' })
 export class BuildingFileService {
 
-  private baseUrl =  'http://localhost:8080/builtrix/v1/buildings/files';
+  private baseUrl = 'http://builtrixmetrics-env.qwzndp9hya.us-east-2.elasticbeanstalk.com/builtrix/v1/buildings/files';
 
   constructor(private http: HttpClient) {}
 

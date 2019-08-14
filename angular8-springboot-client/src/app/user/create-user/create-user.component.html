@@ -6,9 +6,9 @@
       <div class="form-group col-md-12">
         <label class="col-md-2 control-lable" for="emailAddress">Email Address</label>
         <div class="col-md-7">
-          <input type="text" [(ngModel)]="ctrl.user.emailAddress" id="emailAddress"
+          <input type="text" [(ngModel)]="user.emailAddress" id="emailAddress"
                  class="form-control input-sm"
-                 placeholder="Enter your email address." required ng-pattern="ctrl.email"/>
+                 placeholder="Enter your email address." required ng-pattern="email"/>
         </div>
       </div>
     </div>
@@ -16,7 +16,7 @@
       <div class="form-group col-md-12">
         <label class="col-md-2 control-lable" for="firstName">First Name</label>
         <div class="col-md-7">
-          <input type="text" [(ngModel)]="ctrl.user.name" id="firstName"
+          <input type="text" [(ngModel)]="user.firstName" id="firstName"
                  class="username form-control input-sm" placeholder="Enter your first name"
                  required
                  ng-minlength="3"/>
@@ -27,7 +27,7 @@
       <div class="form-group col-md-12">
         <label class="col-md-2 control-lable" for="lastName">Last Name</label>
         <div class="col-md-7">
-          <input type="text" [(ngModel)]="ctrl.user.name" id="lastName"
+          <input type="text" [(ngModel)]="user.lastName" id="lastName"
                  class="username form-control input-sm" placeholder="Enter your last name"
                  required
                  ng-minlength="3"/>
@@ -38,7 +38,7 @@
       <div class="form-group col-md-12">
         <label class="col-md-2 control-lable" for="job">Job</label>
         <div class="col-md-7">
-          <input type="text" [(ngModel)]="ctrl.user.job" id="job" class="form-control input-sm"
+          <input type="text" [(ngModel)]="user.job" id="job" class="form-control input-sm"
                  placeholder="Enter your Job." required/>
         </div>
       </div>

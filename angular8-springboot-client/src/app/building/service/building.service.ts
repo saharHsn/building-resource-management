@@ -2,14 +2,13 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Building} from "../model/building";
-import {User} from "../../user/user";
 
 @Injectable({
   providedIn: 'root'
 })
 export class BuildingService {
 
-  private baseUrl = 'http://localhost:8080/builtrix/v1/buildings';
+  private baseUrl = 'http://builtrixmetrics-env.qwzndp9hya.us-east-2.elasticbeanstalk.com/builtrix/v1/buildings';
 
   constructor(private http: HttpClient) {
   }
