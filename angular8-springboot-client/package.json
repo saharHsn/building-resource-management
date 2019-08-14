@@ -1,6 +1,6 @@
 {
   "name": "angular8-springboot-client",
-  "version": "0.0.0",
+  "version": "0.1.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -49,5 +49,9 @@
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
     "typescript": "~3.4.3"
-  }
+  },
+  "description": "This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.1.",
+  "main": "server.js",
+  "author": "",
+  "license": "ISC"
 }
