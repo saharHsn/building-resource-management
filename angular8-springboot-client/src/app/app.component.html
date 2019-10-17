@@ -1,26 +1,26 @@
-<nav class="navbar navbar-expand-sm bg-primary navbar-dark">
-  <!-- Links -->
-  <ul class="navbar-nav">
-    <!-- <li class="nav-item">
-         <a routerLink="add-user" class="nav-link" routerLinkActive="active">Add User</a>
-     </li>
-     <li class="nav-item">
-       <a routerLink="add-building" class="nav-link" routerLinkActive="active">Add Building</a>
-     </li>-->
-    <li class="nav-item">
-      <a routerLink="wizard" class="nav-link" routerLinkActive="active">Building Registration</a>
-    </li>
-  </ul>
+﻿<!-- nav -->
+<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
+  <div class="navbar-nav">
+    <a class="nav-item nav-link" routerLink="/">Home</a>
+    <a class="nav-item nav-link" (click)="logout()">Logout</a>
+  </div>
 </nav>
-<div class="generic-container">
-  <div class="panel panel-default">
-    <!-- Default panel contents -->
-    <!--<div class="panel-heading"><span class="lead">Building </span></div>-->
-    <router-outlet></router-outlet>
-    <div class="panel-body">
-      <div class="formcontainer">
+
+<!-- main app container -->
+<div class="jumbotron">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6 offset-sm-3">
+        <alert></alert>
+        <router-outlet></router-outlet>
       </div>
     </div>
   </div>
 </div>
 
+<!-- credits -->
+<div class="text-center">
+  <p>
+    <a href="https://www.builtrix.tech/" target="_top">Builtrix : Trusted METRICs for Your Buildings !</a>
+  </p>
+</div>

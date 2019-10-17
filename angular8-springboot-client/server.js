@@ -1,21 +1,12 @@
-//Importing dependencies
 const express = require('express');
-var path = require('path');
+const http = require('http');
 
-//Starting Express app
 const app = express();
 
-//Set the base path to the angular-test dist folder
-app.use(express.static(path.join(__dirname, 'dist/angular-test')));
+const port = process.env.PORT || 3001;
 
-//Any routes will be redirected to the angular app
-app.get('*', function (req, res) {
-  res.sendFile(path.join(__dirname, 'dist/angular-test/index.html'));
-});
+app.use(express.static(__dirname));
 
-//Starting server on port 8081
-app.listen(3000, () = > {
-  console.log('Server started!');
-console.log('on port 3000');
-})
-;
+const server = http.createServer(app);
+
+server.listen(port, ()=> console.log("Running..."));
