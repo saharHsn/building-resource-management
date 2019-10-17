@@ -42,7 +42,7 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
     }
 
     public String save(BuildingDto buildingDto) {
-        String userId = this.userService.save(buildingDto.getOwner());
+        String userId = this.userService.save(buildingDto.getOwner()).getId();
         buildingDto.getOwner().setId(userId);
         Building building = new Building(buildingDto);
         building = this.repository.save(building);

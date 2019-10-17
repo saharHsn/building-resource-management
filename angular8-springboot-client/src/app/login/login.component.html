@@ -1,14 +1,14 @@
 ﻿<h2>Login</h2>
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
   <div class="form-group">
-    <label for="email">Email</label>
+    <label for="emailAddress">Email</label>
     <input type="text" formControlName="email" class="form-control" [email]="true" placeholder="Enter your email address."
-           [ngClass]="{ 'is-invalid': submitted && f.email.errors }"/>
+           [ngClass]="{ 'is-invalid': submitted && f.emailAddress.errors }"/>
 
-    <div *ngIf="f.email.invalid && (f.email.dirty || f.email.touched)"
+    <div *ngIf="f.emailAddress.invalid && (f.emailAddress.dirty || f.emailAddress.touched)"
          class="alert alert-danger">
-      <div *ngIf="f.email.errors.required">Email is required</div>
-      <div *ngIf="f.email.errors.email">
+      <div *ngIf="f.emailAddress.errors.required">Email is required</div>
+      <div *ngIf="f.emailAddress.errors.email">
         Email Address is invalid.
       </div>
     </div>

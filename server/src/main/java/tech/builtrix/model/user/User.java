@@ -2,14 +2,18 @@ package tech.builtrix.model.user;
 
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.NotAudited;
 import tech.builtrix.base.EntityBase;
 import tech.builtrix.dto.UserDto;
 import tech.builtrix.model.EnumConverter;
 
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 
 @DynamoDBTable(tableName = "User")
@@ -53,6 +57,23 @@ public class User extends EntityBase<User> {
     @DynamoDBAttribute
     private String nationalId;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Setter(value = AccessLevel.PROTECTED)
+    @NotAudited
+    private List<UserToken> tokens;
+
+    @Column(name = "role", nullable = false, columnDefinition = "varchar not null default 'User'")
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    /* @Column(name = "failed_logins", nullable = false)
+    private Byte failedLogin = 0;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Setter(value = AccessLevel.PROTECTED)
+    @NotAudited
+    private List<UserLogin> logins;
+*/
     public User(UserDto userDto) {
         this.firstName = userDto.getFirstName();
         this.lastName = userDto.getLastName();
@@ -61,5 +82,7 @@ public class User extends EntityBase<User> {
         this.emailAddress = userDto.getEmailAddress();
         this.phoneNumber = userDto.getPhone();
         this.birthDate = userDto.getBirthDate();
+        this.role = userDto.getRole();
+        this.password = userDto.getPassword();
     }
 }

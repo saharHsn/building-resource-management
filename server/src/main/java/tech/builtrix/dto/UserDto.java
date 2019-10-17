@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import tech.builtrix.model.user.Education;
 import tech.builtrix.model.user.Gender;
+import tech.builtrix.model.user.Role;
 import tech.builtrix.model.user.User;
 
 import java.util.Date;
@@ -28,6 +29,8 @@ public class UserDto extends EntityDtoBase {
     @ApiModelProperty(notes = "Birth date in unix timestamp", dataType = "integer")
     private Date birthDate;
     private Boolean isActive;
+    private Role role;
+    private String password;
 
     public UserDto(User user) {
         this.id = user.getId();
@@ -39,5 +42,7 @@ public class UserDto extends EntityDtoBase {
         this.lastName = user.getLastName();
         this.phone = user.getPhoneNumber();
         this.isActive = user.getActive();
+        this.role = user.getRole();
+        //this.password = user.getPassword();
     }
 }
