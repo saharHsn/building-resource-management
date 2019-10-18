@@ -23,6 +23,7 @@ import java.util.Optional;
 public class UserService extends GenericCrudServiceBase<User, UserRepository> {
     private final CodeService codeService;
     private final ValidationService validationService;
+
     @Autowired
     public UserService(UserRepository repository,
                        CodeService codeService,
@@ -39,6 +40,15 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
             return new UserDto(optionalUser.get());
         } else {
             throw new NotFoundException("user", "id", id);
+        }
+    }
+
+    public User findByEmail(String email) throws NotFoundException {
+        User user = this.repository.findByEmail(email);
+        if (user != null) {
+            return user;
+        } else {
+            throw new NotFoundException("user", "email", email);
         }
     }
 
@@ -64,10 +74,6 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
         return this.repository.findAll();
     }
 
-    public User getEmailAndUser(String email) throws NotFoundException{
-        return null;
-    }
-
     @Transactional
     public String registerUser(String firstName,
                                String lastName,
@@ -88,7 +94,7 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
                                   String password,
                                   String confirmPassword) throws ExceptionBase {
         //just reload user
-        User user = this.getEmailAndUser(email);
+        User user = this.findByEmail(email);
         if (user != null) {
             throw new AlreadyExistException("emailAddress", email);
         }
@@ -106,6 +112,8 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
         userDto.setPassword(password);
         return this.save(userDto);
     }
+
+
    /* @Transactional
     public void addSuccessfulLogin(User user, String reason) {
         User dbUser = this.repository.findById(user.getId()).get();

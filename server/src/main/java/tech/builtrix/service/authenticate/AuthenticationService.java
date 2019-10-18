@@ -1,26 +1,24 @@
 package tech.builtrix.service.authenticate;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import tech.builtrix.dto.UserDto;
-import tech.builtrix.exception.*;
-import tech.builtrix.model.user.Role;
-import tech.builtrix.model.user.TokenPurpose;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import tech.builtrix.exception.InactiveUserException;
+import tech.builtrix.exception.InvalidPasswordException;
+import tech.builtrix.exception.NotFoundException;
 import tech.builtrix.model.user.User;
-import tech.builtrix.model.user.UserToken;
 import tech.builtrix.service.user.UserService;
 import tech.builtrix.util.HashUtil;
-
-import javax.transaction.Transactional;
 
 /**
  * Created By sahar at 10/17/19
  */
-@Service
+@Component
 @Slf4j
 public class AuthenticationService {
     private final UserService userService;
 
+    @Autowired
     public AuthenticationService(UserService userService) {
         this.userService = userService;
     }
@@ -30,7 +28,7 @@ public class AuthenticationService {
             InactiveUserException {
         User user;
         try {
-            user = this.userService.getEmailAndUser(email);
+            user = this.userService.findByEmail(email);
         } catch (NotFoundException ex) {
             throw new InvalidPasswordException();
         }

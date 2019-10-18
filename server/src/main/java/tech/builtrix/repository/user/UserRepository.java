@@ -34,6 +34,10 @@ public class UserRepository implements RepositoryBase<User> {
         return mapper.load(User.class, userId, lastName);
     }
 
+    public User findByEmail(String email) {
+        return mapper.load(User.class, email);
+    }
+
     public void update(User user) {
         try {
             mapper.save(user, buildDynamoDBSaveExpression(user));
@@ -116,5 +120,6 @@ public class UserRepository implements RepositoryBase<User> {
     public void deleteAll() {
 
     }
+
 
 }

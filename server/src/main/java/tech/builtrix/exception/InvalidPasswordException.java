@@ -1,15 +1,14 @@
 package tech.builtrix.exception;
 
 
+import org.springframework.http.HttpStatus;
 import tech.builtrix.base.ErrorMessage;
 
 /**
  * @author : pc`
  * @date : 04/04/2018
- * @project : pfm
- * @class : com.farazpardazan.investmentFund.common.user.exception.InvalidPasswordException
  */
 
-@ErrorMessage
+@ErrorMessage(code = 400011, status = HttpStatus.BAD_REQUEST)
 public class InvalidPasswordException extends ExceptionBase {
 }

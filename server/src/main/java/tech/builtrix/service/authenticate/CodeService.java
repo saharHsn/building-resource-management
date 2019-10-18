@@ -3,7 +3,7 @@ package tech.builtrix.service.authenticate;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import tech.builtrix.exception.TokenExpiredException;
 import tech.builtrix.exception.TokenNotExistException;
 import tech.builtrix.exception.TokenUsedException;
@@ -16,18 +16,19 @@ import javax.transaction.Transactional;
 import java.security.SecureRandom;
 import java.util.*;
 
-@Service
+@Component
+//@ConfigurationProperties("metrics.token")
 public class CodeService {
 
-    @Value("${investment.token.email.length}")
+    @Value("${metrics.token.email.length}")
     private int emailTokenLength;
-    @Value("${investment.token.email.expiration}")
+    @Value("${metrics.token.email.expiration}")
     private int emailTokenExpiration;
 
-    @Value("${investment.token.phone.length}")
+    /*@Value("${metrics.token.phone.length}")
     private int phoneTokenLength;
-    @Value("${investment.token.phone.expiration}")
-    private int phoneTokenExpiration;
+    @Value("${metrics.token.phone.expiration}")
+    private int phoneTokenExpiration;*/
 
     private final UserTokenRepository userTokenRepository;
 
@@ -41,9 +42,9 @@ public class CodeService {
         return createToken(user, purpose, emailTokenExpiration, emailTokenLength, false);
     }
 
-    UserToken createPhoneToken(User user, TokenPurpose purpose) {
+   /* UserToken createPhoneToken(User user, TokenPurpose purpose) {
         return createToken(user, purpose, phoneTokenExpiration, phoneTokenLength, true);
-    }
+    }*/
 
     @Transactional
     public void validateToken(User user, String token, TokenPurpose purpose) throws TokenExpiredException, TokenNotExistException, TokenUsedException {

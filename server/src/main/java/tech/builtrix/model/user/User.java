@@ -2,16 +2,13 @@ package tech.builtrix.model.user;
 
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.envers.NotAudited;
 import tech.builtrix.base.EntityBase;
 import tech.builtrix.dto.UserDto;
 import tech.builtrix.model.EnumConverter;
 
-import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
@@ -57,13 +54,11 @@ public class User extends EntityBase<User> {
     @DynamoDBAttribute
     private String nationalId;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Setter(value = AccessLevel.PROTECTED)
-    @NotAudited
+    @DynamoDBAttribute
     private List<UserToken> tokens;
 
-    @Column(name = "role", nullable = false, columnDefinition = "varchar not null default 'User'")
-    @Enumerated(EnumType.STRING)
+    @DynamoDBTypeConverted(converter = EnumConverter.class)
+    @DynamoDBAttribute(attributeName = "Role")
     private Role role;
 
     /* @Column(name = "failed_logins", nullable = false)

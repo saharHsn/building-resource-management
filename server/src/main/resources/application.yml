@@ -1,5 +1,5 @@
 server:
-  port: 5000
+  port: 8080
   servlet:
     context-path: /builtrix
 
@@ -7,3 +7,9 @@ spring:
   profiles:
     include:
       - aws
+
+metrics:
+  token:
+    email:
+      length: 48
+      expiration: 300

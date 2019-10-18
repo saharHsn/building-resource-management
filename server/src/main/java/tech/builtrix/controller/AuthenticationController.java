@@ -2,17 +2,17 @@ package tech.builtrix.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import tech.builtrix.Response;
 import tech.builtrix.dto.LoginRequest;
 import tech.builtrix.dto.LoginResponse;
 import tech.builtrix.dto.UserDto;
-import tech.builtrix.dto.emailToken.EmailTokenRequest;
-import tech.builtrix.dto.emailToken.EmailTokenResponse;
-import tech.builtrix.exception.ExceptionBase;
 import tech.builtrix.exception.InactiveUserException;
 import tech.builtrix.exception.InvalidPasswordException;
-import tech.builtrix.limit.Limited;
 import tech.builtrix.model.user.User;
 import tech.builtrix.service.authenticate.AuthenticationService;
 
@@ -24,6 +24,7 @@ import javax.validation.Valid;
 public class AuthenticationController {
     private final AuthenticationService service;
 
+    @Autowired
     public AuthenticationController(AuthenticationService service) {
         this.service = service;
     }

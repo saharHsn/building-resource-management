@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
 /**
  * @author : pc`
  * @date : 09/06/2018
- * @project : hadaf
- * @class : com.farazpardazan.investment.application.limit.RequestLimitInterceptor
  */
 
 @Component
