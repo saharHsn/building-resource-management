@@ -2,19 +2,21 @@
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-
+import {environment} from 'src/environments/environment';
 import {User} from '../user/user';
 
 @Injectable({providedIn: 'root'})
 export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<User>;
-  private baseUrl = 'http://builtrixmetrics-env.qwzndp9hya.us-east-2.elasticbeanstalk.com/builtrix/v1/';
-
+  environmentName = '';
+  environmentUrl = 'Debug api';
   public currentUser: Observable<User>;
 
   constructor(private http: HttpClient) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
+    this.environmentName = environment.environmentName;
+    this.environmentUrl = environment.apiUrl;
   }
 
   public get currentUserValue(): User {
@@ -22,7 +24,7 @@ export class AuthenticationService {
   }
 
   login(emailAddress, password) {
-    return this.http.post<any>(`${this.baseUrl}/users/authenticate`, {emailAddress, password})
+    return this.http.post<any>(`${this.environmentUrl}/users/authenticate`, {emailAddress, password})
       .pipe(map(user => {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
         localStorage.setItem('currentUser', JSON.stringify(user));

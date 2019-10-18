@@ -5,6 +5,7 @@ import {first} from 'rxjs/operators';
 
 import {AlertService, AuthenticationService} from '../_services';
 import {UserService} from '../user/user.service';
+import {RxwebValidators} from "@rxweb/reactive-form-validators";
 
 @Component({templateUrl: 'register.component.html'})
 export class RegisterComponent implements OnInit {
@@ -30,7 +31,8 @@ export class RegisterComponent implements OnInit {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       emailAddress: ['', Validators.required],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required, RxwebValidators.compare({fieldName: 'password'})]]
     });
   }
 

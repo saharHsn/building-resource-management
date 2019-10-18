@@ -2,15 +2,21 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {User} from "./user";
+import {environment} from "../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
+  environmentName = '';
+  environmentUrl = 'Debug api';
+  private baseUrl;
 
-  private baseUrl = 'http://builtrixmetrics-env.qwzndp9hya.us-east-2.elasticbeanstalk.com/builtrix/v1/users';
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+    this.environmentName = environment.environmentName;
+    this.environmentUrl = environment.apiUrl;
+    this.baseUrl = this.environmentUrl + '/users';
+  }
 
   getUser(id: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/${id}`);

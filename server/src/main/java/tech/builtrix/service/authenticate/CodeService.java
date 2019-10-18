@@ -29,7 +29,7 @@ public class CodeService {
     @Value("${investment.token.phone.expiration}")
     private int phoneTokenExpiration;
 
-    private UserTokenRepository userTokenRepository;
+    private final UserTokenRepository userTokenRepository;
 
     @Autowired
     public CodeService(UserTokenRepository userTokenRepository) {
