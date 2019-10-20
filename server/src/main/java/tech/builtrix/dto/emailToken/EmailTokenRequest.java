@@ -13,12 +13,12 @@ public class EmailTokenRequest {
     private String lastName;
 
     @NotNull
-    private String email;
+    private String emailAddress;
     @NotNull
     private String password;
     @NotNull
     private String confirmPassword;
-    @NotNull
+    //@NotNull
     private String token;
 
     public String getToken() {

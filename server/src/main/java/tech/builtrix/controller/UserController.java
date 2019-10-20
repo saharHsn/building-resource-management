@@ -2,8 +2,6 @@ package tech.builtrix.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.builtrix.Response;
 import tech.builtrix.dto.UserDto;
@@ -11,7 +9,6 @@ import tech.builtrix.dto.emailToken.EmailTokenRequest;
 import tech.builtrix.dto.emailToken.EmailTokenResponse;
 import tech.builtrix.exception.ExceptionBase;
 import tech.builtrix.exception.NotFoundException;
-import tech.builtrix.exception.ResourceNotFoundException;
 import tech.builtrix.limit.Limited;
 import tech.builtrix.service.user.UserService;
 
@@ -67,7 +64,7 @@ public class UserController {
         String code = this.service.registerUser(
                 request.getFirstName(),
                 request.getLastName(),
-                request.getEmail(),
+                request.getEmailAddress(),
                 request.getPassword(),
                 request.getConfirmPassword(),
                 request.getToken());//device

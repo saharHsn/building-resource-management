@@ -14,8 +14,8 @@ import tech.builtrix.model.user.UserToken;
 import tech.builtrix.repository.user.UserRepository;
 import tech.builtrix.service.authenticate.CodeService;
 import tech.builtrix.service.authenticate.ValidationService;
+import tech.builtrix.util.HashUtil;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,7 +76,6 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
         return this.repository.findAll();
     }
 
-    @Transactional
     public String registerUser(String firstName,
                                String lastName,
                                String email,
@@ -89,7 +88,6 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
         return userToken.getValue();
     }
 
-    @Transactional
     public User updateUserByEmail(String firstName,
                                   String lastName,
                                   String email,
@@ -116,7 +114,8 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
         userDto.setLastName(lastName);
         userDto.setEmailAddress(email);
         userDto.setRole(Role.User);
-        userDto.setPassword(password);
+        String hashedPass = HashUtil.sha1(password);
+        userDto.setPassword(hashedPass);
         return this.save(userDto);
     }
 

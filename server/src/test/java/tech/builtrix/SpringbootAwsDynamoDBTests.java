@@ -1,8 +1,6 @@
 package tech.builtrix;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.model.*;
-import com.amazonaws.services.dynamodbv2.util.TableUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Before;
@@ -31,8 +29,6 @@ import java.util.List;
 @SpringBootTest
 @Slf4j
 public class SpringbootAwsDynamoDBTests {
-    @Autowired
-    private DynamoDBMapper dynamoDBMapper;
     @Autowired
     private DynamoDBConfig dynamoDBConfig;
     @Autowired
@@ -65,7 +61,7 @@ public class SpringbootAwsDynamoDBTests {
                     new ProvisionedThroughput(10L, 10L));
             table.waitForActive();*/
 
-        //createTableIfDoesNotExist();
+        createTable("User_Token");
     }
 
     private void createTable(String tableName) {
@@ -85,24 +81,21 @@ public class SpringbootAwsDynamoDBTests {
                 new ProvisionedThroughput(10L, 10L));
     }*/
 
-    private void createTableIfDoesNotExist(boolean tableExist) throws InterruptedException {
-        if (!tableExist) {
-            if (TableUtils.createTableIfNotExists(dynamoDBConfig.getDynamoDB(), dynamoDBMapper.generateCreateTableRequest(User.class)
+    /*private void createTableIfDoesNotExist(boolean tableExist, Class entity) throws InterruptedException {
+            if (TableUtils.createTableIfNotExists(dynamoDBConfig.getDynamoDB(), dynamoDBMapper.generateCreateTableRequest(entity)
                     .withProvisionedThroughput(new ProvisionedThroughput(2L, 2L)))) {
                 //logger.info("~~~ Waiting for User table to be active ~~~");
-                TableUtils.waitUntilActive(dynamoDBConfig.getDynamoDB(), "User");
+                TableUtils.waitUntilActive(dynamoDBConfig.getDynamoDB(), entity.getSimpleName());
             } else {
-               // logger.info("~~~ User table already exists ~~~");
+                //logger.info("~~~  table already exists ~~~");
             }
-            tableExist = true;
-        }
     }
 
     private void makeTable(Class aClass) {
         CreateTableRequest createUserTableRequest = dynamoDBMapper.generateCreateTableRequest(aClass);
         createUserTableRequest.withProvisionedThroughput(new ProvisionedThroughput(2L, 2L));
         dynamoDBConfig.getDynamoDB().createTable(createUserTableRequest);
-    }
+    }*/
 
     @After
     public void onFinish() throws Exception {

@@ -16,7 +16,8 @@ import org.springframework.context.annotation.Configuration;
  * Created By sahar-hoseini at 08. Jul 2019 9:02 AM
  **/
 @Configuration()
-@EnableDynamoDBRepositories(basePackages = "tech.builtrix"
+@EnableDynamoDBRepositories(
+        basePackages = "tech.builtrix"
         //  , dynamoDBMapperConfigRef = "dynamoDBMapperConfig"
 )
 public class DynamoDBConfig {
@@ -31,6 +32,7 @@ public class DynamoDBConfig {
     private String awsDynamoDBEndPoint;
 
     AmazonDynamoDB dynamoDB;
+
     @Bean
     public DynamoDBMapperConfig dynamoDBMapperConfig() {
         // Create empty DynamoDBMapperConfig builder
@@ -42,28 +44,28 @@ public class DynamoDBConfig {
         return new DynamoDBMapperConfig(DynamoDBMapperConfig.DEFAULT, builder.build());
     }
 
-    /*  @Bean
-      public DynamoDBMapper mapper() {
-          dynamoDB = amazonDynamoDBConfig();
-          return new DynamoDBMapper(dynamoDB);
-      }
-  */
+    /*@Bean
+    public DynamoDBMapper mapper() {
+        dynamoDB = amazonDynamoDBConfig();
+        return new DynamoDBMapper(dynamoDB);
+    }*/
+
     @Bean
     public AmazonDynamoDB amazonDynamoDB() {
         //return new AmazonDynamoDBClient();
+        dynamoDB = amazonDynamoDBConfig();
         return AmazonDynamoDBClientBuilder.standard()
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(awsDynamoDBEndPoint, awsRegion))
                 .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(awsAccessKey, awsSecretKey)))
                 .build();
     }
 
-   /* private AmazonDynamoDB amazonDynamoDBConfig() {
+    private AmazonDynamoDB amazonDynamoDBConfig() {
         return AmazonDynamoDBClientBuilder.standard()
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(awsDynamoDBEndPoint, awsRegion))
                 .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(awsAccessKey, awsSecretKey)))
                 .build();
     }
-*/
 
     public void createTable(CreateTableRequest tableRequest) {
         dynamoDB.createTable(tableRequest);

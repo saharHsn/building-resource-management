@@ -78,7 +78,7 @@ public class CodeService {
         // add expiration time
         calendar.add(Calendar.SECOND, secondsToExpire);
         token.setExpirationTime(calendar.getTime());
-        token.setUser(user);
+        token.setUser(user.getId());
         token.setPurpose(purpose);
         token.setValue(justNumber ? generateRandomNumber(length) : RandomString.make(length));
         this.userTokenRepository.save(token);

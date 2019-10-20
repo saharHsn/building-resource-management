@@ -61,7 +61,13 @@ export class RegisterComponent implements OnInit {
           this.router.navigate(['/login']);
         },
         error => {
-          this.alertService.error(error);
+          let errorMessage = "Unknown Error (Internal server error!)";
+          if (error.status = 400 && error.error.errors) {
+            errorMessage = error.error.errors;
+          } else {
+            errorMessage = error.error.message;
+          }
+          this.alertService.error(errorMessage);
           this.loading = false;
         });
   }

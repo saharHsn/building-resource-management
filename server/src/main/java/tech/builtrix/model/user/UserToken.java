@@ -15,7 +15,7 @@ import java.util.Date;
  * Created By Sahar at 2/23/19 : 10:43 AM
  **/
 
-@DynamoDBTable(tableName = "User")
+@DynamoDBTable(tableName = "User_Token")
 @Setter
 @Getter
 @NoArgsConstructor
@@ -28,7 +28,7 @@ public class UserToken extends EntityBase<UserToken> {
     @DynamoDBAttribute(attributeName = "TokenPurpose")
     private TokenPurpose purpose;
     @DynamoDBAttribute(attributeName = "user_id")
-    private User user;
+    private String user;
     @DynamoDBAttribute
     private Date usedTime;
 

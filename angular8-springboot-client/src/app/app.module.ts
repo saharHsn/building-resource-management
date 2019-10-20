@@ -1,7 +1,7 @@
 ﻿import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 
 
 import {appRoutingModule} from './app.routing';
@@ -39,6 +39,7 @@ import {EnergyCertificateComponent} from "./building/enums/energy-certificate-co
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
+    // {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true}
 
     // provider used to create fake backend
     //fakeBackendProvider
@@ -46,4 +47,4 @@ import {EnergyCertificateComponent} from "./building/enums/energy-certificate-co
   bootstrap: [AppComponent]
 })
 export class AppModule {
-};
+}
