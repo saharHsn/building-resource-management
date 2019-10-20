@@ -2,14 +2,21 @@ package tech.builtrix.model;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverter;
 
-public class EnumConverter implements DynamoDBTypeConverter<String, Enum> {
+public class EnumConverter<T extends Enum<T>> implements DynamoDBTypeConverter<String, T> {
+    private final Class<T> sourceType;
+
+    public EnumConverter(Class<T> sourceType) {
+        this.sourceType = sourceType;
+    }
+
+
     @Override
-    public String convert(Enum anEnum) {
+    public String convert(T anEnum) {
         return anEnum.name();
     }
 
     @Override
-    public Enum unconvert(String s) {
-        return Enum.valueOf(Enum.class, s);
+    public T unconvert(String s) {
+        return Enum.valueOf(sourceType, s);
     }
 }

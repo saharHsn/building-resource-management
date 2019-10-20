@@ -3,6 +3,7 @@ package tech.builtrix.service.user;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import tech.builtrix.base.GenericCrudServiceBase;
 import tech.builtrix.dto.UserDto;
 import tech.builtrix.exception.*;
@@ -15,6 +16,7 @@ import tech.builtrix.service.authenticate.CodeService;
 import tech.builtrix.service.authenticate.ValidationService;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -44,9 +46,9 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
     }
 
     public User findByEmail(String email) throws NotFoundException {
-        User user = this.repository.findByEmail(email);
-        if (user != null) {
-            return user;
+        List<User> users = this.repository.findByEmailAddress(email);
+        if (!CollectionUtils.isEmpty(users)) {
+            return users.get(0);
         } else {
             throw new NotFoundException("user", "email", email);
         }
@@ -94,7 +96,12 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
                                   String password,
                                   String confirmPassword) throws ExceptionBase {
         //just reload user
-        User user = this.findByEmail(email);
+        User user = null;
+        try {
+            user = this.findByEmail(email);
+        } catch (NotFoundException e) {
+            logger.info("User does not exist");
+        }
         if (user != null) {
             throw new AlreadyExistException("emailAddress", email);
         }

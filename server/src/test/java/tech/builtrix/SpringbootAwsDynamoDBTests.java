@@ -115,7 +115,9 @@ public class SpringbootAwsDynamoDBTests {
 
     @Test
     public void dynamoDBTestCase() {
-        buildingTest();
+        //buildingTest();
+        List<User> users = userRepository.findByEmailAddress("test@test.com");
+        System.out.println(users);
     }
 
     private User userTest() {
@@ -130,9 +132,9 @@ public class SpringbootAwsDynamoDBTests {
         user.setJob("Project Manager");
         user.setHomeTown("Iran");
         user.setPhoneNumber("+989399325216");
-        userRepository.insert(user);
+        userRepository.save(user);
 
-        List<User> users = (List<User>) userRepository.getAll();
+        List<User> users = (List<User>) userRepository.findAll();
 
        /* assertTrue("User found.", users.size() > 0);
         assertTrue("The user first name is correct.", users.get(0).getFirstName().equals(FIRST_NAME));*/

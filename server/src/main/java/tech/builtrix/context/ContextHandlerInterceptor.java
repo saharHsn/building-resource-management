@@ -14,10 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 /**
  * Created By sahar-hoseini at 12. Jul 2019 5:53 PM
@@ -42,7 +39,7 @@ public class ContextHandlerInterceptor implements HandlerInterceptor {
                              Object handler) throws Exception {
         RequestContextHolder.currentRequestAttributes().setAttribute("requestContext", this.requestContext, 0);
         // this is for ignoring accept-language
-        LocaleContextHolder.setLocale(new Locale("fa", "IR"));
+        LocaleContextHolder.setLocale(new Locale("en", "US"));
         HandlerMethod handlerMethod;
         Method method;
         String remoteAddr = "";
