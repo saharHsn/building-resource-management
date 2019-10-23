@@ -5,8 +5,8 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jboss.aerogear.security.otp.api.Base32;
 import tech.builtrix.base.EntityBase;
 import tech.builtrix.dto.UserDto;
 import tech.builtrix.model.EnumConverter;
@@ -18,9 +18,7 @@ import java.util.List;
 @DynamoDBTable(tableName = "User")
 @Setter
 @Getter
-@NoArgsConstructor
 public class User extends EntityBase<User> {
-
     @DynamoDBAttribute
     private String firstName;
     @DynamoDBAttribute
@@ -53,13 +51,17 @@ public class User extends EntityBase<User> {
     private String homeTown;
     @DynamoDBAttribute
     private String nationalId;
-
     @DynamoDBAttribute
     private List<UserToken> tokens;
-
     @DynamoDBTypeConverted(converter = EnumConverter.class)
     @DynamoDBAttribute(attributeName = "Role")
     private Role role;
+    @DynamoDBAttribute
+    private Boolean enabled;
+    @DynamoDBAttribute
+    private Boolean isUsing2FA;
+    @DynamoDBAttribute
+    private String secret;
 
     /* @Column(name = "failed_logins", nullable = false)
     private Byte failedLogin = 0;
@@ -69,6 +71,14 @@ public class User extends EntityBase<User> {
     @NotAudited
     private List<UserLogin> logins;
 */
+
+    public User() {
+        super();
+        this.secret = Base32.random();
+        this.enabled = false;
+    }
+
+
     public User(UserDto userDto) {
         this.firstName = userDto.getFirstName();
         this.lastName = userDto.getLastName();

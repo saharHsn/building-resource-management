@@ -15,3 +15,12 @@ metrics:
     email:
       length: 48
       expiration: 300
+
+  email:
+    template-path: classpath:templates.email
+    aws:
+      server:
+      userName:
+      password:
+      port:
+      default-account:

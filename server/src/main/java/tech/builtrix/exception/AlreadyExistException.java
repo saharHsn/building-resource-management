@@ -14,4 +14,8 @@ class AlreadyExistException extends ExceptionBase {
         addParameter("field", field)
                 .addParameter("value", value);
     }
+
+    public AlreadyExistException(String message) {
+        super(message);
+    }
 }

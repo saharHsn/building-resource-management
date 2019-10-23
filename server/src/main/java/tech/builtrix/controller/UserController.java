@@ -5,14 +5,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import tech.builtrix.Response;
 import tech.builtrix.dto.UserDto;
-import tech.builtrix.dto.emailToken.EmailTokenRequest;
-import tech.builtrix.dto.emailToken.EmailTokenResponse;
-import tech.builtrix.exception.ExceptionBase;
 import tech.builtrix.exception.NotFoundException;
-import tech.builtrix.limit.Limited;
 import tech.builtrix.service.user.UserService;
-
-import javax.validation.Valid;
 
 /**
  * Created By sahar-hoseini at 08. Jul 2019 5:52 PM
@@ -54,20 +48,5 @@ public class UserController {
     public Response<Void> delete(@PathVariable("userId") String userId) {
         service.delete(userId);
         return Response.ok();
-    }
-
-    @ApiOperation(value = "Request for register  user")
-    @RequestMapping(value = "register", method = RequestMethod.POST)
-    @Limited(requestsPerMinutes = 3)
-    public Response<EmailTokenResponse> registerUser(@Valid @RequestBody EmailTokenRequest request) throws ExceptionBase {
-        // Device device = this.requestContext.getDevice();
-        String code = this.service.registerUser(
-                request.getFirstName(),
-                request.getLastName(),
-                request.getEmailAddress(),
-                request.getPassword(),
-                request.getConfirmPassword(),
-                request.getToken());//device
-        return Response.ok(new EmailTokenResponse(code));
     }
 }

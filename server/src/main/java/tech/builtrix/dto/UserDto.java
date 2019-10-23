@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import tech.builtrix.model.user.Education;
 import tech.builtrix.model.user.Gender;
 import tech.builtrix.model.user.Role;
 import tech.builtrix.model.user.User;
@@ -31,6 +30,7 @@ public class UserDto extends EntityDtoBase {
     private Boolean isActive;
     private Role role;
     private String password;
+
 
     public UserDto(User user) {
         this.id = user.getId();

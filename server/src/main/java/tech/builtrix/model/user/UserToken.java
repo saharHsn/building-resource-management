@@ -21,7 +21,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class UserToken extends EntityBase<UserToken> {
     @DynamoDBAttribute
-    private String value;
+    private String token;
     @DynamoDBAttribute
     private Date expirationTime;
     @DynamoDBTypeConverted(converter = EnumConverter.class)

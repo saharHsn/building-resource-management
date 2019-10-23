@@ -3,10 +3,10 @@ package tech.builtrix.dto.emailToken;
 import lombok.Data;
 
 @Data
-public class EmailTokenResponse {
+public class TokenResponse {
     private String code;
 
-    public EmailTokenResponse(String code) {
+    public TokenResponse(String code) {
         this.code = code;
     }
 }
