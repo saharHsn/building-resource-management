@@ -52,6 +52,8 @@ public class User extends EntityBase<User> {
     @DynamoDBAttribute
     private String nationalId;
     @DynamoDBAttribute
+    private User parent;
+    @DynamoDBAttribute
     private List<UserToken> tokens;
     @DynamoDBTypeConverted(converter = EnumConverter.class)
     @DynamoDBAttribute(attributeName = "Role")
@@ -62,6 +64,9 @@ public class User extends EntityBase<User> {
     private Boolean isUsing2FA;
     @DynamoDBAttribute
     private String secret;
+
+    //Transient property-never save it
+    private String rawPassword;
 
     /* @Column(name = "failed_logins", nullable = false)
     private Byte failedLogin = 0;
@@ -77,7 +82,6 @@ public class User extends EntityBase<User> {
         this.secret = Base32.random();
         this.enabled = false;
     }
-
 
     public User(UserDto userDto) {
         this.firstName = userDto.getFirstName();

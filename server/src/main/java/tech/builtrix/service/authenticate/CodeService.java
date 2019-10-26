@@ -97,7 +97,7 @@ public class CodeService {
         return token;
     }
 
-    private String generateRandomNumber(int length) {
+    public String generateRandomNumber(int length) {
         final String seed = "0123456789";
         Random random = new SecureRandom();
         StringBuilder builder = new StringBuilder(length);

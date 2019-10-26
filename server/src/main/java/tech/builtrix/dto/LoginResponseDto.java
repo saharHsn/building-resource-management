@@ -8,10 +8,10 @@ import lombok.Data;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-public class LoginResponse {
+public class LoginResponseDto {
     private UserDto user;
 
-    public LoginResponse(UserDto user) {
+    public LoginResponseDto(UserDto user) {
         this.user = user;
     }
 }

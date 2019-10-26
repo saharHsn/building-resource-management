@@ -4,5 +4,8 @@ public enum Role {
     User,
     Admin,
     Operator,
-    Test
+    Test,
+    Senior,
+    Junior,
+
 }

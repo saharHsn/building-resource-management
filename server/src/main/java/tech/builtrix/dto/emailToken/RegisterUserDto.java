@@ -11,29 +11,7 @@ import javax.validation.constraints.Size;
 @Data
 @PasswordMatches
 public class RegisterUserDto {
-    /* @NotNull
-    @Size(min = 1, message = "{Size.userDto.firstName}")
-    private String firstName;
 
-    @NotNull
-    @Size(min = 1, message = "{Size.userDto.lastName}")
-    private String lastName;
-
-    @ValidPassword
-    private String password;
-
-    @NotNull
-    @Size(min = 1)
-    private String matchingPassword;
-
-    @ValidEmail
-    @NotNull
-    @Size(min = 1, message = "{Size.userDto.email}")
-    private String email;
-
-    private boolean isUsing2FA;
-
-*/
     @NotNull
     @Size(min = 1, message = "{Size.userDto.firstName}")
     private String firstName;

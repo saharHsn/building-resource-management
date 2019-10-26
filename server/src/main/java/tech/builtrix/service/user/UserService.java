@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import tech.builtrix.base.GenericCrudServiceBase;
+import tech.builtrix.dto.InvitationDto;
 import tech.builtrix.dto.UserDto;
 import tech.builtrix.dto.emailToken.RegisterUserDto;
 import tech.builtrix.exception.*;
@@ -146,10 +147,30 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
         //user.setPassword(passwordEncoder.encode(registerUserDto.getPassword()));
         user.setPassword(HashUtil.sha1(registerUserDto.getPassword()));
         user.setEmailAddress(registerUserDto.getEmailAddress());
+        user.setRole(Role.Senior);
+        user.setEnabled(true);
         //TODO
         /*user.setUsing2FA(registerUserDto.isUsing2FA());
         user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));*/
         return repository.save(user);
+    }
+
+    public User registerUserViaInvitation(InvitationDto invitationDto, User parent) throws AlreadyExistException {
+        if (emailExists(invitationDto.getInviteeEmail())) {
+            throw new AlreadyExistException("There is an account with that email address: " + invitationDto.getInviteeEmail());
+        }
+        User user = new User();
+        String randomPassword = codeService.generateRandomNumber(6);
+        user.setPassword(HashUtil.sha1(randomPassword));
+        user.setEmailAddress(invitationDto.getInviteeEmail());
+        user.setParent(parent);
+        user.setRole(Role.Junior);
+        //TODO
+        /*user.setUsing2FA(registerUserDto.isUsing2FA());
+        user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));*/
+        user = repository.save(user);
+        user.setRawPassword(randomPassword);
+        return user;
     }
 
     public String registerUser(String firstName,

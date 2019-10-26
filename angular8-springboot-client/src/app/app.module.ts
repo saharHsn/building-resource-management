@@ -10,6 +10,7 @@ import {AppComponent} from './app.component';
 import {HomeComponent} from './home';
 import {LoginComponent} from './login';
 import {RegisterComponent} from './register';
+import {InvitationComponent} from './invitation';
 import {AlertComponent} from './_components';
 import {WizardFormComponent} from './wizard-form/wizard-form.component';
 import {ArchwizardModule} from "angular-archwizard";
@@ -31,6 +32,7 @@ import {EnergyCertificateComponent} from "./building/enums/energy-certificate-co
     HomeComponent,
     LoginComponent,
     RegisterComponent,
+    InvitationComponent,
     AlertComponent,
     WizardFormComponent,
     BuildingUsageComponent,

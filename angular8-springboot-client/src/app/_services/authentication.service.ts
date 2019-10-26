@@ -5,6 +5,7 @@ import {map} from 'rxjs/operators';
 import {environment} from 'src/environments/environment';
 import {User} from '../user/user';
 import {LoginRequest} from "../user/LoginRequest";
+import {InvitationRequest} from "../register/InvitationRequest";
 
 @Injectable({providedIn: 'root'})
 export class AuthenticationService {
@@ -13,6 +14,7 @@ export class AuthenticationService {
   environmentUrl = 'Debug api';
   public currentUser: Observable<User>;
   private loginRequest: LoginRequest;
+  private invitationRequest: InvitationRequest;
 
   constructor(private http: HttpClient) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
@@ -43,5 +45,11 @@ export class AuthenticationService {
     // remove user from local storage and set current user to null
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+  }
+
+  sendInvitation(inviteeEmail: String, subject: String, message: String) {
+    return this.http.post<any>(`${this.environmentUrl}/users/registration`, this.loginRequest)
+      .pipe(map(user => {
+      }));
   }
 }

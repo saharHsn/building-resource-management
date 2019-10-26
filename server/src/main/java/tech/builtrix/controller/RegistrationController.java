@@ -10,12 +10,17 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import tech.builtrix.Response;
+import tech.builtrix.base.ControllerBase;
 import tech.builtrix.base.ErrorMessage;
+import tech.builtrix.dto.InvitationDto;
 import tech.builtrix.dto.emailToken.RegisterUserDto;
 import tech.builtrix.exception.*;
+import tech.builtrix.model.user.Role;
 import tech.builtrix.model.user.TokenPurpose;
 import tech.builtrix.model.user.User;
 import tech.builtrix.registration.OnRegistrationCompleteEvent;
+import tech.builtrix.security.annotations.Authorize;
+import tech.builtrix.security.session.NoSession;
 import tech.builtrix.service.authenticate.CodeService;
 import tech.builtrix.service.user.UserService;
 
@@ -31,7 +36,7 @@ import java.util.Locale;
 @RequestMapping("/v1/users")
 @Api(value = "User Registration Controller", tags = {"User Registration Controller"})
 @Slf4j
-public class RegistrationController {
+public class RegistrationController extends ControllerBase {
 
     private final UserService userService;
     private final CodeService codeService;
@@ -55,14 +60,29 @@ public class RegistrationController {
     // Registration
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     @ResponseBody
+    @NoSession
     public Response<Void> registerUserAccount(@Valid final RegisterUserDto registerUserDto, final HttpServletRequest request) throws AlreadyExistException {
         logger.debug("Registering user account with information: {}", registerUserDto);
         final User registered = userService.registerNewUserAccount(registerUserDto);
+        //eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
+        return Response.ok();
+    }
+
+    @RequestMapping(value = "/invitation", method = RequestMethod.POST)
+    @ResponseBody
+    @Authorize(roles = Role.Senior)
+    public Response<Void> registerViaInvitation(@Valid final InvitationDto invitationDto,
+                                                final HttpServletRequest request) throws AlreadyExistException {
+
+        logger.debug("Registering user account with information: {}", invitationDto);
+        User parent = requestContext.getUser();
+        final User registered = userService.registerUserViaInvitation(invitationDto, parent);
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
         return Response.ok();
     }
 
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
+    @NoSession
     public Response<String> confirmRegistration(final HttpServletRequest request, final Model model, @RequestParam("token") final String token) throws NotFoundException {
         Locale locale = request.getLocale();
         String userId = null;

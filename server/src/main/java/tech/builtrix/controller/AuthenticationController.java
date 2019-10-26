@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import tech.builtrix.Response;
-import tech.builtrix.dto.LoginRequest;
-import tech.builtrix.dto.LoginResponse;
+import tech.builtrix.dto.LoginRequestDto;
+import tech.builtrix.dto.LoginResponseDto;
 import tech.builtrix.dto.UserDto;
 import tech.builtrix.exception.InactiveUserException;
 import tech.builtrix.exception.InvalidPasswordException;
@@ -31,8 +31,8 @@ public class AuthenticationController {
 
     @ApiOperation(value = "Request for login user")
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public Response<LoginResponse> login(@Valid @RequestBody LoginRequest request) throws InactiveUserException, InvalidPasswordException {
+    public Response<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request) throws InactiveUserException, InvalidPasswordException {
         User userLogin = this.service.loginByPassword(request.getEmail(), request.getPassword());
-        return Response.ok(new LoginResponse(new UserDto(userLogin)));
+        return Response.ok(new LoginResponseDto(new UserDto(userLogin)));
     }
 }
