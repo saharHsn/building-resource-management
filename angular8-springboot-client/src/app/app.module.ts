@@ -27,6 +27,8 @@ import {CostComponent} from './chart/cost/cost.component';
 import {ConsumptionComponent} from './chart/consumption/consumption.component';
 import {PredictionsComponent} from './chart/overall/predictions/predictions.component';
 import {BeScoreComponent} from './chart/overall/be-score/be-score.component';
+import {CostPieChartComponent} from './chart/cost/cost-pie-chart/cost-pie-chart.component';
+import {CostStackChartComponent} from './chart/cost/cost-stack-chart/cost-stack-chart.component'
 
 @NgModule({
   imports: [
@@ -56,6 +58,10 @@ import {BeScoreComponent} from './chart/overall/be-score/be-score.component';
     PredictionsComponent,
     HighchartsChartComponent,
     BeScoreComponent
+    ,
+    CostPieChartComponent,
+    CostStackChartComponent,
+    CostStackChartComponent
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
