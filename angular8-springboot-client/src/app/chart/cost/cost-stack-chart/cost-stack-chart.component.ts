@@ -15,7 +15,7 @@ export class CostStackChartComponent implements OnInit {
       grid: true,
       gridLineColor: '#0066cc',
       plotBackgroundColor: '#F7F7F7',
-      width: 600,
+      width: 800,
       height: 400
     },
     title: {
@@ -24,25 +24,25 @@ export class CostStackChartComponent implements OnInit {
     xAxis: {
       categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
     },
-    legend: {
-      layout: 'vertical',
-      align: 'right',
-      verticalAlign: 'middle',
-      floating: false,
-      itemStyle: {
-        font: '9pt Trebuchet MS, Verdana, sans-serif',
-        color: '#A0A0A0'
-      },
-      itemHoverStyle: {
-        color: '#FFF'
-      },
-      itemHiddenStyle: {
-        color: '#444'
-      },
-      symbolHeight: 12,
-      symbolWidth: 12,
-      y: -20
-    },
+    /* legend: {
+       layout: 'vertical',
+       align: 'right',
+       verticalAlign: 'middle',
+       floating: false,
+       itemStyle: {
+         font: '9pt Trebuchet MS, Verdana, sans-serif',
+         color: '#A0A0A0'
+       },
+       itemHoverStyle: {
+         color: '#FFF'
+       },
+       itemHiddenStyle: {
+         color: '#444'
+       },
+       symbolHeight: 12,
+       symbolWidth: 12,
+       y: -20
+     },*/
     yAxis: {
       min: 0,
       // max: 5000,

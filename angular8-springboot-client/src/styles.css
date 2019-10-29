@@ -16,3 +16,7 @@
 .custom-tooltip-blue {
   background-color: #007bff;
 }
+
+.highcharts-container {
+  margin: 0 auto;
+}
