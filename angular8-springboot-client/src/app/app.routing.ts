@@ -10,6 +10,7 @@ import {BeScoreComponent} from './chart/overall/be-score/be-score.component';
 import {CostComponent} from './chart/cost/cost.component';
 import {CostStackChartComponent} from './chart/cost/cost-stack-chart/cost-stack-chart.component';
 import {CostPieChartComponent} from './chart/cost/cost-pie-chart/cost-pie-chart.component';
+import {CarbonFootPrintComponent} from './chart/carbon-foot-print/carbon-foot-print.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent, canActivate: [AuthGuard]},
@@ -22,6 +23,7 @@ const routes: Routes = [
   {path: 'cost', component: CostComponent},
   {path: 'cost-stack', component: CostStackChartComponent},
   {path: 'cost-stack', component: CostPieChartComponent},
+  {path: 'carbon-footprint', component: CarbonFootPrintComponent},
 
   // otherwise redirect to home
   {path: '**', redirectTo: ''}

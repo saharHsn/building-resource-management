@@ -1,20 +1,20 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {CarbonFootprintComponent} from './carbon-footprint.component';
+import {CarbonPieChartComponent} from './carbon-pie-chart.component';
 
-describe('CarbonFootprintComponent', () => {
-  let component: CarbonFootprintComponent;
-  let fixture: ComponentFixture<CarbonFootprintComponent>;
+describe('CarbonPieChartComponent', () => {
+  let component: CarbonPieChartComponent;
+  let fixture: ComponentFixture<CarbonPieChartComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CarbonFootprintComponent]
+      declarations: [CarbonPieChartComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CarbonFootprintComponent);
+    fixture = TestBed.createComponent(CarbonPieChartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

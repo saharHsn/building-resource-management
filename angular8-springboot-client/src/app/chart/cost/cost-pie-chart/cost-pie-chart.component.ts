@@ -34,7 +34,6 @@ export class CostPieChartComponent implements OnInit {
     },
     series: [{
       type: 'pie',
-      name: 'Browser share',
 
       data: [
         {

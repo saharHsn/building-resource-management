@@ -28,7 +28,10 @@ import {ConsumptionComponent} from './chart/consumption/consumption.component';
 import {PredictionsComponent} from './chart/overall/predictions/predictions.component';
 import {BeScoreComponent} from './chart/overall/be-score/be-score.component';
 import {CostPieChartComponent} from './chart/cost/cost-pie-chart/cost-pie-chart.component';
-import {CostStackChartComponent} from './chart/cost/cost-stack-chart/cost-stack-chart.component'
+import {CostStackChartComponent} from './chart/cost/cost-stack-chart/cost-stack-chart.component';
+import {CarbonFootPrintComponent} from './chart/carbon-foot-print/carbon-foot-print.component';
+import {CarbonPslineChartComponent} from './chart/carbon-foot-print/carbon-psline-chart/carbon-psline-chart.component';
+import {CarbonPieChartComponent} from './chart/carbon-foot-print/carbon-pie-chart/carbon-pie-chart.component';
 
 @NgModule({
   imports: [
@@ -57,12 +60,13 @@ import {CostStackChartComponent} from './chart/cost/cost-stack-chart/cost-stack-
     ConsumptionComponent,
     PredictionsComponent,
     HighchartsChartComponent,
-    BeScoreComponent
-    ,
+    BeScoreComponent,
     CostPieChartComponent,
     CostStackChartComponent,
-    CostStackChartComponent
-  ],
+    CostStackChartComponent,
+    CarbonFootPrintComponent,
+    CarbonPslineChartComponent,
+    CarbonPieChartComponent],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     // {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true}
