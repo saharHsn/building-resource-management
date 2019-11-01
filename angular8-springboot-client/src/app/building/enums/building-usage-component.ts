@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
-import {BuildingUsage} from "./buildingUsage";
+import {BuildingUsage} from './buildingUsage';
 
 @Component({
-  selector: 'building-usage-component',
-  template: `    
+  selector: 'app-building-usage-component',
+  template: `
     <p>
       <!--Having the symbol as label and name as value:-->
       <select class="browser-default custom-select" [(ngModel)]="inputSliderValue"
@@ -15,8 +15,8 @@ import {BuildingUsage} from "./buildingUsage";
   `
 })
 
-//[(ngModel)]="inputSliderValue" (ngModelChange)="inputSliderValueChange.emit(inputSliderValue)"
-//[(ngModel)]="value" (ngModelChange)="updateChanges()"
+// [(ngModel)]="inputSliderValue" (ngModelChange)="inputSliderValueChange.emit(inputSliderValue)"
+// [(ngModel)]="value" (ngModelChange)="updateChanges()"
 export class BuildingUsageComponent  {
   keys = Object.keys;
   buildingUsage = BuildingUsage;
@@ -24,7 +24,7 @@ export class BuildingUsageComponent  {
   /**
    * Holds the current value of the slider
    */
-  @Input() inputSliderValue: string = "";
+  @Input() inputSliderValue = '';
 
   /**
    * Invoked when the model has been changed

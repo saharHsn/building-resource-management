@@ -11,11 +11,15 @@ import {CostComponent} from './chart/cost/cost.component';
 import {CostStackChartComponent} from './chart/cost/cost-stack-chart/cost-stack-chart.component';
 import {CostPieChartComponent} from './chart/cost/cost-pie-chart/cost-pie-chart.component';
 import {CarbonFootPrintComponent} from './chart/carbon-foot-print/carbon-foot-print.component';
+// tslint:disable-next-line:max-line-length
+import {ConsumptionComponent} from './chart/consumption/consumption.component';
+import {WizardFormComponent} from './wizard-form/wizard-form.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
+  {path: 'wizard', component: WizardFormComponent},
   // { path: 'weather', component: WeatherComponent },
   {path: 'predictions', component: PredictionsComponent},
   {path: 'overall', component: OverallComponent},
@@ -24,6 +28,7 @@ const routes: Routes = [
   {path: 'cost-stack', component: CostStackChartComponent},
   {path: 'cost-stack', component: CostPieChartComponent},
   {path: 'carbon-footprint', component: CarbonFootPrintComponent},
+  {path: 'consumption-component', component: ConsumptionComponent},
 
   // otherwise redirect to home
   {path: '**', redirectTo: ''}

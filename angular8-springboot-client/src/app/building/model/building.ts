@@ -1,9 +1,7 @@
-import {BuildingAge} from "../enums/buildingAge";
-import {BuildingUsage} from "../enums/buildingUsage";
-import {EnergyCertificate} from "../enums/energyCertificate";
-import {FileUploader} from 'ng2-file-upload';
-import {User} from "../../user/user";
-
+import {BuildingAge} from '../enums/buildingAge';
+import {BuildingUsage} from '../enums/buildingUsage';
+import {EnergyCertificate} from '../enums/energyCertificate';
+import {User} from '../../user/user';
 
 
 export class Building {
@@ -14,7 +12,7 @@ export class Building {
   addressId: number;
   usage: BuildingUsage;
   age: BuildingAge;
-  energyCertificate:EnergyCertificate;
+  energyCertificate: EnergyCertificate;
   area: number;
   numberOfPeople: number;
   gasBill: File;

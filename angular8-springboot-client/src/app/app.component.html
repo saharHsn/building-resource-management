@@ -1,22 +1,28 @@
-﻿<div class="container-fluid">
+﻿<div class="container-fluid full-page">
   <!-- nav -->
-  <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
-    <div class="navbar-nav">
-      <a class="nav-item nav-link" routerLink="/">Home</a>
-      <a class="nav-item nav-link" (click)="logout()">Logout</a>
-    </div>
-  </nav>
-
+  <!-- <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="currentUser">
+     <div class="navbar-nav">
+       <a class="nav-item nav-link" routerLink="/">Home</a>
+       <a class="nav-item nav-link" (click)="logout()">Logout</a>
+     </div>
+   </nav>-->
+  <!-- navbar navbar-expand navbar-dark bg-dark p-0 m-0-->
   <div class="row navbar navbar-expand navbar-dark bg-dark">
-    <div class="col-sm-1">
+    <div class="col navbar-nav">
       <a class="nav-item nav-link" routerLink="/overall">Overall</a>
     </div>
-    <div class="col-sm-1">
+    <div class="col navbar-nav">
       <a class="nav-item nav-link" routerLink="/cost">Cost</a>
     </div>
-    <div class="col-sm-2">
+    <div class="col navbar-nav">
+      <a class="nav-item nav-link" routerLink="/consumption-component">Consumption</a>
+    </div>
+    <div class="col navbar-nav">
       <a class="nav-item nav-link" routerLink="/carbon-footprint">Carbon Footprint</a>
     </div>
+    <!-- <div class="col-sm-2 p-0 m-0">
+       <a class="nav-item nav-link" routerLink="/wizard">Wizard</a>
+     </div>-->
   </div>
 
   <div class="row">

@@ -1,20 +1,20 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {CarbonPslineChartComponent} from './carbon-psline-chart.component';
+import {CarbonSplineChartComponent} from './carbon-spline-chart.component';
 
-describe('CarbonPslineChartComponent', () => {
-  let component: CarbonPslineChartComponent;
-  let fixture: ComponentFixture<CarbonPslineChartComponent>;
+describe('CarbonSplineChartComponent', () => {
+  let component: CarbonSplineChartComponent;
+  let fixture: ComponentFixture<CarbonSplineChartComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CarbonPslineChartComponent]
+      declarations: [CarbonSplineChartComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CarbonPslineChartComponent);
+    fixture = TestBed.createComponent(CarbonSplineChartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

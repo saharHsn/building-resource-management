@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {EnergyCertificate} from "./energyCertificate";
+import {EnergyCertificate} from './energyCertificate';
 
 @Component({
-  selector: 'energy-certificate-component',
+  selector: 'app-energy-certificate-component',
   template: `
     <p>
       <!--Having the symbol as label and name as value:-->
@@ -21,7 +21,7 @@ export class EnergyCertificateComponent  {
   /**
    * Holds the current value of the slider
    */
-  @Input() inputSliderValue: string = "";
+  @Input() inputSliderValue = '';
 
   /**
    * Invoked when the model has been changed

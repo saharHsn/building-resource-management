@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {BuildingAge} from "./buildingAge"
+import {BuildingAge} from './buildingAge';
 
 @Component({
-  selector: 'building-age-component',
+  selector: 'app-building-age-component',
   template: `
     <p>
       <!--Having the symbol as label and name as value:-->
@@ -20,7 +20,7 @@ export class BuildingAgeComponent  {
   /**
    * Holds the current value of the slider
    */
-  @Input() inputSliderValue: string = "";
+  @Input() inputSliderValue = '';
 
   /**
    * Invoked when the model has been changed

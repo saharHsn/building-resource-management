@@ -2,11 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import * as Highcharts from 'highcharts';
 
 @Component({
-  selector: 'app-carbon-psline-chart',
-  templateUrl: './carbon-psline-chart.component.html',
-  styleUrls: ['./carbon-psline-chart.component.css']
+  selector: 'app-carbon-spline-chart',
+  templateUrl: './carbon-spline-chart.component.html',
+  styleUrls: ['./carbon-spline-chart.component.css']
 })
-export class CarbonPslineChartComponent implements OnInit {
+export class CarbonSplineChartComponent implements OnInit {
   highcharts = Highcharts;
   chartOptions = {
     chart: {

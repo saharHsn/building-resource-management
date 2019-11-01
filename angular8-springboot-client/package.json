@@ -32,7 +32,8 @@
     "zone.js": "^0.9.1",
     "highcharts-angular": "latest",
     "highcharts": "latest",
-    "highcharts-more": "latest"
+    "highcharts-more": "latest",
+    "@ng-select/ng-select": "latest"
   },
   "devDependencies": {
     "@types/node": "^12.0.7",

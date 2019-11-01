@@ -158,8 +158,8 @@
         <div class="form-group col-md-10">
           <label class="col-md-3 control-lable" for="buildingUsage">Building Usage</label>
           <div class="col-md-7">
-            <building-usage-component [(inputSliderValue)]="building.usage" id="buildingUsage"
-                                      name="buildingUsage"></building-usage-component>
+            <app-building-usage-component [(inputSliderValue)]="building.usage" id="buildingUsage"
+                                          name="buildingUsage"></app-building-usage-component>
           </div>
         </div>
       </div>
@@ -168,8 +168,8 @@
         <div class="form-group col-md-10">
           <label class="col-md-3 control-lable" for="buildingAge">Building Age</label>
           <div class="col-md-7">
-            <building-age-component [(inputSliderValue)]="building.age" id="buildingAge"
-                                    name="buildingAge"></building-age-component>
+            <app-building-age-component [(inputSliderValue)]="building.age" id="buildingAge"
+                                        name="buildingAge"></app-building-age-component>
           </div>
         </div>
       </div>
@@ -178,11 +178,11 @@
         <div class="form-group col-md-10">
           <label class="col-md-3 control-lable" for="energyCertificate">Energy Certificate</label>
           <div class="col-md-7">
-            <energy-certificate-component [(inputSliderValue)]="building.energyCertificate" id="energyCertificate"
-                                          name="energyCertificate"
-                                          tooltip="You can ask your building manager for your building energy certificate."
-                                          theme="light"
-                                          placement="right"></energy-certificate-component>
+            <app-energy-certificate-component [(inputSliderValue)]="building.energyCertificate" id="energyCertificate"
+                                              name="energyCertificate"
+                                              tooltip="You can ask your building manager for your building energy certificate."
+                                              theme="light"
+                                              placement="right"></app-energy-certificate-component>
           </div>
         </div>
       </div>

@@ -30,8 +30,18 @@ import {BeScoreComponent} from './chart/overall/be-score/be-score.component';
 import {CostPieChartComponent} from './chart/cost/cost-pie-chart/cost-pie-chart.component';
 import {CostStackChartComponent} from './chart/cost/cost-stack-chart/cost-stack-chart.component';
 import {CarbonFootPrintComponent} from './chart/carbon-foot-print/carbon-foot-print.component';
-import {CarbonPslineChartComponent} from './chart/carbon-foot-print/carbon-psline-chart/carbon-psline-chart.component';
+import {CarbonSplineChartComponent} from './chart/carbon-foot-print/carbon-spline-chart/carbon-spline-chart.component';
 import {CarbonPieChartComponent} from './chart/carbon-foot-print/carbon-pie-chart/carbon-pie-chart.component';
+// tslint:disable-next-line:max-line-length
+import {ConsumptionDynamicBarChartComponent} from './chart/consumption/consumption-average-tariff-cost/consumption-dynamic-bar-chart/consumption-dynamic-bar-chart.component';
+// tslint:disable-next-line:max-line-length
+import {AverageTariffFilterComponent} from './chart/consumption/filter-form/average-tariff-filter-component';
+import {YearFilterComponent} from './chart/consumption/filter-form/enum-components/year-filter-component';
+import {DatePartComponent} from './chart/consumption/filter-form/enum-components/date-part-component';
+import {TimePeriodComponent} from './chart/consumption/filter-form/enum-components/time-period-component';
+import {NgSelectModule} from '@ng-select/ng-select';
+import {ChartComponent} from './chart/chart.component';
+
 
 @NgModule({
   imports: [
@@ -41,7 +51,8 @@ import {CarbonPieChartComponent} from './chart/carbon-foot-print/carbon-pie-char
     appRoutingModule,
     FormsModule,
     ArchwizardModule,
-    CommonModule
+    CommonModule,
+    NgSelectModule,
   ],
   declarations: [
     AppComponent,
@@ -65,8 +76,15 @@ import {CarbonPieChartComponent} from './chart/carbon-foot-print/carbon-pie-char
     CostStackChartComponent,
     CostStackChartComponent,
     CarbonFootPrintComponent,
-    CarbonPslineChartComponent,
-    CarbonPieChartComponent],
+    CarbonSplineChartComponent,
+    CarbonPieChartComponent,
+    ConsumptionDynamicBarChartComponent,
+    AverageTariffFilterComponent,
+    YearFilterComponent,
+    DatePartComponent,
+    TimePeriodComponent,
+    ChartComponent
+  ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     // {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true}

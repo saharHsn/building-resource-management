@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="row p-0 m-0">
+    <div class="col col-sm-2">
+      <label class="control-lable" for="year">Year</label>
+    </div>
+    <div class="col col-sm-2">
+      <label class="control-lable" for="periodType">Time Period Type</label>
+    </div>
+    <div class="col col-sm-2">
+      <label class="control-lable" for="datePartType">Date Part Type</label>
+    </div>
+  </div>
+  <div class="row p-0 m-0">
+    <div class="col col-sm-2">
+      <app-year-filter-component
+        [(inputSliderValue)]="tariffFilter.year"
+        (inputSliderValueChange)="setYear($event)"
+        id="year" name="year">
+      </app-year-filter-component>
+    </div>
+    <div class="col col-sm-2">
+      <app-time-period-component
+        [(inputSliderValue)]="tariffFilter.periodType"
+        (inputSliderValueChange)="setTimePeriod($event)"
+        id="periodType" name="periodType">
+      </app-time-period-component>
+    </div>
+    <div class="col col-sm-2">
+      <app-date-part-component
+        [(inputSliderValue)]="tariffFilter.datePartType"
+        (inputSliderValueChange)="setDataPartType($event)"
+        id="datePartType" name="datePartType">
+      </app-date-part-component>
+    </div>
+  </div>
+</div>
