@@ -21,34 +21,34 @@ import {BuildingUsageComponent} from './building/enums/building-usage-component'
 import {BuildingAgeComponent} from './building/enums/building-age-component';
 import {EnergyCertificateComponent} from './building/enums/energy-certificate-component';
 
-import {OverallComponent} from './chart/overall/overall.component';
+import {OverallComponent} from './charts/overall/overall.component';
 import {WeatherComponent} from './weather/weather.component';
-import {CostComponent} from './chart/cost/cost.component';
-import {ConsumptionComponent} from './chart/consumption/consumption.component';
-import {PredictionsComponent} from './chart/overall/predictions/predictions.component';
-import {BeScoreComponent} from './chart/overall/be-score/be-score.component';
-import {CostPieChartComponent} from './chart/cost/cost-pie-chart/cost-pie-chart.component';
-import {CostStackChartComponent} from './chart/cost/cost-stack-chart/cost-stack-chart.component';
-import {CarbonFootPrintComponent} from './chart/carbon-foot-print/carbon-foot-print.component';
-import {CarbonSplineChartComponent} from './chart/carbon-foot-print/carbon-spline-chart/carbon-spline-chart.component';
-import {CarbonPieChartComponent} from './chart/carbon-foot-print/carbon-pie-chart/carbon-pie-chart.component';
+import {CostComponent} from './charts/cost/cost.component';
+import {ConsumptionComponent} from './charts/consumption/consumption.component';
+import {PredictionsComponent} from './charts/overall/predictions/predictions.component';
+import {BeScoreComponent} from './charts/overall/be-score/be-score.component';
+import {CostPieChartComponent} from './charts/cost/cost-pie-chart/cost-pie-chart.component';
+import {CostStackChartComponent} from './charts/cost/cost-stack-chart/cost-stack-chart.component';
+import {CarbonFootPrintComponent} from './charts/carbon-foot-print/carbon-foot-print.component';
+import {CarbonSplineChartComponent} from './charts/carbon-foot-print/carbon-spline-chart/carbon-spline-chart.component';
+import {CarbonPieChartComponent} from './charts/carbon-foot-print/carbon-pie-chart/carbon-pie-chart.component';
 // tslint:disable-next-line:max-line-length
-import {ConsumptionDynamicBarChartComponent} from './chart/consumption/consumption-average-tariff-cost/consumption-dynamic-bar-chart/consumption-dynamic-bar-chart.component';
+import {ConsumptionDynamicBarChartComponent} from './charts/consumption/consumption-average-tariff-cost/consumption-dynamic-bar-chart/consumption-dynamic-bar-chart.component';
 // tslint:disable-next-line:max-line-length
-import {AverageTariffFilterComponent} from './chart/consumption/consumption-average-tariff-cost/filter-form/average-tariff-filter-component';
-import {YearFilterComponent} from './chart/consumption/consumption-average-tariff-cost/filter-form/enum-components/year-filter-component';
-import {DatePartComponent} from './chart/consumption/consumption-average-tariff-cost/filter-form/enum-components/date-part-component';
-import {TimePeriodComponent} from './chart/consumption/consumption-average-tariff-cost/filter-form/enum-components/time-period-component';
+import {AverageTariffFilterComponent} from './charts/consumption/consumption-average-tariff-cost/filter-form/average-tariff-filter-component';
+import {YearFilterComponent} from './charts/consumption/consumption-average-tariff-cost/filter-form/enum-components/year-filter-component';
+import {DatePartComponent} from './charts/consumption/consumption-average-tariff-cost/filter-form/enum-components/date-part-component';
+import {TimePeriodComponent} from './charts/consumption/consumption-average-tariff-cost/filter-form/enum-components/time-period-component';
 import {NgSelectModule} from '@ng-select/ng-select';
 // tslint:disable-next-line:max-line-length
-import {ElectricityConsumptionOverTimeComponent} from './chart/consumption/electricity-consumption-over-time/electricity-consumption-over-time.component';
+import {ElectricityConsumptionOverTimeComponent} from './charts/consumption/electricity-consumption-over-time/electricity-consumption-over-time.component';
 // tslint:disable-next-line:max-line-length
-import {NormalizedVsEnergyEfficiencyComponent} from './chart/normalized-consumption/normalized-vs-energy-efficiency/normalized-vs-energy-efficiency.component';
-import {ConsumptionWeatherComponent} from './chart/normalized-consumption/consumption-weather/consumption-weather.component';
+import {NormalizedVsEnergyEfficiencyComponent} from './charts/normalized-consumption/normalized-vs-energy-efficiency/normalized-vs-energy-efficiency.component';
+import {ConsumptionWeatherComponent} from './charts/normalized-consumption/consumption-weather/consumption-weather.component';
 // tslint:disable-next-line:max-line-length
-import {PredictedWeatherVsRealComponent} from './chart/normalized-consumption/predicted-weather-vs-real/predicted-weather-vs-real.component';
-import {NormalizedPerCapitaComponent} from './chart/normalized-consumption/normalized-per-capita/normalized-per-capita.component';
-import {NormalizedConsumptionComponent} from './chart/normalized-consumption/normalized-consumption.component';
+import {PredictedWeatherVsRealComponent} from './charts/normalized-consumption/predicted-weather-vs-real/predicted-weather-vs-real.component';
+import {NormalizedPerCapitaComponent} from './charts/normalized-consumption/normalized-per-capita/normalized-per-capita.component';
+import {NormalizedConsumptionComponent} from './charts/normalized-consumption/normalized-consumption.component';
 
 @NgModule({
   imports: [
