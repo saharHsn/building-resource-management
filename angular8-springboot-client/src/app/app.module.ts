@@ -35,12 +35,12 @@ import {CarbonPieChartComponent} from './chart/carbon-foot-print/carbon-pie-char
 // tslint:disable-next-line:max-line-length
 import {ConsumptionDynamicBarChartComponent} from './chart/consumption/consumption-average-tariff-cost/consumption-dynamic-bar-chart/consumption-dynamic-bar-chart.component';
 // tslint:disable-next-line:max-line-length
-import {AverageTariffFilterComponent} from './chart/consumption/filter-form/average-tariff-filter-component';
-import {YearFilterComponent} from './chart/consumption/filter-form/enum-components/year-filter-component';
-import {DatePartComponent} from './chart/consumption/filter-form/enum-components/date-part-component';
-import {TimePeriodComponent} from './chart/consumption/filter-form/enum-components/time-period-component';
+import {AverageTariffFilterComponent} from './chart/consumption/consumption-average-tariff-cost/filter-form/average-tariff-filter-component';
+import {YearFilterComponent} from './chart/consumption/consumption-average-tariff-cost/filter-form/enum-components/year-filter-component';
+import {DatePartComponent} from './chart/consumption/consumption-average-tariff-cost/filter-form/enum-components/date-part-component';
+import {TimePeriodComponent} from './chart/consumption/consumption-average-tariff-cost/filter-form/enum-components/time-period-component';
 import {NgSelectModule} from '@ng-select/ng-select';
-import {ChartComponent} from './chart/chart.component';
+import {ElectricityConsumptionOverTimeComponent} from './chart/consumption/electricity-consumption-over-time/electricity-consumption-over-time.component';
 
 
 @NgModule({
@@ -83,8 +83,7 @@ import {ChartComponent} from './chart/chart.component';
     YearFilterComponent,
     DatePartComponent,
     TimePeriodComponent,
-    ChartComponent
-  ],
+    ElectricityConsumptionOverTimeComponent],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     // {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true}
