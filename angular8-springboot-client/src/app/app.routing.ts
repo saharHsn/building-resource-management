@@ -14,6 +14,7 @@ import {CarbonFootPrintComponent} from './chart/carbon-foot-print/carbon-foot-pr
 // tslint:disable-next-line:max-line-length
 import {ConsumptionComponent} from './chart/consumption/consumption.component';
 import {WizardFormComponent} from './wizard-form/wizard-form.component';
+import {NormalizedConsumptionComponent} from "./chart/normalized-consumption/normalized-consumption.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent, canActivate: [AuthGuard]},
@@ -29,6 +30,7 @@ const routes: Routes = [
   {path: 'cost-stack', component: CostPieChartComponent},
   {path: 'carbon-footprint', component: CarbonFootPrintComponent},
   {path: 'consumption-component', component: ConsumptionComponent},
+  {path: 'normalized-consumption', component: NormalizedConsumptionComponent},
 
   // otherwise redirect to home
   {path: '**', redirectTo: ''}

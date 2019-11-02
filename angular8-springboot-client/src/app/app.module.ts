@@ -40,8 +40,15 @@ import {YearFilterComponent} from './chart/consumption/consumption-average-tarif
 import {DatePartComponent} from './chart/consumption/consumption-average-tariff-cost/filter-form/enum-components/date-part-component';
 import {TimePeriodComponent} from './chart/consumption/consumption-average-tariff-cost/filter-form/enum-components/time-period-component';
 import {NgSelectModule} from '@ng-select/ng-select';
+// tslint:disable-next-line:max-line-length
 import {ElectricityConsumptionOverTimeComponent} from './chart/consumption/electricity-consumption-over-time/electricity-consumption-over-time.component';
-
+// tslint:disable-next-line:max-line-length
+import {NormalizedVsEnergyEfficiencyComponent} from './chart/normalized-consumption/normalized-vs-energy-efficiency/normalized-vs-energy-efficiency.component';
+import {ConsumptionWeatherComponent} from './chart/normalized-consumption/consumption-weather/consumption-weather.component';
+// tslint:disable-next-line:max-line-length
+import {PredictedWeatherVsRealComponent} from './chart/normalized-consumption/predicted-weather-vs-real/predicted-weather-vs-real.component';
+import {NormalizedPerCapitaComponent} from './chart/normalized-consumption/normalized-per-capita/normalized-per-capita.component';
+import {NormalizedConsumptionComponent} from './chart/normalized-consumption/normalized-consumption.component';
 
 @NgModule({
   imports: [
@@ -83,7 +90,12 @@ import {ElectricityConsumptionOverTimeComponent} from './chart/consumption/elect
     YearFilterComponent,
     DatePartComponent,
     TimePeriodComponent,
-    ElectricityConsumptionOverTimeComponent],
+    ElectricityConsumptionOverTimeComponent,
+    NormalizedPerCapitaComponent,
+    PredictedWeatherVsRealComponent,
+    ConsumptionWeatherComponent,
+    NormalizedVsEnergyEfficiencyComponent,
+    NormalizedConsumptionComponent],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     // {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true}
