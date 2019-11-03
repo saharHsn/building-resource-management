@@ -18,7 +18,7 @@ export class ConsumptionWeatherComponent implements OnInit {
       gridLineColor: '#0066cc'
     },
     title: {
-      text: 'Normalized Consumption Considering Weather Normalization'
+      text: ''
     },
     xAxis: {
       categories: ['Jan-2018',

@@ -17,7 +17,7 @@ export class PredictedWeatherVsRealComponent implements OnInit {
       height: 500
     },
     title: {
-      text: 'Predicted Baseline by Weather vs Real Consumption'
+      text: ''
     },
     xAxis: {
       categories: ['Jan-2019', 'Feb-2019', 'Mar-2019'],

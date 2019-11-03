@@ -18,7 +18,7 @@ export class NormalizedVsEnergyEfficiencyComponent implements OnInit {
       gridLineColor: '#0066cc'
     },
     title: {
-      text: 'Normalized Consumption vs Energy Efficiency Standards\n'
+      text: ''
     },
     xAxis: {
       categories: ['Jan-2018',

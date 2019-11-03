@@ -17,7 +17,7 @@ export class NormalizedPerCapitaComponent implements OnInit {
       height: 500
     },
     title: {
-      text: 'Predicted Baseline by Weather vs Real Consumption'
+      text: ''
     },
     xAxis: {
       categories: ['Jan-2018', 'Feb-2018', 'Mar-2018', 'Apr-2018', 'May-2018', 'Jun-2018',
