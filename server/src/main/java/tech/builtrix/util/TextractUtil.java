@@ -84,10 +84,10 @@ public class TextractUtil {
         return text.toString();
     }
 
-    public static void extractKeyValues(Map<String, Block> blocksMap, Map<String, Block> keysMap, Map<String, Block> valuesMap) {
+    public static String extractKeyValues(Map<String, Block> blocksMap, Map<String, Block> keysMap, Map<String, Block> valuesMap) {
         Map<String, String> kvs = get_kv_relationship(keysMap, valuesMap, blocksMap);
         System.out.println("\n\n== FOUND KEY : VALUE pairs ===\n");
-        print_kvs(kvs);
+        return print_kvs(kvs);
     }
 
     private static Map<String, String> get_kv_relationship(Map<String, Block> key_map,
@@ -149,12 +149,39 @@ public class TextractUtil {
     }
 
 
-    private static void print_kvs(Map<String, String> kvs) {
+    private static String print_kvs(Map<String, String> kvs) {
         String x = "";
         for (String s : kvs.keySet()) {
             x += s + ":" + kvs.get(s) + "\n";
         }
-        System.out.println(x);
+        return x;
+    }
+
+    public static TExtractDto extractData(List<Block> blocks) {
+        Map<String, Block> blocksMap = new HashMap<>();
+        Map<String, Block> keysMap = new HashMap<>();
+        Map<String, Block> valuesMap = new HashMap<>();
+        List<Block> tableBlocks = new ArrayList<>();
+
+        for (Block block : blocks) {
+            blocksMap.put(block.getId(), block);
+            if (block.getBlockType().equals("TABLE")) {
+                tableBlocks.add(block);
+            }
+            if (block.getBlockType().equals("KEY_VALUE_SET")) {
+                if (block.getEntityTypes().contains("KEY")) {
+                    keysMap.put(block.getId(), block);
+                } else {
+                    valuesMap.put(block.getId(), block);
+                }
+            }
+        }
+
+        String keyValueResult = TextractUtil.extractKeyValues(blocksMap, keysMap, valuesMap);
+
+        String tableResult = TextractUtil.extractTables(blocksMap, tableBlocks);
+
+        return new TExtractDto(tableResult, keyValueResult);
     }
 
 }

@@ -43,6 +43,10 @@ public class PdfParser {
     private AmazonSNS sns = null;
     private AmazonTextract textract = null;
 
+    public enum ProcessType {
+        DETECTION, ANALYSIS
+    }
+
     @Value("${amazon.region}")
     private String awsRegion;
 
@@ -55,8 +59,12 @@ public class PdfParser {
         textract = AmazonTextractClientBuilder.defaultClient();
 
         createTopicAndQueue();
-        processDocument(bucket, document, roleArn, DocumentProcessor.ProcessType.ANALYSIS);
+        List<Block> blockList = processDocument(bucket, document, roleArn, ProcessType.ANALYSIS);
+
+        TextractUtil.extractData(blockList);
+
         deleteTopicAndQueue();
+
         logger.info("Done!");
     }
 
@@ -99,7 +107,7 @@ public class PdfParser {
     }
 
     //Starts the processing of the input document.
-    void processDocument(String inBucket, String inDocument, String inRoleArn, DocumentProcessor.ProcessType type) throws Exception {
+    List<Block> processDocument(String inBucket, String inDocument, String inRoleArn, ProcessType type) throws Exception {
         bucket = inBucket;
         document = inDocument;
         roleArn = inRoleArn;
@@ -124,7 +132,7 @@ public class PdfParser {
         List<Message> messages = null;
         int dotLine = 0;
         boolean jobFound = false;
-
+        List<Block> blockList = null;
         //loop until the job status is published. Ignore other messages in queue.
         do {
             messages = sqs.receiveMessage(sqsQueueUrl).getMessages();
@@ -159,7 +167,7 @@ public class PdfParser {
                                     getDocumentTextDetectionResults();
                                     break;
                                 case ANALYSIS:
-                                    getDocumentAnalysisResults();
+                                    blockList = getDocumentAnalysisResults();
                                     break;
                                 default:
                                     logger.info("Invalid processing type. Choose Detection or Analysis");
@@ -183,6 +191,7 @@ public class PdfParser {
         } while (!jobFound);
 
         logger.info("Finished processing document");
+        return blockList;
     }
 
     //Gets the results of processing started by StartDocumentTextDetection
@@ -214,7 +223,7 @@ public class PdfParser {
     }
 
     //Gets the results of processing started by StartDocumentAnalysis
-    private void getDocumentAnalysisResults() throws Exception {
+    private List<Block> getDocumentAnalysisResults() throws Exception {
         int maxResults = 1000;
         String paginationToken = null;
         GetDocumentAnalysisResult response = null;
@@ -223,7 +232,7 @@ public class PdfParser {
         List<Block> blockList = new ArrayList<>();
         //loops until pagination token is null
         String display = "";
-        while (finished == false) {
+        while (finished.equals(false)) {
             GetDocumentAnalysisRequest documentAnalysisRequest = new GetDocumentAnalysisRequest()
                     .withJobId(startJobId)
                     .withMaxResults(maxResults)
@@ -243,37 +252,8 @@ public class PdfParser {
                 finished = true;
             }
         }
-        allBlocks += extractData(blockList);
 
-        logger.info(allBlocks);
-
-    }
-
-    private String extractData(List<Block> blocks) {
-        Map<String, Block> blocksMap = new HashMap<>();
-        Map<String, Block> keysMap = new HashMap<>();
-        Map<String, Block> valuesMap = new HashMap<>();
-        List<Block> tableBlocks = new ArrayList<>();
-        List<Block> keyValueBlocks = new ArrayList<>();
-        for (Block block : blocks) {
-            blocksMap.put(block.getId(), block);
-            if (block.getBlockType().equals("TABLE")) {
-                tableBlocks.add(block);
-            }
-            if (block.getBlockType().equals("KEY_VALUE_SET")) {
-                if (block.getEntityTypes().contains("KEY")) {
-                    keysMap.put(block.getId(), block);
-                } else {
-                    valuesMap.put(block.getId(), block);
-                }
-            }
-        }
-
-        TextractUtil.extractKeyValues(blocksMap, keysMap, valuesMap);
-
-        String csv = TextractUtil.extractTables(blocksMap, tableBlocks);
-
-        return csv;
+        return blockList;
     }
 
     private void startDocumentTextDetection(String bucket, String document) throws Exception {
