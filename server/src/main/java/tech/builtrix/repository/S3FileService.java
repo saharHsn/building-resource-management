@@ -2,10 +2,12 @@ package tech.builtrix.repository;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.Map;
 
 @Component
@@ -31,10 +34,7 @@ public class S3FileService implements FileUploader {
     public String uploadFile(MultipartFile file, Map<String, String> metaData, String bucketName) {
         //AmazonS3 s3 = new AmazonS3Client(new ClasspathPropertiesFileCredentialsProvider());
 
-        AmazonS3 s3 = AmazonS3ClientBuilder.standard()
-                .withRegion(awsRegion)
-                .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(awsAccessKey, awsSecretKey)))
-                .build();
+        AmazonS3 s3 = getAmazonS3();
         if (s3.doesBucketExistV2(bucketName)) {
             logger.info("Bucket name is not available."
                     + " Try again with a different Bucket name.");
@@ -83,5 +83,58 @@ public class S3FileService implements FileUploader {
         }
 
         return result;
+    }
+
+    public void downloadFile(String bucketName, String fileName) throws IOException {
+
+        S3Object fullObject = null, objectPortion = null;
+        try {
+            AmazonS3 s3Client = getAmazonS3();
+
+            // Get an object and print its contents.
+            System.out.println("Downloading an object");
+            fullObject = s3Client.getObject(new GetObjectRequest(bucketName, fileName));
+            System.out.println("Content-Type: " + fullObject.getObjectMetadata().getContentType());
+            System.out.println("Content: ");
+            //displayTextInputStream(fullObject.getObjectContent());
+
+            // Get a range of bytes from an object and print the bytes.
+            GetObjectRequest rangeObjectRequest = new GetObjectRequest(bucketName, fileName)
+                    .withRange(0, 9);
+            objectPortion = s3Client.getObject(rangeObjectRequest);
+            System.out.println("Printing bytes retrieved.");
+            //displayTextInputStream(objectPortion.getObjectContent());
+
+            // Get an entire object, overriding the specified response headers, and print the object's content.
+            /*ResponseHeaderOverrides headerOverrides = new ResponseHeaderOverrides()
+                    .withCacheControl("No-cache")
+                    .withContentDisposition("attachment; filename=example.txt");
+            GetObjectRequest getObjectRequestHeaderOverride = new GetObjectRequest(bucketName, fileName)
+                    .withResponseHeaders(headerOverrides);*/
+            //headerOverrideObject = s3Client.getObject(getObjectRequestHeaderOverride);
+            // displayTextInputStream(headerOverrideObject.getObjectContent());
+        } catch (SdkClientException e) {
+            // The call was transmitted successfully, but Amazon S3 couldn't process
+            // it, so it returned an error response.
+            e.printStackTrace();
+        }// Amazon S3 couldn't be contacted for a response, or the client
+// couldn't parse the response from Amazon S3.
+        finally {
+            // To ensure that the network connection doesn't remain open, close any open input streams.
+            if (fullObject != null) {
+                fullObject.close();
+            }
+            if (objectPortion != null) {
+                objectPortion.close();
+            }
+        }
+    }
+
+    private AmazonS3 getAmazonS3() {
+        return AmazonS3ClientBuilder.standard()
+                .withRegion(awsRegion)
+                .withCredentials(
+                        new AWSStaticCredentialsProvider(new BasicAWSCredentials(awsAccessKey, awsSecretKey)))
+                .build();
     }
 }

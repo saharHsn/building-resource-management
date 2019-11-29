@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <conversionRule conversionWord="jalali"
+                    converterClass="com.farazpardazan.hadaf.application.configurations.PersianDateConverter"/>
+    <property scope="context" name="COLORIZER_COLORS" value="boldblack@boldred,red@,boldcyan@,green@,cyan@"/>
+    <conversionRule conversionWord="colorize" converterClass="org.tuxdude.logback.extensions.LogColorizer"/>
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/current.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                %jalali %4.-4level [%-10.-10X{correlationId:-INTERNAL}%-10X{phoneNo:-NA}] %-40.-40(%logger{0}.%M) :
+                %replace(%m){'[\r\n]',''}%replace(%nopex){'[\r\n]',''}%n
+            </Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/old.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="ERRORFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <file>logs/errors.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                %jalali %-4level [%-10.-10X{correlationId:-INTERNAL}%-10X{phoneNo:-NA}] %-40.-40(%logger{0}.%M) :
+                %replace(%m){'[\r\n]',''}%replace(%nopex){'[\r\n]',''}%n
+            </Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/errors_old.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="RequestLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/requests.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                %jalali - %replace(%m){'[\r\n]',''}%n
+            </Pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/requests.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>7</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %colorize(%jalali %-4level [%-10X{correlationId:-INTERNAL}-%-11X{phoneNo:-NA}] %-40(%logger{0}.%M)
+                %msg%n)
+            </pattern>
+        </encoder>
+    </appender>
+
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="prod,devtest,staging">
+        <root level="INFO">
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERRORFILE"/>
+        </root>
+    </springProfile>
+
+    <logger name="RequestLogger" additivity="false" level="DEBUG">
+        <appender-ref ref="RequestLogger"/>
+    </logger>
+</configuration>
