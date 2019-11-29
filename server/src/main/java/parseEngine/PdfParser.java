@@ -167,7 +167,7 @@ public class PdfParser {
 
                             }
                         } else {
-                            logger.info("Video analysis failed");
+                            logger.error("Analysis failed");
                         }
 
                         sqs.deleteMessage(sqsQueueUrl, message.getReceiptHandle());
