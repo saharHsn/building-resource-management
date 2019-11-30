@@ -1,4 +1,4 @@
-package parseEngine;
+package tech.builtrix.parseEngine;
 
 import com.amazonaws.auth.policy.*;
 import com.amazonaws.auth.policy.actions.SQSActions;
