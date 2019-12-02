@@ -36,7 +36,7 @@ public class FileParserTest {
     }
 
     @Test
-    public void dynamoDBTestCase() {
+    public void fileExtractorTest() {
         try {
             String document = "2018_apr_may.pdf";
             String bucket = "textract-console-us-east-2-64c71e37-898b-403b-80b7-942d95a9cf48";
