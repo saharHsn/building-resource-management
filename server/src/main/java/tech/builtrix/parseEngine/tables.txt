@@ -1,0 +1,46 @@
+Table_1
+TAXA ,VALORIZACAO (s/ %IVA) ,VALORIZACAO (IVA) ,VALORIZACAO (c/ %IVA) ,
+IVA a 6% ,2,85 6 ,0,17 ,3,02 e ,
+IVA a 23% ,3.437,46 6 ,790,62 e ,4.228,08 e ,
+Total a Pagar ,3.440,31 E ,790,79 E ,4.231,10 ,
+########################################################################
+Table_2
+Eletricidade ,,VALORIZACAO ,%IVA ,
+,,(s/ %IVA) ,,
+Energia Ativa ,,2.592,41 E ,23% ,
+Redes ,,825,03 E ,23% ,
+Obrigacies Tributarias (exceto IVA) ,,20,02 E ,23% ,
+Obrigacoes Tributarias (exceto IVA) ,,2,85 E ,6% ,
+Total a Pagar (antes de IVA) ,,2,85 E ,6% ,
+Total a Pagar (antes de IVA) ,,3.437,46 e ,23% ,
+########################################################################
+Table_3
+N9 CONTADOR 95785467 ,PERfoDo (inicio) ,ATIVO (Fim) ,Ativa ,CONSUMO Perdas ,Total ,FATOR MULTIP. ,CONS. REGISTADO (KWh/KVArh/kW) ,
+Elementos Medidos ,,,,,,,,
+Energ. Ativa Super Vazio ,18/04 ,17/05 ,2.354 ,0 ,2.354 ,1,00 ,2.354,00 ,
+Energ Ativa Vazio Normal ,18/04 ,17/05 ,3.936 ,0 ,3.936 ,1,00 ,3.936,00 ,
+Energ Ativa Ponta ,18/04 ,17/05 ,2.985 ,0 ,2.985 ,1,00 ,2.985,00 ,
+########################################################################
+Table_4
+Eletricidade ,Periodo a ,Faturar ,Quantidades ,Preco Unit. ,Ne Dias ,% IVA ,Valorizagao ,
+,Data inicio ,Data fim ,(kWh/kVArh/kW) ,,,,(s/IVA) ,
+Energia Ativa ,,,,,,,2.592,41 E ,
+Super Vazio (SV) ,18/04/2018 ,17/05/2018 ,2.354,0000 ,0,089700 E ,,23% ,211,15 e ,
+Vazio Norma (VN) ,18/04/2018 ,17/05/2018 ,3.936,0000 ,0,093900 e ,,23% ,369,59 e ,
+Ponta (P) ,18/04/2018 ,17/05/2018 ,2.985,0000 ,0,158600 e ,,23% ,473,42 e ,
+Cheia (C) ,18/04/2018 ,17/05/2018 ,10.742,0000 ,0,143200 E ,,23% ,1.538,25 e ,
+Redes ,,,,,,,825,03 E ,
+Potencia Contratada ,18/04/2018 ,17/05/2018 ,98,0000 ,0,043134 E ,30 ,23% ,126,81 e ,
+Potencia Horas de Ponta ,18/04/2018 ,17/05/2018 ,45,2273 ,0,504756 E ,30 ,23% ,684,86 e ,
+Reativa Fornecida no vazio (Vz) ,18/04/2018 ,17/05/2018 ,530,0000 ,0,025200 e ,,23% ,13,36 e ,
+Obrigacoes Tributarias (exceto IVA) ,,,,,,,22,87 E ,
+Imposto sobre Cons. Eletricidade ,18/04/2018 ,17/05/2018 ,20.017,0000 ,0,001000 e ,,23% ,20,02 e ,
+Contribuicao Audio-Visual ,18/04/2018 ,17/05/2018 ,1,0000 ,2,850000 6 ,,6% ,2,85 E ,
+Total (antes de IVA a 6%) ,,,,,,6% ,2,85 E ,
+Total (antes de IVA a 23%) ,,,,,,23% ,3.437,46 E ,
+Total (antes de IVA) ,,,,,,,3.440,31 E ,
+########################################################################
+
+
+
+
