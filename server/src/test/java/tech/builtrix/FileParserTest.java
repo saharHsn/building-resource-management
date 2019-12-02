@@ -8,7 +8,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import tech.builtrix.parseEngine.PdfParser;
 import tech.builtrix.service.bill.BillParser;
+import tech.builtrix.util.TExtractDto;
 
 /**
  * Created By sahar at 12/2/19
@@ -19,6 +21,8 @@ import tech.builtrix.service.bill.BillParser;
 public class FileParserTest {
     @Autowired
     private BillParser billParser;
+    @Autowired
+    private PdfParser pdfParser;
 
     public FileParserTest() {
     }
@@ -37,7 +41,9 @@ public class FileParserTest {
             String document = "2018_apr_may.pdf";
             String bucket = "textract-console-us-east-2-64c71e37-898b-403b-80b7-942d95a9cf48";
 
-            billParser.parseBill(bucket, document);
+            TExtractDto tExtractDto = this.pdfParser.parseFile(bucket, document);
+            System.out.println("key value result : " + tExtractDto.getKeyValueResult());
+            System.out.println("table result : " + tExtractDto.getTablesResult());
         } catch (Exception e) {
             // logger.error();
             System.out.println("Error : " + e.getMessage());
