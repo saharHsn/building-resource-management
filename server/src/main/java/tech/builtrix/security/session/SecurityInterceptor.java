@@ -32,7 +32,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
             // todo wtf is wrong if no controller is assigned to handle this request
             return true;
         }
-        if (!method.getDeclaringClass().getPackage().getName().contains("farazpardazan")) {
+        if (!method.getDeclaringClass().getPackage().getName().contains("builtrix")) {
             return true;
         }
         if (method.isAnnotationPresent(NoSession.class) ||

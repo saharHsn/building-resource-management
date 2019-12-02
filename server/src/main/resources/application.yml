@@ -5,6 +5,7 @@ server:
 
 spring:
   profiles:
+    active: dev
     include:
       - aws
   mvc:
@@ -22,5 +23,5 @@ metrics:
       server:
       userName:
       password:
-      port:
+      port: 9090
       default-account:

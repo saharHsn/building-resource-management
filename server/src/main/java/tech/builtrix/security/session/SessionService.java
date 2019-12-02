@@ -7,7 +7,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 import tech.builtrix.aspect.NoLog;
 import tech.builtrix.base.GenericCrudServiceBase;
 import tech.builtrix.exception.NotFoundException;
@@ -17,7 +16,6 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 @Component
 @ConfigurationProperties("investment.security")
@@ -34,17 +32,17 @@ public class SessionService extends GenericCrudServiceBase<Session, SessionRepos
 
     @Cacheable(cacheNames = "SessionService.getSession", key = "#sessionKey")
     public Session getSession(String sessionKey) throws NotFoundException {
-        Session session = this.repository.getBySessionKey(sessionKey);
+        Session session = this.repository.findBySessionKey(sessionKey);
         if (session == null) {
             throw new NotFoundException("Session", "sessionKey", sessionKey);
         }
         return session;
     }
 
-    @NoLog
+  /*  @NoLog
     public void getSessionIncrementRequestCount(Session session) {
         this.repository.incrementRequests(session.getSessionKey());
-    }
+    }*/
 
     private Session createNewSession(@Nullable User user) {
         Session session = new Session();
@@ -60,18 +58,18 @@ public class SessionService extends GenericCrudServiceBase<Session, SessionRepos
     }
 
 
-    void touchSession(Session session) {
+   /* void touchSession(Session session) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.SECOND, this.exp);
         this.repository.touchSession(session.getId(), calendar.getTime());
-    }
+    }*/
 
     public Session create(@NotNull User user) {
-        Page<Session> sessions = this.repository.findUserSession(user.getId(),
+        Page<Session> sessions = this.repository.findByUser(user.getId(),
                 PageRequest.of(0, 1));
         Session session = processOldSession(sessions);
         if (session != null) return session;
-        this.repository.disableAllOtherSessions(user.getId());
+        // this.repository.disableAllOtherSessions(user.getId());
         return createNewSession(user);
     }
 
@@ -79,7 +77,7 @@ public class SessionService extends GenericCrudServiceBase<Session, SessionRepos
         Session session = sessions.getContent().size() > 0 ?
                 sessions.getContent().get(0) : null;
         if (session != null && session.getExpirationDate().after(new Date())) {
-            touchSession(session);
+            // touchSession(session);
             return session;
         }
         return null;
@@ -104,14 +102,14 @@ public class SessionService extends GenericCrudServiceBase<Session, SessionRepos
     }
 
     public String findUserSession(String deviceId, String userId) {
-        Page<Session> sessions = repository.findUserSession(userId, PageRequest.of(0, 1));
+        Page<Session> sessions = repository.findByUser(userId, PageRequest.of(0, 1));
         Session session = processOldSession(sessions);
         return session.getSessionKey();
 
     }
 
     public Session findUserSessionToken(String sessionId) throws NotFoundException {
-        Page<Session> sessions = repository.findUserSessionToken(sessionId, PageRequest.of(0, 1));
+        Page<Session> sessions = repository.findBySessionKey(sessionId, PageRequest.of(0, 1));
         Session session = processOldSession(sessions);
         if (session == null) {
             throw new NotFoundException("Session", "sessionKey", sessionId);
@@ -123,11 +121,11 @@ public class SessionService extends GenericCrudServiceBase<Session, SessionRepos
         repository.save(session);
     }
 
-    public Session getTestSession(String mobileNumber) {
+    /*public Session getTestSession(String mobileNumber) {
         List<Session> testSession = this.repository.getTestSession(mobileNumber);
         if (!CollectionUtils.isEmpty(testSession)) {
             return testSession.get(0);
         } else
             return null;
-    }
+    }*/
 }

@@ -61,7 +61,9 @@ public class SpringbootAwsDynamoDBTests {
                     new ProvisionedThroughput(10L, 10L));
             table.waitForActive();*/
 
-        createTable("User_Token");
+        //createTable("User_Token");
+        createTable("Bill");
+        createTable("BillParameterInfo");
     }
 
     private void createTable(String tableName) {

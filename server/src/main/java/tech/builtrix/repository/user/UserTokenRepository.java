@@ -20,9 +20,7 @@ public interface UserTokenRepository extends RepositoryBase<UserToken> {
 
     UserToken findByUser(User user);
 
-    Stream<UserToken> findAllByExpiryDateLessThan(Date now);
+    Stream<UserToken> findAllByExpirationTimeLessThan(Date now);
 
-    void deleteByExpiryDateLessThan(Date now);
-
-    void deleteAllExpiredSince(Date now);
+    void deleteByExpirationTimeLessThan(Date now);
 }

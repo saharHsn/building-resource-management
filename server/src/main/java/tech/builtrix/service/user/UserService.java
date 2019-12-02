@@ -2,7 +2,6 @@ package tech.builtrix.service.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import tech.builtrix.base.GenericCrudServiceBase;
@@ -33,7 +32,7 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
     private final ValidationService validationService;
 
     private final UserTokenRepository tokenRepository;
-    private final PasswordEncoder passwordEncoder;
+    //private final PasswordEncoder passwordEncoder;
 
     // API
     public String getUser(final String userToken) {
@@ -45,12 +44,8 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
     }
 
     public void changeUserPassword(final User user, final String password) {
-        user.setPassword(passwordEncoder.encode(password));
+        user.setPassword(HashUtil.sha1(password));
         repository.save(user);
-    }
-
-    public boolean checkIfValidOldPassword(final User user, final String oldPassword) {
-        return passwordEncoder.matches(oldPassword, user.getPassword());
     }
 
     public String generateQRUrl(User user) throws UnsupportedEncodingException {
@@ -95,12 +90,10 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
     public UserService(UserRepository repository,
                        CodeService codeService,
                        ValidationService validationService,
-                       PasswordEncoder passwordEncoder,
                        UserTokenRepository tokenRepository) {
         super(repository);
         this.codeService = codeService;
         this.validationService = validationService;
-        this.passwordEncoder = passwordEncoder;
         this.tokenRepository = tokenRepository;
     }
 

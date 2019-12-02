@@ -44,9 +44,9 @@ public class SessionKeyService {
         return session.getSessionKey();
     }
 
-    Session getTestSession(String mobileNumber) {
+   /* Session getTestSession(String mobileNumber) {
         return this.sessionService.getTestSession(mobileNumber);
-    }
+    }*/
 
 
     void expireToken(String sessionKey) throws NotFoundException {
@@ -57,7 +57,7 @@ public class SessionKeyService {
     public Session getAndValidateSession(String accessToken) throws NotFoundException, SessionDisabledException, SessionExpiredException {
         Session session = this.sessionService.getSession(accessToken);
         this.sessionService.validate(session);
-        this.sessionService.getSessionIncrementRequestCount(session);
+        // this.sessionService.getSessionIncrementRequestCount(session);
         return session;
     }
 }
