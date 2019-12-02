@@ -84,10 +84,11 @@ public class TextractUtil {
         return text.toString();
     }
 
-    public static String extractKeyValues(Map<String, Block> blocksMap, Map<String, Block> keysMap, Map<String, Block> valuesMap) {
+    public static Map<String, String> extractKeyValues(Map<String, Block> blocksMap, Map<String, Block> keysMap, Map<String, Block> valuesMap) {
         Map<String, String> kvs = get_kv_relationship(keysMap, valuesMap, blocksMap);
         System.out.println("\n\n== FOUND KEY : VALUE pairs ===\n");
-        return print_kvs(kvs);
+        //return print_kvs(kvs);
+        return kvs;
     }
 
     private static Map<String, String> get_kv_relationship(Map<String, Block> key_map,
@@ -177,11 +178,11 @@ public class TextractUtil {
             }
         }
 
-        String keyValueResult = TextractUtil.extractKeyValues(blocksMap, keysMap, valuesMap);
+        Map<String, String> keyValues = TextractUtil.extractKeyValues(blocksMap, keysMap, valuesMap);
 
         String tableResult = TextractUtil.extractTables(blocksMap, tableBlocks);
 
-        return new TExtractDto(tableResult, keyValueResult);
+        return new TExtractDto(tableResult, keyValues);
     }
 
 }

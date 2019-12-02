@@ -2,6 +2,7 @@ package tech.builtrix.model.bill;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import tech.builtrix.base.EntityBase;
@@ -14,6 +15,7 @@ import java.util.Date;
 
 @Setter
 @Getter
+@AllArgsConstructor
 @DynamoDBTable(tableName = "BillParameterInfo")
 public class BillParameterInfo extends EntityBase<BillParameterInfo> {
     @DynamoDBAttribute

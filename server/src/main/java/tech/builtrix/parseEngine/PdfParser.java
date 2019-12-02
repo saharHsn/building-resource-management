@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import tech.builtrix.util.TExtractDto;
 import tech.builtrix.util.TextractUtil;
 
 import java.util.*;
@@ -53,7 +54,7 @@ public class PdfParser {
     @Value("${amazon.roleArn}")
     private String roleArn;
 
-    private void parseFile(String bucket, String document) throws Exception {
+    public TExtractDto parseFile(String bucket, String document) throws Exception {
         sns = AmazonSNSClientBuilder.defaultClient();
         sqs = AmazonSQSClientBuilder.defaultClient();
         textract = AmazonTextractClientBuilder.defaultClient();
@@ -61,11 +62,12 @@ public class PdfParser {
         createTopicAndQueue();
         List<Block> blockList = processDocument(bucket, document, roleArn, ProcessType.ANALYSIS);
 
-        TextractUtil.extractData(blockList);
+        TExtractDto tExtractDto = TextractUtil.extractData(blockList);
 
         deleteTopicAndQueue();
 
         logger.info("Done!");
+        return tExtractDto;
     }
 
     // Creates an SNS topic and SQS queue. The queue is subscribed to the topic.
