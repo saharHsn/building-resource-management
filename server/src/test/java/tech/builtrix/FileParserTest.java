@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import tech.builtrix.parseEngine.PdfParser;
 import tech.builtrix.service.bill.BillParser;
-import tech.builtrix.util.TExtractDto;
 
 /**
  * Created By sahar at 12/2/19
@@ -40,10 +39,10 @@ public class FileParserTest {
         try {
             String document = "2018_apr_may.pdf";
             String bucket = "textract-console-us-east-2-64c71e37-898b-403b-80b7-942d95a9cf48";
-
-            TExtractDto tExtractDto = this.pdfParser.parseFile(bucket, document);
+            this.billParser.parseBill(bucket, document);
+            /*TExtractDto tExtractDto = this.pdfParser.parseFile(bucket, document);
             System.out.println("key value result : " + tExtractDto.getKeyValueResult());
-            System.out.println("table result : " + tExtractDto.getTablesResult());
+            System.out.println("table result : " + tExtractDto.getTablesResult());*/
         } catch (Exception e) {
             // logger.error();
             System.out.println("Error : " + e.getMessage());

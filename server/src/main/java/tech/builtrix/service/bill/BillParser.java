@@ -6,9 +6,13 @@ import tech.builtrix.dto.BillDto;
 import tech.builtrix.dto.BillParameterDto;
 import tech.builtrix.exception.BillParseException;
 import tech.builtrix.parseEngine.PdfParser;
+import tech.builtrix.util.DateUtil;
+import tech.builtrix.util.MyTable;
 import tech.builtrix.util.TExtractDto;
 
+import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,12 +23,23 @@ import java.util.Map;
 @Slf4j
 public class BillParser {
     private final PdfParser pdfParser;
+    private static String SUPER_VAZIO = "Super Vazio (SV) ";
+    private static String VAZIO_NORMAL = "Vazio Norma (VN) ";
+    private static String CHEIA = "Cheia (C) ";
+    private static String PONTA = "Ponta (P) ";
+    private static String POTENCIA_HORAS_DE_PONTA_ = "Potencia Horas de Ponta ";
+    private static String POTENCIA_CONTRATADA_ = "Potencia Contratada ";
+    private static String REATIVA_FORNECIDA_NO_VAZIO = "Reativa Fornecida no vazio (Vz) ";
+    private String PERIODO_DE_FATURACAO_ = "PERIODO DE FATURACAO ";
+    private String TOTAL_A_PAGAR = "Total a pagar: (ELETRICIDADE) ";
+    private String ENERGIA_ATIVA_ = "Energia Ativa ";
+    private String REDES_ = "Redes ";
 
     public BillParser(PdfParser pdfParser) {
         this.pdfParser = pdfParser;
     }
 
-    public BillDto parseBill(String bucketName, String fileName) throws BillParseException {
+    public BillDto parseBill(String bucketName, String fileName) throws BillParseException, ParseException {
         TExtractDto tExtractDto;
         try {
             tExtractDto = this.pdfParser.parseFile(bucketName, fileName);
@@ -33,115 +48,38 @@ public class BillParser {
             throw new BillParseException();
         }
         Map<String, String> keyValueResult = tExtractDto.getKeyValueResult();
-        String tablesResult = tExtractDto.getTablesResult();
+        List<MyTable> tablesResult = tExtractDto.getTablesResult();
+        MyTable table = tablesResult.get(3);
+        Map<String, List<String>> column_value = table.getColumn_value();
+        String billPeriod = keyValueResult.get(PERIODO_DE_FATURACAO_);
+        String[] periods = billPeriod.trim().split("a");
+        Date fromDate = DateUtil.getDateFromStr(periods[0], "dd/MM/yyyy");// 18/04/2018 a 17/05/2018
+        Date toDate = DateUtil.getDateFromStr(periods[1], "dd/MM/yyyy");
+
+        String totalPayableStr = keyValueResult.get(TOTAL_A_PAGAR);//4.231,10 E
+        Float totalPayable = getAmount(totalPayableStr);
+
+        String energia_ativa_ = column_value.get(this.ENERGIA_ATIVA_).get(6);
+        Float activeEnergyCost = getAmount(energia_ativa_);
+        String redes_ = column_value.get(this.REDES_).get(6);
+        Float powerDemandCost = getAmount(redes_);
+
+        //?????
         String address = "";
-        Date fromDate = null;
-        Date toDate = null;
-        Float totalPayable = null;
-        Float activeEnergyCost = null;
+        //??????
+        //Emissão de CO2 associada aos consumos de energia desta Fatura: 8.183,95 Kg
         Float producedCo2 = null;
-        Float powerDemandCost = null;
+        //??
+        //Consumo médio dos últimos 12 meses: 767,90 kWh
         Float averageDailyConsumption = null;
-        Date aEOffInitialDate = null;
-        Date aEOffEndDate = null;
-        Float aEOffCost = null;
-        Float aEOffConsumption = null;
-        Float aEOffTariffPrice = null;
-        Float aEOffTotalTariffCost = null;
-        BillParameterDto activeEnergyOffHours = new BillParameterDto(aEOffInitialDate,
-                aEOffEndDate,
-                aEOffCost,
-                aEOffConsumption,
-                aEOffTariffPrice,
-                aEOffTotalTariffCost);
 
-        Date aEFreeInitialDate = null;
-        Date aEFreeEndDate = null;
-        Float aEFreeCost = null;
-        Float aEFreeConsumption = null;
-        Float aEFreeTariffPrice = null;
-        Float aEFreeTotalTariffCost = null;
-        BillParameterDto activeEnergyFreeHours = new BillParameterDto(aEFreeInitialDate,
-                aEFreeEndDate,
-                aEFreeCost,
-                aEFreeConsumption,
-                aEFreeTariffPrice,
-                aEFreeTotalTariffCost
-        );
-
-        Date aENormalInitialDate = null;
-        Date aENormalEndDate = null;
-        Float aENormalCost = null;
-        Float aENormalConsumption = null;
-        Float aENormalTariffPrice = null;
-        Float aENormalTotalTariffCost = null;
-        BillParameterDto activeEnergyNormalHours = new BillParameterDto(
-                aENormalInitialDate,
-                aENormalEndDate,
-                aENormalCost,
-                aENormalConsumption,
-                aENormalTariffPrice,
-                aENormalTotalTariffCost
-        );
-
-        Date aEPeakInitialDate = null;
-        Date aEPeakEndDate = null;
-        Float aEPeakCost = null;
-        Float aEPeakConsumption = null;
-        Float aEPeakTariffPrice = null;
-        Float aEPeakTotalTariffCost = null;
-        BillParameterDto activeEnergyPeakHours = new BillParameterDto(
-                aEPeakInitialDate,
-                aEPeakEndDate,
-                aEPeakCost,
-                aEPeakConsumption,
-                aEPeakTariffPrice,
-                aEPeakTotalTariffCost);
-
-        Date rdPeakInitialDate = null;
-        Date rdPeakEndDate = null;
-        Float rdPeakCost = null;
-        Float rdPeakConsumption = null;
-        Float rdPeakTariffPrice = null;
-        Float rdPeakTotalTariffCost = null;
-        BillParameterDto redesPeakHours = new BillParameterDto(
-                rdPeakInitialDate,
-                rdPeakEndDate,
-                rdPeakCost,
-                rdPeakConsumption,
-                rdPeakTariffPrice,
-                rdPeakTotalTariffCost
-        );
-
-        Date rdCPInitialDate = null;
-        Date rdCPEndDate = null;
-        Float rdCPCost = null;
-        Float rdCPConsumption = null;
-        Float rdCPTariffPrice = null;
-        Float rdCPTotalTariffCost = null;
-        BillParameterDto redesContractedPower = new BillParameterDto(
-                rdCPInitialDate,
-                rdCPEndDate,
-                rdCPCost,
-                rdCPConsumption,
-                rdCPTariffPrice,
-                rdCPTotalTariffCost
-        );
-
-        Date rdRPInitialDate = null;
-        Date rdRPEndDate = null;
-        Float rdRPCost = null;
-        Float rdRPConsumption = null;
-        Float rdRPTariffPrice = null;
-        Float rdRPTotalTariffCost = null;
-        BillParameterDto redesReactivePower = new BillParameterDto(
-                rdRPInitialDate,
-                rdRPEndDate,
-                rdRPCost,
-                rdRPConsumption,
-                rdRPTariffPrice,
-                rdRPTotalTariffCost
-        );
+        BillParameterDto aEOffHours = getBillParameter(column_value, SUPER_VAZIO);
+        BillParameterDto aEFreeHours = getBillParameter(column_value, VAZIO_NORMAL);
+        BillParameterDto aENormalHours = getBillParameter(column_value, CHEIA);
+        BillParameterDto aEPeakHours = getBillParameter(column_value, PONTA);
+        BillParameterDto rDPeakHours = getBillParameter(column_value, POTENCIA_HORAS_DE_PONTA_);
+        BillParameterDto rDContractedPower = getBillParameter(column_value, POTENCIA_CONTRATADA_);
+        BillParameterDto rDReactivePower = getBillParameter(column_value, REATIVA_FORNECIDA_NO_VAZIO);
         BillDto bill = new BillDto(
                 address,
                 fromDate,
@@ -151,14 +89,45 @@ public class BillParser {
                 producedCo2,
                 powerDemandCost,
                 averageDailyConsumption,
-                activeEnergyOffHours,
-                activeEnergyFreeHours,
-                activeEnergyNormalHours,
-                activeEnergyPeakHours,
-                redesPeakHours,
-                redesContractedPower,
-                redesReactivePower
+                aEOffHours,
+                aEFreeHours,
+                aENormalHours,
+                aEPeakHours,
+                rDPeakHours,
+                rDContractedPower,
+                rDReactivePower
         );
         return bill;
+    }
+
+    private Float getAmount(String e) {
+        return Float.valueOf(e.replaceAll(",", "")
+                .replaceAll("E", "")
+                .replaceAll("%", ""));
+    }
+
+    private BillParameterDto getBillParameter(Map<String, List<String>> column_value, String paramName) throws ParseException {
+        String initialDateStr = column_value.get(paramName).get(0);//18/04/2018
+        String endDateStr = column_value.get(paramName).get(1);//17/05/2018
+        String costStr = column_value.get(paramName).get(2);//2.354,0000
+        String consumptionStr = column_value.get(paramName).get(3);//0,089700 E
+        String tariffPriceStr = column_value.get(paramName).get(4);
+        String totalTariffCostStr = column_value.get(paramName).get(5);//23%
+        BillParameterDto parameterDto = new BillParameterDto();
+        parameterDto.setConsumption(getAmount(consumptionStr));
+        parameterDto.setCost(getAmount(costStr));
+        parameterDto.setInitialDate(DateUtil.getDateFromStr(initialDateStr, "dd/MM/yyyy"));
+        parameterDto.setEndDate(DateUtil.getDateFromStr(endDateStr, "dd/MM/yyyy"));
+        parameterDto.setTariffPrice(getAmount(tariffPriceStr));
+        parameterDto.setTotalTariffCost(getAmount(totalTariffCostStr));
+        return parameterDto;
+    }
+
+    public static void main(String[] args) {
+        String period = " 18/04/2018 a 17/05/2018";
+        String[] as = period.trim().split("a");
+        for (String a : as) {
+            System.out.println(a);
+        }
     }
 }

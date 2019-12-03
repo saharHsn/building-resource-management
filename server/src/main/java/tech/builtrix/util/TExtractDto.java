@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,10 +18,10 @@ import java.util.Map;
 @Getter
 @Setter
 public class TExtractDto {
-    String tablesResult;
+    List<MyTable> tablesResult;
     Map<String, String> keyValueResult;
 
-    public TExtractDto(String tableResult, Map<String, String> keyValueResult) {
+    public TExtractDto(List<MyTable> tableResult, Map<String, String> keyValueResult) {
         this.tablesResult = tableResult;
         this.keyValueResult = keyValueResult;
     }

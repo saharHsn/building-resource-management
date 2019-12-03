@@ -27,20 +27,21 @@ public class Bill extends EntityBase<Bill> {
     private Date toDate;
     //totalPayable Amount;
     @DynamoDBAttribute
-    private float totalPayable;
+    private Float totalPayable;
     @DynamoDBAttribute
-    private float activeEnergyCost;
+    private Float activeEnergyCost;
     @DynamoDBAttribute
-    private float producedCO2;
+    private Float producedCO2;
     //Redes
     @DynamoDBAttribute
-    private float powerDemandCost;
+    private Float powerDemandCost;
     //Average daily consumption of entity in last 12 months
     @DynamoDBAttribute
-    private float averageDailyConsumption;
+    private Float averageDailyConsumption;
 
     //BillParameterInfo
-
+    @DynamoDBAttribute
+    private Float activePower;
     //active power (Energia Ativa) AE --> Energia Ativa
     //Super Vasio
     @DynamoDBAttribute(attributeName = "aEOffHours")

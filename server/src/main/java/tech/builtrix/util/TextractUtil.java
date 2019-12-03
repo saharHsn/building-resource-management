@@ -13,14 +13,16 @@ import java.util.Map;
  * Created By sahar at 11/29/19
  */
 public class TextractUtil {
-    public static String extractTables(Map<String, Block> blocksMap, List<Block> tableBlocks) {
-        String csv = "";
+    public static List<MyTable> extractTables(Map<String, Block> blocksMap, List<Block> tableBlocks) {
+        //String csv = "";
+        List<MyTable> tables = new ArrayList<>();
         for (Block tableBlock : tableBlocks) {
             //getRowsColumnsMap(blocksMap, tableBlock);
-            csv += generateTableCsv(tableBlock, blocksMap, tableBlocks.indexOf(tableBlock) + 1);
-            csv += "\n\n";
+            //csv += generateTableCsv(tableBlock, blocksMap, tableBlocks.indexOf(tableBlock) + 1);
+            //csv += "\n\n";
+            tables.add(generateTable(tableBlock, blocksMap));
         }
-        return csv;
+        return tables;
     }
 
     private static String generateTableCsv(Block tableBlock, Map<String, Block> blocksMap, int index) {
@@ -31,11 +33,23 @@ public class TextractUtil {
             for (String rowText : rowsColumnsMap.get(rowIndex)) {
                 csv += rowText + ",";
             }
-            csv += "\n";
         }
         csv += "\n\n\n";
-
         return csv;
+    }
+
+    private static MyTable generateTable(Block tableBlock, Map<String, Block> blocksMap) {
+        MyTable table = new MyTable();
+        Map<Integer, List<String>> rowsColumnsMap = getRowsColumnsMap(blocksMap, tableBlock);
+        List<String> rowHeaders = rowsColumnsMap.get(1);
+        Map<String, List<String>> column_value = new HashMap<>();
+        for (Integer rowIndex : rowsColumnsMap.keySet()) {
+            List<String> columnValues = rowsColumnsMap.get(rowIndex);
+            column_value.put(columnValues.get(0), columnValues.subList(1, columnValues.size()));
+        }
+        table.setColumn_value(column_value);
+        table.setRowHeaders(rowHeaders);
+        return table;
     }
 
     private static Map<Integer, List<String>> getRowsColumnsMap(Map<String, Block> blocksMap, Block tableBlock) {
@@ -179,8 +193,7 @@ public class TextractUtil {
         }
 
         Map<String, String> keyValues = TextractUtil.extractKeyValues(blocksMap, keysMap, valuesMap);
-
-        String tableResult = TextractUtil.extractTables(blocksMap, tableBlocks);
+        List<MyTable> tableResult = TextractUtil.extractTables(blocksMap, tableBlocks);
 
         return new TExtractDto(tableResult, keyValues);
     }
