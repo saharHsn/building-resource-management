@@ -19,11 +19,11 @@ public class BillDto {
     private String address;
     private Date fromDate;
     private Date toDate;
-    private float totalPayable;
-    private float activeEnergyCost;
-    private float producedCO2;
-    private float powerDemandCost;
-    private float averageDailyConsumption;
+    private Float totalPayable;
+    private Float activeEnergyCost;
+    private Float producedCO2;
+    private Float powerDemandCost;
+    private Float averageDailyConsumption;
     private BillParameterDto aEOffHours;
     private BillParameterDto aEFreeHours;
     private BillParameterDto aENormalHours;

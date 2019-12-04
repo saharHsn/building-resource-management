@@ -1,7 +1,9 @@
 package tech.builtrix.service.bill;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import tech.builtrix.dto.BillDto;
 import tech.builtrix.dto.BillParameterDto;
 import tech.builtrix.exception.BillParseException;
@@ -34,9 +36,12 @@ public class BillParser {
     private String TOTAL_A_PAGAR = "Total a pagar: (ELETRICIDADE) ";
     private String ENERGIA_ATIVA_ = "Energia Ativa ";
     private String REDES_ = "Redes ";
+    private final BillService billService;
 
-    public BillParser(PdfParser pdfParser) {
+    @Autowired
+    public BillParser(PdfParser pdfParser, BillService billService) {
         this.pdfParser = pdfParser;
+        this.billService = billService;
     }
 
     public BillDto parseBill(String bucketName, String fileName) throws BillParseException, ParseException {
@@ -97,29 +102,45 @@ public class BillParser {
                 rDContractedPower,
                 rDReactivePower
         );
+        this.billService.save(bill);
         return bill;
     }
 
     private Float getAmount(String e) {
-        return Float.valueOf(e.replaceAll(",", "")
+        return Float.valueOf(e.replaceAll("\\.", "")
+                .replaceAll(",", ".")
                 .replaceAll("E", "")
+                .replaceAll("e", "")
                 .replaceAll("%", ""));
     }
 
     private BillParameterDto getBillParameter(Map<String, List<String>> column_value, String paramName) throws ParseException {
-        String initialDateStr = column_value.get(paramName).get(0);//18/04/2018
-        String endDateStr = column_value.get(paramName).get(1);//17/05/2018
-        String costStr = column_value.get(paramName).get(2);//2.354,0000
-        String consumptionStr = column_value.get(paramName).get(3);//0,089700 E
-        String tariffPriceStr = column_value.get(paramName).get(4);
-        String totalTariffCostStr = column_value.get(paramName).get(5);//23%
+        List<String> paramValues = column_value.get(paramName);
+        String initialDateStr = paramValues.get(0);//18/04/2018
+        String endDateStr = paramValues.get(1);//17/05/2018
+        //String costStr = column_value.get(paramName).get(2);//2.354,0000
+        String consumptionStr = paramValues.get(2);//0,089700 E
+        String tariffPriceStr = paramValues.get(3);
+        String totalTariffCostStr = paramValues.get(6);
         BillParameterDto parameterDto = new BillParameterDto();
-        parameterDto.setConsumption(getAmount(consumptionStr));
-        parameterDto.setCost(getAmount(costStr));
-        parameterDto.setInitialDate(DateUtil.getDateFromStr(initialDateStr, "dd/MM/yyyy"));
-        parameterDto.setEndDate(DateUtil.getDateFromStr(endDateStr, "dd/MM/yyyy"));
-        parameterDto.setTariffPrice(getAmount(tariffPriceStr));
-        parameterDto.setTotalTariffCost(getAmount(totalTariffCostStr));
+        if (!StringUtils.isEmpty(consumptionStr)) {
+            parameterDto.setConsumption(getAmount(consumptionStr));
+        }
+        /*if (!StringUtils.isEmpty(costStr)) {
+            parameterDto.setCost(getAmount(costStr));
+        }*/
+        if (!StringUtils.isEmpty(initialDateStr)) {
+            parameterDto.setInitialDate(DateUtil.getDateFromStr(initialDateStr, "dd/MM/yyyy"));
+        }
+        if (!StringUtils.isEmpty(endDateStr)) {
+            parameterDto.setEndDate(DateUtil.getDateFromStr(endDateStr, "dd/MM/yyyy"));
+        }
+        if (!StringUtils.isEmpty(tariffPriceStr)) {
+            parameterDto.setTariffPrice(getAmount(tariffPriceStr));
+        }
+        if (!StringUtils.isEmpty(totalTariffCostStr)) {
+            parameterDto.setTotalTariffCost(getAmount(totalTariffCostStr));
+        }
         return parameterDto;
     }
 

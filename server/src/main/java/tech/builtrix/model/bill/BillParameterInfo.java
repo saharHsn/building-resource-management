@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import tech.builtrix.base.EntityBase;
+import tech.builtrix.dto.BillParameterDto;
 
 import java.util.Date;
 
@@ -18,18 +19,28 @@ import java.util.Date;
 @AllArgsConstructor
 @DynamoDBTable(tableName = "BillParameterInfo")
 public class BillParameterInfo extends EntityBase<BillParameterInfo> {
+    /*5 columns (initial date, end date, consumption, tariff price, total cost of each tariff);*/
     @DynamoDBAttribute
     private Date initialDate;
     @DynamoDBAttribute
     private Date endDate;
     @DynamoDBAttribute
-    private Float cost;
-    @DynamoDBAttribute
     private Float consumption;
+    @DynamoDBAttribute
+    private Float cost;
     @DynamoDBAttribute
     private Float tariffPrice;
     @DynamoDBAttribute
     private Float totalTariffCost;
+
+    public BillParameterInfo(BillParameterDto billParameterDto) {
+        this.initialDate = billParameterDto.getInitialDate();
+        this.endDate = billParameterDto.getEndDate();
+        this.cost = billParameterDto.getCost();
+        this.consumption = billParameterDto.getConsumption();
+        this.tariffPrice = billParameterDto.getTariffPrice();
+        this.totalTariffCost = billParameterDto.getTotalTariffCost();
+    }
 
     /*initial date, end date, consumption, tariff price, total cost of each tariff*/
 

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import tech.builtrix.base.EntityBase;
+import tech.builtrix.dto.BillDto;
 
 import java.util.Date;
 
@@ -68,4 +69,22 @@ public class Bill extends EntityBase<Bill> {
     @DynamoDBAttribute(attributeName = "rDReactivePower")
     private String rDReactivePower;
 
+    public Bill(BillDto billDto) {
+        this.address = billDto.getAddress();
+        this.fromDate = billDto.getFromDate();
+        this.toDate = billDto.getToDate();
+        this.totalPayable = billDto.getTotalPayable();
+        this.activeEnergyCost = billDto.getActiveEnergyCost();
+        this.producedCO2 = billDto.getProducedCO2();
+        this.powerDemandCost = billDto.getPowerDemandCost();
+        this.averageDailyConsumption = billDto.getAverageDailyConsumption();
+       /* // this.activePower = billDto.getActivePower();
+        this.aEFreeHours= billDto.getAEFreeHours().getParamId();
+        this.aEOffHours = billDto.getAEOffHours().getParamId();
+        this.aENormalHours = billDto.getAENormalHours().getParamId();
+        this.aEPeakHours = billDto.getAEPeakHours().getParamId();
+        this.rDPeakHours= billDto.getRDPeakHours().getParamId();
+        this.rDContractedPower = billDto.getRDContractedPower().getParamId();
+        this.rDReactivePower = billDto.getRDReactivePower().getParamId();*/
+    }
 }

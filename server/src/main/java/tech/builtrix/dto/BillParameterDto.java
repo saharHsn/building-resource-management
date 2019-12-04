@@ -16,6 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BillParameterDto {
+    String paramId;
     private Date initialDate;
     private Date endDate;
     private Float cost;
