@@ -40,7 +40,7 @@ export class CostStackChartComponent implements OnInit {
             },
             xAxis: {
               // TODO check errors
-              categories: data.content.xValues
+              categories: data.content.xValues,
               // categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
             },
             yAxis: {
