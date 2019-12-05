@@ -45,7 +45,7 @@ public class ReportController extends ControllerBase {
         return Response.ok(savingDto);
     }
 
-    @ApiOperation(value = "Request for getting be socre")
+    @ApiOperation(value = "Request for getting be score")
     @GetMapping(value = "/beScore/{buildingId}")
     @NoSession
     public Response<Float> getBEScore(@PathVariable("buildingId") String buildingId) {
@@ -53,7 +53,7 @@ public class ReportController extends ControllerBase {
         return Response.ok(beScore);
     }
 
-    @ApiOperation(value = "Request for getting be socre")
+    @ApiOperation(value = "Request for ")
     @GetMapping(value = "/costStack/{buildingId}")
     @NoSession
     public Response<CostStackDto> getCostStackData(@PathVariable("buildingId") String buildingId) {
@@ -61,11 +61,19 @@ public class ReportController extends ControllerBase {
         return Response.ok(costStackData);
     }
 
-    @ApiOperation(value = "Request for getting be socre")
+    @ApiOperation(value = "Request for ")
     @GetMapping(value = "/costPie/{buildingId}")
     @NoSession
     public Response<CostPieDto> getCostPieData(@PathVariable("buildingId") String buildingId) {
         CostPieDto costPieDto = this.reportService.getCostPieData(buildingId);
         return Response.ok(costPieDto);
+    }
+
+    @ApiOperation(value = "Request for ")
+    @GetMapping(value = "/consumption/{buildingId}")
+    @NoSession
+    public Response<ConsumptionDto> getConsumption(@PathVariable("buildingId") String buildingId) {
+        ConsumptionDto consumption = this.reportService.getConsumption(buildingId);
+        return Response.ok(consumption);
     }
 }
