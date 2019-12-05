@@ -1,4 +1,8 @@
-<highcharts-chart
-  [Highcharts]="highcharts"
-  [options]="chartOptions">
-</highcharts-chart>
+<div class="row">
+  <div class="col-md-12" *ngIf="!loading && chartOptions">
+    <highcharts-chart
+      [Highcharts]="highcharts"
+      [options]="chartOptions">
+    </highcharts-chart>
+  </div>
+</div>

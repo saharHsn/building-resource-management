@@ -52,4 +52,20 @@ public class ReportController extends ControllerBase {
         Float beScore = this.reportService.getBEScore(buildingId);
         return Response.ok(beScore);
     }
+
+    @ApiOperation(value = "Request for getting be socre")
+    @GetMapping(value = "/costStack/{buildingId}")
+    @NoSession
+    public Response<CostStackDto> getCostStackData(@PathVariable("buildingId") String buildingId) {
+        CostStackDto costStackData = this.reportService.getCostStackData(buildingId);
+        return Response.ok(costStackData);
+    }
+
+    @ApiOperation(value = "Request for getting be socre")
+    @GetMapping(value = "/costPie/{buildingId}")
+    @NoSession
+    public Response<CostPieDto> getCostPieData(@PathVariable("buildingId") String buildingId) {
+        CostPieDto costPieDto = this.reportService.getCostPieData(buildingId);
+        return Response.ok(costPieDto);
+    }
 }

@@ -14,6 +14,8 @@ export class ChartService {
   private readonly predictUrl;
   private readonly savingUrl;
   private readonly beScoreUrl;
+  private readonly costStackUrl;
+  private readonly costPieUrl;
 
   constructor(private http: HttpClient) {
     this.environmentName = environment.environmentName;
@@ -22,6 +24,8 @@ export class ChartService {
     this.predictUrl = this.baseUrl + '/prediction';
     this.savingUrl = this.baseUrl + '/saving';
     this.beScoreUrl = this.baseUrl + '/beScore';
+    this.costStackUrl = this.baseUrl + '/costStack';
+    this.costPieUrl = this.baseUrl + '/costPie';
   }
 
   predict(building: Building): Observable<any> {
@@ -34,5 +38,13 @@ export class ChartService {
 
   getBEScore(buildingId: any): Observable<any> {
     return this.http.get(`${this.beScoreUrl}/${33333333}`);
+  }
+
+  costStackData(buildingId: string): Observable<any> {
+    return this.http.get(`${this.costStackUrl}/${33333333}`);
+  }
+
+  costPieData(buildingId: string): Observable<any> {
+    return this.http.get(`${this.costPieUrl}/${33333333}`);
   }
 }

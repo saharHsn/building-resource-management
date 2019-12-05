@@ -19,7 +19,6 @@ export class OverallComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.id = this.route.snapshot.params.id;
     this.saving = new Saving();
     this.chartService.savingThisMonth(this.buildingId)
