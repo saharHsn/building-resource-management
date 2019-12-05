@@ -4,6 +4,8 @@ import * as more from 'highcharts-more/more';
 import * as HighchartsSolidGauge from 'highcharts/modules/solid-gauge';
 import * as Highcharts from 'highcharts/highcharts';
 import * as HighchartsMore from 'highcharts/highcharts-more';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ChartService} from '../../chartService';
 
 // Now init modules:
 // @ts-ignore
@@ -22,15 +24,24 @@ export class BeScoreComponent implements OnInit, OnDestroy {
   // private updataDataEndRef: Subscription = null;
   public messageCount: number;
   public chart: any;
+  private beScore: number;
+  private buildingId: string;
 
   // @Input() usageService: UsageService;
 
-  constructor() {
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private chartService: ChartService) {
     this.messageCount = 0;
   }
 
   ngOnInit(): void {
-    this.initChart(this.buildGauge());
+    this.chartService.getBEScore(this.buildingId)
+      .subscribe(data => {
+        console.log(data);
+        this.beScore = data.content;
+        this.initChart(this.buildGauge());
+      }, error => console.log(error));
   }
 
   ngOnDestroy() {
@@ -142,7 +153,7 @@ export class BeScoreComponent implements OnInit, OnDestroy {
       },
       series: [{
         name: 'Speed',
-        data: [80],
+        data: [this.beScore],
         tooltip: {
           valueSuffix: ' km/h'
         }

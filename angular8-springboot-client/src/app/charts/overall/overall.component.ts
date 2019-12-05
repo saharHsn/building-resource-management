@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+import {ChartService} from '../chartService';
+import {Saving} from './Saving';
 
 @Component({
   templateUrl: './overall.component.html',
@@ -8,19 +10,25 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class OverallComponent implements OnInit {
 
   id: number;
+  buildingId: string;
+  saving: Saving;
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private chartService: ChartService) {
   }
 
   ngOnInit() {
 
     this.id = this.route.snapshot.params.id;
-
-    /*this.userService.getUser(this.id)
+    this.saving = new Saving();
+    this.chartService.savingThisMonth(this.buildingId)
       .subscribe(data => {
-        console.log(data)
-        this.user = data;
-      }, error => console.log(error));*/
+        console.log(data);
+        this.saving.consumption = data.content.consumption;
+        this.saving.cost = data.content.cost;
+        this.saving.environmental = data.content.environmental;
+      }, error => console.log(error));
   }
 
   list() {

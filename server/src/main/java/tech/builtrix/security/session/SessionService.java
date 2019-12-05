@@ -18,7 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Component
-@ConfigurationProperties("investment.security")
+@ConfigurationProperties("builtrix.security")
 public class SessionService extends GenericCrudServiceBase<Session, SessionRepository> {
 
     @Setter

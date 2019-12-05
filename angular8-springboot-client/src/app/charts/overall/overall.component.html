@@ -1,5 +1,5 @@
 <div class="container justify-content-md-center">
-  <div class="row" style="height: 500px;">
+  <div class="row" style="height: 500px;" *ngIf="saving">
     <div class="col my-auto">
       <app-predictions></app-predictions>
     </div>
@@ -11,13 +11,13 @@
       </div>
       <div class="border border-info">
         <div class="text-center">
-          Consumption (kWh): 1263
+          Consumption (kWh): {{saving.consumption}}
         </div>
         <div class="text-center">
-          <br>Cost (€): 180
+          <br>Cost (€): {{saving.cost}}
         </div>
         <div class="text-center">
-          <br>Environmental (kg CO2): 515
+          <br>Environmental (kg CO2): {{saving.environmental}}
           <br>
         </div>
       </div>

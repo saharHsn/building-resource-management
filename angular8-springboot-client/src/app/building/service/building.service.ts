@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {Building} from "../model/building";
+import {Building} from '../model/building';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +17,8 @@ export class BuildingService {
     return this.http.get(`${this.baseUrl}/${id}`);
   }
 
-  createBuilding(building: Building): Observable<Object> {
-    let formData: FormData  = this.createFormData(building, null, null);
+  createBuilding(building: Building): Observable<object> {
+    const formData: FormData = this.createFormData(building, null, null);
     const req = new HttpRequest('POST', this.baseUrl, formData, {
       reportProgress: true,
       responseType: 'text'
@@ -26,9 +26,9 @@ export class BuildingService {
     return this.http.request(req);
   }
 
-  createFormData(object: Object, form?: FormData, namespace?: string): FormData {
+  createFormData(object: object, form?: FormData, namespace?: string): FormData {
     const formData = form || new FormData();
-    for (let property in object) {
+    for (const property in object) {
       if (!object.hasOwnProperty(property) || !object[property]) {
         continue;
       }
@@ -44,7 +44,7 @@ export class BuildingService {
     return formData;
   }
 
-  updateBuilding(id: number, value: any): Observable<Object> {
+  updateBuilding(id: number, value: any): Observable<object> {
     return this.http.put(`${this.baseUrl}/${id}`, value);
   }
 

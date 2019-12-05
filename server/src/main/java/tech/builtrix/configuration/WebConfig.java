@@ -1,16 +1,19 @@
 package tech.builtrix.configuration;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import tech.builtrix.context.ContextHandlerInterceptor;
+import tech.builtrix.limit.RequestLimitInterceptor;
+import tech.builtrix.security.session.SecurityInterceptor;
 
 /**
  * Created By sahar-hoseini at 12. Jul 2019 5:53 PM
@@ -18,21 +21,23 @@ import tech.builtrix.context.ContextHandlerInterceptor;
 
 @Configuration
 @EnableWebMvc
-@EnableTransactionManagement
-@EnableAutoConfiguration
 public class WebConfig implements WebMvcConfigurer {
 
-    private final ContextHandlerInterceptor contextHandlerInterceptor;
-
-    private final CorsInterceptor corsInterceptor;
-
-    public WebConfig(ContextHandlerInterceptor contextHandlerInterceptor, CorsInterceptor corsInterceptor) {
-        this.contextHandlerInterceptor = contextHandlerInterceptor;
-        this.corsInterceptor = corsInterceptor;
-    }
+    @Autowired
+    private ContextHandlerInterceptor contextHandlerInterceptor;
+    @Autowired
+    private SecurityInterceptor securityInterceptor;
+    @Autowired
+    private CorsInterceptor corsInterceptor;
+    @Autowired
+    private RequestLimitInterceptor requestLimitInterceptor;
+   /* @Autowired
+    private RequestLogger requestLogger;
+*/
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
         registry.addResourceHandler("swagger-ui.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
 
@@ -42,8 +47,22 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(this.requestLimitInterceptor);
         registry.addInterceptor(this.corsInterceptor);
         registry.addInterceptor(this.contextHandlerInterceptor);
+        registry.addInterceptor(this.securityInterceptor);
+    }
+
+    @Bean(name = "validator")
+    public LocalValidatorFactoryBean validator() {
+        LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+        bean.setValidationMessageSource(messageSource());
+        return bean;
+    }
+
+    @Override
+    public Validator getValidator() {
+        return validator();
     }
 
     @Bean

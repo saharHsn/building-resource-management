@@ -26,9 +26,11 @@ export class WizardFormComponent implements OnInit {
   submitted = false;
   // userInfo: Object;
   // buildingInfo: Object;
-  userInfo: BehaviorSubject<Object> = new BehaviorSubject<Object>(0);
+  // @ts-ignore
+  userInfo: BehaviorSubject<object> = new BehaviorSubject<object>(0);
 
-  buildingInfo: BehaviorSubject<Object> = new BehaviorSubject<Object>(0);
+  // @ts-ignore
+  buildingInfo: BehaviorSubject<object> = new BehaviorSubject<object>(0);
 
   selectedFiles: FileList;
   currentFile: File;
@@ -56,7 +58,7 @@ export class WizardFormComponent implements OnInit {
   }
 
   onSubmit() {
-    //this.submitted = true;
+    // this.submitted = true;
     // this.save();
   }
 
@@ -93,31 +95,32 @@ export class WizardFormComponent implements OnInit {
     this.submitted = false;
   }
 
-  selectFile(event, billType: String) {
+  selectFile(event, billType: string) {
     this.selectedFiles = event.target.files;
     this.currentFile = this.selectedFiles.item(0);
     if (this.currentFile.size > 3000000) {
-      alert("File is too big!");
+      alert('File is too big!');
       this.currentFile = null;
     }
-    if (billType == 'Water') {
-      if (this.currentFile == null)
-        this.waterFileVariable.nativeElement.value = "";
-      this.waterFile = this.currentFile;
-    } else if (billType == 'Gas') {
+    if (billType === 'Water') {
       if (this.currentFile == null) {
-        this.gasFileVariable.nativeElement.value = "";
+        this.waterFileVariable.nativeElement.value = '';
+      }
+      this.waterFile = this.currentFile;
+    } else if (billType === 'Gas') {
+      if (this.currentFile == null) {
+        this.gasFileVariable.nativeElement.value = '';
       }
       this.gasFile = this.currentFile;
-    } else if (billType == 'Electricity') {
+    } else if (billType === 'Electricity') {
       if (this.currentFile == null) {
-        this.electricityFileVariable.nativeElement.value = "";
+        this.electricityFileVariable.nativeElement.value = '';
       }
       this.electricityFile = this.currentFile;
     }
   }
 
   removeSelectedFile(file: HTMLInputElement) {
-    file.value = "";
+    file.value = '';
   }
 }
