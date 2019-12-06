@@ -20,7 +20,7 @@ export class NormalizedVsEnergyEfficiencyComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.chartService.normalizedVsEnergeEfficiency(this.buildingId)
+    this.chartService.normalizedVsEnergyEfficiency(this.buildingId)
       .pipe(first())
       .subscribe(
         data => {

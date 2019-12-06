@@ -40,7 +40,8 @@ export class ChartService {
     this.consumptionUrl = this.baseUrl + '/consumption';
     this.consumptionDynamicUrl = this.baseUrl + '/consumptionDynamic';
     this.normalizedConsumptionWeatherUrl = this.baseUrl + '/normConsumptionWeather';
-    this.normalizedPerCapitaUrl = this.baseUrl + '/normVsEE';
+    this.normalizedPerCapitaUrl = this.baseUrl + '/normPerCapita';
+    this.normalizedVsEEUrl = this.baseUrl + '/normVSEE';
     this.predictedWeatherVSRealUrl = this.baseUrl + '/predictedWeatherVSReal';
     this.carbonPieDataUrl = this.baseUrl + '/carbonPie';
     this.carbonSPLineUrl = this.baseUrl + '/carbonSPLine';
@@ -91,7 +92,7 @@ export class ChartService {
     return this.http.get(`${this.normalizedPerCapitaUrl}/${33333333}`);
   }
 
-  normalizedVsEnergeEfficiency(buildingId: string): Observable<any> {
+  normalizedVsEnergyEfficiency(buildingId: string): Observable<any> {
     return this.http.get(`${this.normalizedVsEEUrl}/${33333333}`);
   }
 

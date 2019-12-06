@@ -102,7 +102,7 @@ public class ReportController extends ControllerBase {
     }
 
     @ApiOperation(value = "Request for ")
-    @GetMapping(value = "/normPerCapita/{buildingId}")
+    @GetMapping(value = "/normVSEE/{buildingId}")
     @NoSession
     public Response<NormalVsEEDto> getNormalizedVsEnergyEfficiency(@PathVariable("buildingId") String buildingId) {
         NormalVsEEDto dto = this.reportService.getNormalizedVsEnergyEfficiency(buildingId);
