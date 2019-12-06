@@ -119,4 +119,63 @@ public class ReportService {
         peakHours.setData(Arrays.asList(v, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12));
         return peakHours;
     }
+
+    public ConsumptionNormalWeatherDto getConsumptionNormalWeather(String buildingId) {
+        ConsumptionNormalWeatherDto dto = new ConsumptionNormalWeatherDto();
+        dto.setXValues(Arrays.asList("Jan-2018",
+                "Feb-2018",
+                "Mar-2018",
+                "Apr-2018",
+                "May-2018",
+                "Jun-2018",
+                "Jul-2018",
+                "Aug-2018",
+                "Sep-2018",
+                "Oct-2018",
+                "Nov-2018",
+                "Dec-2018"));
+        dto.setStandardAValues(Arrays.asList(0f, 0f, 0f, 0.042f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f));
+        dto.setStandardBValues(Arrays.asList(0f, 0f, 0f, 0f, 0.07f, 0.092f, 0f, 0.08f, 0.067f, 0f, 0f, 0f));
+        dto.setStandardCValues(Arrays.asList(0.04f, 0.04f, 0.045f, 0f, 0f, 0f, 0.14f, 0f, 0f, 0.092f, 0.066f, 0.05f));
+        dto.setStandardDValues(Arrays.asList(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f));
+        return dto;
+    }
+
+    public NormalPerCapitaDto getNormalizedPerCapita(String buildingId) {
+        NormalPerCapitaDto dto = new NormalPerCapitaDto();
+        dto.setXValues(Arrays.asList("Jan-2018", "Feb-2018", "Mar-2018", "Apr-2018", "May-2018", "Jun-2018", "Jul-2018", "Aug-2018", "Sept-2018", "Oct-2018", "Nov-2018", "Dec-2018"));
+        dto.setBaseLine(Arrays.asList(98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f));
+        dto.setTotal(Arrays.asList(116.351f, 122.56f, 107.364f, 110.476f, 88.964f, 87.093f, 95.84f, 104.204f, 100.311f, 102.862f, 105.511f, 122.884f));
+        return dto;
+    }
+
+    public NormalVsEEDto getNormalizedVsEnergyEfficiency(String buildingId) {
+        NormalVsEEDto dto = new NormalVsEEDto();
+        dto.setXValues(Arrays.asList("Jan-2018",
+                "Feb-2018",
+                "Mar-2018",
+                "Apr-2018",
+                "May-2018",
+                "Jun-2018",
+                "Jul-2018",
+                "Aug-2018",
+                "Sep-2018",
+                "Oct-2018",
+                "Nov-2018",
+                "Dec-2018"));
+        dto.setStandardAValues(Arrays.asList(7.5f, 7.5f, 7.5f, 7.5f, 7.5f, 7.5f, 7.5f, 7.5f, 7.5f, 7.5f, 7.5f, 7.5f));
+        dto.setStandardBValues(Arrays.asList(9.17f, 9.17f, 9.17f, 9.17f, 9.17f, 9.17f, 9.17f, 9.17f, 9.17f, 9.17f, 9.17f, 9.17f));
+        dto.setStandardCValues(Arrays.asList(10.83f, 10.83f, 10.83f, 10.83f, 10.83f, 10.83f, 10.83f, 10.83f, 10.83f, 10.83f, 10.83f, 10.83f));
+        dto.setStandardDValues(Arrays.asList(12.5f, 12.5f, 12.5f, 12.5f, 12.5f, 12.5f, 12.5f, 12.5f, 12.5f, 12.5f, 12.5f, 12.5f));
+        dto.setTotal(Arrays.asList(10.47f, 11.03f, 9.663f, 9.943f, 8.007f, 7.838f, 8.626f, 9.378f, 9.028f, 9.258f, 9.496f, 11.06f));
+        return dto;
+    }
+
+    public PredictedWeatherVsRealDto getPredictedWeatherVSReal(String buildingId) {
+        PredictedWeatherVsRealDto dto = new PredictedWeatherVsRealDto();
+        dto.setXValues(Arrays.asList("Jan-2019", "Feb-2019", "Mar-2019"));
+        dto.setBaseLineValues(Arrays.asList(10.62f, 9.85f, 9.38f));
+        dto.setConsumptionValues(Arrays.asList(10.94f, 11.21f, 9.3f));
+        return dto;
+    }
 }

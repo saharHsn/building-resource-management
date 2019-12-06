@@ -21,6 +21,10 @@ export class ChartService {
   private readonly costPieUrl;
   private readonly consumptionUrl;
   private readonly consumptionDynamicUrl;
+  private readonly normalizedConsumptionWeatherUrl;
+  private readonly normalizedPerCapitaUrl;
+  private readonly normalizedVsEEUrl;
+  private readonly predictedWeatherVSRealUrl;
 
   constructor(private http: HttpClient) {
     this.environmentName = environment.environmentName;
@@ -33,6 +37,9 @@ export class ChartService {
     this.costPieUrl = this.baseUrl + '/costPie';
     this.consumptionUrl = this.baseUrl + '/consumption';
     this.consumptionDynamicUrl = this.baseUrl + '/consumptionDynamic';
+    this.normalizedConsumptionWeatherUrl = this.baseUrl + '/normConsumptionWeather';
+    this.normalizedPerCapitaUrl = this.baseUrl + '/normVsEE';
+    this.predictedWeatherVSRealUrl = this.baseUrl + '/predictedWeatherVSReal';
   }
 
   predict(building: Building): Observable<any> {
@@ -70,5 +77,21 @@ export class ChartService {
     return this.http.get(`${this.consumptionDynamicUrl}/${33333333}`,
       {params}
     );
+  }
+
+  normalizedConsumptionWeatherData(buildingId: string): Observable<any> {
+    return this.http.get(`${this.normalizedConsumptionWeatherUrl}/${33333333}`);
+  }
+
+  normalizedPerCapitaData(buildingId: string): Observable<any> {
+    return this.http.get(`${this.normalizedPerCapitaUrl}/${33333333}`);
+  }
+
+  normalizedVsEnergeEfficiency(buildingId: string): Observable<any> {
+    return this.http.get(`${this.normalizedVsEEUrl}/${33333333}`);
+  }
+
+  predictedWeatherVSReal(buildingId: string): Observable<any> {
+    return this.http.get(`${this.predictedWeatherVSRealUrl}/${33333333}`);
   }
 }

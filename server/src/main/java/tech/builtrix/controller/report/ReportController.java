@@ -84,4 +84,36 @@ public class ReportController extends ControllerBase {
         ConsumptionDynamicDto consumption = this.reportService.getConsumptionDynamicData(buildingId, year, periodType, datePartType);
         return Response.ok(consumption);
     }
+
+    @ApiOperation(value = "Request for ")
+    @GetMapping(value = "/normConsumptionWeather/{buildingId}")
+    @NoSession
+    public Response<ConsumptionNormalWeatherDto> getConsumptionNormalWeather(@PathVariable("buildingId") String buildingId) {
+        ConsumptionNormalWeatherDto consumption = this.reportService.getConsumptionNormalWeather(buildingId);
+        return Response.ok(consumption);
+    }
+
+    @ApiOperation(value = "Request for ")
+    @GetMapping(value = "/normPerCapita/{buildingId}")
+    @NoSession
+    public Response<NormalPerCapitaDto> getNormalizedPerCapita(@PathVariable("buildingId") String buildingId) {
+        NormalPerCapitaDto normalizedPerCapita = this.reportService.getNormalizedPerCapita(buildingId);
+        return Response.ok(normalizedPerCapita);
+    }
+
+    @ApiOperation(value = "Request for ")
+    @GetMapping(value = "/normPerCapita/{buildingId}")
+    @NoSession
+    public Response<NormalVsEEDto> getNormalizedVsEnergyEfficiency(@PathVariable("buildingId") String buildingId) {
+        NormalVsEEDto dto = this.reportService.getNormalizedVsEnergyEfficiency(buildingId);
+        return Response.ok(dto);
+    }
+
+    @ApiOperation(value = "Request for ")
+    @GetMapping(value = "/predictedWeatherVSReal/{buildingId}")
+    @NoSession
+    public Response<PredictedWeatherVsRealDto> getPredictedWeatherVSReal(@PathVariable("buildingId") String buildingId) {
+        PredictedWeatherVsRealDto dto = this.reportService.getPredictedWeatherVSReal(buildingId);
+        return Response.ok(dto);
+    }
 }
