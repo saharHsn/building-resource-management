@@ -25,6 +25,8 @@ export class ChartService {
   private readonly normalizedPerCapitaUrl;
   private readonly normalizedVsEEUrl;
   private readonly predictedWeatherVSRealUrl;
+  private readonly carbonPieDataUrl;
+  private readonly carbonSPLineUrl;
 
   constructor(private http: HttpClient) {
     this.environmentName = environment.environmentName;
@@ -40,6 +42,8 @@ export class ChartService {
     this.normalizedConsumptionWeatherUrl = this.baseUrl + '/normConsumptionWeather';
     this.normalizedPerCapitaUrl = this.baseUrl + '/normVsEE';
     this.predictedWeatherVSRealUrl = this.baseUrl + '/predictedWeatherVSReal';
+    this.carbonPieDataUrl = this.baseUrl + '/carbonPie';
+    this.carbonSPLineUrl = this.baseUrl + '/carbonSPLine';
   }
 
   predict(building: Building): Observable<any> {
@@ -93,5 +97,13 @@ export class ChartService {
 
   predictedWeatherVSReal(buildingId: string): Observable<any> {
     return this.http.get(`${this.predictedWeatherVSRealUrl}/${33333333}`);
+  }
+
+  carbonPieData(buildingId: string): Observable<any> {
+    return this.http.get(`${this.carbonPieDataUrl}/${33333333}`);
+  }
+
+  carbonSPLineData(buildingId: string): Observable<any> {
+    return this.http.get(`${this.carbonSPLineUrl}/${33333333}`);
   }
 }

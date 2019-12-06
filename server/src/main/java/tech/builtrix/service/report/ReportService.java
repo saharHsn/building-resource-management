@@ -178,4 +178,32 @@ public class ReportService {
         dto.setConsumptionValues(Arrays.asList(10.94f, 11.21f, 9.3f));
         return dto;
     }
+
+    public CarbonPieDto getCarbonPieData(String buildingId) {
+        CarbonPieDto dto = new CarbonPieDto();
+        dto.setCo2Free(19.4f);
+        dto.setCo2Normal(51f);
+        dto.setCo2Off(11.4f);
+        dto.setCo2Peak(18.1f);
+        return dto;
+    }
+
+    public CarbonSPLineDto getCarbonSPLineData(String buildingId) {
+        CarbonSPLineDto dto = new CarbonSPLineDto();
+        dto.setTotalValues(Arrays.asList(4.28f, 4.51f, 3.95f, 4.07f, 3.27f, 3.2f, 3.53f, 3.83f, 3.69f, 3.78f, 3.88f, 4.52f));
+        dto.setBaseLineValues(Arrays.asList(3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f));
+        dto.setXValues(Arrays.asList("Jan-2018",
+                "Feb-2018",
+                "Mar-2018",
+                "Apr-2018",
+                "May-2018",
+                "Jun-2018",
+                "Jul-2018",
+                "Aug-2018",
+                "Sep-2018",
+                "Oct-2018",
+                "Nov-2018",
+                "Dec-2018"));
+        return dto;
+    }
 }

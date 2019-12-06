@@ -116,4 +116,20 @@ public class ReportController extends ControllerBase {
         PredictedWeatherVsRealDto dto = this.reportService.getPredictedWeatherVSReal(buildingId);
         return Response.ok(dto);
     }
+
+    @ApiOperation(value = "Request for ")
+    @GetMapping(value = "/carbonPie/{buildingId}")
+    @NoSession
+    public Response<CarbonPieDto> getCarbonPieData(@PathVariable("buildingId") String buildingId) {
+        CarbonPieDto dto = this.reportService.getCarbonPieData(buildingId);
+        return Response.ok(dto);
+    }
+
+    @ApiOperation(value = "Request for ")
+    @GetMapping(value = "/carbonSPLine/{buildingId}")
+    @NoSession
+    public Response<CarbonSPLineDto> getCarbonSPLineData(@PathVariable("buildingId") String buildingId) {
+        CarbonSPLineDto dto = this.reportService.getCarbonSPLineData(buildingId);
+        return Response.ok(dto);
+    }
 }
