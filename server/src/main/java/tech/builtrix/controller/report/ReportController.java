@@ -3,10 +3,7 @@ package tech.builtrix.controller.report;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tech.builtrix.Response;
 import tech.builtrix.base.ControllerBase;
 import tech.builtrix.security.session.NoSession;
@@ -74,6 +71,17 @@ public class ReportController extends ControllerBase {
     @NoSession
     public Response<ConsumptionDto> getConsumption(@PathVariable("buildingId") String buildingId) {
         ConsumptionDto consumption = this.reportService.getConsumption(buildingId);
+        return Response.ok(consumption);
+    }
+
+    @ApiOperation(value = "Request for ")
+    @GetMapping(value = "/consumptionDynamic/{buildingId}")
+    @NoSession
+    public Response<ConsumptionDynamicDto> getConsumptionDynamicData(@PathVariable("buildingId") String buildingId,
+                                                                     @RequestParam(value = "year") Long year,
+                                                                     @RequestParam(value = "periodType") TimePeriodType periodType,
+                                                                     @RequestParam(value = "datePartType") DatePartType datePartType) {
+        ConsumptionDynamicDto consumption = this.reportService.getConsumptionDynamicData(buildingId, year, periodType, datePartType);
         return Response.ok(consumption);
     }
 }

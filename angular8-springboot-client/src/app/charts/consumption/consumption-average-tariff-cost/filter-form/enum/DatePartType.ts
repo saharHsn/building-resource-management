@@ -1,6 +1,6 @@
 export enum DatePartType {
-  OFF_HOURS = 'Off-hours',
-  FREE_HOURS = 'Free-hours',
-  PEAK_HOURS = 'Peak-hours',
-  NORMAL_HOURS = 'Normal-hours',
+  OFF_HOURS = 'OFF_HOURS',
+  FREE_HOURS = 'FREE_HOURS',
+  PEAK_HOURS = 'PEAK_HOURS',
+  NORMAL_HOURS = 'NORMAL_HOURS',
 }

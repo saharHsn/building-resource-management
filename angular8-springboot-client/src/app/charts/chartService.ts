@@ -1,8 +1,11 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {Building} from '../building/model/building';
+import {YearFilterType} from './consumption/consumption-average-tariff-cost/filter-form/enum/YearFilterType';
+import {TimePeriodType} from './consumption/consumption-average-tariff-cost/filter-form/enum/TimePeriodType';
+import {DatePartType} from './consumption/consumption-average-tariff-cost/filter-form/enum/DatePartType';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +20,7 @@ export class ChartService {
   private readonly costStackUrl;
   private readonly costPieUrl;
   private readonly consumptionUrl;
+  private readonly consumptionDynamicUrl;
 
   constructor(private http: HttpClient) {
     this.environmentName = environment.environmentName;
@@ -28,6 +32,7 @@ export class ChartService {
     this.costStackUrl = this.baseUrl + '/costStack';
     this.costPieUrl = this.baseUrl + '/costPie';
     this.consumptionUrl = this.baseUrl + '/consumption';
+    this.consumptionDynamicUrl = this.baseUrl + '/consumptionDynamic';
   }
 
   predict(building: Building): Observable<any> {
@@ -52,5 +57,18 @@ export class ChartService {
 
   consumptionStackData(buildingId: string): Observable<any> {
     return this.http.get(`${this.consumptionUrl}/${33333333}`);
+  }
+
+  consumptionDynamicData(buildingId: string,
+                         year: YearFilterType,
+                         timePeriod: TimePeriodType,
+                         datePartType: DatePartType): Observable<any> {
+    const params = new HttpParams()
+      .set('year', year)
+      .set('periodType', timePeriod)
+      .set('datePartType', datePartType);
+    return this.http.get(`${this.consumptionDynamicUrl}/${33333333}`,
+      {params}
+    );
   }
 }

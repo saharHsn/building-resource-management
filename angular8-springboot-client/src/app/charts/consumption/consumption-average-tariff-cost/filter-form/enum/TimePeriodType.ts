@@ -1,4 +1,4 @@
 export enum TimePeriodType {
-  MONTHLY = 'Monthly',
-  QUARTERS = 'Quarters'
+  MONTHLY = 'MONTHLY',
+  QUARTERS = 'QUARTERS'
 }

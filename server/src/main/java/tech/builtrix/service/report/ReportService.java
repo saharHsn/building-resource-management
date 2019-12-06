@@ -71,4 +71,52 @@ public class ReportService {
         dto.setBaseLineValues(Arrays.asList(1844.74f, 1932.34f, 1715.54f, 1833.96f, 1538.25f, 1451.76f, 1729.1f, 878.35f, 1743.17f, 1881.22f, 1728.28f, 1834.11f));
         return dto;
     }
+
+    public ConsumptionDynamicDto getConsumptionDynamicData(String buildingId,
+                                                           Long year,
+                                                           TimePeriodType periodType, DatePartType datePartType) {
+        ConsumptionDynamicDto peakHours = getConsumptionDynamicDto("#ff0000", "Peak Hours", 878.11f, 944.15f, 829.95f, 690.54f, 473.42f, 429.33f, 513.55f, 547.49f, 481.35f, 527.35f, 695.46f, 865.32f);
+        ConsumptionDynamicDto peakHoursQ = getConsumptionDynamicDto("#ff0000", "Peak Hours", 878.11f, 944.15f, 829.95f, 690.54f);
+
+        ConsumptionDynamicDto freeHours = getConsumptionDynamicDto("#ffff00", "Free Hours", 9.34f, 9.32f, 10.21f, 10.56f, 13.36f, 16.35f, 9.78f, 6.43f, 6.4f, 9.37f, 12.25f, 6.02f);
+
+        ConsumptionDynamicDto freeHoursQ = getConsumptionDynamicDto("#ff0000", "Free Hours", 9.34f, 9.32f, 10.21f, 10.56f);
+
+        ConsumptionDynamicDto normalHours = getConsumptionDynamicDto("#0066cc", "Normal Hour", 125.79f, 131.4f, 118.36f, 131.4f, 126.81f, 131.04f, 126.81f, 131.04f, 131.04f, 131.99f, 136.69f, 131.99f);
+
+        ConsumptionDynamicDto normalHoursQ = getConsumptionDynamicDto("#0066cc", "Normal Hour", 125.79f, 131.4f, 118.36f, 131.4f);
+
+        ConsumptionDynamicDto offHours = getConsumptionDynamicDto("#248f24", "Off Hours", 265.96f, 282.73f, 238.51f, 250.71f, 211.15f, 209.45f, 209f, 228.47f, 227.03f, 220.12f, 245.33f, 310.36f);
+
+        ConsumptionDynamicDto offHoursQ = getConsumptionDynamicDto("#248f24", "Off Hours", 265.96f, 282.73f, 238.51f, 250.71f);
+
+        boolean isQuarter = periodType.equals(TimePeriodType.QUARTERS);
+
+        if (datePartType.equals(DatePartType.FREE_HOURS)) {
+            return (isQuarter ? freeHoursQ : freeHours);
+        } else if (datePartType.equals(DatePartType.NORMAL_HOURS)) {
+            return (isQuarter ? normalHoursQ : normalHours);
+        } else if (datePartType.equals(DatePartType.OFF_HOURS)) {
+            return (isQuarter ? offHoursQ : offHours);
+        } else if (datePartType.equals(DatePartType.PEAK_HOURS)) {
+            return (isQuarter ? peakHoursQ : peakHours);
+        }
+        return null;
+    }
+
+    private ConsumptionDynamicDto getConsumptionDynamicDto(String s, String s2, float v, float v2, float v3, float v4) {
+        ConsumptionDynamicDto freeHoursQ = new ConsumptionDynamicDto();
+        freeHoursQ.setColor(s);
+        freeHoursQ.setName(s2);
+        freeHoursQ.setData(Arrays.asList(v, v2, v3, v4));
+        return freeHoursQ;
+    }
+
+    private ConsumptionDynamicDto getConsumptionDynamicDto(String s, String s2, float v, float v2, float v3, float v4, float v5, float v6, float v7, float v8, float v9, float v10, float v11, float v12) {
+        ConsumptionDynamicDto peakHours = new ConsumptionDynamicDto();
+        peakHours.setColor(s);
+        peakHours.setName(s2);
+        peakHours.setData(Arrays.asList(v, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12));
+        return peakHours;
+    }
 }

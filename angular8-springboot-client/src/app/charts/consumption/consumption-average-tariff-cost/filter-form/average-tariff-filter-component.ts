@@ -4,6 +4,10 @@ import {AverageTariffFilter} from './average-tariff-filter';
 import {YearFilterType} from './enum/YearFilterType';
 import {DatePartType} from './enum/DatePartType';
 import {TimePeriodType} from './enum/TimePeriodType';
+import {first} from 'rxjs/operators';
+import {ChartService} from '../../../chartService';
+import {Router} from '@angular/router';
+import {ConsumptionDynamic} from '../ConsumptionDynamic';
 
 @Component({
   selector: 'app-average-tariff-filter',
@@ -13,43 +17,60 @@ import {TimePeriodType} from './enum/TimePeriodType';
 export class AverageTariffFilterComponent {
   tariffFilter: AverageTariffFilter;
 
-  constructor(public fb: FormBuilder) {
+  constructor(public fb: FormBuilder,
+              private chartService: ChartService,
+              private router: Router) {
     this.tariffFilter = new AverageTariffFilter();
     this.tariffFilter.year = YearFilterType.YEAR_2019;
     this.tariffFilter.datePartType = DatePartType.FREE_HOURS;
     this.tariffFilter.periodType = TimePeriodType.MONTHLY;
   }
 
-  dataPartType: DatePartType;
+  datePartType: DatePartType;
   year: YearFilterType;
   timePeriod: TimePeriodType;
+  buildingId: string;
 
   changedDataSeries;
   changedXAxisCategories;
   @Output() chartOptions = new EventEmitter();
 
-  setDataPartType($event) {
-    this.dataPartType = $event;
-    this.redrawChart(this.dataPartType, this.year, this.timePeriod);
+
+  setDataPartType($event, year: YearFilterType, timePeriod: TimePeriodType) {
+    this.datePartType = $event;
+    this.redraw(year, this.datePartType, timePeriod);
   }
 
-  setYear($event) {
+  setYear($event, timePeriod: TimePeriodType, datePartType: DatePartType) {
     this.year = $event;
-    this.redrawChart(this.dataPartType, this.year, this.timePeriod);
+    this.redraw(this.year, datePartType, timePeriod);
   }
 
-  setTimePeriod($event) {
+  setTimePeriod($event, year: YearFilterType, datePartType: DatePartType) {
     this.timePeriod = $event;
-    this.redrawChart(this.dataPartType, this.year, this.timePeriod);
+    this.redraw(year, datePartType, this.timePeriod);
   }
 
-  private redrawChart(dataPartType: DatePartType,
-                      year: YearFilterType,
-                      timePeriod: TimePeriodType,
-  ) {
+  private redraw(year: YearFilterType, datePartType: DatePartType, timePeriod: TimePeriodType) {
+    this.chartService.consumptionDynamicData(this.buildingId, YearFilterType[year], timePeriod, datePartType)
+      .pipe(first())
+      .subscribe(
+        data => {
+          this.extracted(data, year, this.timePeriod);
+        },
+        () => {
+        });
+  }
 
+  private extracted(data, year: YearFilterType, timePeriod: TimePeriodType) {
+    const consumption = new ConsumptionDynamic();
+    const content = data.content;
+    consumption.color = content.color;
+    consumption.data = content.data;
+    consumption.name = content.name;
+    this.changedDataSeries = consumption;
     this.changedXAxisCategories = this.getChangedXAxisCategories(year, timePeriod);
-    this.changedDataSeries = this.getChangedDataSeries(dataPartType);
+    this.changedDataSeries = consumption;
     this.chartOptions.emit({
       chart: {
         events: {
@@ -116,60 +137,5 @@ export class AverageTariffFilterComponent {
     return ['Jan-' + yearValue, 'Feb-' + yearValue, 'Mar-' + yearValue, 'Apr-' + yearValue, 'May-' + yearValue,
       'Jun-' + yearValue, 'Jul-' + yearValue, 'Aug-' + yearValue, 'Sept-' + yearValue, 'Oct-' + yearValue, 'Nov-' + yearValue,
       'Dec-' + yearValue];
-  }
-
-  private getChangedDataSeries(datePartType: DatePartType) {
-    const peakHours = [{
-      name: 'Peak Hours',
-      data: [878.11, 944.15, 829.95, 690.54, 473.42, 429.33, 513.55, 547.49, 481.35, 527.35, 695.46, 865.32],
-      color: '#ff0000'
-    }];
-    const normalHours = [{
-      name: 'Normal Hour',
-      data: [125.79, 131.4, 118.36, 131.4, 126.81, 131.04, 126.81, 131.04, 131.04, 131.99, 136.69, 131.99],
-      color: '#0066cc'
-    }];
-    const freeHours = [{
-      name: 'Free Hours',
-      data: [9.34, 9.32, 10.21, 10.56, 13.36, 16.35, 9.78, 6.43, 6.4, 9.37, 12.25, 6.02],
-      color: '#ffff00'
-    }];
-    const offHours = [{
-      name: 'Off Hours',
-      data: [265.96, 282.73, 238.51, 250.71, 211.15, 209.45, 209, 228.47, 227.03, 220.12, 245.33, 310.36],
-      color: '#248f24'
-    }];
-
-    const peakHoursQ = [{
-      name: 'Peak Hours',
-      data: [878.11, 944.15, 829.95, 690.54],
-      color: '#ff0000'
-    }];
-    const normalHoursQ = [{
-      name: 'Normal Hour',
-      data: [125.79, 131.4, 118.36, 131.4],
-      color: '#0066cc'
-    }];
-    const freeHoursQ = [{
-      name: 'Free Hours',
-      data: [9.34, 9.32, 10.21, 10.56],
-      color: '#ffff00'
-    }];
-    const offHoursQ = [{
-      name: 'Off Hours',
-      data: [265.96, 282.73, 238.51, 250.71],
-      color: '#248f24'
-    }];
-    const isQuarter = this.timePeriod && TimePeriodType[this.timePeriod] === TimePeriodType.QUARTERS;
-
-    if (!datePartType || DatePartType[datePartType] === DatePartType.FREE_HOURS) {
-      return (isQuarter ? freeHoursQ : freeHours);
-    } else if (DatePartType[datePartType] === DatePartType.NORMAL_HOURS) {
-      return (isQuarter ? normalHoursQ : normalHours);
-    } else if (DatePartType[datePartType] === DatePartType.OFF_HOURS) {
-      return (isQuarter ? offHoursQ : offHours);
-    } else if (DatePartType[datePartType] === DatePartType.PEAK_HOURS) {
-      return (isQuarter ? peakHoursQ : peakHours);
-    }
   }
 }
