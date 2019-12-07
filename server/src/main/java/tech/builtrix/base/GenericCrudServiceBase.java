@@ -2,7 +2,7 @@ package tech.builtrix.base;
 
 
 import org.springframework.data.repository.CrudRepository;
-import tech.builtrix.exception.NotFoundException;
+import tech.builtrix.exceptions.NotFoundException;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Optional;

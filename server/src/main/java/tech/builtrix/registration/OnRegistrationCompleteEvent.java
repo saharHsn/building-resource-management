@@ -1,7 +1,7 @@
 package tech.builtrix.registration;
 
 import org.springframework.context.ApplicationEvent;
-import tech.builtrix.model.user.User;
+import tech.builtrix.models.user.User;
 
 import java.util.Locale;
 

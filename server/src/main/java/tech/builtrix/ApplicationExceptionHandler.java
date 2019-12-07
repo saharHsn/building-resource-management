@@ -21,8 +21,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import tech.builtrix.base.ErrorMessage;
-import tech.builtrix.common.service.LocalizationService;
-import tech.builtrix.exception.ExceptionBase;
+import tech.builtrix.commons.LocalizationService;
+import tech.builtrix.exceptions.ExceptionBase;
 
 import java.util.Arrays;
 import java.util.Collection;

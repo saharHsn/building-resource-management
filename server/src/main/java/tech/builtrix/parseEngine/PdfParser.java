@@ -20,8 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import tech.builtrix.util.TExtractDto;
-import tech.builtrix.util.TextractUtil;
+import tech.builtrix.utils.TExtractDto;
+import tech.builtrix.utils.TextractUtil;
 
 import java.util.*;
 

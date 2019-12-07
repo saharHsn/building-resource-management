@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import tech.builtrix.parseEngine.PdfParser;
-import tech.builtrix.service.bill.BillParser;
+import tech.builtrix.services.bill.BillParser;
 
 /**
  * Created By sahar at 12/2/19

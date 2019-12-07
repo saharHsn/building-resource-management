@@ -1,8 +1,8 @@
 package tech.builtrix.base;
 
 
-import tech.builtrix.common.service.LocalizationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import tech.builtrix.commons.LocalizationService;
 
 public abstract class ServiceBase{
     @Autowired

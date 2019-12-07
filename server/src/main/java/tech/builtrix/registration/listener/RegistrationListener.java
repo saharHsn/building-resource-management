@@ -6,12 +6,12 @@ import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
-import tech.builtrix.common.service.EmailSender;
-import tech.builtrix.model.user.TokenPurpose;
-import tech.builtrix.model.user.User;
-import tech.builtrix.model.user.UserToken;
+import tech.builtrix.commons.EmailSender;
+import tech.builtrix.models.user.TokenPurpose;
+import tech.builtrix.models.user.User;
+import tech.builtrix.models.user.UserToken;
 import tech.builtrix.registration.OnRegistrationCompleteEvent;
-import tech.builtrix.service.authenticate.CodeService;
+import tech.builtrix.services.authenticate.CodeService;
 
 import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
