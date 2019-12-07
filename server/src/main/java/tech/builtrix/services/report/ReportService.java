@@ -16,6 +16,7 @@ import java.util.Arrays;
 @Component
 @Slf4j
 public class ReportService {
+
     public PredictionDto predict(String buildingId) {
         PredictionDto dto = new PredictionDto();
         dto.setCostYValues(Arrays.asList(6135.5f, 7130.4f, 6234.3f));
