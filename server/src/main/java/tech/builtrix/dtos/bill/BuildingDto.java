@@ -11,6 +11,9 @@ import tech.builtrix.models.building.BuildingAge;
 import tech.builtrix.models.building.BuildingUsage;
 import tech.builtrix.models.building.EnergyCertificate;
 
+import java.util.Date;
+import java.util.Map;
+
 /**
  * Created By sahar-hoseini at 11. Jul 2019 5:53 PM
  **/
@@ -31,7 +34,7 @@ public class BuildingDto extends EntityDtoBase {
     private MultipartFile waterBill;
     private MultipartFile electricityBill;
     private UserDto owner;
-
+    private Map<Date, Integer> numOfPeopleMap;
     public BuildingDto(Building building) {
         this.name = building.getName();
         this.usage = building.getUsage();
@@ -40,6 +43,7 @@ public class BuildingDto extends EntityDtoBase {
         this.area = building.getArea();
         this.numberOfPeople = building.getNumberOfPeople();
        // this.owner = building.();
+        this.numOfPeopleMap = building.getNumOfPeopleMap();
 
     }
 }

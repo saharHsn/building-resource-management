@@ -120,6 +120,35 @@ public class DateUtil {
         return cal.getTime();
     }
 
+    public static Date setDateField(Date date, Integer field, DateType dateType) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        switch (dateType) {
+            case YEAR:
+                cal.set(Calendar.YEAR, field);
+                break;
+            case MONTH:
+                cal.set(Calendar.MONTH, field);
+                break;
+            case DAY:
+                cal.set(Calendar.DAY_OF_MONTH, field);
+                break;
+            case HOUR:
+                cal.set(Calendar.HOUR_OF_DAY, field);
+                break;
+            case MINUTE:
+                cal.set(Calendar.MINUTE, field);
+                break;
+            case SECOND:
+                cal.set(Calendar.SECOND, field);
+                break;
+            case MILLI_SECOND:
+                cal.set(Calendar.MILLISECOND, 0);
+                break;
+        }
+        return cal.getTime();
+    }
+
     public static Date increaseDate(Date date, int num, DateType dateType) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);

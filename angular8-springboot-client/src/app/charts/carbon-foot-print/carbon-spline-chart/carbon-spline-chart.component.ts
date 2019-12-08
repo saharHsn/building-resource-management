@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import * as Highcharts from 'highcharts';
-import {ChartService} from "../../chartService";
-import {Router} from "@angular/router";
-import {first} from "rxjs/operators";
+import {ChartService} from '../../chartService';
+import {Router} from '@angular/router';
+import {first} from 'rxjs/operators';
 
 @Component({
   selector: 'app-carbon-spline-chart',
@@ -58,7 +58,7 @@ export class CarbonSplineChartComponent implements OnInit {
             },
             yAxis: {
               title: {
-                text: 'KG-CO2'
+                text: 'KG-CO2/m2'
               },
               labels: {
                 style: {
@@ -70,7 +70,7 @@ export class CarbonSplineChartComponent implements OnInit {
               tickInterval: 0.25
             },
             tooltip: {
-              valueSuffix: 'KG-CO2'
+              valueSuffix: 'KG-CO2/m2'
             },
             series: [{
               name: 'Total',

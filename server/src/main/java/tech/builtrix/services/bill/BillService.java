@@ -110,9 +110,13 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         return mapper.scan(Bill.class, scanExpression);
     }
 
-    public Bill getLastBill() throws NotFoundException {
+    public Bill getLastBill(String buildingId) throws NotFoundException {
         //TODO find a way for fetching data order by fromDate
         return getById("0bdd7f99-f3af-4cec-a2e2-269a65de9df1");
+    }
+
+    public BillDto getLastBillDto(String buildingId) throws NotFoundException {
+        return convertBillToDto(getLastBill(buildingId));
     }
 
     public BillDto filterByMonthAndYear(String buildingId, int month, int year) throws NotFoundException {

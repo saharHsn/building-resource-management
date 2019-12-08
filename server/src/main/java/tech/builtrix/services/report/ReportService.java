@@ -6,18 +6,22 @@ import org.springframework.stereotype.Component;
 import tech.builtrix.controllers.report.ConsumptionNormalWeatherDto;
 import tech.builtrix.controllers.report.PredictedWeatherVsRealDto;
 import tech.builtrix.dtos.bill.BillDto;
+import tech.builtrix.dtos.bill.BuildingDto;
 import tech.builtrix.dtos.report.*;
 import tech.builtrix.enums.DatePartType;
 import tech.builtrix.enums.TimePeriodType;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.bill.Bill;
 import tech.builtrix.services.bill.BillService;
+import tech.builtrix.services.building.BuildingService;
 import tech.builtrix.utils.DateUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Created By sahar at 12/4/19
@@ -25,7 +29,6 @@ import java.util.List;
 @Component
 @Slf4j
 public class ReportService {
-    private final BillService billService;
     private static String FREEHOURS_COLOR = "#ffff00";
     private static String NORMALHOURS_COLOR = "#0066cc";
     private static String OFFHOURS_COLOR = "#248f24";
@@ -35,9 +38,15 @@ public class ReportService {
     private static String OFF_HOURS = "Off Hours";
     private static String PEAK_HOURS = "Peak Hours";
 
+    private static Float kg_CO2_per_each_kWh = 0.408f;
+
+    private final BillService billService;
+    private final BuildingService buildingService;
+
     @Autowired
-    public ReportService(BillService billService) {
+    public ReportService(BillService billService, BuildingService buildingService) {
         this.billService = billService;
+        this.buildingService = buildingService;
     }
 
     public PredictionDto predict(String buildingId) {
@@ -46,38 +55,22 @@ public class ReportService {
         //3. average n previous year data
         //4. return each month data
         PredictionDto dto = new PredictionDto();
-        Date currentDate = getCurrentDate();
-        Date previousYear = DateUtil.increaseDate(currentDate, -1, DateUtil.DateType.YEAR);
-        List<Integer> threeNextMonths = findNextThreeMonths(previousYear);
-        Integer month1 = threeNextMonths.get(0);
-        Integer month2 = threeNextMonths.get(1);
-        Integer month3 = threeNextMonths.get(2);
-
-        Float month1Cost = 0f;
-        Float month2Cost = 0f;
-        Float month3Cost = 0f;
-        List<Bill> bills = billService.filterByFromDateAndMonthAndBuilding(previousYear,
-                month1,
-                month2,
-                month3,
-                buildingId);
-        for (Bill bill : bills) {
-            Integer fromMonth = bill.getFromMonth();
-            if (fromMonth.equals(month1)) {
-                month1Cost += bill.getTotalPayable();
-            } else if (fromMonth.equals(month2)) {
-                month2Cost += bill.getTotalPayable();
-            } else if (fromMonth.equals(month3)) {
-                month3Cost += bill.getTotalPayable();
-            }
-        }
+        PredictionData predictionData = new PredictionData(buildingId).invoke();
+        Integer month1 = predictionData.getMonth1();
+        Integer month2 = predictionData.getMonth2();
+        Integer month3 = predictionData.getMonth3();
+        Float month1Cost = predictionData.getMonth1Cost();
+        Float month2Cost = predictionData.getMonth2Cost();
+        Float month3Cost = predictionData.getMonth3Cost();
+        List<Bill> bills = predictionData.getBills();
         // dto.setCostYValues(Arrays.asList(6135.5f, 7130.4f, 6234.3f));
         int billsSize = bills.size();
         dto.setCostYValues(Arrays.asList(month1Cost / billsSize, month2Cost / billsSize, month3Cost / billsSize));
         // dto.setSavingYValues(Arrays.asList(321f, 420f, 360f));
         dto.setSavingYValues(getSavings(month1Cost, month2Cost, month3Cost, billsSize));
         //dto.setXValues(Arrays.asList("Oct-2019", "Nov-2019", "Dec-2019"));
-        int currentYear = DateUtil.getYear(currentDate);
+
+        int currentYear = getCurrentYear();
         dto.setXValues(Arrays.asList(
                 getDateTitle(month1, currentYear),
                 getDateTitle(month2, currentYear),
@@ -91,7 +84,7 @@ public class ReportService {
         List<Bill> bills = billService.filterByFromDateAndMonthAndBuilding(previousYear,
                 DateUtil.getMonth(currentDate),
                 buildingId);
-        Bill lastBill = billService.getLastBill();
+        Bill lastBill = billService.getLastBill(buildingId);
         Float consumptionSum = 0f;
         Float costSum = 0f;
         Float environmentSum = 0f;
@@ -214,6 +207,7 @@ public class ReportService {
     }
 
 
+    //TODO
     public ConsumptionNormalWeatherDto getConsumptionNormalWeather(String buildingId) {
         ConsumptionNormalWeatherDto dto = new ConsumptionNormalWeatherDto();
         dto.setXValues(Arrays.asList("Jan-2018",
@@ -235,14 +229,28 @@ public class ReportService {
         return dto;
     }
 
-    public NormalPerCapitaDto getNormalizedPerCapita(String buildingId) {
+    public NormalPerCapitaDto getNormalizedPerCapita(String buildingId) throws NotFoundException {
         NormalPerCapitaDto dto = new NormalPerCapitaDto();
+        Integer currentYear = getCurrentYear();
+        List<BillDto> dtoList = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            dtoList.add(billService.filterByMonthAndYear(buildingId, i, currentYear));
+        }
+        List<Float> consumptionPerMonth = new ArrayList<>();
+        BuildingDto building = this.buildingService.findById(buildingId);
+        for (int i = 0; i < 12; i++) {
+            Date date = getCustomDate(currentYear, i);
+            Integer numOfPeople = building.getNumOfPeopleMap().get(date);
+            consumptionPerMonth.add(i, (dtoList.get(i).getAverageDailyConsumption()) / numOfPeople);
+        }
+        //TODO ask for this data
         dto.setXValues(Arrays.asList("Jan-2018", "Feb-2018", "Mar-2018", "Apr-2018", "May-2018", "Jun-2018", "Jul-2018", "Aug-2018", "Sept-2018", "Oct-2018", "Nov-2018", "Dec-2018"));
         dto.setBaseLine(Arrays.asList(98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f));
-        dto.setTotal(Arrays.asList(116.351f, 122.56f, 107.364f, 110.476f, 88.964f, 87.093f, 95.84f, 104.204f, 100.311f, 102.862f, 105.511f, 122.884f));
+        dto.setTotal(consumptionPerMonth);
         return dto;
     }
 
+    //TODO not needed now
     public NormalVsEEDto getNormalizedVsEnergyEfficiency(String buildingId) {
         NormalVsEEDto dto = new NormalVsEEDto();
         dto.setXValues(Arrays.asList("Jan-2018",
@@ -265,28 +273,74 @@ public class ReportService {
         return dto;
     }
 
-    public PredictedWeatherVsRealDto getPredictedWeatherVSReal(String buildingId) {
+    public PredictedWeatherVsRealDto getPredictedWeatherVSReal(String buildingId) throws NotFoundException {
+        BuildingDto building = this.buildingService.findById(buildingId);
         PredictedWeatherVsRealDto dto = new PredictedWeatherVsRealDto();
-        dto.setXValues(Arrays.asList("Jan-2019", "Feb-2019", "Mar-2019"));
+        PredictionData predictionData = new PredictionData(buildingId).invoke();
+        Integer month1 = predictionData.getMonth1();
+        Integer month2 = predictionData.getMonth2();
+        Integer month3 = predictionData.getMonth3();
+        Float month1Consumption = predictionData.getMonth1Consumption();
+        Float month2Consumption = predictionData.getMonth2Consumption();
+        Float month3Consumption = predictionData.getMonth3Consumption();
+        List<Bill> bills = predictionData.getBills();
+        // dto.setCostYValues(Arrays.asList(6135.5f, 7130.4f, 6234.3f));
+        int billsSize = bills.size();
+        dto.setConsumptionValues(Arrays.asList((month1Consumption / billsSize) / building.getArea(),
+                (month2Consumption / billsSize) / building.getArea(),
+                (month3Consumption / billsSize) / building.getArea()));
+
+        //dto.setXValues(Arrays.asList("Jan-2019", "Feb-2019", "Mar-2019"));
+        int currentYear = getCurrentYear();
+        dto.setXValues(Arrays.asList(
+                getDateTitle(month1, currentYear),
+                getDateTitle(month2, currentYear),
+                getDateTitle(month3, currentYear)));
         dto.setBaseLineValues(Arrays.asList(10.62f, 9.85f, 9.38f));
-        dto.setConsumptionValues(Arrays.asList(10.94f, 11.21f, 9.3f));
+        // dto.setConsumptionValues(Arrays.asList(10.94f, 11.21f, 9.3f));
         return dto;
     }
 
-    public CarbonPieDto getCarbonPieData(String buildingId) {
+    public CarbonPieDto getCarbonPieData(String buildingId) throws NotFoundException {
+        BillDto lastBill = billService.getLastBillDto(buildingId);
+        Float co2Free = (lastBill.getAEFreeHours().getConsumption() * kg_CO2_per_each_kWh) / lastBill.getProducedCO2();
+        Float co2Normal = (lastBill.getAENormalHours().getConsumption() * kg_CO2_per_each_kWh) / lastBill.getProducedCO2();
+        Float co2Off = (lastBill.getAEOffHours().getConsumption() * kg_CO2_per_each_kWh) / lastBill.getProducedCO2();
+        Float co2Peak = (lastBill.getAEPeakHours().getConsumption() * kg_CO2_per_each_kWh) / lastBill.getProducedCO2();
         CarbonPieDto dto = new CarbonPieDto();
-        dto.setCo2Free(19.4f);
+        dto.setCo2Free(co2Free);
+        dto.setCo2Normal(co2Normal);
+        dto.setCo2Off(co2Off);
+        dto.setCo2Peak(co2Peak);
+        /*dto.setCo2Free(19.4f);
         dto.setCo2Normal(51f);
         dto.setCo2Off(11.4f);
-        dto.setCo2Peak(18.1f);
+        dto.setCo2Peak(18.1f);*/
         return dto;
     }
 
-    public CarbonSPLineDto getCarbonSPLineData(String buildingId) {
+    public CarbonSPLineDto getCarbonSPLineData(String buildingId) throws NotFoundException {
+        Integer currentYear = getCurrentYear();
+        List<BillDto> dtoList = getBillDtos(buildingId, currentYear);
+        BuildingDto building = buildingService.findById(buildingId);
+        List<Float> totalValues = new ArrayList<>();
+        for (BillDto billDto : dtoList) {
+            totalValues.add((billDto.getAverageDailyConsumption() * kg_CO2_per_each_kWh) / building.getArea());
+        }
+        // ConsumptionDto dto = getConsumptionDto(dtoList);
         CarbonSPLineDto dto = new CarbonSPLineDto();
-        dto.setTotalValues(Arrays.asList(4.28f, 4.51f, 3.95f, 4.07f, 3.27f, 3.2f, 3.53f, 3.83f, 3.69f, 3.78f, 3.88f, 4.52f));
-        dto.setBaseLineValues(Arrays.asList(3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f));
-        dto.setXValues(Arrays.asList("Jan-2018",
+        // dto.setTotalValues(Arrays.asList(4.28f, 4.51f, 3.95f, 4.07f, 3.27f, 3.2f, 3.53f, 3.83f, 3.69f, 3.78f, 3.88f, 4.52f));
+        dto.setTotalValues(totalValues);
+        Float baseLineValue = (100 * kg_CO2_per_each_kWh * building.getNumberOfPeople()) / building.getArea();
+        // dto.setBaseLineValues(Arrays.asList(3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f));
+        List<Float> baseLineValues = IntStream.range(0, 12).mapToObj(i -> baseLineValue).collect(Collectors.toList());
+        dto.setBaseLineValues(baseLineValues);
+        List<String> xValues = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            xValues.add(getDateTitle(i, currentYear));
+        }
+        dto.setXValues(xValues);
+       /* dto.setXValues(Arrays.asList("Jan-2018",
                 "Feb-2018",
                 "Mar-2018",
                 "Apr-2018",
@@ -297,14 +351,24 @@ public class ReportService {
                 "Sep-2018",
                 "Oct-2018",
                 "Nov-2018",
-                "Dec-2018"));
+                "Dec-2018"));*/
         return dto;
     }
 
+    //Report
+    //BE Score
+    //Breakdown
+    //Percentile
+    //Electricity consumption index (kWh/m2)
+    //Electricity consumption index (kWh/cap)
+    //Electricity cost index (Euro/m2)
+    //Energy efficiency level
+
+
     //-------------------------------- private methods ------------------------------
 
-    private String getDateTitle(Integer month1, int currentYear) {
-        return DateUtil.getMonth(month1) + "-" + currentYear;
+    private String getDateTitle(Integer month, int year) {
+        return DateUtil.getMonth(month) + "-" + year;
     }
 
     private List<Float> getSavings(Float month1Cost, Float month2Cost, Float month3Cost, int billsSize) {
@@ -312,14 +376,6 @@ public class ReportService {
         Float savings2 = 0.05f * (month2Cost / billsSize);
         Float savings3 = 0.05f * month3Cost / billsSize;
         return Arrays.asList(savings1, savings2, savings3);
-    }
-
-    private List<Integer> findNextThreeMonths(Date date) {
-        List<Integer> nextThreeMonths = new ArrayList<>();
-        nextThreeMonths.add(DateUtil.getNextNMonth(date, 1));
-        nextThreeMonths.add(DateUtil.getNextNMonth(date, 2));
-        nextThreeMonths.add(DateUtil.getNextNMonth(date, 3));
-        return nextThreeMonths;
     }
 
     private Date getCurrentDate() {
@@ -445,5 +501,122 @@ public class ReportService {
         dto.setName(name);
         dto.setData(data);
         return dto;
+    }
+
+    private Date getCustomDate(Integer currentYear, int i) {
+        Date date = new Date();
+        DateUtil.setDateField(date, currentYear, DateUtil.DateType.YEAR);
+        DateUtil.setDateField(date, i, DateUtil.DateType.MONTH);
+        DateUtil.setDateField(date, 1, DateUtil.DateType.DAY);
+        DateUtil.removeTime(date);
+        return date;
+    }
+
+    private class PredictionData {
+        private String buildingId;
+        private Date currentDate;
+        private Integer month1;
+        private Integer month2;
+        private Integer month3;
+        private Float month1Cost;
+        private Float month2Cost;
+        private Float month3Cost;
+        private Float month1Consumption;
+        private Float month2Consumption;
+        private Float month3Consumption;
+        private List<Bill> bills;
+
+        public PredictionData(String buildingId) {
+            this.buildingId = buildingId;
+        }
+
+        public Date getCurrentDate() {
+            return currentDate;
+        }
+
+        public Integer getMonth1() {
+            return month1;
+        }
+
+        public Integer getMonth2() {
+            return month2;
+        }
+
+        public Integer getMonth3() {
+            return month3;
+        }
+
+        public Float getMonth1Cost() {
+            return month1Cost;
+        }
+
+        public Float getMonth2Cost() {
+            return month2Cost;
+        }
+
+        public Float getMonth3Cost() {
+            return month3Cost;
+        }
+
+        public Float getMonth1Consumption() {
+            return month1Consumption;
+        }
+
+        public Float getMonth2Consumption() {
+            return month2Consumption;
+        }
+
+        public Float getMonth3Consumption() {
+            return month3Consumption;
+        }
+
+        public List<Bill> getBills() {
+            return bills;
+        }
+
+        public PredictionData invoke() {
+            currentDate = getCurrentDate();
+            Date previousYear = DateUtil.increaseDate(currentDate, -1, DateUtil.DateType.YEAR);
+            List<Integer> threeNextMonths = findNextThreeMonths(previousYear);
+            month1 = threeNextMonths.get(0);
+            month2 = threeNextMonths.get(1);
+            month3 = threeNextMonths.get(2);
+
+            month1Cost = 0f;
+            month2Cost = 0f;
+            month3Cost = 0f;
+
+            month1Consumption = 0f;
+            month2Consumption = 0f;
+            month3Consumption = 0f;
+
+            bills = billService.filterByFromDateAndMonthAndBuilding(previousYear,
+                    month1,
+                    month2,
+                    month3,
+                    buildingId);
+            for (Bill bill : bills) {
+                Integer fromMonth = bill.getFromMonth();
+                if (fromMonth.equals(month1)) {
+                    month1Cost += bill.getTotalPayable();
+                    month1Consumption += bill.getAverageDailyConsumption();
+                } else if (fromMonth.equals(month2)) {
+                    month2Cost += bill.getTotalPayable();
+                    month2Consumption += bill.getAverageDailyConsumption();
+                } else if (fromMonth.equals(month3)) {
+                    month3Cost += bill.getTotalPayable();
+                    month3Consumption += bill.getAverageDailyConsumption();
+                }
+            }
+            return this;
+        }
+
+        private List<Integer> findNextThreeMonths(Date date) {
+            List<Integer> nextThreeMonths = new ArrayList<>();
+            nextThreeMonths.add(DateUtil.getNextNMonth(date, 1));
+            nextThreeMonths.add(DateUtil.getNextNMonth(date, 2));
+            nextThreeMonths.add(DateUtil.getNextNMonth(date, 3));
+            return nextThreeMonths;
+        }
     }
 }
