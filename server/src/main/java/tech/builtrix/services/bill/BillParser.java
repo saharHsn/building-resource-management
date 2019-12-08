@@ -69,12 +69,12 @@ public class BillParser {
         String redes_ = column_value.get(this.REDES_).get(6);
         Float powerDemandCost = getAmount(redes_);
 
-        //?????
+        // TODO ?
         String address = "";
-        //??????
+        //TODO ?
         //Emissão de CO2 associada aos consumos de energia desta Fatura: 8.183,95 Kg
         Float producedCo2 = null;
-        //??
+        //TODO ?
         //Consumo médio dos últimos 12 meses: 767,90 kWh
         Float averageDailyConsumption = null;
 

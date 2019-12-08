@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tech.builtrix.controllers.report.ConsumptionNormalWeatherDto;
 import tech.builtrix.controllers.report.PredictedWeatherVsRealDto;
+import tech.builtrix.dtos.bill.BillDto;
 import tech.builtrix.dtos.report.*;
 import tech.builtrix.enums.DatePartType;
 import tech.builtrix.enums.TimePeriodType;
+import tech.builtrix.exceptions.NotFoundException;
+import tech.builtrix.models.bill.Bill;
 import tech.builtrix.services.bill.BillService;
 import tech.builtrix.utils.DateUtil;
 
@@ -23,6 +26,14 @@ import java.util.List;
 @Slf4j
 public class ReportService {
     private final BillService billService;
+    private static String FREEHOURS_COLOR = "#ffff00";
+    private static String NORMALHOURS_COLOR = "#0066cc";
+    private static String OFFHOURS_COLOR = "#248f24";
+    private static String PEAKHOURS_COLOR = "#ff0000";
+    private static String FREE_HOURS = "Free Hours";
+    private static String NORMAL_HOUR = "Normal Hour";
+    private static String OFF_HOURS = "Off Hours";
+    private static String PEAK_HOURS = "Peak Hours";
 
     @Autowired
     public ReportService(BillService billService) {
@@ -30,126 +41,178 @@ public class ReportService {
     }
 
     public PredictionDto predict(String buildingId) {
-        PredictionDto dto = new PredictionDto();
-        List<Integer> threeNextMonths = findNextThreeMonths(new Date());
         //1. find next three months
         //2. find next three months data for previous years
         //3. average n previous year data
         //4. return each month data
-        //this.billService.
-        dto.setCostYValues(Arrays.asList(6135.5f, 7130.4f, 6234.3f));
-        dto.setSavingYValues(Arrays.asList(321f, 420f, 360f));
-        dto.setXValues(Arrays.asList("Oct-2019", "Nov-2019", "Dec-2019"));
+        PredictionDto dto = new PredictionDto();
+        Date currentDate = getCurrentDate();
+        Date previousYear = DateUtil.increaseDate(currentDate, -1, DateUtil.DateType.YEAR);
+        List<Integer> threeNextMonths = findNextThreeMonths(previousYear);
+        Integer month1 = threeNextMonths.get(0);
+        Integer month2 = threeNextMonths.get(1);
+        Integer month3 = threeNextMonths.get(2);
+
+        Float month1Cost = 0f;
+        Float month2Cost = 0f;
+        Float month3Cost = 0f;
+        List<Bill> bills = billService.filterByFromDateAndMonthAndBuilding(previousYear,
+                month1,
+                month2,
+                month3,
+                buildingId);
+        for (Bill bill : bills) {
+            Integer fromMonth = bill.getFromMonth();
+            if (fromMonth.equals(month1)) {
+                month1Cost += bill.getTotalPayable();
+            } else if (fromMonth.equals(month2)) {
+                month2Cost += bill.getTotalPayable();
+            } else if (fromMonth.equals(month3)) {
+                month3Cost += bill.getTotalPayable();
+            }
+        }
+        // dto.setCostYValues(Arrays.asList(6135.5f, 7130.4f, 6234.3f));
+        int billsSize = bills.size();
+        dto.setCostYValues(Arrays.asList(month1Cost / billsSize, month2Cost / billsSize, month3Cost / billsSize));
+        // dto.setSavingYValues(Arrays.asList(321f, 420f, 360f));
+        dto.setSavingYValues(getSavings(month1Cost, month2Cost, month3Cost, billsSize));
+        //dto.setXValues(Arrays.asList("Oct-2019", "Nov-2019", "Dec-2019"));
+        int currentYear = DateUtil.getYear(currentDate);
+        dto.setXValues(Arrays.asList(
+                getDateTitle(month1, currentYear),
+                getDateTitle(month2, currentYear),
+                getDateTitle(month3, currentYear)));
         return dto;
     }
 
-    private List<Integer> findNextThreeMonths(Date date) {
-        List<Integer> nextThreeMonths = new ArrayList<>();
-        nextThreeMonths.add(DateUtil.getNextNMonth(date, 1));
-        nextThreeMonths.add(DateUtil.getNextNMonth(date, 2));
-        nextThreeMonths.add(DateUtil.getNextNMonth(date, 3));
-        return nextThreeMonths;
-    }
-
-    public SavingDto savingThisMonth(String buildingId) {
+    public SavingDto savingThisMonth(String buildingId) throws NotFoundException {
+        Date currentDate = getCurrentDate();
+        Date previousYear = DateUtil.increaseDate(currentDate, -1, DateUtil.DateType.YEAR);
+        List<Bill> bills = billService.filterByFromDateAndMonthAndBuilding(previousYear,
+                DateUtil.getMonth(currentDate),
+                buildingId);
+        Bill lastBill = billService.getLastBill();
+        Float consumptionSum = 0f;
+        Float costSum = 0f;
+        Float environmentSum = 0f;
+        for (Bill bill : bills) {
+            //TODO fix this field
+            consumptionSum += bill.getAverageDailyConsumption();
+            costSum += bill.getTotalPayable();
+            environmentSum += bill.getProducedCO2();
+        }
         SavingDto dto = new SavingDto();
-        dto.setConsumption(1263f);
+        dto.setConsumption((consumptionSum / bills.size()) - lastBill.getAverageDailyConsumption());
+        dto.setCost((costSum / bills.size()) - lastBill.getTotalPayable());
+        dto.setEnvironmental((environmentSum / bills.size()) - lastBill.getProducedCO2());
+        /*dto.setConsumption(1263f);
         dto.setCost(190f);
-        dto.setEnvironmental(515f);
+        dto.setEnvironmental(515f);*/
         return dto;
     }
 
     public Float getBEScore(String buildingId) {
-        return 40f;
+        Float reference = 50f;
+        Float GOD = 0.1f * reference;
+        //TODO what is x?
+        Float x = billService.geXValue(buildingId);
+        Float beScore = (GOD / x) * 100;
+        //return 40f;
+        return beScore;
     }
 
-    public CostStackDto getCostStackData(String buildingId) {
-        CostStackDto dto = new CostStackDto();
-        dto.setContractedPowerValues(Arrays.asList(833.69f, 846.81f, 739.59f, 896.43f, 684.86f, 672.34f, 742.91f, 782.83f, 753.81f, 762.87f, 714.73f, 786.84f));
+    public CostStackDto getCostStackData(String buildingId) throws NotFoundException {
+        Integer year = getCurrentYear();
+        List<BillDto> dtoList = getBillDtos(buildingId, year);
+
+        CostStackDto dto = getCostStackDto(dtoList);
+
+       /* dto.setContractedPowerValues(Arrays.asList(833.69f, 846.81f, 739.59f, 896.43f, 684.86f, 672.34f, 742.91f, 782.83f, 753.81f, 762.87f, 714.73f, 786.84f));
         dto.setFreeValues(Arrays.asList(437.62f, 402.36f, 467.34f, 460.2f, 369.59f, 414.66f, 368.28f, 406.59f, 453.63f, 397.01f, 427.34f, 556.36f));
         dto.setOffValues(Arrays.asList(265.96f, 282.73f, 238.51f, 250.71f, 211.15f, 209.45f, 209f, 228.47f, 227.03f, 220.12f, 245.33f, 310.36f));
         dto.setPeakValues(Arrays.asList(878.11f, 944.15f, 829.95f, 690.54f, 473.42f, 429.33f, 513.55f, 547.49f, 481.35f, 527.35f, 695.46f, 865.32f));
-        dto.setXValues(Arrays.asList("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"));
         dto.setPowerInPeakValues(Arrays.asList(833.69f, 846.81f, 739.59f, 896.43f, 684.86f, 672.34f, 742.91f, 782.83f, 753.81f, 762.87f, 714.73f, 786.84f));
         dto.setNormalValues(Arrays.asList(1844.74f, 1932.34f, 1715.54f, 1833.96f, 1538.25f, 1451.76f, 1729.1f, 878.35f, 1743.17f, 1881.22f, 1728.28f, 1834.11f));
-        dto.setReactivePowerValues(Arrays.asList(9.34f, 9.32f, 10.21f, 10.56f, 13.36f, 16.35f, 9.78f, 6.43f, 6.4f, 9.37f, 12.25f, 6.02f));
+        dto.setReactivePowerValues(Arrays.asList(9.34f, 9.32f, 10.21f, 10.56f, 13.36f, 16.35f, 9.78f, 6.43f, 6.4f, 9.37f, 12.25f, 6.02f));*/
         return dto;
     }
 
-    public CostPieDto getCostPieData(String buildingId) {
+
+    public CostPieDto getCostPieData(String buildingId) throws NotFoundException {
+        Date currentDate = getCurrentDate();
+        int year = DateUtil.getYear(currentDate);
+        List<BillDto> dtoList = new ArrayList<>();
+        float contractedPower = 0f;
+        float freeHours = 0f;
+        float normalHours = 0f;
+        float offHours = 0f;
+        float powerInPeakHours = 0f;
+        float reactivePower = 0f;
+        float peakHours = 0f;
+        for (int i = 0; i < 12; i++) {
+            BillDto billDto = billService.filterByMonthAndYear(buildingId, i, year);
+            dtoList.add(billDto);
+        }
+        for (BillDto billDto : dtoList) {
+            contractedPower += billDto.getRDContractedPower().getCost();
+            freeHours += billDto.getAEFreeHours().getCost();
+            normalHours += billDto.getAENormalHours().getCost();
+            offHours += billDto.getAENormalHours().getCost();
+            powerInPeakHours = billDto.getAEPeakHours().getCost();
+            reactivePower += billDto.getRDReactivePower().getCost();
+            peakHours += billDto.getAEPeakHours().getCost();
+        }
         CostPieDto dto = new CostPieDto();
-        dto.setContractedPower(3.2f);
-        dto.setFreeHours(10.8f);
-        dto.setNormalHours(43.6f);
-        dto.setOffHours(6.1f);
-        dto.setPowerInPeakHours(18.08f);
-        dto.setReactivePower(0.2f);
-        dto.setPeakHours(17.3f);
+        dto.setContractedPower(contractedPower / 12);
+        dto.setFreeHours(freeHours / 12);
+        dto.setNormalHours(normalHours / 12);
+        dto.setOffHours(offHours / 12);
+        dto.setPowerInPeakHours(powerInPeakHours / 12);
+        dto.setReactivePower(reactivePower / 12);
+        dto.setPeakHours(peakHours / 12);
         return dto;
     }
 
-    public ConsumptionDto getConsumption(String buildingId) {
-        ConsumptionDto dto = new ConsumptionDto();
-        dto.setXValues(Arrays.asList("Jan-2018", "Feb-2018", "Mar-2018", "Apr-2018", "May-2018", "Jun-2018",
-                "Jul-2018", "Aug-2018", "Sept-2018", "Oct-2018", "Nov-2018", "Dec-2018"));
-        dto.setContractedPowerValues(Arrays.asList(125.79f, 131.4f, 118.36f, 131.4f, 126.81f, 131.04f, 126.81f, 131.04f, 131.04f, 131.99f, 136.69f, 131.99f));
+    public ConsumptionDto getConsumption(String buildingId) throws NotFoundException {
+        List<BillDto> dtoList = getBillDtos(buildingId, getCurrentYear());
+
+        ConsumptionDto dto = getConsumptionDto(dtoList);
+
+        /*dto.setContractedPowerValues(Arrays.asList(125.79f, 131.4f, 118.36f, 131.4f, 126.81f, 131.04f, 126.81f, 131.04f, 131.04f, 131.99f, 136.69f, 131.99f));
         dto.setPowerInPeakValues(Arrays.asList(833.69f, 846.81f, 739.59f, 896.43f, 684.86f, 672.34f, 742.91f, 782.83f, 753.81f, 762.87f, 714.73f, 786.84f));
         dto.setReactivePowerValues(Arrays.asList(9.34f, 9.32f, 10.21f, 10.56f, 13.36f, 16.35f, 9.78f, 6.43f, 6.4f, 9.37f, 12.25f, 6.02f));
         dto.setNormalValues(Arrays.asList(1844.74f, 1932.34f, 1715.54f, 1833.96f, 1538.25f, 1451.76f, 1729.1f, 878.35f, 1743.17f, 1881.22f, 1728.28f, 1834.11f));
         dto.setPeakValues(Arrays.asList(878.11f, 944.15f, 829.95f, 690.54f, 473.42f, 429.33f, 513.55f, 547.49f, 481.35f, 527.35f, 695.46f, 865.32f));
         dto.setFreeValues(Arrays.asList(437.62f, 402.36f, 467.34f, 460.2f, 369.59f, 414.66f, 368.28f, 406.59f, 453.63f, 397.01f, 427.34f, 556.36f));
-        dto.setOffValues(Arrays.asList(265.96f, 282.73f, 238.51f, 250.71f, 211.15f, 209.45f, 209f, 228.47f, 227.03f, 220.12f, 245.33f, 310.36f));
+        dto.setOffValues(Arrays.asList(265.96f, 282.73f, 238.51f, 250.71f, 211.15f, 209.45f, 209f, 228.47f, 227.03f, 220.12f, 245.33f, 310.36f));*/
+        //TODO refine this data later
         dto.setBaseLineValues(Arrays.asList(1844.74f, 1932.34f, 1715.54f, 1833.96f, 1538.25f, 1451.76f, 1729.1f, 878.35f, 1743.17f, 1881.22f, 1728.28f, 1834.11f));
         return dto;
     }
 
+
     public ConsumptionDynamicDto getConsumptionDynamicData(String buildingId,
-                                                           Long year,
-                                                           TimePeriodType periodType, DatePartType datePartType) {
-        ConsumptionDynamicDto peakHours = getConsumptionDynamicDto("#ff0000", "Peak Hours", 878.11f, 944.15f, 829.95f, 690.54f, 473.42f, 429.33f, 513.55f, 547.49f, 481.35f, 527.35f, 695.46f, 865.32f);
-        ConsumptionDynamicDto peakHoursQ = getConsumptionDynamicDto("#ff0000", "Peak Hours", 878.11f, 944.15f, 829.95f, 690.54f);
-
-        ConsumptionDynamicDto freeHours = getConsumptionDynamicDto("#ffff00", "Free Hours", 9.34f, 9.32f, 10.21f, 10.56f, 13.36f, 16.35f, 9.78f, 6.43f, 6.4f, 9.37f, 12.25f, 6.02f);
-
-        ConsumptionDynamicDto freeHoursQ = getConsumptionDynamicDto("#ff0000", "Free Hours", 9.34f, 9.32f, 10.21f, 10.56f);
-
-        ConsumptionDynamicDto normalHours = getConsumptionDynamicDto("#0066cc", "Normal Hour", 125.79f, 131.4f, 118.36f, 131.4f, 126.81f, 131.04f, 126.81f, 131.04f, 131.04f, 131.99f, 136.69f, 131.99f);
-
-        ConsumptionDynamicDto normalHoursQ = getConsumptionDynamicDto("#0066cc", "Normal Hour", 125.79f, 131.4f, 118.36f, 131.4f);
-
-        ConsumptionDynamicDto offHours = getConsumptionDynamicDto("#248f24", "Off Hours", 265.96f, 282.73f, 238.51f, 250.71f, 211.15f, 209.45f, 209f, 228.47f, 227.03f, 220.12f, 245.33f, 310.36f);
-
-        ConsumptionDynamicDto offHoursQ = getConsumptionDynamicDto("#248f24", "Off Hours", 265.96f, 282.73f, 238.51f, 250.71f);
-
+                                                           Integer year,
+                                                           TimePeriodType periodType,
+                                                           DatePartType datePartType) throws NotFoundException {
+        List<BillDto> dtoList = getBillDtos(buildingId, year);
+        ConsumptionDto monthlyConsDto = getConsumptionDto(dtoList);
+        //TODO calculate quarter later
         boolean isQuarter = periodType.equals(TimePeriodType.QUARTERS);
-
-        if (datePartType.equals(DatePartType.FREE_HOURS)) {
-            return (isQuarter ? freeHoursQ : freeHours);
-        } else if (datePartType.equals(DatePartType.NORMAL_HOURS)) {
-            return (isQuarter ? normalHoursQ : normalHours);
-        } else if (datePartType.equals(DatePartType.OFF_HOURS)) {
-            return (isQuarter ? offHoursQ : offHours);
-        } else if (datePartType.equals(DatePartType.PEAK_HOURS)) {
-            return (isQuarter ? peakHoursQ : peakHours);
+        switch (datePartType) {
+            case FREE_HOURS:
+                return !isQuarter ? getConsumptionDynamicDto(FREEHOURS_COLOR, FREE_HOURS, monthlyConsDto.getFreeValues()) : getConsumptionDynamicDto(FREEHOURS_COLOR, FREE_HOURS, 9.34f, 9.32f, 10.21f, 10.56f);
+            case NORMAL_HOURS:
+                return !isQuarter ? getConsumptionDynamicDto(NORMALHOURS_COLOR, NORMAL_HOUR, monthlyConsDto.getNormalValues()) : getConsumptionDynamicDto(NORMALHOURS_COLOR, NORMAL_HOUR, 125.79f, 131.4f, 118.36f, 131.4f);
+            case OFF_HOURS:
+                return !isQuarter ? getConsumptionDynamicDto(OFFHOURS_COLOR, OFF_HOURS, monthlyConsDto.getOffValues()) : getConsumptionDynamicDto(OFFHOURS_COLOR, OFF_HOURS, 265.96f, 282.73f, 238.51f, 250.71f);
+            case PEAK_HOURS:
+                return !isQuarter ? getConsumptionDynamicDto(PEAKHOURS_COLOR, PEAK_HOURS, monthlyConsDto.getPeakValues()) : getConsumptionDynamicDto(PEAKHOURS_COLOR, PEAK_HOURS, 878.11f, 944.15f, 829.95f, 690.54f);
+            default:
+                throw new IllegalStateException("Unexpected value: " + datePartType);
         }
-        return null;
     }
 
-    private ConsumptionDynamicDto getConsumptionDynamicDto(String s, String s2, float v, float v2, float v3, float v4) {
-        ConsumptionDynamicDto freeHoursQ = new ConsumptionDynamicDto();
-        freeHoursQ.setColor(s);
-        freeHoursQ.setName(s2);
-        freeHoursQ.setData(Arrays.asList(v, v2, v3, v4));
-        return freeHoursQ;
-    }
-
-    private ConsumptionDynamicDto getConsumptionDynamicDto(String s, String s2, float v, float v2, float v3, float v4, float v5, float v6, float v7, float v8, float v9, float v10, float v11, float v12) {
-        ConsumptionDynamicDto peakHours = new ConsumptionDynamicDto();
-        peakHours.setColor(s);
-        peakHours.setName(s2);
-        peakHours.setData(Arrays.asList(v, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12));
-        return peakHours;
-    }
 
     public ConsumptionNormalWeatherDto getConsumptionNormalWeather(String buildingId) {
         ConsumptionNormalWeatherDto dto = new ConsumptionNormalWeatherDto();
@@ -235,6 +298,151 @@ public class ReportService {
                 "Oct-2018",
                 "Nov-2018",
                 "Dec-2018"));
+        return dto;
+    }
+
+    //-------------------------------- private methods ------------------------------
+
+    private String getDateTitle(Integer month1, int currentYear) {
+        return DateUtil.getMonth(month1) + "-" + currentYear;
+    }
+
+    private List<Float> getSavings(Float month1Cost, Float month2Cost, Float month3Cost, int billsSize) {
+        Float savings1 = 0.05f * (month1Cost / billsSize);
+        Float savings2 = 0.05f * (month2Cost / billsSize);
+        Float savings3 = 0.05f * month3Cost / billsSize;
+        return Arrays.asList(savings1, savings2, savings3);
+    }
+
+    private List<Integer> findNextThreeMonths(Date date) {
+        List<Integer> nextThreeMonths = new ArrayList<>();
+        nextThreeMonths.add(DateUtil.getNextNMonth(date, 1));
+        nextThreeMonths.add(DateUtil.getNextNMonth(date, 2));
+        nextThreeMonths.add(DateUtil.getNextNMonth(date, 3));
+        return nextThreeMonths;
+    }
+
+    private Date getCurrentDate() {
+        return new Date();
+    }
+
+    private CostStackDto getCostStackDto(List<BillDto> dtoList) {
+        CostStackDto dto = new CostStackDto();
+        List<Float> contractedPowerValues = new ArrayList<>();
+        List<Float> powerInPeakValues = new ArrayList<>();
+        List<Float> reactivePowerValues = new ArrayList<>();
+        List<Float> normalValues = new ArrayList<>();
+        List<Float> peakValues = new ArrayList<>();
+        List<Float> freeValues = new ArrayList<>();
+        List<Float> offValues = new ArrayList<>();
+        extractCostValues(dtoList, contractedPowerValues,
+                powerInPeakValues,
+                reactivePowerValues,
+                normalValues,
+                peakValues,
+                freeValues,
+                offValues);
+        dto.setContractedPowerValues(contractedPowerValues);
+        dto.setFreeValues(freeValues);
+        dto.setOffValues(offValues);
+        dto.setPeakValues(peakValues);
+        dto.setPowerInPeakValues(powerInPeakValues);
+        dto.setNormalValues(normalValues);
+        dto.setReactivePowerValues(reactivePowerValues);
+        //TODO refine later
+        dto.setXValues(Arrays.asList("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"));
+        return dto;
+    }
+
+    private void extractCostValues(List<BillDto> dtoList, List<Float> contractedPowerValues, List<Float> powerInPeakValues, List<Float> reactivePowerValues, List<Float> normalValues, List<Float> peakValues, List<Float> freeValues, List<Float> offValues) {
+        for (BillDto billDto : dtoList) {
+            contractedPowerValues.add(billDto.getRDContractedPower().getCost());
+            freeValues.add(billDto.getAEFreeHours().getCost());
+            offValues.add(billDto.getAEOffHours().getCost());
+            peakValues.add(billDto.getAEPeakHours().getCost());
+            powerInPeakValues.add(billDto.getRDPeakHours().getCost());
+            normalValues.add(billDto.getAENormalHours().getCost());
+            reactivePowerValues.add(billDto.getRDReactivePower().getCost());
+        }
+    }
+
+    private List<BillDto> getBillDtos(String buildingId, Integer year) throws NotFoundException {
+        List<BillDto> dtoList = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            BillDto billDto = billService.filterByMonthAndYear(buildingId, i, year);
+            dtoList.add(billDto);
+        }
+        return dtoList;
+    }
+
+    private ConsumptionDto getConsumptionDto(List<BillDto> dtoList) {
+        ConsumptionDto dto = new ConsumptionDto();
+        //TODO refine later
+        dto.setXValues(Arrays.asList("Jan-2018", "Feb-2018", "Mar-2018", "Apr-2018", "May-2018", "Jun-2018",
+                "Jul-2018", "Aug-2018", "Sept-2018", "Oct-2018", "Nov-2018", "Dec-2018"));
+
+        List<Float> contractedPowerValues = new ArrayList<>();
+        List<Float> powerInPeakValues = new ArrayList<>();
+        List<Float> reactivePowerValues = new ArrayList<>();
+        List<Float> normalValues = new ArrayList<>();
+        List<Float> peakValues = new ArrayList<>();
+        List<Float> freeValues = new ArrayList<>();
+        List<Float> offValues = new ArrayList<>();
+        extractConsumptionValues(dtoList,
+                contractedPowerValues,
+                powerInPeakValues,
+                reactivePowerValues,
+                normalValues,
+                peakValues,
+                freeValues,
+                offValues);
+        dto.setContractedPowerValues(contractedPowerValues);
+        dto.setFreeValues(freeValues);
+        dto.setOffValues(offValues);
+        dto.setPeakValues(peakValues);
+        dto.setPowerInPeakValues(powerInPeakValues);
+        dto.setNormalValues(normalValues);
+        dto.setReactivePowerValues(reactivePowerValues);
+        return dto;
+    }
+
+    private void extractConsumptionValues(List<BillDto> dtoList,
+                                          List<Float> contractedPowerValues,
+                                          List<Float> powerInPeakValues,
+                                          List<Float> reactivePowerValues,
+                                          List<Float> normalValues,
+                                          List<Float> peakValues,
+                                          List<Float> freeValues,
+                                          List<Float> offValues) {
+        for (BillDto billDto : dtoList) {
+            contractedPowerValues.add(billDto.getRDContractedPower().getConsumption());
+            freeValues.add(billDto.getAEFreeHours().getConsumption());
+            offValues.add(billDto.getAEOffHours().getConsumption());
+            peakValues.add(billDto.getAEPeakHours().getConsumption());
+            powerInPeakValues.add(billDto.getRDPeakHours().getConsumption());
+            normalValues.add(billDto.getAENormalHours().getConsumption());
+            reactivePowerValues.add(billDto.getRDReactivePower().getConsumption());
+        }
+    }
+
+    private ConsumptionDynamicDto getConsumptionDynamicDto(String s, String s2, float v, float v2, float v3, float v4) {
+        ConsumptionDynamicDto freeHoursQ = new ConsumptionDynamicDto();
+        freeHoursQ.setColor(s);
+        freeHoursQ.setName(s2);
+        freeHoursQ.setData(Arrays.asList(v, v2, v3, v4));
+        return freeHoursQ;
+    }
+
+    private Integer getCurrentYear() {
+        Date currentDate = getCurrentDate();
+        return DateUtil.getYear(currentDate);
+    }
+
+    private ConsumptionDynamicDto getConsumptionDynamicDto(String color, String name, List<Float> data) {
+        ConsumptionDynamicDto dto = new ConsumptionDynamicDto();
+        dto.setColor(color);
+        dto.setName(name);
+        dto.setData(data);
         return dto;
     }
 }

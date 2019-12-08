@@ -11,6 +11,8 @@ import java.util.GregorianCalendar;
  * Created By sahar at 12/3/19
  */
 public class DateUtil {
+    private static String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+
     public static Date getDateFromStr(String dateStr, String format) throws ParseException {
         DateFormat pdFormatter = new SimpleDateFormat(format);
         return pdFormatter.parse(dateStr);
@@ -151,6 +153,10 @@ public class DateUtil {
         Calendar timeCalendar = Calendar.getInstance();
         timeCalendar.setTime(time);
         return timeCalendar.get(Calendar.YEAR);
+    }
+
+    public static String getMonth(Integer monthNumber) {
+        return monthNames[monthNumber - 1];
     }
 
     public enum DateType {

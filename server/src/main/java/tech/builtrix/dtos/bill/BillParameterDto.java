@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import tech.builtrix.models.bill.BillParameterInfo;
 
 import java.util.Date;
 
@@ -19,8 +20,18 @@ public class BillParameterDto {
     String paramId;
     private Date initialDate;
     private Date endDate;
-    private Float cost;
-    private Float consumption;
-    private Float tariffPrice;
-    private Float totalTariffCost;
+    private Float cost = 0f;
+    private Float consumption = 0f;
+    private Float tariffPrice = 0f;
+    private Float totalTariffCost = 0f;
+
+    public BillParameterDto(BillParameterInfo billParameterInfo) {
+        this.initialDate = billParameterInfo.getInitialDate();
+        this.consumption = billParameterInfo.getConsumption();
+        this.cost = billParameterInfo.getCost();
+        this.endDate = billParameterInfo.getEndDate();
+        this.paramId = billParameterInfo.getId();
+        this.tariffPrice = billParameterInfo.getTariffPrice();
+        this.totalTariffCost = billParameterInfo.getTotalTariffCost();
+    }
 }

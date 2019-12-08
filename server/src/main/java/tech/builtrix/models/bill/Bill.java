@@ -1,6 +1,7 @@
 package tech.builtrix.models.bill;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIndexRangeKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +25,8 @@ public class Bill extends EntityBase<Bill> {
     private String buildingId;
     @DynamoDBAttribute
     private String address;
-    @DynamoDBAttribute
+    //@DynamoDBAttribute
+    @DynamoDBIndexRangeKey
     private Date fromDate;
     @DynamoDBAttribute
     private Integer fromYear;
