@@ -44,7 +44,7 @@ public class BillParser {
         this.billService = billService;
     }
 
-    public BillDto parseBill(String bucketName, String fileName) throws BillParseException, ParseException {
+    public BillDto parseBill(String buildingId, String bucketName, String fileName) throws BillParseException, ParseException {
         TExtractDto tExtractDto;
         try {
             tExtractDto = this.pdfParser.parseFile(bucketName, fileName);
@@ -85,9 +85,11 @@ public class BillParser {
         BillParameterDto rDPeakHours = getBillParameter(column_value, POTENCIA_HORAS_DE_PONTA_);
         BillParameterDto rDContractedPower = getBillParameter(column_value, POTENCIA_CONTRATADA_);
         BillParameterDto rDReactivePower = getBillParameter(column_value, REATIVA_FORNECIDA_NO_VAZIO);
-        BillDto bill = new BillDto(
+        BillDto bill = new BillDto(buildingId,
                 address,
                 fromDate,
+                DateUtil.getYear(fromDate),
+                DateUtil.getMonth(fromDate),
                 toDate,
                 totalPayable,
                 activeEnergyCost,

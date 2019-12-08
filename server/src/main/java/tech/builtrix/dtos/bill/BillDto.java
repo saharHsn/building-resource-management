@@ -16,8 +16,11 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BillDto {
+    private String buildingId;
     private String address;
     private Date fromDate;
+    private Integer year;
+    private Integer fromMonth;
     private Date toDate;
     private Float totalPayable;
     private Float activeEnergyCost;

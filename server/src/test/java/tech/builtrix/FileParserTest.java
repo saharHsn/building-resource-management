@@ -39,7 +39,7 @@ public class FileParserTest {
         try {
             String document = "2018_apr_may.pdf";
             String bucket = "textract-console-us-east-2-64c71e37-898b-403b-80b7-942d95a9cf48";
-            this.billParser.parseBill(bucket, document);
+            this.billParser.parseBill("101010110", bucket, document);
             /*TExtractDto tExtractDto = this.pdfParser.parseFile(bucket, document);
             System.out.println("key value result : " + tExtractDto.getKeyValueResult());
             System.out.println("table result : " + tExtractDto.getTablesResult());*/

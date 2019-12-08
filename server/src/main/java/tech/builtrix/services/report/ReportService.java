@@ -1,14 +1,20 @@
 package tech.builtrix.services.report;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tech.builtrix.controllers.report.ConsumptionNormalWeatherDto;
 import tech.builtrix.controllers.report.PredictedWeatherVsRealDto;
 import tech.builtrix.dtos.report.*;
 import tech.builtrix.enums.DatePartType;
 import tech.builtrix.enums.TimePeriodType;
+import tech.builtrix.services.bill.BillService;
+import tech.builtrix.utils.DateUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created By sahar at 12/4/19
@@ -16,13 +22,33 @@ import java.util.Arrays;
 @Component
 @Slf4j
 public class ReportService {
+    private final BillService billService;
+
+    @Autowired
+    public ReportService(BillService billService) {
+        this.billService = billService;
+    }
 
     public PredictionDto predict(String buildingId) {
         PredictionDto dto = new PredictionDto();
+        List<Integer> threeNextMonths = findNextThreeMonths(new Date());
+        //1. find next three months
+        //2. find next three months data for previous years
+        //3. average n previous year data
+        //4. return each month data
+        //this.billService.
         dto.setCostYValues(Arrays.asList(6135.5f, 7130.4f, 6234.3f));
         dto.setSavingYValues(Arrays.asList(321f, 420f, 360f));
         dto.setXValues(Arrays.asList("Oct-2019", "Nov-2019", "Dec-2019"));
         return dto;
+    }
+
+    private List<Integer> findNextThreeMonths(Date date) {
+        List<Integer> nextThreeMonths = new ArrayList<>();
+        nextThreeMonths.add(DateUtil.getNextNMonth(date, 1));
+        nextThreeMonths.add(DateUtil.getNextNMonth(date, 2));
+        nextThreeMonths.add(DateUtil.getNextNMonth(date, 3));
+        return nextThreeMonths;
     }
 
     public SavingDto savingThisMonth(String buildingId) {
