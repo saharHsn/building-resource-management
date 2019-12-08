@@ -7,13 +7,7 @@ package tech.builtrix.services.bill;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.Table;
-import com.amazonaws.services.dynamodbv2.document.UpdateItemOutcome;
-import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
-import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.ReturnValue;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,7 +32,6 @@ import java.util.Map;
 public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
     private static String billTableName = Bill.class.getAnnotation(DynamoDBTable.class).tableName();
     private static AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
-    DynamoDB dynamoDB = new DynamoDB(client);
     static DynamoDBMapper mapper = new DynamoDBMapper(client);
     private DynamoDBTypeConverter<AttributeValue, Object> converter;
 
@@ -103,7 +96,6 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         return mapper.scan(Bill.class, scanExpression);
     }
 
-
     public List<Bill> filterByFromDateAndMonthAndBuilding(Date fromDate, int month, String buildingId) {
         String fromDateStr = getDateStr(fromDate);
         Map<String, AttributeValue> exprAtrVals = new HashMap<>();
@@ -116,11 +108,6 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
                 .withFilterExpression(filterExpression)
                 .withExpressionAttributeValues(exprAtrVals);
         return mapper.scan(Bill.class, scanExpression);
-    }
-
-    private String getDateStr(Date fromDate) {
-        SimpleDateFormat df = new SimpleDateFormat(DATE_PATTERN);
-        return df.format(fromDate);
     }
 
     public Bill getLastBill() throws NotFoundException {
@@ -147,6 +134,17 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         return allBillInfo;
     }
 
+    public Float geXValue(String buildingId) {
+        return 10f;
+    }
+
+    //----------------------------------------- Private Methods ---------------------------------------------
+
+    private String getDateStr(Date fromDate) {
+        SimpleDateFormat df = new SimpleDateFormat(DATE_PATTERN);
+        return df.format(fromDate);
+    }
+
     private BillDto convertBillToDto(Bill bill) throws NotFoundException {
         BillParameterInfo aeFree = this.billParameterService.getById(bill.getAEFreeHours());
         BillParameterDto aeFreeDto = new BillParameterDto(aeFree);
@@ -171,78 +169,9 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         return billDto;
     }
 
-    /*  public BillDateCostDto getBillFromMap(Map<String, AttributeValue> billItem) throws ParseException {
-          BillDateCostDto dto = new BillDateCostDto();
-          dto.setTotalPayable(Float.valueOf(billItem.get("totalPayable").getN()));
-          String fromDate = billItem.get("fromDate").getS();
-          dto.setFromDate(DateUtil.convertDateStrToDate(fromDate, DATE_PATTERN));
-          dto.setId(billItem.get("id").getS());
-          dto.setFromMonth(Integer.valueOf(billItem.get("fromMonth").getN()));
-          dto.setFromYear(Integer.valueOf(billItem.get("fromYear").getN()));
-          return dto;
-      }
-  */
-
-   /*public List<BillDateCostDto> filterByFromDateAndMonthAndBuilding(Date fromDate,
-                                                                     Integer month1,
-                                                                     Integer month2,
-                                                                     Integer month3,
-                                                                     String buildingId) throws ParseException {
-        //2018-04-17T19:30:00.000Z
-        //"attr1 = :val1 and attr2 = :val2 and (contains(attr3, :val3a) or contains(attr3, :val3b))"
-        Map<String, AttributeValue> exprAtrVals = new HashMap<>();
-        SimpleDateFormat df = new SimpleDateFormat(DATE_PATTERN);
-        String fromDateStr = df.format(fromDate);
-        exprAtrVals.put(":from_date", new AttributeValue().withS(fromDateStr));
-        exprAtrVals.put(":buildingId", new AttributeValue().withS(buildingId));
-        exprAtrVals.put(":month1", new AttributeValue().withN(month1.toString()));
-        exprAtrVals.put(":month2", new AttributeValue().withN(month2.toString()));
-        exprAtrVals.put(":month3", new AttributeValue().withN(month3.toString()));
-
-        ScanRequest scanRequest = new ScanRequest()
-                .withTableName(billTableName)
-                .withProjectionExpression("id, buildingId, fromDate, fromYear, fromMonth, totalPayable")
-                .withFilterExpression("buildingId = :buildingId and fromDate <= :from_date " +
-                        "and fromMonth in (:month1, :month2, :month3)")
-                .withExpressionAttributeValues(exprAtrVals);
-        ScanResult result = client.scan(scanRequest);
-        List<BillDateCostDto> dtoList = new ArrayList<>();
-
-        for (Map<String, AttributeValue> item : result.getItems()) {
-            dtoList.add(getBillFromMap(item));
-        }
-        return dtoList;
-    }*/
-
-    public void updateItem() {
-
-        Table table = dynamoDB.getTable(billTableName);
-
-        String id = "0bdd7f99-f3af-4cec-a2e2-269a65de9df1";
-
-        UpdateItemSpec updateItemSpec = new UpdateItemSpec().withPrimaryKey("id", id)
-                .withUpdateExpression("set year = :year, month = :month")
-                .withValueMap(new ValueMap().withNumber(":year", 2018)
-                        .withNumber("month", 4))
-                .withReturnValues(ReturnValue.UPDATED_NEW);
-
-        try {
-            System.out.println("Updating the item...");
-            UpdateItemOutcome outcome = table.updateItem(updateItemSpec);
-            System.out.println("UpdateItem succeeded:\n" + outcome.getItem().toJSONPretty());
-
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
-    }
-
     public static void main(String[] args) throws ParseException {
         BillService billService = new BillService(null, null);
         // billService.filterByFromDateAndMonthAndBuilding(new Date(), 1, 2, 4, "999999");
         billService.filterByFromDateAndMonthAndBuilding(new Date(), 1, 2, 4, "999999");
-    }
-
-    public Float geXValue(String buildingId) {
-        return 10f;
     }
 }

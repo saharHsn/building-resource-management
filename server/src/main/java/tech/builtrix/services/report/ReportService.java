@@ -425,6 +425,7 @@ public class ReportService {
         }
     }
 
+    //TODO reimplement later
     private ConsumptionDynamicDto getConsumptionDynamicDto(String s, String s2, float v, float v2, float v3, float v4) {
         ConsumptionDynamicDto freeHoursQ = new ConsumptionDynamicDto();
         freeHoursQ.setColor(s);
