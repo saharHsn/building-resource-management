@@ -1,5 +1,7 @@
 package tech.builtrix.services.report;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -7,14 +9,18 @@ import tech.builtrix.controllers.report.ConsumptionNormalWeatherDto;
 import tech.builtrix.controllers.report.PredictedWeatherVsRealDto;
 import tech.builtrix.dtos.bill.BillDto;
 import tech.builtrix.dtos.bill.BuildingDto;
+import tech.builtrix.dtos.bill.EnergyConsumptionIndex;
 import tech.builtrix.dtos.report.*;
 import tech.builtrix.enums.DatePartType;
 import tech.builtrix.enums.TimePeriodType;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.bill.Bill;
+import tech.builtrix.models.building.Building;
+import tech.builtrix.models.building.EnergyCertificate;
 import tech.builtrix.services.bill.BillService;
 import tech.builtrix.services.building.BuildingService;
 import tech.builtrix.utils.DateUtil;
+import tech.builtrix.utils.WeatherUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,7 +76,7 @@ public class ReportService {
         dto.setSavingYValues(getSavings(month1Cost, month2Cost, month3Cost, billsSize));
         //dto.setXValues(Arrays.asList("Oct-2019", "Nov-2019", "Dec-2019"));
 
-        int currentYear = getCurrentYear();
+        int currentYear = DateUtil.getCurrentYear();
         dto.setXValues(Arrays.asList(
                 getDateTitle(month1, currentYear),
                 getDateTitle(month2, currentYear),
@@ -104,19 +110,9 @@ public class ReportService {
         return dto;
     }
 
-    public Float getBEScore(String buildingId) {
-        Float reference = 50f;
-        Float GOD = 0.1f * reference;
-        //TODO what is x?
-        Float x = billService.geXValue(buildingId);
-        Float beScore = (GOD / x) * 100;
-        //return 40f;
-        return beScore;
-    }
-
     public CostStackDto getCostStackData(String buildingId) throws NotFoundException {
-        Integer year = getCurrentYear();
-        List<BillDto> dtoList = getBillDtos(buildingId, year);
+        Integer year = DateUtil.getCurrentYear();
+        List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, year);
 
         CostStackDto dto = getCostStackDto(dtoList);
 
@@ -167,10 +163,8 @@ public class ReportService {
     }
 
     public ConsumptionDto getConsumption(String buildingId) throws NotFoundException {
-        List<BillDto> dtoList = getBillDtos(buildingId, getCurrentYear());
-
+        List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, DateUtil.getCurrentYear());
         ConsumptionDto dto = getConsumptionDto(dtoList);
-
         /*dto.setContractedPowerValues(Arrays.asList(125.79f, 131.4f, 118.36f, 131.4f, 126.81f, 131.04f, 126.81f, 131.04f, 131.04f, 131.99f, 136.69f, 131.99f));
         dto.setPowerInPeakValues(Arrays.asList(833.69f, 846.81f, 739.59f, 896.43f, 684.86f, 672.34f, 742.91f, 782.83f, 753.81f, 762.87f, 714.73f, 786.84f));
         dto.setReactivePowerValues(Arrays.asList(9.34f, 9.32f, 10.21f, 10.56f, 13.36f, 16.35f, 9.78f, 6.43f, 6.4f, 9.37f, 12.25f, 6.02f));
@@ -188,7 +182,7 @@ public class ReportService {
                                                            Integer year,
                                                            TimePeriodType periodType,
                                                            DatePartType datePartType) throws NotFoundException {
-        List<BillDto> dtoList = getBillDtos(buildingId, year);
+        List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, year);
         ConsumptionDto monthlyConsDto = getConsumptionDto(dtoList);
         //TODO calculate quarter later
         boolean isQuarter = periodType.equals(TimePeriodType.QUARTERS);
@@ -207,39 +201,129 @@ public class ReportService {
     }
 
 
-    //TODO
-    public ConsumptionNormalWeatherDto getConsumptionNormalWeather(String buildingId) {
+    public ConsumptionNormalWeatherDto getConsumptionNormalWeather(String buildingId) throws NotFoundException {
+        BuildingDto building = this.buildingService.findById(buildingId);
+        Float comfortTemperature = 20f;
+        Integer lastYear = DateUtil.getYear(DateUtil.increaseDate(new Date(), -1, DateUtil.DateType.YEAR));
+        //TODO replace postal address with city name of address so get address of building in more details
+        Float averageMonthlyTemperature = WeatherUtil.getAverageTemp(lastYear,
+                building.getPostalAddress());
+        List<Float> standardAVals = new ArrayList<>();
+        List<Float> standardBVals = new ArrayList<>();
+        List<Float> standardCVals = new ArrayList<>();
+        List<Float> standardDVals = new ArrayList<>();
+        List<BillDto> billsOfYear = billService.getBillsOfYear(buildingId, lastYear);
+        for (int i = 0; i < 12; i++) {
+            Integer numOfDaysOfMonth = DateUtil.getNumOfDaysOfMonth(lastYear, i);
+            // If the result is 0, we must put 1
+            Float HCDD = numOfDaysOfMonth * (averageMonthlyTemperature - comfortTemperature);
+            //efficiencyIndex = calculated Kwh/m2 / HCDD
+            //annual efficiency reference if not available  51 kwh/m2/year
+            Float annualEfficiencyRef = 51f;
+            Float referenceOfMonth = (annualEfficiencyRef / 12) / HCDD;
+            Float normalizedConsumption = billsOfYear.get(i).getAverageDailyConsumption();
+            //divide the normalized consumption indexes by the normalized reference
+            //energy efficiency reference of building
+            Float efficiencyLevel = normalizedConsumption / referenceOfMonth;
+            EnergyCertificate efficiency = getEnergyEfficiency(efficiencyLevel);
+            updateList(standardAVals, standardBVals, standardCVals, standardDVals, efficiencyLevel, efficiency, i);
+
+        }
+
         ConsumptionNormalWeatherDto dto = new ConsumptionNormalWeatherDto();
-        dto.setXValues(Arrays.asList("Jan-2018",
-                "Feb-2018",
-                "Mar-2018",
-                "Apr-2018",
-                "May-2018",
-                "Jun-2018",
-                "Jul-2018",
-                "Aug-2018",
-                "Sep-2018",
-                "Oct-2018",
-                "Nov-2018",
-                "Dec-2018"));
-        dto.setStandardAValues(Arrays.asList(0f, 0f, 0f, 0.042f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f));
-        dto.setStandardBValues(Arrays.asList(0f, 0f, 0f, 0f, 0.07f, 0.092f, 0f, 0.08f, 0.067f, 0f, 0f, 0f));
-        dto.setStandardCValues(Arrays.asList(0.04f, 0.04f, 0.045f, 0f, 0f, 0f, 0.14f, 0f, 0f, 0.092f, 0.066f, 0.05f));
-        dto.setStandardDValues(Arrays.asList(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f));
+        dto.setXValues(Arrays.asList("Jan-" + lastYear,
+                "Feb-" + lastYear,
+                "Mar-" + lastYear,
+                "Apr-" + lastYear,
+                "May-" + lastYear,
+                "Jun-" + lastYear,
+                "Jul-" + lastYear,
+                "Aug-" + lastYear,
+                "Sep-" + lastYear,
+                "Oct-" + lastYear,
+                "Nov-" + lastYear,
+                "Dec-" + lastYear));
+        //dto.setStandardAValues(Arrays.asList(0f, 0f, 0f, 0.042f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f));
+        dto.setStandardAValues(standardAVals);
+        //dto.setStandardBValues(Arrays.asList(0f, 0f, 0f, 0f, 0.07f, 0.092f, 0f, 0.08f, 0.067f, 0f, 0f, 0f));
+        dto.setStandardBValues(standardBVals);
+        //dto.setStandardCValues(Arrays.asList(0.04f, 0.04f, 0.045f, 0f, 0f, 0f, 0.14f, 0f, 0f, 0.092f, 0.066f, 0.05f));
+        dto.setStandardCValues(standardCVals);
+        //dto.setStandardDValues(Arrays.asList(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f));
+        dto.setStandardDValues(standardDVals);
         return dto;
+    }
+
+    private void updateList(List<Float> standardAVals,
+                            List<Float> standardBVals,
+                            List<Float> standardCVals,
+                            List<Float> standardDVals,
+                            Float efficiencyLevel,
+                            EnergyCertificate efficiency,
+                            int month) {
+        if (efficiency.equals(EnergyCertificate.A) || efficiency.equals(EnergyCertificate.APlus)) {
+            standardAVals.add(month, efficiencyLevel);
+            standardBVals.add(month, 0f);
+            standardCVals.add(month, 0f);
+            standardDVals.add(month, 0f);
+        } else if (efficiency.equals(EnergyCertificate.B) || efficiency.equals(EnergyCertificate.BMinus)) {
+            standardBVals.add(month, efficiencyLevel);
+            standardAVals.add(month, 0f);
+            standardCVals.add(month, 0f);
+            standardDVals.add(month, 0f);
+        } else if (efficiency.equals(EnergyCertificate.C)) {
+            standardAVals.add(month, 0f);
+            standardBVals.add(month, 0f);
+            standardCVals.add(month, efficiencyLevel);
+            standardDVals.add(month, 0f);
+        } else if (efficiency.equals(EnergyCertificate.D)
+                || efficiency.equals(EnergyCertificate.F)
+                || efficiency.equals(EnergyCertificate.E)) {
+            standardAVals.add(month, 0f);
+            standardBVals.add(month, 0f);
+            standardCVals.add(month, 0f);
+            standardDVals.add(month, efficiencyLevel);
+        }
+
+    }
+
+    private EnergyCertificate getEnergyEfficiency(Float efficiencyLevel) {
+        EnergyCertificate energyEfficiency = EnergyCertificate.Others;
+        if (efficiencyLevel >= 0 && efficiencyLevel < 0.25) {
+            energyEfficiency = EnergyCertificate.APlus;
+        }
+        if (efficiencyLevel >= 0.26 && efficiencyLevel < 0.5) {
+            energyEfficiency = EnergyCertificate.A;
+        }
+        if (efficiencyLevel >= 0.51 && efficiencyLevel < 0.75) {
+            energyEfficiency = EnergyCertificate.B;
+        }
+        if (efficiencyLevel >= 0.76 && efficiencyLevel < 1) {
+            energyEfficiency = EnergyCertificate.BMinus;
+        }
+        if (efficiencyLevel >= 1.01 && efficiencyLevel < 1.5) {
+            energyEfficiency = EnergyCertificate.C;
+        }
+        if (efficiencyLevel >= 1.51 && efficiencyLevel < 2) {
+            energyEfficiency = EnergyCertificate.D;
+        }
+        if (efficiencyLevel >= 2.01 && efficiencyLevel < 2.5) {
+            energyEfficiency = EnergyCertificate.E;
+        }
+        if (efficiencyLevel >= 2.5) {
+            energyEfficiency = EnergyCertificate.F;
+        }
+        return energyEfficiency;
     }
 
     public NormalPerCapitaDto getNormalizedPerCapita(String buildingId) throws NotFoundException {
         NormalPerCapitaDto dto = new NormalPerCapitaDto();
-        Integer currentYear = getCurrentYear();
-        List<BillDto> dtoList = new ArrayList<>();
-        for (int i = 0; i < 12; i++) {
-            dtoList.add(billService.filterByMonthAndYear(buildingId, i, currentYear));
-        }
+        Integer currentYear = DateUtil.getCurrentYear();
+        List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, currentYear);
         List<Float> consumptionPerMonth = new ArrayList<>();
         BuildingDto building = this.buildingService.findById(buildingId);
         for (int i = 0; i < 12; i++) {
-            Date date = getCustomDate(currentYear, i);
+            Date date = DateUtil.getCustomDate(currentYear, i);
             Integer numOfPeople = building.getNumOfPeopleMap().get(date);
             consumptionPerMonth.add(i, (dtoList.get(i).getAverageDailyConsumption()) / numOfPeople);
         }
@@ -291,7 +375,7 @@ public class ReportService {
                 (month3Consumption / billsSize) / building.getArea()));
 
         //dto.setXValues(Arrays.asList("Jan-2019", "Feb-2019", "Mar-2019"));
-        int currentYear = getCurrentYear();
+        int currentYear = DateUtil.getCurrentYear();
         dto.setXValues(Arrays.asList(
                 getDateTitle(month1, currentYear),
                 getDateTitle(month2, currentYear),
@@ -320,8 +404,8 @@ public class ReportService {
     }
 
     public CarbonSPLineDto getCarbonSPLineData(String buildingId) throws NotFoundException {
-        Integer currentYear = getCurrentYear();
-        List<BillDto> dtoList = getBillDtos(buildingId, currentYear);
+        Integer currentYear = DateUtil.getCurrentYear();
+        List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, currentYear);
         BuildingDto building = buildingService.findById(buildingId);
         List<Float> totalValues = new ArrayList<>();
         for (BillDto billDto : dtoList) {
@@ -356,16 +440,151 @@ public class ReportService {
     }
 
     //Report
-    //BE Score
-    //Breakdown
-    //Percentile
-    //Electricity consumption index (kWh/m2)
-    //Electricity consumption index (kWh/cap)
-    //Electricity cost index (Euro/m2)
-    //Energy efficiency level
+    //TODO add property target field to building entity
+    public Float getDefaultPropertyTarget(String buildingId) throws NotFoundException {
+        Float beScore = billService.getBEScore(buildingId);
+        Float propertyTarget = beScore + 0.05f * beScore;
+        return propertyTarget;
+    }
+
+    public Float getNationalMedian(String buildingId) throws NotFoundException {
+        Float nationalMedianBEScore = (5 / 50f * 100);
+        Float nationalMedian = BillService.getReference(buildingId) * 100;
+        return nationalMedian;
+    }
+
+    //TODO
+    public void getBEBreakDown(String buildingId) {
+        Float energyEfficiency;
+        Float engagement;
+
+    }
+
+    public Float getPercentile(String buildingId) throws NotFoundException {
+        Building building = this.buildingService.getById(buildingId);
+        EnergyCertificate energyCertificate = building.getEnergyCertificate();
+        Float rank = getRankOfBuilding(energyCertificate);
+        float builtrixMetricMember = 100f - rank;
+        return builtrixMetricMember;
+    }
+
+    public List<EnergyConsumptionIndex> getAllEnergyConsumptionIndexes(String buildingId) throws NotFoundException {
+        BuildingDto buildingDto = this.buildingService.findById(buildingId);
+        Integer currentYear = DateUtil.getCurrentYear();
+        List<BillDto> billsOfYear = this.billService.getBillsOfYear(buildingId, currentYear);
+
+        EnergyConsumptionIndex consumptionArea = getIndexConsumptionData(buildingDto.getArea(), buildingDto, billsOfYear);
+
+        EnergyConsumptionIndex consumptionCap = getIndexConsumptionData(Float.valueOf(buildingDto.getNumberOfPeople()), buildingDto, billsOfYear);
+
+        EnergyConsumptionIndex cost = getIndexCostData(Float.valueOf(buildingDto.getNumberOfPeople()), buildingDto, billsOfYear);
+
+        //TODO implement later
+        EnergyConsumptionIndex energyEfficiencyLevel = new EnergyConsumptionIndex();
+        /*You just need to visualize the average efficiency level in the first column, and the energy level in the last bill in the second column.
+        The Property target is currently one level above the baseline*/
+        /*The national median is the average in the figure below:
+         */
+        return Arrays.asList(consumptionArea, consumptionCap, cost, energyEfficiencyLevel);
+    }
+
+    private EnergyConsumptionIndex getIndexConsumptionData(Float divideParam,
+                                                           BuildingDto buildingDto,
+                                                           List<BillDto> billsOfYear) throws NotFoundException {
+        EnergyConsumptionIndex consumptionIndex = new EnergyConsumptionIndex();
+        Float cnsCapBase = 0f;
+        for (BillDto billDto : billsOfYear) {
+            cnsCapBase += billDto.getAverageDailyConsumption();
+        }
+        cnsCapBase = (cnsCapBase / 12) / buildingDto.getArea();
+        consumptionIndex.setBaseline(cnsCapBase);
+
+        String buildingId = buildingDto.getId();
+        BillDto lastBillDto = this.billService.getLastBillDto(buildingId);
+        Float cnsAreaLastMonth = lastBillDto.getAverageDailyConsumption() / divideParam;
+        consumptionIndex.setThisMonth(cnsAreaLastMonth);
+
+        Float beScore = this.billService.getBEScore(buildingId);
+        Float target = getDefaultPropertyTarget(buildingId);
+        //TODO ask if propTarget is calculated correctly
+        float cnsCapPropsTarget = (cnsCapBase * beScore) / target;
+        consumptionIndex.setPropertiesTarget(cnsCapPropsTarget);
+
+        Float nationalMedian = getNationalMedian(buildingId);
+        Float cnsCapNationalMedian = cnsCapBase * (beScore / nationalMedian);
+        consumptionIndex.setNationalMedian(cnsCapNationalMedian);
+
+        return consumptionIndex;
+    }
+
+    private EnergyConsumptionIndex getIndexCostData(Float divideParam,
+                                                    BuildingDto buildingDto,
+                                                    List<BillDto> billsOfYear) throws NotFoundException {
+        EnergyConsumptionIndex consumptionIndex = new EnergyConsumptionIndex();
+        Float cnsCapBase = 0f;
+        for (BillDto billDto : billsOfYear) {
+            cnsCapBase += billDto.getTotalPayable();
+        }
+        cnsCapBase = (cnsCapBase / 12) / buildingDto.getArea();
+        consumptionIndex.setBaseline(cnsCapBase);
+
+        String buildingId = buildingDto.getId();
+        BillDto lastBillDto = this.billService.getLastBillDto(buildingId);
+        Float cnsAreaLastMonth = lastBillDto.getTotalPayable() / divideParam;
+        consumptionIndex.setThisMonth(cnsAreaLastMonth);
+
+        Float beScore = this.billService.getBEScore(buildingId);
+        Float target = getDefaultPropertyTarget(buildingId);
+        //TODO ask if propTarget is calculated correctly
+        float cnsCapPropsTarget = (cnsCapBase * beScore) / target;
+        consumptionIndex.setPropertiesTarget(cnsCapPropsTarget);
+
+        Float nationalMedian = getNationalMedian(buildingId);
+        Float cnsCapNationalMedian = cnsCapBase * (beScore / nationalMedian);
+        consumptionIndex.setNationalMedian(cnsCapNationalMedian);
+
+        return consumptionIndex;
+    }
 
 
-    //-------------------------------- private methods ------------------------------
+    private Float getRankOfBuilding(EnergyCertificate energyCertificate) {
+        // TODO read values from National DB
+        CertificateInfo aPlus = new CertificateInfo(1, 1.8f, EnergyCertificate.APlus);
+        CertificateInfo a = new CertificateInfo(2, 8.3f, EnergyCertificate.A);
+        CertificateInfo b = new CertificateInfo(3, 9.7f, EnergyCertificate.B);
+        CertificateInfo bMinus = new CertificateInfo(4, 9.7f, EnergyCertificate.BMinus);
+        CertificateInfo c = new CertificateInfo(5, 26.4f, EnergyCertificate.C);
+        CertificateInfo d = new CertificateInfo(6, 22.8f, EnergyCertificate.D);
+        CertificateInfo e = new CertificateInfo(7, 13.5f, EnergyCertificate.E);
+        CertificateInfo f = new CertificateInfo(8, 7.8f, EnergyCertificate.F);
+        List<CertificateInfo> certificateInfoList = Arrays.asList(aPlus, a, b, bMinus, c, d, e, f);
+        CertificateInfo certificateInfo = findCertificateInfo(energyCertificate, certificateInfoList);
+        Float sum = 0f;
+        for (CertificateInfo info : certificateInfoList) {
+            if (info.getRank() <= certificateInfo.getRank()) {
+                sum += info.getValue();
+            }
+        }
+        return sum;
+    }
+
+    private CertificateInfo findCertificateInfo(EnergyCertificate energyCertificate,
+                                                List<CertificateInfo> certificateInfoList) {
+        for (CertificateInfo certificateInfo : certificateInfoList) {
+            if (certificateInfo.getCertificateType().equals(energyCertificate))
+                return certificateInfo;
+        }
+        return null;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    private class CertificateInfo {
+        int rank;
+        Float value;
+        EnergyCertificate certificateType;
+
+    }
 
     private String getDateTitle(Integer month, int year) {
         return DateUtil.getMonth(month) + "-" + year;
@@ -420,15 +639,6 @@ public class ReportService {
             normalValues.add(billDto.getAENormalHours().getCost());
             reactivePowerValues.add(billDto.getRDReactivePower().getCost());
         }
-    }
-
-    private List<BillDto> getBillDtos(String buildingId, Integer year) throws NotFoundException {
-        List<BillDto> dtoList = new ArrayList<>();
-        for (int i = 0; i < 12; i++) {
-            BillDto billDto = billService.filterByMonthAndYear(buildingId, i, year);
-            dtoList.add(billDto);
-        }
-        return dtoList;
     }
 
     private ConsumptionDto getConsumptionDto(List<BillDto> dtoList) {
@@ -490,10 +700,10 @@ public class ReportService {
         return freeHoursQ;
     }
 
-    private Integer getCurrentYear() {
+   /* private Integer getCurrentYear() {
         Date currentDate = getCurrentDate();
         return DateUtil.getYear(currentDate);
-    }
+    }*/
 
     private ConsumptionDynamicDto getConsumptionDynamicDto(String color, String name, List<Float> data) {
         ConsumptionDynamicDto dto = new ConsumptionDynamicDto();
@@ -501,15 +711,6 @@ public class ReportService {
         dto.setName(name);
         dto.setData(data);
         return dto;
-    }
-
-    private Date getCustomDate(Integer currentYear, int i) {
-        Date date = new Date();
-        DateUtil.setDateField(date, currentYear, DateUtil.DateType.YEAR);
-        DateUtil.setDateField(date, i, DateUtil.DateType.MONTH);
-        DateUtil.setDateField(date, 1, DateUtil.DateType.DAY);
-        DateUtil.removeTime(date);
-        return date;
     }
 
     private class PredictionData {

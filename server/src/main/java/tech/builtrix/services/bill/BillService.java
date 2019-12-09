@@ -6,7 +6,10 @@ package tech.builtrix.services.bill;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.datamodeling.*;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedScanList;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,30 +21,36 @@ import tech.builtrix.dtos.bill.BillParameterDto;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.bill.Bill;
 import tech.builtrix.models.bill.BillParameterInfo;
+import tech.builtrix.models.building.Building;
 import tech.builtrix.repositories.bill.BillRepository;
+import tech.builtrix.services.building.BuildingService;
+import tech.builtrix.utils.DateUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @Slf4j
 public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
     private static String billTableName = Bill.class.getAnnotation(DynamoDBTable.class).tableName();
     private static AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
+    private static String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private static Float reference = 50f;
+
     static DynamoDBMapper mapper = new DynamoDBMapper(client);
-    private DynamoDBTypeConverter<AttributeValue, Object> converter;
 
     private final BillParameterService billParameterService;
-    private String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private final BuildingService buildingService;
+
 
     @Autowired
-    protected BillService(BillRepository repository, BillParameterService billParameterService) {
+    protected BillService(BillRepository repository,
+                          BillParameterService billParameterService,
+                          BuildingService buildingService) {
         super(repository);
         this.billParameterService = billParameterService;
+        this.buildingService = buildingService;
     }
 
     public Bill save(BillDto billDto) {
@@ -138,10 +147,27 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         return allBillInfo;
     }
 
-    public Float geXValue(String buildingId) {
-        return 10f;
+    public Float getBEScore(String buildingId) throws NotFoundException {
+        //TODO add reference field to building entity
+        /*user enters reference if not we consider 50*/
+        Float GOD = 0.1f * reference; //5 kWh/m2/year
+        Float x = geXValue(buildingId);
+        Float beScore = (GOD / x) * 100;
+        return beScore;
     }
 
+    public static Float getReference(String buildingId) {
+        return reference;
+    }
+
+    public List<BillDto> getBillsOfYear(String buildingId, Integer year) throws NotFoundException {
+        List<BillDto> dtoList = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            BillDto billDto = filterByMonthAndYear(buildingId, i, year);
+            dtoList.add(billDto);
+        }
+        return dtoList;
+    }
     //----------------------------------------- Private Methods ---------------------------------------------
 
     private String getDateStr(Date fromDate) {
@@ -173,8 +199,28 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         return billDto;
     }
 
+    private Float geXValue(String buildingId) throws NotFoundException {
+        Building building = this.buildingService.getById(buildingId);
+        List<BillDto> dtoList = getBillsOfYear(buildingId);
+        Float x = 0f;
+        for (int i = 0; i < 12; i++) {
+            //TODO is normalized equals with averageConsumption?
+            x += ((dtoList.get(i).getAverageDailyConsumption()) / building.getArea());
+        }
+        return (x) / 12f;
+    }
+
+    private List<BillDto> getBillsOfYear(String buildingId) throws NotFoundException {
+        Integer currentYear = DateUtil.getCurrentYear();
+        List<BillDto> dtoList = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            dtoList.add(filterByMonthAndYear(buildingId, i, currentYear));
+        }
+        return dtoList;
+    }
+
     public static void main(String[] args) throws ParseException {
-        BillService billService = new BillService(null, null);
+        BillService billService = new BillService(null, null, null);
         // billService.filterByFromDateAndMonthAndBuilding(new Date(), 1, 2, 4, "999999");
         billService.filterByFromDateAndMonthAndBuilding(new Date(), 1, 2, 4, "999999");
     }

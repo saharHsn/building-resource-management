@@ -188,6 +188,20 @@ public class DateUtil {
         return monthNames[monthNumber - 1];
     }
 
+    public static Date getCustomDate(Integer currentYear, int i) {
+        Date date = new Date();
+        DateUtil.setDateField(date, currentYear, DateUtil.DateType.YEAR);
+        DateUtil.setDateField(date, i, DateUtil.DateType.MONTH);
+        DateUtil.setDateField(date, 1, DateUtil.DateType.DAY);
+        DateUtil.removeTime(date);
+        return date;
+    }
+
+    //TODO implement later
+    public static Integer getNumOfDaysOfMonth(Integer lastYear, int i) {
+        return null;
+    }
+
     public enum DateType {
         MILLI_SECOND,
         SECOND,

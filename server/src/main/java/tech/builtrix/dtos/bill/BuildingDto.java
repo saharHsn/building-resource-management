@@ -28,7 +28,7 @@ public class BuildingDto extends EntityDtoBase {
     private BuildingUsage usage = BuildingUsage.UNKNOWN;
     private EnergyCertificate energyCertificate = EnergyCertificate.Others;
     private BuildingAge age = BuildingAge.UNKNOWN;
-    private float area;
+    private Float area;
     private Integer numberOfPeople;
     private MultipartFile gasBill;
     private MultipartFile waterBill;
