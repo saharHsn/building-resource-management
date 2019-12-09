@@ -334,7 +334,7 @@ public class ReportService {
         return dto;
     }
 
-    //TODO not needed now
+    //not needed now
     public NormalVsEEDto getNormalizedVsEnergyEfficiency(String buildingId) {
         NormalVsEEDto dto = new NormalVsEEDto();
         dto.setXValues(Arrays.asList("Jan-2018",
