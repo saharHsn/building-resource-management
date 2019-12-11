@@ -38,8 +38,8 @@ public class ReportUtil {
         return sum;
     }
 
-    public static CertificateInfo findCertificateInfo(EnergyCertificate energyCertificate,
-                                                      List<CertificateInfo> certificateInfoList) {
+    private static CertificateInfo findCertificateInfo(EnergyCertificate energyCertificate,
+                                                       List<CertificateInfo> certificateInfoList) {
         for (CertificateInfo certificateInfo : certificateInfoList) {
             if (certificateInfo.getCertificateType().equals(energyCertificate))
                 return certificateInfo;
@@ -90,7 +90,7 @@ public class ReportUtil {
         return dto;
     }
 
-    public static void extractCostValues(List<BillDto> dtoList, List<Float> contractedPowerValues, List<Float> powerInPeakValues, List<Float> reactivePowerValues, List<Float> normalValues, List<Float> peakValues, List<Float> freeValues, List<Float> offValues) {
+    private static void extractCostValues(List<BillDto> dtoList, List<Float> contractedPowerValues, List<Float> powerInPeakValues, List<Float> reactivePowerValues, List<Float> normalValues, List<Float> peakValues, List<Float> freeValues, List<Float> offValues) {
         for (BillDto billDto : dtoList) {
             contractedPowerValues.add(billDto.getRDContractedPower().getCost());
             freeValues.add(billDto.getAEFreeHours().getCost());
@@ -133,14 +133,14 @@ public class ReportUtil {
         return dto;
     }
 
-    public static void extractConsumptionValues(List<BillDto> dtoList,
-                                                List<Float> contractedPowerValues,
-                                                List<Float> powerInPeakValues,
-                                                List<Float> reactivePowerValues,
-                                                List<Float> normalValues,
-                                                List<Float> peakValues,
-                                                List<Float> freeValues,
-                                                List<Float> offValues) {
+    private static void extractConsumptionValues(List<BillDto> dtoList,
+                                                 List<Float> contractedPowerValues,
+                                                 List<Float> powerInPeakValues,
+                                                 List<Float> reactivePowerValues,
+                                                 List<Float> normalValues,
+                                                 List<Float> peakValues,
+                                                 List<Float> freeValues,
+                                                 List<Float> offValues) {
         for (BillDto billDto : dtoList) {
             contractedPowerValues.add(billDto.getRDContractedPower().getConsumption());
             freeValues.add(billDto.getAEFreeHours().getConsumption());
@@ -272,7 +272,7 @@ public class ReportUtil {
 
     @AllArgsConstructor
     @Getter
-    public static class CertificateInfo {
+    private static class CertificateInfo {
         int rank;
         Float value;
         EnergyCertificate certificateType;
