@@ -1,4 +1,6 @@
 import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ChartService} from '../../chartService';
 
 @Component({
   selector: 'app-report-be-score',
@@ -6,11 +8,32 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./report-be-score.component.css']
 })
 export class ReportBeScoreComponent implements OnInit {
+  beScore: number;
+  nationalMedian: number;
+  propertyTarget: number;
+  buildingId: number;
 
-  constructor() {
+  constructor(private route: ActivatedRoute, private router: Router,
+              private chartService: ChartService) {
   }
 
   ngOnInit() {
+    // this.buildingId = this.route.snapshot.params.id;
+    this.chartService.getBEScore(this.buildingId)
+      .subscribe(data => {
+        console.log(data);
+        this.beScore = data;
+      }, error => console.log(error));
+    this.chartService.getNationalMedian(this.buildingId)
+      .subscribe(data => {
+        console.log(data);
+        this.beScore = data;
+      }, error => console.log(error));
+    this.chartService.getPropertyTarget(this.buildingId)
+      .subscribe(data => {
+        console.log(data);
+        this.beScore = data;
+      }, error => console.log(error));
   }
-
 }
+

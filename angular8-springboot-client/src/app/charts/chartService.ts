@@ -27,6 +27,9 @@ export class ChartService {
   private readonly predictedWeatherVSRealUrl;
   private readonly carbonPieDataUrl;
   private readonly carbonSPLineUrl;
+  private readonly energyConsumptionIndexUrl;
+  private readonly nationalMedianUrl;
+  private readonly propertyTargetUrl;
 
   constructor(private http: HttpClient) {
     this.environmentName = environment.environmentName;
@@ -45,6 +48,9 @@ export class ChartService {
     this.predictedWeatherVSRealUrl = this.baseUrl + '/predictedWeatherVSReal';
     this.carbonPieDataUrl = this.baseUrl + '/carbonPie';
     this.carbonSPLineUrl = this.baseUrl + '/carbonSPLine';
+    this.energyConsumptionIndexUrl = this.baseUrl + '/energyConsumptionIndex';
+    this.nationalMedianUrl = this.baseUrl + '/nationalMedian';
+    this.propertyTargetUrl = this.baseUrl + '/propertyTarget';
   }
 
   predict(building: Building): Observable<any> {
@@ -106,5 +112,17 @@ export class ChartService {
 
   carbonSPLineData(buildingId: string): Observable<any> {
     return this.http.get(`${this.carbonSPLineUrl}/${33333333}`);
+  }
+
+  getAllEnergyConsumptionIndexes(buildingId: number): Observable<any> {
+    return this.http.get(`${this.energyConsumptionIndexUrl}/${33333333}`);
+  }
+
+  getNationalMedian(buildingId: number): Observable<any> {
+    return this.http.get(`${this.nationalMedianUrl}/${33333333}`);
+  }
+
+  getPropertyTarget(buildingId: number): Observable<any> {
+    return this.http.get(`${this.propertyTargetUrl}/${33333333}`);
   }
 }

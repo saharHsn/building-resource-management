@@ -88,6 +88,10 @@ public class ReportService {
         return dto;
     }
 
+    public Float getBEScore(String buildingId) throws NotFoundException {
+        return this.billService.getBEScore(buildingId);
+    }
+
     public SavingDto savingThisMonth(String buildingId) throws NotFoundException {
         Bill lastBill = billService.getLastBill(buildingId);
 
@@ -465,15 +469,6 @@ public class ReportService {
         return Arrays.asList(consumptionArea, consumptionCap, cost, energyEfficiencyLevel);
     }
 
-    private List<Bill> getAllPreviousBills(String buildingId) {
-        Date currentDate = new Date();
-        Date previousYear = DateUtil.increaseDate(currentDate, -1, DateUtil.DateType.YEAR);
-        List<Bill> bills = this.billService.filterByFromDateAndMonthAndBuilding(previousYear,
-                DateUtil.getMonth(currentDate),
-                buildingId);
-        return bills;
-    }
-
     //------------------------------------private methods --------------------------------------------------------------
     private EnergyConsumptionIndex getIndexConsumptionData(Float divideParam,
                                                            BuildingDto buildingDto,
@@ -539,6 +534,15 @@ public class ReportService {
             monthConsVals.add(i, lastYearBills.get(i).getTotalMonthlyConsumption());
         }
         return monthConsVals;
+    }
+
+    private List<Bill> getAllPreviousBills(String buildingId) {
+        Date currentDate = new Date();
+        Date previousYear = DateUtil.increaseDate(currentDate, -1, DateUtil.DateType.YEAR);
+        List<Bill> bills = this.billService.filterByFromDateAndMonthAndBuilding(previousYear,
+                DateUtil.getMonth(currentDate),
+                buildingId);
+        return bills;
     }
 
     //---------------------------------------------------Inner Classes --------------------------------------------------------------

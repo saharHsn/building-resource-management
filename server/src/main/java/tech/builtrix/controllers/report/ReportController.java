@@ -7,10 +7,14 @@ import org.springframework.web.bind.annotation.*;
 import tech.builtrix.Response;
 import tech.builtrix.annotations.NoSession;
 import tech.builtrix.base.ControllerBase;
+import tech.builtrix.dtos.bill.EnergyConsumptionIndex;
 import tech.builtrix.dtos.report.*;
 import tech.builtrix.enums.DatePartType;
 import tech.builtrix.enums.TimePeriodType;
+import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.services.report.ReportService;
+
+import java.util.List;
 
 /**
  * Created By sahar at 12/4/19
@@ -40,7 +44,7 @@ public class ReportController extends ControllerBase {
     @ApiOperation(value = "Request for getting saving this month data")
     @GetMapping(value = "/saving/{buildingId}")
     @NoSession
-    public Response<SavingDto> savingThisMonth(@PathVariable("buildingId") String buildingId) {
+    public Response<SavingDto> savingThisMonth(@PathVariable("buildingId") String buildingId) throws NotFoundException {
         SavingDto savingDto = this.reportService.savingThisMonth(buildingId);
         return Response.ok(savingDto);
     }
@@ -48,15 +52,31 @@ public class ReportController extends ControllerBase {
     @ApiOperation(value = "Request for getting be score")
     @GetMapping(value = "/beScore/{buildingId}")
     @NoSession
-    public Response<Float> getBEScore(@PathVariable("buildingId") String buildingId) {
+    public Response<Float> getBEScore(@PathVariable("buildingId") String buildingId) throws NotFoundException {
         Float beScore = this.reportService.getBEScore(buildingId);
         return Response.ok(beScore);
+    }
+
+    @ApiOperation(value = "Request for getting be score")
+    @GetMapping(value = "/nationalMedian/{buildingId}")
+    @NoSession
+    public Response<Float> getNationalMedian(@PathVariable("buildingId") String buildingId) throws NotFoundException {
+        Float nationalMedian = this.reportService.getNationalMedian(buildingId);
+        return Response.ok(nationalMedian);
+    }
+
+    @ApiOperation(value = "Request for getting be score")
+    @GetMapping(value = "/propertyTarget/{buildingId}")
+    @NoSession
+    public Response<Float> getPropertyTarget(@PathVariable("buildingId") String buildingId) throws NotFoundException {
+        Float propertyTarget = this.reportService.getDefaultPropertyTarget(buildingId);
+        return Response.ok(propertyTarget);
     }
 
     @ApiOperation(value = "Request for ")
     @GetMapping(value = "/costStack/{buildingId}")
     @NoSession
-    public Response<CostStackDto> getCostStackData(@PathVariable("buildingId") String buildingId) {
+    public Response<CostStackDto> getCostStackData(@PathVariable("buildingId") String buildingId) throws NotFoundException {
         CostStackDto costStackData = this.reportService.getCostStackData(buildingId);
         return Response.ok(costStackData);
     }
@@ -64,7 +84,7 @@ public class ReportController extends ControllerBase {
     @ApiOperation(value = "Request for ")
     @GetMapping(value = "/costPie/{buildingId}")
     @NoSession
-    public Response<CostPieDto> getCostPieData(@PathVariable("buildingId") String buildingId) {
+    public Response<CostPieDto> getCostPieData(@PathVariable("buildingId") String buildingId) throws NotFoundException {
         CostPieDto costPieDto = this.reportService.getCostPieData(buildingId);
         return Response.ok(costPieDto);
     }
@@ -72,7 +92,7 @@ public class ReportController extends ControllerBase {
     @ApiOperation(value = "Request for ")
     @GetMapping(value = "/consumption/{buildingId}")
     @NoSession
-    public Response<ConsumptionDto> getConsumption(@PathVariable("buildingId") String buildingId) {
+    public Response<ConsumptionDto> getConsumption(@PathVariable("buildingId") String buildingId) throws NotFoundException {
         ConsumptionDto consumption = this.reportService.getConsumption(buildingId);
         return Response.ok(consumption);
     }
@@ -81,9 +101,9 @@ public class ReportController extends ControllerBase {
     @GetMapping(value = "/consumptionDynamic/{buildingId}")
     @NoSession
     public Response<ConsumptionDynamicDto> getConsumptionDynamicData(@PathVariable("buildingId") String buildingId,
-                                                                     @RequestParam(value = "year") Long year,
+                                                                     @RequestParam(value = "year") int year,
                                                                      @RequestParam(value = "periodType") TimePeriodType periodType,
-                                                                     @RequestParam(value = "datePartType") DatePartType datePartType) {
+                                                                     @RequestParam(value = "datePartType") DatePartType datePartType) throws NotFoundException {
         ConsumptionDynamicDto consumption = this.reportService.getConsumptionDynamicData(buildingId, year, periodType, datePartType);
         return Response.ok(consumption);
     }
@@ -91,7 +111,7 @@ public class ReportController extends ControllerBase {
     @ApiOperation(value = "Request for ")
     @GetMapping(value = "/normConsumptionWeather/{buildingId}")
     @NoSession
-    public Response<ConsumptionNormalWeatherDto> getConsumptionNormalWeather(@PathVariable("buildingId") String buildingId) {
+    public Response<ConsumptionNormalWeatherDto> getConsumptionNormalWeather(@PathVariable("buildingId") String buildingId) throws NotFoundException {
         ConsumptionNormalWeatherDto consumption = this.reportService.getConsumptionNormalWeather(buildingId);
         return Response.ok(consumption);
     }
@@ -99,7 +119,7 @@ public class ReportController extends ControllerBase {
     @ApiOperation(value = "Request for ")
     @GetMapping(value = "/normPerCapita/{buildingId}")
     @NoSession
-    public Response<NormalPerCapitaDto> getNormalizedPerCapita(@PathVariable("buildingId") String buildingId) {
+    public Response<NormalPerCapitaDto> getNormalizedPerCapita(@PathVariable("buildingId") String buildingId) throws NotFoundException {
         NormalPerCapitaDto normalizedPerCapita = this.reportService.getNormalizedPerCapita(buildingId);
         return Response.ok(normalizedPerCapita);
     }
@@ -115,7 +135,7 @@ public class ReportController extends ControllerBase {
     @ApiOperation(value = "Request for ")
     @GetMapping(value = "/predictedWeatherVSReal/{buildingId}")
     @NoSession
-    public Response<PredictedWeatherVsRealDto> getPredictedWeatherVSReal(@PathVariable("buildingId") String buildingId) {
+    public Response<PredictedWeatherVsRealDto> getPredictedWeatherVSReal(@PathVariable("buildingId") String buildingId) throws NotFoundException {
         PredictedWeatherVsRealDto dto = this.reportService.getPredictedWeatherVSReal(buildingId);
         return Response.ok(dto);
     }
@@ -123,7 +143,7 @@ public class ReportController extends ControllerBase {
     @ApiOperation(value = "Request for ")
     @GetMapping(value = "/carbonPie/{buildingId}")
     @NoSession
-    public Response<CarbonPieDto> getCarbonPieData(@PathVariable("buildingId") String buildingId) {
+    public Response<CarbonPieDto> getCarbonPieData(@PathVariable("buildingId") String buildingId) throws NotFoundException {
         CarbonPieDto dto = this.reportService.getCarbonPieData(buildingId);
         return Response.ok(dto);
     }
@@ -131,8 +151,20 @@ public class ReportController extends ControllerBase {
     @ApiOperation(value = "Request for ")
     @GetMapping(value = "/carbonSPLine/{buildingId}")
     @NoSession
-    public Response<CarbonSPLineDto> getCarbonSPLineData(@PathVariable("buildingId") String buildingId) {
+    public Response<CarbonSPLineDto> getCarbonSPLineData(@PathVariable("buildingId") String buildingId) throws NotFoundException {
         CarbonSPLineDto dto = this.reportService.getCarbonSPLineData(buildingId);
+        return Response.ok(dto);
+    }
+
+    @ApiOperation(value = "Request for ")
+    @GetMapping(value = "/energyConsumptionIndex/{buildingId}")
+    @NoSession
+    public Response<EnergyConsumptionIndexDto> getEnergyConsumptionIndex(@PathVariable("buildingId") String buildingId) throws NotFoundException {
+        List<EnergyConsumptionIndex> indexes = this.reportService.getAllEnergyConsumptionIndexes(buildingId);
+        EnergyConsumptionIndexDto dto = new EnergyConsumptionIndexDto(indexes.get(0),
+                indexes.get(1),
+                indexes.get(2),
+                indexes.get(3));
         return Response.ok(dto);
     }
 }
