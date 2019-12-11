@@ -15,12 +15,15 @@ import {CarbonFootPrintComponent} from './charts/carbon-foot-print/carbon-foot-p
 import {ConsumptionComponent} from './charts/consumption/consumption.component';
 import {WizardFormComponent} from './wizard-form/wizard-form.component';
 import {NormalizedConsumptionComponent} from './charts/normalized-consumption/normalized-consumption.component';
+import {BuildingDetailsComponent} from './building/building-details/building-details.component';
+import {ReportComponent} from './charts/report/report.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'wizard', component: WizardFormComponent},
+  {path: 'building-detail', component: BuildingDetailsComponent},
   // { path: 'weather', component: WeatherComponent },
   {path: 'predictions', component: PredictionsComponent},
   {path: 'overall', component: OverallComponent},
@@ -31,6 +34,7 @@ const routes: Routes = [
   {path: 'carbon-footprint', component: CarbonFootPrintComponent},
   {path: 'consumption-component', component: ConsumptionComponent},
   {path: 'normalized-consumption', component: NormalizedConsumptionComponent},
+  {path: 'report', component: ReportComponent},
 
   // otherwise redirect to home
   {path: '**', redirectTo: ''}

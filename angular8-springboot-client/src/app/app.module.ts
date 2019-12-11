@@ -20,13 +20,13 @@ import {ArchwizardModule} from 'angular-archwizard';
 import {BuildingUsageComponent} from './building/enums/building-usage-component';
 import {BuildingAgeComponent} from './building/enums/building-age-component';
 import {EnergyCertificateComponent} from './building/enums/energy-certificate-component';
+import {BuildingDetailsComponent} from './building/building-details/building-details.component';
 
 import {OverallComponent} from './charts/overall/overall.component';
 import {WeatherComponent} from './weather/weather.component';
 import {CostComponent} from './charts/cost/cost.component';
 import {ConsumptionComponent} from './charts/consumption/consumption.component';
 import {PredictionsComponent} from './charts/overall/predictions/predictions.component';
-import {BeScoreComponent} from './charts/overall/be-score/be-score.component';
 import {CostPieChartComponent} from './charts/cost/cost-pie-chart/cost-pie-chart.component';
 import {CostStackChartComponent} from './charts/cost/cost-stack-chart/cost-stack-chart.component';
 import {CarbonFootPrintComponent} from './charts/carbon-foot-print/carbon-foot-print.component';
@@ -49,6 +49,16 @@ import {ConsumptionWeatherComponent} from './charts/normalized-consumption/consu
 import {PredictedWeatherVsRealComponent} from './charts/normalized-consumption/predicted-weather-vs-real/predicted-weather-vs-real.component';
 import {NormalizedPerCapitaComponent} from './charts/normalized-consumption/normalized-per-capita/normalized-per-capita.component';
 import {NormalizedConsumptionComponent} from './charts/normalized-consumption/normalized-consumption.component';
+
+import {BeBreakdownComponent} from './charts/report/be-breakdown/be-breakdown.component';
+import {ReportBeScoreComponent} from './charts/report/be-score/report-be-score.component';
+import {PercentileComponent} from './charts/report/percentile/percentile.component';
+import {EnergyEfficiencyComponent} from './charts/report/energy-efficiency/energy-efficiency.component';
+import {CarbonComponent} from './charts/report/carbon/carbon.component';
+import {BeScoreComponent} from './charts/overall/be-score/be-score.component';
+import {ReportComponent} from './charts/report/report.component';
+// tslint:disable-next-line:max-line-length
+import {EnergyEfficiencySymbolsComponent} from './charts/report/energy-efficiency/energy_efficiency_symbols/energy-efficiency-symbols.component';
 
 @NgModule({
   imports: [
@@ -73,12 +83,13 @@ import {NormalizedConsumptionComponent} from './charts/normalized-consumption/no
     BuildingAgeComponent,
     EnergyCertificateComponent,
     OverallComponent,
+    BeScoreComponent,
     WeatherComponent,
     CostComponent,
     ConsumptionComponent,
     PredictionsComponent,
     HighchartsChartComponent,
-    BeScoreComponent,
+    ReportBeScoreComponent,
     CostPieChartComponent,
     CostStackChartComponent,
     CostStackChartComponent,
@@ -95,7 +106,15 @@ import {NormalizedConsumptionComponent} from './charts/normalized-consumption/no
     PredictedWeatherVsRealComponent,
     ConsumptionWeatherComponent,
     NormalizedVsEnergyEfficiencyComponent,
-    NormalizedConsumptionComponent],
+    NormalizedConsumptionComponent,
+    ReportComponent,
+    BuildingDetailsComponent,
+    BeBreakdownComponent,
+    ReportBeScoreComponent,
+    PercentileComponent,
+    EnergyEfficiencyComponent,
+    CarbonComponent,
+    EnergyEfficiencySymbolsComponent],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     // {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true}

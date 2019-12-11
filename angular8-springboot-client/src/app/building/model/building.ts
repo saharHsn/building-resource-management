@@ -19,4 +19,5 @@ export class Building {
   waterBill: File;
   electricityBill: File;
   owner: User;
+  builtIn: number;
 }

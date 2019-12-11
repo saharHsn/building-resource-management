@@ -1,29 +1,26 @@
-﻿<nav class="navbar navbar-expand-sm bg-info navbar-light">
-  <!-- Brand/logo -->
+﻿<nav class="navbar navbar-expand-md navbar-light bg-info">
+  <!--<a href="#" class="navbar-brand">Brand</a>-->
   <a class="navbar-brand" href="#">
     <img src="../assets/images/bafa157a-cb70-4b75-9b84-670ea85efb19.png" style="width:170px;height: 100px">
   </a>
+  <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-  <!-- Links -->
-  <ul class="navbar-nav">
-    <li class="nav-item">
+  <div class="collapse navbar-collapse" id="navbarCollapse">
+    <div class="navbar-nav">
       <a class="nav-link" href="#" routerLink="/overall">Overall</a>
-    </li>
-    <li class="nav-item">
       <a class="nav-link" href="#" routerLink="/cost">Cost</a>
-    </li>
-    <li class="nav-item">
       <a class="nav-link" href="#" routerLink="/consumption-component">Consumption</a>
-    </li>
-    <li class="nav-item">
       <a class="nav-link" routerLink="/normalized-consumption">Normalized Consumption</a>
-    </li>
-    <li class="nav-item">
       <a class="nav-link" routerLink="/carbon-footprint">Carbon Footprint</a>
-    </li>
-  </ul>
+      <a class="nav-link" routerLink="/report">Report</a>
+    </div>
+    <div class="navbar-nav ml-auto">
+      <a href="#" routerLink="/login" class="nav-item nav-link">Login</a>
+    </div>
+  </div>
 </nav>
-
 <!-- main app container -->
 <div class="container-fluid full-page">
   <div class="row  bg-light">

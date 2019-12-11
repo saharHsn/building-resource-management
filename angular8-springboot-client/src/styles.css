@@ -1,7 +1,6 @@
-/* You can add global styles to this file, and also import other style files */
+/* You can add global styles to this file; and also import other style files */
 @import '~bootstrap/dist/css/bootstrap.min.css';
-@import "~@ng-select/ng-select/themes/default.theme.css";
-@import "~@ng-select/ng-select/themes/material.theme.css";
+
 
 .footer {
   position: absolute;
@@ -31,3 +30,99 @@
   height: 100%;
   width: 100%;
 }
+
+.slidecontainer {
+  width: 100%; /* Width of the outside container */
+}
+
+/* The slider itself */
+.slider {
+  -webkit-appearance: none; /* Override default CSS styles */
+  appearance: none;
+  width: 100%; /* Full-width */
+  height: 25px; /* Specified height */
+  background: #d3d3d3; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+}
+
+/* Mouse-over effects */
+.slider:hover {
+  opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome; Opera; Safari; Edge) and -moz- (Firefox) to override default look) */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: #4CAF50; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: #4CAF50; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+}
+
+/*.table td {
+  border: #5d6161 solid 1px !important;
+}
+
+.table th {
+  border: #5d6161 solid 1px !important;
+}
+
+.table .thead-dark th {
+  color: #fff;
+  background-color: #114e62;
+  border-color: #0f2736;
+}*/
+
+.table .thead-dark th {
+  color: #fff;
+  background-color: #114e62;
+  border-color: #1a3951;
+}
+
+
+.backgroundLayer {
+  border-top-width: 2px;
+  border-top-color: #6ACA25;
+  border-right-width: 2px;
+  border-right-color: #6ACA25;
+  border-bottom-width: 2px;
+  border-bottom-color: #6ACA25;
+  border-left-width: 2px;
+  border-left-color: #6ACA25;
+  box-shadow: none;
+}
+
+.attributes-ie {
+  border-top-width: 2px;
+  border-top-color: #6ACA25;
+  border-right-width: 2px;
+  border-right-color: #6ACA25;
+  border-bottom-width: 2px;
+  border-bottom-color: #6ACA25;
+  border-left-width: 2px;
+  border-left-color: #6ACA25
+}
+
+.paddingLayer {
+  height: 21px;
+  width: 67px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+
+
+

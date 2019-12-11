@@ -21,13 +21,10 @@ more(Highcharts);
 })
 
 export class BeScoreComponent implements OnInit, OnDestroy {
-  // private updataDataEndRef: Subscription = null;
   public messageCount: number;
   public chart: any;
   private beScore: number;
   private buildingId: string;
-
-  // @Input() usageService: UsageService;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -48,7 +45,6 @@ export class BeScoreComponent implements OnInit, OnDestroy {
     // this.updataDataEndRef.unsubscribe();
   }
 
-  // noinspection JSMethodCanBeStatic
   private buildGauge(): any {
     return {
       chart: {
@@ -100,7 +96,6 @@ export class BeScoreComponent implements OnInit, OnDestroy {
       yAxis: {
         min: 0,
         max: 55,
-
         minorTickInterval: 'auto',
         minorTickWidth: 1,
         minorTickLength: 10,
@@ -136,20 +131,6 @@ export class BeScoreComponent implements OnInit, OnDestroy {
           to: 55,
           color: '#DF5353' // red
         }]
-        /*stops: [
-          [0.1, '#55BF3B'],
-          [0.5, '#DDDF0D'],
-          [0.9, '#DF5353']
-        ],
-        lineWidth: 0,
-        minorTickInterval: null,
-        tickAmount: 2,
-        title: {
-          y: -70
-        },
-        labels: {
-          y: 16
-        }*/
       },
       series: [{
         name: 'Speed',
@@ -158,15 +139,6 @@ export class BeScoreComponent implements OnInit, OnDestroy {
           valueSuffix: ' km/h'
         }
       }]
-      /*plotOptions: {
-        solidgauge: {
-          dataLabels: {
-            y: 5,
-            borderWidth: 0,
-            useHTML: true
-          }
-        }
-      }*/
     };
   }
 
