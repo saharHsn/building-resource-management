@@ -27,6 +27,7 @@ public class BillDto {
     private Float producedCO2;
     private Float powerDemandCost;
     private Float averageDailyConsumption;
+    private Float totalMonthlyConsumption;
     private BillParameterDto aEOffHours;
     private BillParameterDto aEFreeHours;
     private BillParameterDto aENormalHours;

@@ -47,6 +47,8 @@ public class Bill extends EntityBase<Bill> {
     //Average daily consumption of entity in last 12 months
     @DynamoDBAttribute
     private Float averageDailyConsumption;
+    @DynamoDBAttribute
+    private Float totalMonthlyConsumption;
 
     //BillParameterInfo
     @DynamoDBAttribute
@@ -92,5 +94,6 @@ public class Bill extends EntityBase<Bill> {
         this.producedCO2 = billDto.getProducedCO2();
         this.powerDemandCost = billDto.getPowerDemandCost();
         this.averageDailyConsumption = billDto.getAverageDailyConsumption();
+        this.totalMonthlyConsumption = billDto.getTotalMonthlyConsumption();
     }
 }

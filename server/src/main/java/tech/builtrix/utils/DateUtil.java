@@ -3,6 +3,7 @@ package tech.builtrix.utils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.YearMonth;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -197,9 +198,10 @@ public class DateUtil {
         return date;
     }
 
-    //TODO implement later
-    public static Integer getNumOfDaysOfMonth(Integer lastYear, int i) {
-        return null;
+    public static Integer getNumOfDaysOfMonth(Integer year, int month) {
+        YearMonth yearMonthObject = YearMonth.of(year, month);
+        int daysInMonth = yearMonthObject.lengthOfMonth();
+        return daysInMonth;
     }
 
     public enum DateType {

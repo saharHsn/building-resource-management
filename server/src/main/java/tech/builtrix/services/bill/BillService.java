@@ -190,11 +190,25 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         BillParameterDto rdPeakDto = new BillParameterDto(rdPeak);
         BillParameterInfo rdReactive = this.billParameterService.getById(bill.getRDReactivePower());
         BillParameterDto rdReactiveDto = new BillParameterDto(rdReactive);
-        BillDto billDto = new BillDto(bill.getBuildingId(), bill.getAddress(), bill.getFromDate(),
-                bill.getFromYear(), bill.getFromMonth(), bill.getFromDate(),
-                bill.getTotalPayable(), bill.getActiveEnergyCost(),
-                bill.getProducedCO2(), bill.getPowerDemandCost(), bill.getAverageDailyConsumption(),
-                aeOffDto, aeFreeDto, aeNormalDto, aePeakDto, rdPeakDto, rdContractedDto, rdReactiveDto
+        BillDto billDto = new BillDto(bill.getBuildingId(),
+                bill.getAddress(),
+                bill.getFromDate(),
+                bill.getFromYear(),
+                bill.getFromMonth(),
+                bill.getFromDate(),
+                bill.getTotalPayable(),
+                bill.getActiveEnergyCost(),
+                bill.getProducedCO2(),
+                bill.getPowerDemandCost(),
+                bill.getAverageDailyConsumption(),
+                bill.getTotalMonthlyConsumption(),
+                aeOffDto,
+                aeFreeDto,
+                aeNormalDto,
+                aePeakDto,
+                rdPeakDto,
+                rdContractedDto,
+                rdReactiveDto
         );
         return billDto;
     }
@@ -205,7 +219,7 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         Float x = 0f;
         for (int i = 0; i < 12; i++) {
             //TODO is normalized equals with averageConsumption?
-            x += ((dtoList.get(i).getAverageDailyConsumption()) / building.getArea());
+            x += ((dtoList.get(i).getTotalMonthlyConsumption()) / building.getArea());
         }
         return (x) / 12f;
     }

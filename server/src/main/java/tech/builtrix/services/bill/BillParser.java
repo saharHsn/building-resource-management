@@ -85,6 +85,10 @@ public class BillParser {
         BillParameterDto rDPeakHours = getBillParameter(column_value, POTENCIA_HORAS_DE_PONTA_);
         BillParameterDto rDContractedPower = getBillParameter(column_value, POTENCIA_CONTRATADA_);
         BillParameterDto rDReactivePower = getBillParameter(column_value, REATIVA_FORNECIDA_NO_VAZIO);
+        Float totalMonthlyConsumption = aEOffHours.getConsumption() +
+                aEFreeHours.getConsumption() +
+                aENormalHours.getConsumption() +
+                +aEPeakHours.getConsumption();
         BillDto bill = new BillDto(buildingId,
                 address,
                 fromDate,
@@ -96,6 +100,7 @@ public class BillParser {
                 producedCo2,
                 powerDemandCost,
                 averageDailyConsumption,
+                totalMonthlyConsumption,
                 aEOffHours,
                 aEFreeHours,
                 aENormalHours,
