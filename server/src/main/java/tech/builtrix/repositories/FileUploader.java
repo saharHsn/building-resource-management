@@ -2,9 +2,11 @@ package tech.builtrix.repositories;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 public interface FileUploader {
 
-    String uploadFile(MultipartFile file, Map<String, String> metaData, String bucketName);
+    //returns list of file names
+    List<String> uploadFile(MultipartFile file, Map<String, String> metaData, String bucketName);
 }

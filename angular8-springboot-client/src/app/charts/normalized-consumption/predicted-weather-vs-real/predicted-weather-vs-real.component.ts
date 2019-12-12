@@ -38,7 +38,7 @@ export class PredictedWeatherVsRealComponent implements OnInit {
             },
             xAxis: {
               // categories: ['Jan-2019', 'Feb-2019', 'Mar-2019'],
-              categories: data.content.xValues,
+              categories: data.content.xvalues,
               labels: {
                 style: {
                   fontSize: '15px'

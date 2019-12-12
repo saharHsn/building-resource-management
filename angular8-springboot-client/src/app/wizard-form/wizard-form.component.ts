@@ -70,6 +70,7 @@ export class WizardFormComponent implements OnInit {
     this.building.gasBill = this.gasFile;
     this.building.electricityBill = this.electricityFile;
     this.building.waterBill = this.waterFile;
+    console.log(this.building.name);
     this.buildingService.createBuilding(this.building).subscribe(data => this.buildingInfo.next(data), error => console.log(error));
 
 
@@ -78,7 +79,7 @@ export class WizardFormComponent implements OnInit {
     this.uploadFile(this.waterFile, '', BillType.Water);
     */
     // this.user = new User();
-    this.building = new Building();
+    // this.building = new Building();
   }
 
   private uploadFile(file: File, buildingId: string, billType: BillType) {

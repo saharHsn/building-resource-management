@@ -93,25 +93,25 @@ public class ReportUtil {
     private static void extractCostValues(List<BillDto> dtoList, List<Float> contractedPowerValues, List<Float> powerInPeakValues, List<Float> reactivePowerValues, List<Float> normalValues, List<Float> peakValues, List<Float> freeValues, List<Float> offValues) {
         for (BillDto billDto : dtoList) {
             if (billDto.getRDContractedPower() != null) {
-                contractedPowerValues.add(billDto.getRDContractedPower().getCost());
+                contractedPowerValues.add(billDto.getRDContractedPower().getTotalTariffCost());
             }
             if (billDto.getAEFreeHours() != null) {
-                freeValues.add(billDto.getAEFreeHours().getCost());
+                freeValues.add(billDto.getAEFreeHours().getTotalTariffCost());
             }
             if (billDto.getAEOffHours() != null) {
-                offValues.add(billDto.getAEOffHours().getCost());
+                offValues.add(billDto.getAEOffHours().getTotalTariffCost());
             }
             if (billDto.getAEPeakHours() != null) {
-                peakValues.add(billDto.getAEPeakHours().getCost());
+                peakValues.add(billDto.getAEPeakHours().getTotalTariffCost());
             }
             if (billDto.getRDPeakHours() != null) {
-                powerInPeakValues.add(billDto.getRDPeakHours().getCost());
+                powerInPeakValues.add(billDto.getRDPeakHours().getTotalTariffCost());
             }
             if (billDto.getAENormalHours() != null) {
-                normalValues.add(billDto.getAENormalHours().getCost());
+                normalValues.add(billDto.getAENormalHours().getTotalTariffCost());
             }
             if (billDto.getRDReactivePower() != null) {
-                reactivePowerValues.add(billDto.getRDReactivePower().getCost());
+                reactivePowerValues.add(billDto.getRDReactivePower().getTotalTariffCost());
             }
         }
     }
@@ -204,28 +204,28 @@ public class ReportUtil {
 
     public static EnergyCertificate getEnergyEfficiency(Float efficiencyLevel) {
         EnergyCertificate energyEfficiency = EnergyCertificate.Others;
-        if (efficiencyLevel >= 0 && efficiencyLevel < 0.25) {
+        if (efficiencyLevel >= 0 && efficiencyLevel < 25) {
             energyEfficiency = EnergyCertificate.APlus;
         }
-        if (efficiencyLevel >= 0.26 && efficiencyLevel < 0.5) {
+        if (efficiencyLevel >= 26 && efficiencyLevel < 50) {
             energyEfficiency = EnergyCertificate.A;
         }
-        if (efficiencyLevel >= 0.51 && efficiencyLevel < 0.75) {
+        if (efficiencyLevel >= 51 && efficiencyLevel < 75) {
             energyEfficiency = EnergyCertificate.B;
         }
-        if (efficiencyLevel >= 0.76 && efficiencyLevel < 1) {
+        if (efficiencyLevel >= 76 && efficiencyLevel < 100) {
             energyEfficiency = EnergyCertificate.BMinus;
         }
-        if (efficiencyLevel >= 1.01 && efficiencyLevel < 1.5) {
+        if (efficiencyLevel >= 101 && efficiencyLevel < 150) {
             energyEfficiency = EnergyCertificate.C;
         }
-        if (efficiencyLevel >= 1.51 && efficiencyLevel < 2) {
+        if (efficiencyLevel >= 151 && efficiencyLevel < 200) {
             energyEfficiency = EnergyCertificate.D;
         }
-        if (efficiencyLevel >= 2.01 && efficiencyLevel < 2.5) {
+        if (efficiencyLevel >= 201 && efficiencyLevel < 250) {
             energyEfficiency = EnergyCertificate.E;
         }
-        if (efficiencyLevel >= 2.5) {
+        if (efficiencyLevel >= 250) {
             energyEfficiency = EnergyCertificate.F;
         }
         return energyEfficiency;
@@ -240,25 +240,25 @@ public class ReportUtil {
                                   int month) {
         if (efficiency.equals(EnergyCertificate.A) || efficiency.equals(EnergyCertificate.APlus)) {
             standardAVals.add(month, efficiencyLevel);
-            standardBVals.add(month, 0f);
+            /*standardBVals.add(month, 0f);
             standardCVals.add(month, 0f);
-            standardDVals.add(month, 0f);
+            standardDVals.add(month, 0f);*/
         } else if (efficiency.equals(EnergyCertificate.B) || efficiency.equals(EnergyCertificate.BMinus)) {
             standardBVals.add(month, efficiencyLevel);
-            standardAVals.add(month, 0f);
+          /*  standardAVals.add(month, 0f);
             standardCVals.add(month, 0f);
-            standardDVals.add(month, 0f);
+            standardDVals.add(month, 0f);*/
         } else if (efficiency.equals(EnergyCertificate.C)) {
-            standardAVals.add(month, 0f);
-            standardBVals.add(month, 0f);
+            /*standardAVals.add(month, 0f);
+            standardBVals.add(month, 0f);*/
             standardCVals.add(month, efficiencyLevel);
-            standardDVals.add(month, 0f);
+            //standardDVals.add(month, 0f);
         } else if (efficiency.equals(EnergyCertificate.D)
                 || efficiency.equals(EnergyCertificate.F)
                 || efficiency.equals(EnergyCertificate.E)) {
-            standardAVals.add(month, 0f);
+            /*standardAVals.add(month, 0f);
             standardBVals.add(month, 0f);
-            standardCVals.add(month, 0f);
+            standardCVals.add(month, 0f);*/
             standardDVals.add(month, efficiencyLevel);
         }
 

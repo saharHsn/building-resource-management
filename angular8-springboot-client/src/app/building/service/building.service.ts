@@ -2,15 +2,22 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Building} from '../model/building';
+import {environment} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class BuildingService {
 
-  private baseUrl = 'http://builtrixmetrics-env.qwzndp9hya.us-east-2.elasticbeanstalk.com/builtrix/v1/buildings';
+  // private baseUrl = 'http://builtrixmetrics-env.qwzndp9hya.us-east-2.elasticbeanstalk.com/builtrix/v1/buildings';
+  environmentName = '';
+  environmentUrl = 'Debug api';
+  private readonly baseUrl;
 
   constructor(private http: HttpClient) {
+    this.environmentName = environment.environmentName;
+    this.environmentUrl = environment.apiUrl;
+    this.baseUrl = this.environmentUrl + '/buildings';
   }
 
   getBuilding(id: number): Observable<any> {

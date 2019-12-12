@@ -24,6 +24,7 @@ export class ConsumptionWeatherComponent implements OnInit {
       .subscribe(
         data => {
           this.highcharts = Highcharts;
+          const content = data.content;
           this.chartOptions = {
             chart: {
               type: 'column',
@@ -37,7 +38,17 @@ export class ConsumptionWeatherComponent implements OnInit {
               text: ''
             },
             xAxis: {
-              /*categories: ['Jan-2018',
+              /*categories: ['Jan-2018', 'Feb-2018', 'Mar-2018', 'Apr-2018', 'May-2018', 'Jun-2018',
+                'Jul-2018', 'Aug-2018', 'Sept-2018', 'Oct-2018', 'Nov-2018', 'Dec-2018'],*/
+              categories: content.xvalues,
+              labels: {
+                style: {
+                  fontSize: '15px'
+                }
+              }
+            },
+            /*xAxis: {
+              /!*categories: ['Jan-2018',
                 'Feb-2018',
                 'Mar-2018',
                 'Apr-2018',
@@ -48,14 +59,14 @@ export class ConsumptionWeatherComponent implements OnInit {
                 'Sep-2018',
                 'Oct-2018',
                 'Nov-2018',
-                'Dec-2018'],*/
-              categories: data.content.xValues,
+                'Dec-2018'],*!/
+              categories: data.content.xvalues,
               labels: {
                 style: {
                   fontSize: '15px'
                 }
               }
-            },
+            },*/
             yAxis: {
               gridLineWidth: 0,
 

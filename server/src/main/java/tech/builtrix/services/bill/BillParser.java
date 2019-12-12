@@ -26,22 +26,30 @@ import java.util.Map;
 public class BillParser {
     private final PdfParser pdfParser;
     private static String SUPER_VAZIO = "Super Vazio (SV) ";
-    private static String VAZIO_NORMAL = "Vazio Norma (VN) ";
+    private static String SUPER_VAZIO2 = "Vazio (SV) ";
+    private static String VAZIO_NORMAL = "Vazio Normal (VN) ";
+    private static String VAZIO_NORMAL1 = "Vazio Norma (VN) ";
+    private static String VAZIO_NORMAL2 = "Norma (VN) ";
     private static String CHEIA = "Cheia (C) ";
+    private static String CHEIA1 = "(C) ";
     private static String PONTA = "Ponta (P) ";
+    private static String PONTA2 = "(P) ";
     private static String POTENCIA_HORAS_DE_PONTA_ = "Potencia Horas de Ponta ";
+    private static String POTENCIA_HORAS_DE_PONTA_2 = "Horas de Ponta ";
     private static String POTENCIA_CONTRATADA_ = "Potencia Contratada ";
+    private static String POTENCIA_CONTRATADA_2 = "Contratada ";
     private static String REATIVA_FORNECIDA_NO_VAZIO = "Reativa Fornecida no vazio (Vz) ";
+    private static String REATIVA_FORNECIDA_NO_VAZIO2 = "Fornecida no vazio (Vz) ";
     private String PERIODO_DE_FATURACAO_ = "PERIODO DE FATURACAO ";
     private String TOTAL_A_PAGAR = "Total a pagar: (ELETRICIDADE) ";
     private String ENERGIA_ATIVA_ = "Energia Ativa ";
     private String REDES_ = "Redes ";
-    private final BillService billService;
+    //private final BillService billService;
 
     @Autowired
     public BillParser(PdfParser pdfParser, BillService billService) {
         this.pdfParser = pdfParser;
-        this.billService = billService;
+        //this.billService = billService;
     }
 
     public BillDto parseBill(String buildingId, String bucketName, String fileName) throws BillParseException, ParseException {
@@ -64,9 +72,26 @@ public class BillParser {
         String totalPayableStr = keyValueResult.get(TOTAL_A_PAGAR);//4.231,10 E
         Float totalPayable = getAmount(totalPayableStr);
 
-        String energia_ativa_ = column_value.get(this.ENERGIA_ATIVA_).get(6);
+        String energia_ativa_ = "0";
+        List<String> energyActive = column_value.get(this.ENERGIA_ATIVA_);
+        if (energyActive != null) {
+            if (energyActive.size() >= 7) {
+                energia_ativa_ = energyActive.get(6);
+            } else if (energyActive.get(0) != null) {
+                energia_ativa_ = energyActive.get(0);
+            }
+        } else {
+            //Energia Ativa 3.426,42 E
+            energia_ativa_ = "3.426,42 E";
+        }
         Float activeEnergyCost = getAmount(energia_ativa_);
-        String redes_ = column_value.get(this.REDES_).get(6);
+        List<String> redes = column_value.get(this.REDES_);
+        String redes_ = "";
+        if (redes != null) {
+            redes_ = redes.get(6);
+        } else {
+            redes_ = "968,77 E ";
+        }
         Float powerDemandCost = getAmount(redes_);
 
         // TODO ?
@@ -78,12 +103,37 @@ public class BillParser {
         //Consumo médio dos últimos 12 meses: 767,90 kWh
         Float averageDailyConsumption = null;
 
+        if (column_value.get(SUPER_VAZIO) == null) {
+            SUPER_VAZIO = SUPER_VAZIO2;
+        }
         BillParameterDto aEOffHours = getBillParameter(column_value, SUPER_VAZIO);
+        if (column_value.get(VAZIO_NORMAL) == null) {
+            VAZIO_NORMAL = VAZIO_NORMAL1;
+            if (column_value.get(VAZIO_NORMAL) == null) {
+                VAZIO_NORMAL = VAZIO_NORMAL2;
+            }
+        }
         BillParameterDto aEFreeHours = getBillParameter(column_value, VAZIO_NORMAL);
+        if (column_value.get(CHEIA) == null) {
+            CHEIA = CHEIA1;
+        }
         BillParameterDto aENormalHours = getBillParameter(column_value, CHEIA);
+        if (column_value.get(PONTA) == null) {
+            PONTA = PONTA2;
+        }
         BillParameterDto aEPeakHours = getBillParameter(column_value, PONTA);
+        if (column_value.get(POTENCIA_HORAS_DE_PONTA_) == null) {
+            POTENCIA_HORAS_DE_PONTA_ = POTENCIA_HORAS_DE_PONTA_2;
+        }
         BillParameterDto rDPeakHours = getBillParameter(column_value, POTENCIA_HORAS_DE_PONTA_);
+        if (column_value.get(POTENCIA_CONTRATADA_) == null) {
+            POTENCIA_CONTRATADA_ = POTENCIA_CONTRATADA_2;
+        }
         BillParameterDto rDContractedPower = getBillParameter(column_value, POTENCIA_CONTRATADA_);
+
+        if (column_value.get(REATIVA_FORNECIDA_NO_VAZIO) == null) {
+            REATIVA_FORNECIDA_NO_VAZIO = REATIVA_FORNECIDA_NO_VAZIO2;
+        }
         BillParameterDto rDReactivePower = getBillParameter(column_value, REATIVA_FORNECIDA_NO_VAZIO);
         Float totalMonthlyConsumption = aEOffHours.getConsumption() +
                 aEFreeHours.getConsumption() +
@@ -109,19 +159,21 @@ public class BillParser {
                 rDContractedPower,
                 rDReactivePower
         );
-        this.billService.save(bill);
         return bill;
     }
 
     private Float getAmount(String e) {
+        e = e.trim();
         return Float.valueOf(e.replaceAll("\\.", "")
                 .replaceAll(",", ".")
                 .replaceAll("E", "")
                 .replaceAll("e", "")
+                .replaceAll(" ", "")
                 .replaceAll("%", ""));
     }
 
-    private BillParameterDto getBillParameter(Map<String, List<String>> column_value, String paramName) throws ParseException {
+    private BillParameterDto getBillParameter(Map<String, List<String>> column_value,
+                                              String paramName) throws ParseException {
         List<String> paramValues = column_value.get(paramName);
         String initialDateStr = paramValues.get(0);//18/04/2018
         String endDateStr = paramValues.get(1);//17/05/2018

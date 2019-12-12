@@ -156,7 +156,7 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
         String randomPassword = codeService.generateRandomNumber(6);
         user.setPassword(HashUtil.sha1(randomPassword));
         user.setEmailAddress(invitationDto.getInviteeEmail());
-        user.setParent(parent);
+        user.setParent(parent.getId());
         user.setRole(Role.Junior);
         //TODO
         /*user.setUsing2FA(registerUserDto.isUsing2FA());

@@ -42,7 +42,7 @@ export class NormalizedPerCapitaComponent implements OnInit {
             xAxis: {
               /*categories: ['Jan-2018', 'Feb-2018', 'Mar-2018', 'Apr-2018', 'May-2018', 'Jun-2018',
                 'Jul-2018', 'Aug-2018', 'Sept-2018', 'Oct-2018', 'Nov-2018', 'Dec-2018'],*/
-              categories: content.xValues,
+              categories: content.xvalues,
               labels: {
                 style: {
                   fontSize: '15px'

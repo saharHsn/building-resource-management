@@ -6,9 +6,12 @@ import org.springframework.web.bind.annotation.*;
 import tech.builtrix.Response;
 import tech.builtrix.dtos.bill.BuildingDto;
 import tech.builtrix.dtos.building.UploadFileDto;
+import tech.builtrix.exceptions.BillParseException;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.services.building.BuildingService;
 import tech.builtrix.utils.FileService;
+
+import java.text.ParseException;
 
 /**
  * Created By sahar-hoseini at 08. Jul 2019 5:53 PM
@@ -28,7 +31,12 @@ public class BuildingController {
     @ApiOperation(value = "Request for creating new building")
     @PostMapping
     public Response<String> save(@ModelAttribute BuildingDto building) {
-        String buildingId = service.save(building);
+        String buildingId = null;
+        try {
+            buildingId = service.save(building);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Response.ok(buildingId);
     }
 
@@ -41,7 +49,7 @@ public class BuildingController {
 
     @ApiOperation(value = "Request for updating a specific building")
     @PutMapping
-    public Response<Void> update(@RequestBody BuildingDto building) {
+    public Response<Void> update(@RequestBody BuildingDto building) throws ParseException, BillParseException {
         service.update(building);
         return Response.ok();
     }

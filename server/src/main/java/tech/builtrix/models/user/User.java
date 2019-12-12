@@ -12,7 +12,6 @@ import tech.builtrix.dtos.user.UserDto;
 import tech.builtrix.models.EnumConverter;
 
 import java.util.Date;
-import java.util.List;
 
 
 @DynamoDBTable(tableName = "User")
@@ -52,9 +51,9 @@ public class User extends EntityBase<User> {
     @DynamoDBAttribute
     private String nationalId;
     @DynamoDBAttribute
-    private User parent;
-    @DynamoDBAttribute
-    private List<UserToken> tokens;
+    private String parent;
+    /*@DynamoDBAttribute
+    private List<UserToken> tokens;*/
     @DynamoDBTypeConverted(converter = EnumConverter.class)
     @DynamoDBAttribute(attributeName = "Role")
     private Role role;

@@ -75,9 +75,9 @@
     <form #buildingForm="ngForm" (ngSubmit)="onSubmit()" name="buildingForm" class="form-horizontal">
       <div class="row">
         <div class="form-group col-md-10">
-          <label class="col-md-3 control-lable" for="buildingName">Building Name</label>
+          <label class="col-md-3 control-lable" for="name">Building Name</label>
           <div class="col-md-7">
-            <input type="text" [(ngModel)]="building.name" id="buildingName" name="buildingName"
+            <input type="text" [(ngModel)]="building.name" id="name" name="name"
                    class=" form-control input-sm" placeholder="Enter your building name" ng-minlength="3"/>
           </div>
         </div>
@@ -129,8 +129,8 @@
       <div class="row col-md-9">
         <!--<div class="col-md-12">-->
         <div class="form-group col-md-4">
-          <label class="control-lable" for="buildingArea">Building Area</label>
-          <input type="text" [(ngModel)]="building.area" id="buildingArea" name="buildingArea"
+          <label class="control-lable" for="area">Building Area</label>
+          <input type="text" [(ngModel)]="building.area" id="area" name="area"
                  class="form-control input-sm" placeholder="Enter your Building Area." required
                  tooltip="The average area of your building in m2."
                  theme="light"
@@ -156,20 +156,20 @@
 
       <div class="row">
         <div class="form-group col-md-10">
-          <label class="col-md-3 control-lable" for="buildingUsage">Building Usage</label>
+          <label class="col-md-3 control-lable" for="usage">Building Usage</label>
           <div class="col-md-7">
-            <app-building-usage-component [(inputSliderValue)]="building.usage" id="buildingUsage"
-                                          name="buildingUsage"></app-building-usage-component>
+            <app-building-usage-component [(inputSliderValue)]="building.usage" id="usage"
+                                          name="usage"></app-building-usage-component>
           </div>
         </div>
       </div>
 
       <div class="row">
         <div class="form-group col-md-10">
-          <label class="col-md-3 control-lable" for="buildingAge">Building Age</label>
+          <label class="col-md-3 control-lable" for="age">Building Age</label>
           <div class="col-md-7">
-            <app-building-age-component [(inputSliderValue)]="building.age" id="buildingAge"
-                                        name="buildingAge"></app-building-age-component>
+            <app-building-age-component [(inputSliderValue)]="building.age" id="age"
+                                        name="age"></app-building-age-component>
           </div>
         </div>
       </div>

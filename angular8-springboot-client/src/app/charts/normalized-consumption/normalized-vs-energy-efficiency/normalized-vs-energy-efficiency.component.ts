@@ -51,7 +51,7 @@ export class NormalizedVsEnergyEfficiencyComponent implements OnInit {
                 'Oct-2018',
                 'Nov-2018',
                 'Dec-2018'],*/
-              categories: content.xValues,
+              categories: content.xvalues,
               labels: {
                 style: {
                   fontSize: '15px'

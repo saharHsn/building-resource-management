@@ -48,7 +48,7 @@ export class PredictionsComponent implements OnInit {
             },
             xAxis: {
               // categories: ['Oct-2019', 'Nov-2019', 'Dec-2019'],
-              categories: data.content.xValues,
+              categories: data.content.xvalues,
               labels: {
                 style: {
                   fontSize: '15px'

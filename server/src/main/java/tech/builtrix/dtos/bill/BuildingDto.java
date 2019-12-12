@@ -46,7 +46,7 @@ public class BuildingDto extends EntityDtoBase {
         this.area = building.getArea();
         this.numberOfPeople = building.getNumberOfPeople();
        // this.owner = building.();
-        this.numOfPeopleMap = building.getNumOfPeopleMap();
+        //this.numOfPeopleMap = building.getNumOfPeopleMap();
 
     }
 }

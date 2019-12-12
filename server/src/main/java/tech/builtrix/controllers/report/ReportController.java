@@ -37,7 +37,12 @@ public class ReportController extends ControllerBase {
     @GetMapping(value = "/prediction/{buildingId}")
     @NoSession
     public Response<PredictionDto> prediction(@PathVariable("buildingId") String buildingId) {
-        PredictionDto predictionDto = this.reportService.predict(buildingId);
+        PredictionDto predictionDto = null;
+        try {
+            predictionDto = this.reportService.predict(buildingId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Response.ok(predictionDto);
     }
 
@@ -45,7 +50,12 @@ public class ReportController extends ControllerBase {
     @GetMapping(value = "/saving/{buildingId}")
     @NoSession
     public Response<SavingDto> savingThisMonth(@PathVariable("buildingId") String buildingId) throws NotFoundException {
-        SavingDto savingDto = this.reportService.savingThisMonth(buildingId);
+        SavingDto savingDto = null;
+        try {
+            savingDto = this.reportService.savingThisMonth(buildingId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Response.ok(savingDto);
     }
 
@@ -53,7 +63,12 @@ public class ReportController extends ControllerBase {
     @GetMapping(value = "/beScore/{buildingId}")
     @NoSession
     public Response<Float> getBEScore(@PathVariable("buildingId") String buildingId) throws NotFoundException {
-        Float beScore = this.reportService.getBEScore(buildingId);
+        Float beScore = null;
+        try {
+            beScore = this.reportService.getBEScore(buildingId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Response.ok(beScore);
     }
 
@@ -61,7 +76,12 @@ public class ReportController extends ControllerBase {
     @GetMapping(value = "/nationalMedian/{buildingId}")
     @NoSession
     public Response<Float> getNationalMedian(@PathVariable("buildingId") String buildingId) throws NotFoundException {
-        Float nationalMedian = this.reportService.getNationalMedian(buildingId);
+        Float nationalMedian = null;
+        try {
+            nationalMedian = this.reportService.getNationalMedian(buildingId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Response.ok(nationalMedian);
     }
 
@@ -69,7 +89,12 @@ public class ReportController extends ControllerBase {
     @GetMapping(value = "/propertyTarget/{buildingId}")
     @NoSession
     public Response<Float> getPropertyTarget(@PathVariable("buildingId") String buildingId) throws NotFoundException {
-        Float propertyTarget = this.reportService.getDefaultPropertyTarget(buildingId, null);
+        Float propertyTarget = null;
+        try {
+            propertyTarget = this.reportService.getDefaultPropertyTarget(buildingId, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Response.ok(propertyTarget);
     }
 
@@ -77,7 +102,12 @@ public class ReportController extends ControllerBase {
     @GetMapping(value = "/costStack/{buildingId}")
     @NoSession
     public Response<CostStackDto> getCostStackData(@PathVariable("buildingId") String buildingId) throws NotFoundException {
-        CostStackDto costStackData = this.reportService.getCostStackData(buildingId);
+        CostStackDto costStackData = null;
+        try {
+            costStackData = this.reportService.getCostStackData(buildingId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Response.ok(costStackData);
     }
 
@@ -85,7 +115,12 @@ public class ReportController extends ControllerBase {
     @GetMapping(value = "/costPie/{buildingId}")
     @NoSession
     public Response<CostPieDto> getCostPieData(@PathVariable("buildingId") String buildingId) throws NotFoundException {
-        CostPieDto costPieDto = this.reportService.getCostPieData(buildingId);
+        CostPieDto costPieDto = null;
+        try {
+            costPieDto = this.reportService.getCostPieData(buildingId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Response.ok(costPieDto);
     }
 
@@ -93,7 +128,12 @@ public class ReportController extends ControllerBase {
     @GetMapping(value = "/consumption/{buildingId}")
     @NoSession
     public Response<ConsumptionDto> getConsumption(@PathVariable("buildingId") String buildingId) throws NotFoundException {
-        ConsumptionDto consumption = this.reportService.getConsumption(buildingId);
+        ConsumptionDto consumption = null;
+        try {
+            consumption = this.reportService.getConsumption(buildingId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Response.ok(consumption);
     }
 
@@ -104,7 +144,12 @@ public class ReportController extends ControllerBase {
                                                                      @RequestParam(value = "year") int year,
                                                                      @RequestParam(value = "periodType") TimePeriodType periodType,
                                                                      @RequestParam(value = "datePartType") DatePartType datePartType) throws NotFoundException {
-        ConsumptionDynamicDto consumption = this.reportService.getConsumptionDynamicData(buildingId, year, periodType, datePartType);
+        ConsumptionDynamicDto consumption = null;
+        try {
+            consumption = this.reportService.getConsumptionDynamicData(buildingId, year, periodType, datePartType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Response.ok(consumption);
     }
 
@@ -138,7 +183,12 @@ public class ReportController extends ControllerBase {
     @GetMapping(value = "/normVSEE/{buildingId}")
     @NoSession
     public Response<NormalVsEEDto> getNormalizedVsEnergyEfficiency(@PathVariable("buildingId") String buildingId) {
-        NormalVsEEDto dto = this.reportService.getNormalizedVsEnergyEfficiency(buildingId);
+        NormalVsEEDto dto = null;
+        try {
+            dto = this.reportService.getNormalizedVsEnergyEfficiency(buildingId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Response.ok(dto);
     }
 
@@ -146,7 +196,12 @@ public class ReportController extends ControllerBase {
     @GetMapping(value = "/predictedWeatherVSReal/{buildingId}")
     @NoSession
     public Response<PredictedWeatherVsRealDto> getPredictedWeatherVSReal(@PathVariable("buildingId") String buildingId) throws NotFoundException {
-        PredictedWeatherVsRealDto dto = this.reportService.getPredictedWeatherVSReal(buildingId);
+        PredictedWeatherVsRealDto dto = null;
+        try {
+            dto = this.reportService.getPredictedWeatherVSReal(buildingId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Response.ok(dto);
     }
 

@@ -8,8 +8,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import tech.builtrix.dtos.bill.BillDto;
 import tech.builtrix.parseEngine.PdfParser;
 import tech.builtrix.services.bill.BillParser;
+import tech.builtrix.services.bill.BillService;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created By sahar at 12/2/19
@@ -22,6 +27,8 @@ public class FileParserTest {
     private BillParser billParser;
     @Autowired
     private PdfParser pdfParser;
+    @Autowired
+    private BillService billService;
 
     public FileParserTest() {
     }
@@ -37,9 +44,40 @@ public class FileParserTest {
     @Test
     public void fileExtractorTest() {
         try {
-            String document = "2018_apr_may.pdf";
-            String bucket = "textract-console-us-east-2-64c71e37-898b-403b-80b7-942d95a9cf48";
-            this.billParser.parseBill("101010110", bucket, document);
+            // String document = "2017-DEC-2018-JAN.pdf";
+
+            String bucket = "metrics-building-0023499e-0bd1-44bb-b3d5-15da81f0ef12";
+            /* "2017-DEC-2018-JAN.pdf",
+                    "2018-APR-MAY.pdf",
+                    "2018-AUG-SEP.pdf",
+                     "2018-DEC-2019-JAN.pdf",
+                      "2018-FEB-MAR.pdf",
+                       "2018-JAN-FEB.pdf",
+                    "2018-JUL-Aug.pdf",
+                       "2018-JUN-JUL.pdf",
+                    "2018-MAR-APR.pdf",
+                    "2018-MAY-JUN.pdf",
+                    "2018-OCT-NOV.pdf",
+                    "2018-SEP-OCT.pdf",
+                    "2019-FEB-MAR.pdf",
+                    "2019-JAN-FEB.pdf",
+                    "2018-JUN-JUL.pdf",
+                    "2018-MAR-APR.pdf",
+                    "2018-SEP-OCT.pdf"*/
+
+                 /* ,
+                    ,
+                    */
+            List<String> documents = Arrays.asList("2019-FEB-MAR.pdf");
+            for (String document : documents) {
+                BillDto billDto;
+                try {
+                    billDto = this.billParser.parseBill("0023499e-0bd1-44bb-b3d5-15da81f0ef12", bucket, document);
+                    billService.save(billDto);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             /*TExtractDto tExtractDto = this.pdfParser.parseFile(bucket, document);
             System.out.println("key value result : " + tExtractDto.getKeyValueResult());
             System.out.println("table result : " + tExtractDto.getTablesResult());*/

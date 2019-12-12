@@ -15,9 +15,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import tech.builtrix.utils.FileUtil;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -31,47 +35,67 @@ public class S3FileService implements FileUploader {
     private String awsRegion;
 
     @Override
-    public String uploadFile(MultipartFile file, Map<String, String> metaData, String bucketName) {
-        //AmazonS3 s3 = new AmazonS3Client(new ClasspathPropertiesFileCredentialsProvider());
+    public List<String> uploadFile(MultipartFile file, Map<String, String> metaData, String bucketName) {
+        List<String> fileNames = new ArrayList<>();
+        if (file.getContentType() != null && file.getContentType().equalsIgnoreCase("application/zip")) {
+            //file is zipped
+            File destFiles = new File(bucketName + "_" + file.getName());
+            String destination = destFiles.getAbsolutePath();
+            try {
+                FileUtil.unzipMultipartFile(file, destination);
+            } catch (IOException e) {
+                throw new RuntimeException("Encounter IO error in unzipping files : " + file.getName());
+            }
+            fileNames.addAll(uploadMultiFiles(destFiles, bucketName, metaData));
+        } else {
+            uploadSingleFile(file, bucketName, metaData);
+            fileNames.add(file.getName());
+        }
+        return fileNames;
+    }
 
+    private List<String> uploadMultiFiles(File destination, String bucketName, Map<String, String> metaData) {
+        List<String> fileNames = new ArrayList<>();
+        List<File> directoryFiles = FileUtil.getDirectoryFiles(destination);
+        for (File directoryFile : directoryFiles) {
+            MultipartFile multiPartFile;
+            try {
+                multiPartFile = FileUtil.createMultiPartFile(directoryFile.getName(), directoryFile.getAbsolutePath());
+            } catch (IOException e) {
+                throw new RuntimeException("Encounter error : " + e + " during creating multiPart files");
+            }
+            uploadSingleFile(multiPartFile, bucketName, metaData);
+            fileNames.add(multiPartFile.getName());
+        }
+        return fileNames;
+    }
+
+    private void uploadSingleFile(MultipartFile file, String bucketName, Map<String, String> metaData) {
+        ObjectMetadata omd = getObjectMetadata(file, metaData);
         AmazonS3 s3 = getAmazonS3();
         if (s3.doesBucketExistV2(bucketName)) {
             logger.info("Bucket name is not available."
                     + " Try again with a different Bucket name.");
-            //return null;
         } else {
             s3.createBucket(bucketName);
         }
-
         String result = "Upload unsuccessfull because ";
         try {
-
             S3Object s3Object = new S3Object();
-
-            ObjectMetadata omd = new ObjectMetadata();
-            omd.setContentType(file.getContentType());
-            omd.setContentLength(file.getSize());
-            omd.setHeader("filename", file.getName());
-            omd.setUserMetadata(metaData);
-
             ByteArrayInputStream bis = new ByteArrayInputStream(file.getBytes());
-
             s3Object.setObjectContent(bis);
             //"bill-" + UUID.randomUUID().toString()
             s3.putObject(new PutObjectRequest(bucketName, file.getName(), bis, omd));
             s3Object.close();
-
             result = "Uploaded Successfully.";
         } catch (AmazonServiceException ase) {
             logger.error("Caught an AmazonServiceException, which means your request made it to Amazon S3, but was "
                     + "rejected with an error response for some reason.");
-
             logger.error("Error Message:    " + ase.getMessage());
             logger.error("HTTP Status Code: " + ase.getStatusCode());
             logger.error("AWS Error Code:   " + ase.getErrorCode());
             logger.error("Error Type:       " + ase.getErrorType());
             logger.error("Request ID:       " + ase.getRequestId());
-
             result = result + ase.getMessage();
         } catch (AmazonClientException ace) {
             logger.error("Caught an AmazonClientException, which means the client encountered an internal error while "
@@ -81,8 +105,17 @@ public class S3FileService implements FileUploader {
         } catch (Exception e) {
             result = result + e.getMessage();
         }
+        //return result;
+    }
 
-        return result;
+
+    private ObjectMetadata getObjectMetadata(MultipartFile file, Map<String, String> metaData) {
+        ObjectMetadata omd = new ObjectMetadata();
+        omd.setContentType(file.getContentType());
+        omd.setContentLength(file.getSize());
+        omd.setHeader("filename", file.getName());
+        omd.setUserMetadata(metaData);
+        return omd;
     }
 
     public void downloadFile(String bucketName, String fileName) throws IOException {

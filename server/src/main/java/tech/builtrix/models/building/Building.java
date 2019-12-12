@@ -9,9 +9,6 @@ import lombok.Setter;
 import tech.builtrix.base.EntityBase;
 import tech.builtrix.dtos.bill.BuildingDto;
 
-import java.util.Date;
-import java.util.Map;
-
 /**
  * Created By sahar-hoseini at 20. Jun 2019 4:03 PM
  **/
@@ -41,8 +38,8 @@ public class Building extends EntityBase<Building> {
     private float area;
     @DynamoDBAttribute
     private Integer numberOfPeople;
-    @DynamoDBAttribute
-    private Map<Date, Integer> numOfPeopleMap;
+    //@DynamoDBAttribute
+    //private Map<Date, Integer> numOfPeopleMap;
     @DynamoDBAttribute(attributeName = "Owner")
     private String owner;
 
@@ -56,6 +53,6 @@ public class Building extends EntityBase<Building> {
         this.area = buildingDto.getArea();
         this.numberOfPeople = buildingDto.getNumberOfPeople();
         this.owner = buildingDto.getOwner().getId();
-        this.numOfPeopleMap = buildingDto.getNumOfPeopleMap();
+        // this.numOfPeopleMap = buildingDto.getNumOfPeopleMap();
     }
 }

@@ -23,8 +23,6 @@ import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.bill.Bill;
 import tech.builtrix.models.bill.BillParameterInfo;
 import tech.builtrix.repositories.bill.BillRepository;
-import tech.builtrix.services.building.BuildingService;
-import tech.builtrix.utils.DateUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,16 +39,14 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
     static DynamoDBMapper mapper = new DynamoDBMapper(client);
 
     private final BillParameterService billParameterService;
-    private final BuildingService buildingService;
+    //private final BuildingService buildingService;
 
 
     @Autowired
     protected BillService(BillRepository repository,
-                          BillParameterService billParameterService,
-                          BuildingService buildingService) {
+                          BillParameterService billParameterService) {
         super(repository);
         this.billParameterService = billParameterService;
-        this.buildingService = buildingService;
     }
 
     public Bill findById(String id) throws NotFoundException {
@@ -156,11 +152,11 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         return allBillInfo;
     }
 
-    public Float getBEScore(String buildingId, List<BillDto> dtoList) throws NotFoundException {
+    public Float getBEScore(BuildingDto building, List<BillDto> dtoList) throws NotFoundException {
         //TODO add reference field to building entity
         /*user enters reference if not we consider 50*/
         float GOD = 0.1f * reference; //5 kWh/m2/year
-        Float x = geXValue(buildingId, dtoList);
+        Float x = geXValue(building, dtoList);
         Float beScore = (GOD / (x > 0 ? x : 0.5f)) * 100;
         return beScore;
     }
@@ -170,14 +166,28 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
     }
 
     public List<BillDto> getBillsOfYear(String buildingId, Integer year) throws NotFoundException {
-        List<BillDto> dtoList = new ArrayList<>();
-        for (int i = 0; i < 12; i++) {
-            BillDto billDto = filterByMonthAndYear(buildingId, i, year);
-            dtoList.add(billDto);
+        List<Bill> bills;
+        List<BillDto> billDtos = new ArrayList<>();
+        bills = filterByYear(buildingId, year);
+        for (Bill bill : bills) {
+            billDtos.add(convertBillToDto(bill));
         }
-        return dtoList;
+        return billDtos;
     }
+
     //----------------------------------------- Private Methods ---------------------------------------------
+
+    private List<Bill> filterByYear(String buildingId, Integer year) {
+        Map<String, AttributeValue> exprAtrVals = new HashMap<>();
+        exprAtrVals.put(":fromYear", new AttributeValue().withN(String.valueOf(year)));
+        exprAtrVals.put(":buildingId", new AttributeValue().withS(buildingId));
+        String filterExpression = "buildingId = :buildingId and  fromYear= :fromYear";
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
+                .withFilterExpression(filterExpression)
+                .withExpressionAttributeValues(exprAtrVals);
+
+        return mapper.scan(Bill.class, scanExpression);
+    }
 
     private String getDateStr(Date fromDate) {
         SimpleDateFormat df = new SimpleDateFormat(DATE_PATTERN);
@@ -222,30 +232,23 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         return billDto;
     }
 
-    private Float geXValue(String buildingId, List<BillDto> dtoList) throws NotFoundException {
-        BuildingDto building = this.buildingService.findById(buildingId);
+    private Float geXValue(BuildingDto building, List<BillDto> dtoList) throws NotFoundException {
+        //BuildingDto building = this.buildingService.findById(buildingId);
         // List<BillDto> dtoList = getBillsOfYear(buildingId);
         float x = 0f;
         for (int i = 0; i < 12; i++) {
             //TODO is normalized equals with averageConsumption?
-            if (dtoList.get(i).getTotalMonthlyConsumption() != null) {
-                x += ((dtoList.get(i).getTotalMonthlyConsumption()) / building.getArea());
+            if (dtoList.size() > i) {
+                if (dtoList.get(i).getTotalMonthlyConsumption() != null) {
+                    x += ((dtoList.get(i).getTotalMonthlyConsumption()) / building.getArea());
+                }
             }
         }
         return (x) / 12f;
     }
 
-    public List<BillDto> getBillsOfYear(String buildingId) throws NotFoundException {
-        int currentYear = DateUtil.getCurrentYear();
-        List<BillDto> dtoList = new ArrayList<>();
-        for (int i = 0; i < 12; i++) {
-            dtoList.add(filterByMonthAndYear(buildingId, i, currentYear));
-        }
-        return dtoList;
-    }
-
     public static void main(String[] args) throws ParseException {
-        BillService billService = new BillService(null, null, null);
+        BillService billService = new BillService(null, null);
         // billService.filterByFromDateAndMonthAndBuilding(new Date(), 1, 2, 4, "999999");
         billService.filterByFromDateAndMonthAndBuilding(new Date(), 1, 2, 4, "999999");
     }

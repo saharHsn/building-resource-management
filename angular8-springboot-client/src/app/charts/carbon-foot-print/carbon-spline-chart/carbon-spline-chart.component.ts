@@ -49,7 +49,7 @@ export class CarbonSplineChartComponent implements OnInit {
                 'Oct-2018',
                 'Nov-2018',
                 'Dec-2018'],*/
-              categories: data.content.xValues,
+              categories: data.content.xvalues,
               labels: {
                 style: {
                   fontSize: '15px'
