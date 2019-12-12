@@ -92,13 +92,27 @@ public class ReportUtil {
 
     private static void extractCostValues(List<BillDto> dtoList, List<Float> contractedPowerValues, List<Float> powerInPeakValues, List<Float> reactivePowerValues, List<Float> normalValues, List<Float> peakValues, List<Float> freeValues, List<Float> offValues) {
         for (BillDto billDto : dtoList) {
-            contractedPowerValues.add(billDto.getRDContractedPower().getCost());
-            freeValues.add(billDto.getAEFreeHours().getCost());
-            offValues.add(billDto.getAEOffHours().getCost());
-            peakValues.add(billDto.getAEPeakHours().getCost());
-            powerInPeakValues.add(billDto.getRDPeakHours().getCost());
-            normalValues.add(billDto.getAENormalHours().getCost());
-            reactivePowerValues.add(billDto.getRDReactivePower().getCost());
+            if (billDto.getRDContractedPower() != null) {
+                contractedPowerValues.add(billDto.getRDContractedPower().getCost());
+            }
+            if (billDto.getAEFreeHours() != null) {
+                freeValues.add(billDto.getAEFreeHours().getCost());
+            }
+            if (billDto.getAEOffHours() != null) {
+                offValues.add(billDto.getAEOffHours().getCost());
+            }
+            if (billDto.getAEPeakHours() != null) {
+                peakValues.add(billDto.getAEPeakHours().getCost());
+            }
+            if (billDto.getRDPeakHours() != null) {
+                powerInPeakValues.add(billDto.getRDPeakHours().getCost());
+            }
+            if (billDto.getAENormalHours() != null) {
+                normalValues.add(billDto.getAENormalHours().getCost());
+            }
+            if (billDto.getRDReactivePower() != null) {
+                reactivePowerValues.add(billDto.getRDReactivePower().getCost());
+            }
         }
     }
 
@@ -142,13 +156,27 @@ public class ReportUtil {
                                                  List<Float> freeValues,
                                                  List<Float> offValues) {
         for (BillDto billDto : dtoList) {
-            contractedPowerValues.add(billDto.getRDContractedPower().getConsumption());
-            freeValues.add(billDto.getAEFreeHours().getConsumption());
-            offValues.add(billDto.getAEOffHours().getConsumption());
-            peakValues.add(billDto.getAEPeakHours().getConsumption());
-            powerInPeakValues.add(billDto.getRDPeakHours().getConsumption());
-            normalValues.add(billDto.getAENormalHours().getConsumption());
-            reactivePowerValues.add(billDto.getRDReactivePower().getConsumption());
+            if (billDto.getRDContractedPower() != null) {
+                contractedPowerValues.add(billDto.getRDContractedPower().getConsumption());
+            }
+            if (billDto.getAEFreeHours() != null) {
+                freeValues.add(billDto.getAEFreeHours().getConsumption());
+            }
+            if (billDto.getAEOffHours() != null) {
+                offValues.add(billDto.getAEOffHours().getConsumption());
+            }
+            if (billDto.getAEPeakHours() != null) {
+                peakValues.add(billDto.getAEPeakHours().getConsumption());
+            }
+            if (billDto.getRDPeakHours() != null) {
+                powerInPeakValues.add(billDto.getRDPeakHours().getConsumption());
+            }
+            if (billDto.getAENormalHours() != null) {
+                normalValues.add(billDto.getAENormalHours().getConsumption());
+            }
+            if (billDto.getRDReactivePower() != null) {
+                reactivePowerValues.add(billDto.getRDReactivePower().getConsumption());
+            }
         }
     }
 

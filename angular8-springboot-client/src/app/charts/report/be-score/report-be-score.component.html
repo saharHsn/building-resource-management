@@ -1,9 +1,9 @@
 <h3 align="center">BE Score</h3>
 <br>
 <div class="container-fluid">
-  <div class="row">
+  <div class="row" *ngIf="beScore">
     <div class="col">
-      <h4 align="center">46</h4>
+      <h4 align="center">{{beScore}}</h4>
     </div>
   </div>
 
@@ -15,9 +15,9 @@
       </h5>
     </div>
   </div>
-  <div class="row">
+  <div class="row" *ngIf="propertyTarget">
     <div class="col">
-      <h6 align="center">55</h6>
+      <h6 align="center">{{propertyTarget}}</h6>
     </div>
   </div>
   <div class="row">
@@ -27,9 +27,9 @@
       </h5>
     </div>
   </div>
-  <div class="row">
+  <div class="row" *ngIf="nationalMedian">
     <div class="col">
-      <h6 align="center">42</h6>
+      <h6 align="center">{{nationalMedian}}</h6>
     </div>
   </div>
 </div>

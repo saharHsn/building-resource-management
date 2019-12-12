@@ -38,6 +38,9 @@ public class BuildingDto extends EntityDtoBase {
     public BuildingDto(Building building) {
         this.name = building.getName();
         this.usage = building.getUsage();
+        this.id = building.getId();
+        this.postalAddress = building.getPostalAddress();
+        this.postalCode = building.getPostalCode();
         this.energyCertificate = building.getEnergyCertificate();
         this.age = building.getAge();
         this.area = building.getArea();

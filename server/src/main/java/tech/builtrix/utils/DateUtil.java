@@ -58,8 +58,6 @@ public class DateUtil {
         GregorianCalendar date = new GregorianCalendar();
         year = date.get(Calendar.YEAR);
         return year;
-
-
     }
 
     public static Date convertDateStrToDate(String dateStr, String format) throws ParseException {
@@ -186,7 +184,7 @@ public class DateUtil {
     }
 
     public static String getMonth(Integer monthNumber) {
-        return monthNames[monthNumber - 1];
+        return monthNames[monthNumber];
     }
 
     public static Date getCustomDate(Integer currentYear, int i) {
@@ -202,6 +200,13 @@ public class DateUtil {
         YearMonth yearMonthObject = YearMonth.of(year, month);
         int daysInMonth = yearMonthObject.lengthOfMonth();
         return daysInMonth;
+    }
+
+    public static int geCurrentMonth() {
+        int month;
+        GregorianCalendar date = new GregorianCalendar();
+        month = date.get(Calendar.MONTH);
+        return month;
     }
 
     public enum DateType {

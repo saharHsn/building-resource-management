@@ -18,10 +18,10 @@ import org.springframework.util.CollectionUtils;
 import tech.builtrix.base.GenericCrudServiceBase;
 import tech.builtrix.dtos.bill.BillDto;
 import tech.builtrix.dtos.bill.BillParameterDto;
+import tech.builtrix.dtos.bill.BuildingDto;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.bill.Bill;
 import tech.builtrix.models.bill.BillParameterInfo;
-import tech.builtrix.models.building.Building;
 import tech.builtrix.repositories.bill.BillRepository;
 import tech.builtrix.services.building.BuildingService;
 import tech.builtrix.utils.DateUtil;
@@ -51,6 +51,15 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         super(repository);
         this.billParameterService = billParameterService;
         this.buildingService = buildingService;
+    }
+
+    public Bill findById(String id) throws NotFoundException {
+        Optional<Bill> opitonal = this.repository.findById(id);
+        if (opitonal.isPresent()) {
+            return opitonal.get();
+        } else {
+            throw new NotFoundException("bill", "id", id);
+        }
     }
 
     public Bill save(BillDto billDto) {
@@ -121,7 +130,7 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
 
     public Bill getLastBill(String buildingId) throws NotFoundException {
         //TODO find a way for fetching data order by fromDate
-        return getById("0bdd7f99-f3af-4cec-a2e2-269a65de9df1");
+        return findById("0bdd7f99-f3af-4cec-a2e2-269a65de9df1");
     }
 
     public BillDto getLastBillDto(String buildingId) throws NotFoundException {
@@ -147,12 +156,12 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         return allBillInfo;
     }
 
-    public Float getBEScore(String buildingId) throws NotFoundException {
+    public Float getBEScore(String buildingId, List<BillDto> dtoList) throws NotFoundException {
         //TODO add reference field to building entity
         /*user enters reference if not we consider 50*/
-        Float GOD = 0.1f * reference; //5 kWh/m2/year
-        Float x = geXValue(buildingId);
-        Float beScore = (GOD / x) * 100;
+        float GOD = 0.1f * reference; //5 kWh/m2/year
+        Float x = geXValue(buildingId, dtoList);
+        Float beScore = (GOD / (x > 0 ? x : 0.5f)) * 100;
         return beScore;
     }
 
@@ -176,19 +185,19 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
     }
 
     private BillDto convertBillToDto(Bill bill) throws NotFoundException {
-        BillParameterInfo aeFree = this.billParameterService.getById(bill.getAEFreeHours());
+        BillParameterInfo aeFree = this.billParameterService.findById(bill.getAEFreeHours());
         BillParameterDto aeFreeDto = new BillParameterDto(aeFree);
-        BillParameterInfo aeNormal = this.billParameterService.getById(bill.getAENormalHours());
+        BillParameterInfo aeNormal = this.billParameterService.findById(bill.getAENormalHours());
         BillParameterDto aeNormalDto = new BillParameterDto(aeNormal);
-        BillParameterInfo aeOff = this.billParameterService.getById(bill.getAEOffHours());
+        BillParameterInfo aeOff = this.billParameterService.findById(bill.getAEOffHours());
         BillParameterDto aeOffDto = new BillParameterDto(aeOff);
-        BillParameterInfo aePeak = this.billParameterService.getById(bill.getAEPeakHours());
+        BillParameterInfo aePeak = this.billParameterService.findById(bill.getAEPeakHours());
         BillParameterDto aePeakDto = new BillParameterDto(aePeak);
-        BillParameterInfo rdContracted = this.billParameterService.getById(bill.getRDContractedPower());
+        BillParameterInfo rdContracted = this.billParameterService.findById(bill.getRDContractedPower());
         BillParameterDto rdContractedDto = new BillParameterDto(rdContracted);
-        BillParameterInfo rdPeak = this.billParameterService.getById(bill.getRDPeakHours());
+        BillParameterInfo rdPeak = this.billParameterService.findById(bill.getRDPeakHours());
         BillParameterDto rdPeakDto = new BillParameterDto(rdPeak);
-        BillParameterInfo rdReactive = this.billParameterService.getById(bill.getRDReactivePower());
+        BillParameterInfo rdReactive = this.billParameterService.findById(bill.getRDReactivePower());
         BillParameterDto rdReactiveDto = new BillParameterDto(rdReactive);
         BillDto billDto = new BillDto(bill.getBuildingId(),
                 bill.getAddress(),
@@ -213,19 +222,21 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         return billDto;
     }
 
-    private Float geXValue(String buildingId) throws NotFoundException {
-        Building building = this.buildingService.getById(buildingId);
-        List<BillDto> dtoList = getBillsOfYear(buildingId);
-        Float x = 0f;
+    private Float geXValue(String buildingId, List<BillDto> dtoList) throws NotFoundException {
+        BuildingDto building = this.buildingService.findById(buildingId);
+        // List<BillDto> dtoList = getBillsOfYear(buildingId);
+        float x = 0f;
         for (int i = 0; i < 12; i++) {
             //TODO is normalized equals with averageConsumption?
-            x += ((dtoList.get(i).getTotalMonthlyConsumption()) / building.getArea());
+            if (dtoList.get(i).getTotalMonthlyConsumption() != null) {
+                x += ((dtoList.get(i).getTotalMonthlyConsumption()) / building.getArea());
+            }
         }
         return (x) / 12f;
     }
 
-    private List<BillDto> getBillsOfYear(String buildingId) throws NotFoundException {
-        Integer currentYear = DateUtil.getCurrentYear();
+    public List<BillDto> getBillsOfYear(String buildingId) throws NotFoundException {
+        int currentYear = DateUtil.getCurrentYear();
         List<BillDto> dtoList = new ArrayList<>();
         for (int i = 0; i < 12; i++) {
             dtoList.add(filterByMonthAndYear(buildingId, i, currentYear));

@@ -69,7 +69,7 @@ public class ReportController extends ControllerBase {
     @GetMapping(value = "/propertyTarget/{buildingId}")
     @NoSession
     public Response<Float> getPropertyTarget(@PathVariable("buildingId") String buildingId) throws NotFoundException {
-        Float propertyTarget = this.reportService.getDefaultPropertyTarget(buildingId);
+        Float propertyTarget = this.reportService.getDefaultPropertyTarget(buildingId, null);
         return Response.ok(propertyTarget);
     }
 
@@ -112,7 +112,12 @@ public class ReportController extends ControllerBase {
     @GetMapping(value = "/normConsumptionWeather/{buildingId}")
     @NoSession
     public Response<ConsumptionNormalWeatherDto> getConsumptionNormalWeather(@PathVariable("buildingId") String buildingId) throws NotFoundException {
-        ConsumptionNormalWeatherDto consumption = this.reportService.getConsumptionNormalWeather(buildingId);
+        ConsumptionNormalWeatherDto consumption = null;
+        try {
+            consumption = this.reportService.getConsumptionNormalWeather(buildingId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Response.ok(consumption);
     }
 
@@ -120,7 +125,12 @@ public class ReportController extends ControllerBase {
     @GetMapping(value = "/normPerCapita/{buildingId}")
     @NoSession
     public Response<NormalPerCapitaDto> getNormalizedPerCapita(@PathVariable("buildingId") String buildingId) throws NotFoundException {
-        NormalPerCapitaDto normalizedPerCapita = this.reportService.getNormalizedPerCapita(buildingId);
+        NormalPerCapitaDto normalizedPerCapita = null;
+        try {
+            normalizedPerCapita = this.reportService.getNormalizedPerCapita(buildingId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Response.ok(normalizedPerCapita);
     }
 
@@ -144,7 +154,12 @@ public class ReportController extends ControllerBase {
     @GetMapping(value = "/carbonPie/{buildingId}")
     @NoSession
     public Response<CarbonPieDto> getCarbonPieData(@PathVariable("buildingId") String buildingId) throws NotFoundException {
-        CarbonPieDto dto = this.reportService.getCarbonPieData(buildingId);
+        CarbonPieDto dto = null;
+        try {
+            dto = this.reportService.getCarbonPieData(buildingId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Response.ok(dto);
     }
 
@@ -152,7 +167,12 @@ public class ReportController extends ControllerBase {
     @GetMapping(value = "/carbonSPLine/{buildingId}")
     @NoSession
     public Response<CarbonSPLineDto> getCarbonSPLineData(@PathVariable("buildingId") String buildingId) throws NotFoundException {
-        CarbonSPLineDto dto = this.reportService.getCarbonSPLineData(buildingId);
+        CarbonSPLineDto dto = null;
+        try {
+            dto = this.reportService.getCarbonSPLineData(buildingId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Response.ok(dto);
     }
 
@@ -160,11 +180,17 @@ public class ReportController extends ControllerBase {
     @GetMapping(value = "/energyConsumptionIndex/{buildingId}")
     @NoSession
     public Response<EnergyConsumptionIndexDto> getEnergyConsumptionIndex(@PathVariable("buildingId") String buildingId) throws NotFoundException {
-        List<EnergyConsumptionIndex> indexes = this.reportService.getAllEnergyConsumptionIndexes(buildingId);
-        EnergyConsumptionIndexDto dto = new EnergyConsumptionIndexDto(indexes.get(0),
-                indexes.get(1),
-                indexes.get(2),
-                indexes.get(3));
+        List<EnergyConsumptionIndex> indexes;
+        EnergyConsumptionIndexDto dto = null;
+        try {
+            indexes = this.reportService.getAllEnergyConsumptionIndexes(buildingId);
+            dto = new EnergyConsumptionIndexDto(indexes.get(0),
+                    indexes.get(1),
+                    indexes.get(2),
+                    indexes.get(3));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Response.ok(dto);
     }
 }

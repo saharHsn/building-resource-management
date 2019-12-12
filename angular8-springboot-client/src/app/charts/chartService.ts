@@ -54,27 +54,28 @@ export class ChartService {
   }
 
   predict(building: Building): Observable<any> {
-    return this.http.get(`${this.predictUrl}/${33333333}`);
+    const buildId = '2e389b38-97e7-45c0-9c22-e6fb215dc3e7';
+    return this.http.get(`${this.predictUrl}/${buildId}`);
   }
 
   savingThisMonth(buildingId: string): Observable<any> {
-    return this.http.get(`${this.savingUrl}/${33333333}`);
+    return this.http.get(`${this.savingUrl}/${'2e389b38-97e7-45c0-9c22-e6fb215dc3e7'}`);
   }
 
   getBEScore(buildingId: any): Observable<any> {
-    return this.http.get(`${this.beScoreUrl}/${33333333}`);
+    return this.http.get(`${this.beScoreUrl}/${'2e389b38-97e7-45c0-9c22-e6fb215dc3e7'}`);
   }
 
   costStackData(buildingId: string): Observable<any> {
-    return this.http.get(`${this.costStackUrl}/${33333333}`);
+    return this.http.get(`${this.costStackUrl}/${'2e389b38-97e7-45c0-9c22-e6fb215dc3e7'}`);
   }
 
   costPieData(buildingId: string): Observable<any> {
-    return this.http.get(`${this.costPieUrl}/${33333333}`);
+    return this.http.get(`${this.costPieUrl}/${'2e389b38-97e7-45c0-9c22-e6fb215dc3e7'}`);
   }
 
   consumptionStackData(buildingId: string): Observable<any> {
-    return this.http.get(`${this.consumptionUrl}/${33333333}`);
+    return this.http.get(`${this.consumptionUrl}/${'2e389b38-97e7-45c0-9c22-e6fb215dc3e7'}`);
   }
 
   consumptionDynamicData(buildingId: string,
@@ -85,44 +86,44 @@ export class ChartService {
       .set('year', year)
       .set('periodType', timePeriod)
       .set('datePartType', datePartType);
-    return this.http.get(`${this.consumptionDynamicUrl}/${33333333}`,
+    return this.http.get(`${this.consumptionDynamicUrl}/${'2e389b38-97e7-45c0-9c22-e6fb215dc3e7'}`,
       {params}
     );
   }
 
   normalizedConsumptionWeatherData(buildingId: string): Observable<any> {
-    return this.http.get(`${this.normalizedConsumptionWeatherUrl}/${33333333}`);
+    return this.http.get(`${this.normalizedConsumptionWeatherUrl}/${'2e389b38-97e7-45c0-9c22-e6fb215dc3e7'}`);
   }
 
   normalizedPerCapitaData(buildingId: string): Observable<any> {
-    return this.http.get(`${this.normalizedPerCapitaUrl}/${33333333}`);
+    return this.http.get(`${this.normalizedPerCapitaUrl}/${'2e389b38-97e7-45c0-9c22-e6fb215dc3e7'}`);
   }
 
   normalizedVsEnergyEfficiency(buildingId: string): Observable<any> {
-    return this.http.get(`${this.normalizedVsEEUrl}/${33333333}`);
+    return this.http.get(`${this.normalizedVsEEUrl}/${'2e389b38-97e7-45c0-9c22-e6fb215dc3e7'}`);
   }
 
   predictedWeatherVSReal(buildingId: string): Observable<any> {
-    return this.http.get(`${this.predictedWeatherVSRealUrl}/${33333333}`);
+    return this.http.get(`${this.predictedWeatherVSRealUrl}/${'2e389b38-97e7-45c0-9c22-e6fb215dc3e7'}`);
   }
 
   carbonPieData(buildingId: string): Observable<any> {
-    return this.http.get(`${this.carbonPieDataUrl}/${33333333}`);
+    return this.http.get(`${this.carbonPieDataUrl}/${'2e389b38-97e7-45c0-9c22-e6fb215dc3e7'}`);
   }
 
   carbonSPLineData(buildingId: string): Observable<any> {
-    return this.http.get(`${this.carbonSPLineUrl}/${33333333}`);
+    return this.http.get(`${this.carbonSPLineUrl}/${'2e389b38-97e7-45c0-9c22-e6fb215dc3e7'}`);
   }
 
   getAllEnergyConsumptionIndexes(buildingId: number): Observable<any> {
-    return this.http.get(`${this.energyConsumptionIndexUrl}/${33333333}`);
+    return this.http.get(`${this.energyConsumptionIndexUrl}/${'2e389b38-97e7-45c0-9c22-e6fb215dc3e7'}`);
   }
 
   getNationalMedian(buildingId: number): Observable<any> {
-    return this.http.get(`${this.nationalMedianUrl}/${33333333}`);
+    return this.http.get(`${this.nationalMedianUrl}/${'2e389b38-97e7-45c0-9c22-e6fb215dc3e7'}`);
   }
 
   getPropertyTarget(buildingId: number): Observable<any> {
-    return this.http.get(`${this.propertyTargetUrl}/${33333333}`);
+    return this.http.get(`${this.propertyTargetUrl}/${'2e389b38-97e7-45c0-9c22-e6fb215dc3e7'}`);
   }
 }

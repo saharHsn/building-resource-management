@@ -67,7 +67,7 @@ export class CarbonSplineChartComponent implements OnInit {
               },
               gridLineColor: '#cccccc',
               gridLineWidth: 2,
-              tickInterval: 0.25
+              tickInterval: 10
             },
             tooltip: {
               valueSuffix: 'KG-CO2/m2'

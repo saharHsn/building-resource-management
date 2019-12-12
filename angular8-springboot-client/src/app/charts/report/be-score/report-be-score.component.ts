@@ -22,17 +22,17 @@ export class ReportBeScoreComponent implements OnInit {
     this.chartService.getBEScore(this.buildingId)
       .subscribe(data => {
         console.log(data);
-        this.beScore = data;
+        this.beScore = data.content;
       }, error => console.log(error));
     this.chartService.getNationalMedian(this.buildingId)
       .subscribe(data => {
         console.log(data);
-        this.beScore = data;
+        this.nationalMedian = data.content;
       }, error => console.log(error));
     this.chartService.getPropertyTarget(this.buildingId)
       .subscribe(data => {
         console.log(data);
-        this.beScore = data;
+        this.propertyTarget = data.content;
       }, error => console.log(error));
   }
 }

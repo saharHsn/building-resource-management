@@ -33,6 +33,9 @@ public class BillParameterInfo extends EntityBase<BillParameterInfo> {
     @DynamoDBAttribute
     private Float totalTariffCost;
 
+    public BillParameterInfo() {
+    }
+
     public BillParameterInfo(BillParameterDto billParameterDto) {
         this.initialDate = billParameterDto.getInitialDate();
         this.endDate = billParameterDto.getEndDate();
