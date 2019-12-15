@@ -127,11 +127,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/ir.ghasemkiani/persiancalendar -->
+        <!-- https://mvnrepository.com/artifact/net.lingala.zip4j/zip4j -->
         <dependency>
-            <groupId>ir.ghasemkiani</groupId>
-            <artifactId>persiancalendar</artifactId>
-            <version>2.1.7</version>
+            <groupId>net.lingala.zip4j</groupId>
+            <artifactId>zip4j</artifactId>
+            <version>2.2.7</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <dependency>
@@ -224,11 +224,11 @@
             <artifactId>spring-boot-test</artifactId>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator -->
-        <!-- <dependency>
+        <dependency>
              <groupId>org.springframework.boot</groupId>
              <artifactId>spring-boot-starter-actuator</artifactId>
              <version>2.1.2.RELEASE</version>
-         </dependency>-->
+        </dependency>
 
         <dependency>
             <groupId>org.aspectj</groupId>
@@ -247,6 +247,10 @@
             <artifactId>lombok</artifactId>
             <version>1.18.4</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
     </dependencies>
 

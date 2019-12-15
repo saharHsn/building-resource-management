@@ -15,7 +15,7 @@ export class BeBreakdownComponent implements OnInit {
   xValues: string[];
   costYValues: number[];
   savingYValues: number[];
-  buildingId: string;
+
   highcharts = Highcharts;
 
   constructor(private route: ActivatedRoute,

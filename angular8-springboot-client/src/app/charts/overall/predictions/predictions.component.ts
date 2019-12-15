@@ -27,7 +27,7 @@ export class PredictionsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.chartService.predict(this.building)
+    this.chartService.predict()
       .pipe(first())
       .subscribe(
         data => {

@@ -8,9 +8,7 @@ import {Saving} from './Saving';
   styleUrls: ['./overall.component.css']
 })
 export class OverallComponent implements OnInit {
-
   id: number;
-  buildingId: string;
   saving: Saving;
 
   constructor(private route: ActivatedRoute,
@@ -21,7 +19,7 @@ export class OverallComponent implements OnInit {
   ngOnInit() {
     this.id = this.route.snapshot.params.id;
     this.saving = new Saving();
-    this.chartService.savingThisMonth(this.buildingId)
+    this.chartService.savingThisMonth()
       .subscribe(data => {
         console.log(data);
         this.saving.consumption = data.content.consumption;

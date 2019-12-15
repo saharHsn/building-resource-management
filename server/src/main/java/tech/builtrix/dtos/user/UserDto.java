@@ -31,6 +31,7 @@ public class UserDto extends EntityDtoBase {
     private Boolean isActive;
     private Role role;
     private String password;
+    private String token;
 
 
     public UserDto(User user) {

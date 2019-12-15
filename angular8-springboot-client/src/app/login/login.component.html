@@ -5,7 +5,7 @@
       <div class="col-sm-3">
         <div class="form-group">
           <label for="emailAddress">Email</label>
-          <input type="text" formControlName="emailAddress" class="form-control" [email]="true"
+          <input type="text" id="emailAddress" formControlName="emailAddress" class="form-control" [email]="true"
                  placeholder="Enter your email address."
                  [ngClass]="{ 'is-invalid': submitted && f.emailAddress.errors }"/>
 
@@ -24,7 +24,8 @@
       <div class="col-sm-3">
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" formControlName="password" placeholder="Enter your password" class="form-control"
+          <input type="password" id="password" formControlName="password" placeholder="Enter your password"
+                 class="form-control"
                  [ngClass]="{ 'is-invalid': submitted && f.password.errors }"/>
           <div *ngIf="submitted && f.password.errors" class="alert alert-danger">
             <div *ngIf="f.password.errors.required">Password is required</div>

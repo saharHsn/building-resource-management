@@ -29,7 +29,7 @@ import java.util.List;
 
 
 /**
-  * Created By sahar-hoseini at 12. Jul 2019 5:53 PM
+ * Created By sahar-hoseini at 12. Jul 2019 5:53 PM
  **/
 
 @Component
@@ -129,36 +129,6 @@ public class RequestContext {
         return null;
     }
 
-    private String getAppVersionFromHeader(HttpServletRequest request) {
-        List<String> sessionValues = Collections.list(request.getHeaders(SessionKeyService.VersionKey));
-        if (sessionValues.size() == 0)
-            return null;
-        if (sessionValues.size() > 1) {
-            return null;
-        }
-        return sessionValues.get(0);
-    }
-
-    private String getOsVersionFromHeader(HttpServletRequest request) {
-        List<String> sessionValues = Collections.list(request.getHeaders(SessionKeyService.OsVersionNoKey));
-        if (sessionValues.size() == 0)
-            return null;
-        if (sessionValues.size() > 1) {
-            return null;
-        }
-        return sessionValues.get(0);
-    }
-
-    private String getAppBuildNoFromHeader(HttpServletRequest request) {
-        List<String> sessionValues = Collections.list(request.getHeaders(SessionKeyService.BuildNoKey));
-        if (sessionValues.size() == 0)
-            return null;
-        if (sessionValues.size() > 1) {
-            return null;
-        }
-        return sessionValues.get(0);
-    }
-
     public String getSessionKey() {
         if (StringUtils.isEmpty(this.sessionToken))
             return null;
@@ -178,7 +148,7 @@ public class RequestContext {
         }
         if (user == null) {
             try {
-                user = this.userService.getById(this.session.getUser().getId());
+                user = this.userService.getById(this.session.getUser());
             } catch (NotFoundException e) {
                 return null;
             }

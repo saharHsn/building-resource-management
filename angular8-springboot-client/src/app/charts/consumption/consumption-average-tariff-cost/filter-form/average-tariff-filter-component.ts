@@ -29,7 +29,7 @@ export class AverageTariffFilterComponent {
   datePartType: DatePartType;
   year: YearFilterType;
   timePeriod: TimePeriodType;
-  buildingId: string;
+
 
   changedDataSeries;
   changedXAxisCategories;
@@ -52,7 +52,7 @@ export class AverageTariffFilterComponent {
   }
 
   private redraw(year: YearFilterType, datePartType: DatePartType, timePeriod: TimePeriodType) {
-    this.chartService.consumptionDynamicData(this.buildingId, YearFilterType[year], timePeriod, datePartType)
+    this.chartService.consumptionDynamicData(YearFilterType[year], timePeriod, datePartType)
       .pipe(first())
       .subscribe(
         data => {

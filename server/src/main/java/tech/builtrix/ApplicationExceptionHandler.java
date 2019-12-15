@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -68,7 +71,6 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     }
 
     private String createUserMessage(ExceptionBase ex, String userMessage) {
-        //String userMessage = errorMessage.message();
         if (userMessage.startsWith("${")) {
             userMessage = localizationService.localizedText(userMessage.substring(2, userMessage.length() - 1));
         }
@@ -78,7 +80,6 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
             userMessage = "errors." + ex.getClass().getSimpleName().toLowerCase().replace("exception", "");
             userMessage = this.localizationService.localizedText(userMessage);
         }
-
         return injectParametersToMessage(userMessage, ex);
     }
 
@@ -100,10 +101,12 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
         if (ex instanceof MethodArgumentNotValidException) {
-            List<String> errors = ((MethodArgumentNotValidException) ex).getBindingResult()
-                    .getFieldErrors().stream()
-                    .map(x -> String.format("%s %s", x.getField(), x.getDefaultMessage()))
-                    .collect(Collectors.toList());
+            BindingResult bindingResult = ((MethodArgumentNotValidException) ex).getBindingResult();
+            List<FieldError> bindingErrors = bindingResult.getFieldErrors();
+            List<ObjectError> allErrors = bindingResult.getAllErrors();
+            List<String> errors = bindingErrors.stream().map(bindingError -> String.format("%s %s", bindingError.getField(), bindingError.getDefaultMessage())).collect(Collectors.toList());
+            errors.addAll(allErrors.stream().map(error -> String.format("%s %s", error.getObjectName(), error.getDefaultMessage())).collect(Collectors.toList()));
+
             Response response = Response.error(400, localizationService.localizedError("badrequest"),
                     localizationService.localizedError("badrequest.dev"));
             for (String err : errors) {

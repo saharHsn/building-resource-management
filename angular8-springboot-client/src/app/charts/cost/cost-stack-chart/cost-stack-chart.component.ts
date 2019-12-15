@@ -10,7 +10,7 @@ import {Router} from '@angular/router';
   styleUrls: ['./cost-stack-chart.component.css']
 })
 export class CostStackChartComponent implements OnInit {
-  buildingId: string;
+
   highcharts = Highcharts;
   loading = true;
   chartOptions: any;
@@ -20,7 +20,7 @@ export class CostStackChartComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.chartService.costStackData(this.buildingId)
+    this.chartService.costStackData()
       .pipe(first())
       .subscribe(
         data => {

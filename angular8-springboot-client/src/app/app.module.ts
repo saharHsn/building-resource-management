@@ -59,7 +59,7 @@ import {BeScoreComponent} from './charts/overall/be-score/be-score.component';
 import {ReportComponent} from './charts/report/report.component';
 // tslint:disable-next-line:max-line-length
 import {EnergyEfficiencySymbolsComponent} from './charts/report/energy-efficiency/energy_efficiency_symbols/energy-efficiency-symbols.component';
-import {TooltipModule} from "ng2-tooltip-directive";
+import {TooltipModule} from 'ng2-tooltip-directive';
 
 @NgModule({
   imports: [

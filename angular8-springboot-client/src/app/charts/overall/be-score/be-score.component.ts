@@ -24,7 +24,6 @@ export class BeScoreComponent implements OnInit, OnDestroy {
   public messageCount: number;
   public chart: any;
   private beScore: number;
-  private buildingId: string;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -33,7 +32,7 @@ export class BeScoreComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.chartService.getBEScore(this.buildingId)
+    this.chartService.getBEScore()
       .subscribe(data => {
         console.log(data);
         this.beScore = data.content;

@@ -58,10 +58,10 @@ public class RegistrationController extends ControllerBase {
     }
 
     // Registration
-    @RequestMapping(value = "/registration", method = RequestMethod.POST)
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
     @NoSession
-    public Response<Void> registerUserAccount(@Valid final RegisterUserDto registerUserDto, final HttpServletRequest request) throws AlreadyExistException {
+    public Response<Void> registerUserAccount(@Valid @RequestBody RegisterUserDto registerUserDto, final HttpServletRequest request) throws AlreadyExistException {
         logger.debug("Registering user account with information: {}", registerUserDto);
         final User registered = userService.registerNewUserAccount(registerUserDto);
         //eventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, request.getLocale(), getAppUrl(request)));
@@ -71,7 +71,7 @@ public class RegistrationController extends ControllerBase {
     @RequestMapping(value = "/invitation", method = RequestMethod.POST)
     @ResponseBody
     @Authorize(roles = Role.Senior)
-    public Response<Void> registerViaInvitation(@Valid final InvitationDto invitationDto,
+    public Response<Void> registerViaInvitation(@RequestBody InvitationDto invitationDto,
                                                 final HttpServletRequest request) throws AlreadyExistException {
 
         logger.debug("Registering user account with information: {}", invitationDto);
@@ -83,7 +83,9 @@ public class RegistrationController extends ControllerBase {
 
     @RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
     @NoSession
-    public Response<String> confirmRegistration(final HttpServletRequest request, final Model model, @RequestParam("token") final String token) throws NotFoundException {
+    public Response<String> confirmRegistration(final HttpServletRequest request,
+                                                final Model model,
+                                                @RequestParam("token") final String token) throws NotFoundException {
         Locale locale = request.getLocale();
         String userId = null;
         try {

@@ -8,7 +8,6 @@ import {ChartService} from '../../chartService';
   styleUrls: ['./energy-efficiency.component.css']
 })
 export class EnergyEfficiencyComponent implements OnInit {
-  buildingId: number;
   energyIndex: any;
 
   constructor(private route: ActivatedRoute, private router: Router,
@@ -17,12 +16,10 @@ export class EnergyEfficiencyComponent implements OnInit {
 
   ngOnInit() {
     // this.energyIndex = new EnergyConsumptionIndexDto();
-    // this.buildingId = this.route.snapshot.params.id;
-    this.chartService.getAllEnergyConsumptionIndexes(this.buildingId)
+    this.chartService.getAllEnergyConsumptionIndexes()
       .subscribe(data => {
         console.log(data);
         this.energyIndex = data.content;
       }, error => console.log(error));
   }
-
 }

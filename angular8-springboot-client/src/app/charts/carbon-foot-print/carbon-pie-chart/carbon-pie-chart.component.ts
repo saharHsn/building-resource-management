@@ -10,7 +10,6 @@ import {Router} from '@angular/router';
   styleUrls: ['./carbon-pie-chart.component.css']
 })
 export class CarbonPieChartComponent implements OnInit {
-  buildingId: string;
   highcharts = Highcharts;
   chartOptions: any;
 
@@ -19,7 +18,7 @@ export class CarbonPieChartComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.chartService.carbonPieData(this.buildingId)
+    this.chartService.carbonPieData()
       .pipe(first())
       .subscribe(
         data => {

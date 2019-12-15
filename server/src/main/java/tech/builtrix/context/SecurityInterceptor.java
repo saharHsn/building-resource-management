@@ -53,7 +53,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
                     method.getDeclaringClass().getAnnotation(Authorize.class).roles();
 
             // if no role set User role is set
-            if (requiredRoles == null || requiredRoles.length == 0) {
+            if (requiredRoles.length == 0) {
                 requiredRoles = Role.values();
             }
 
@@ -69,8 +69,6 @@ public class SecurityInterceptor implements HandlerInterceptor {
             return true;
         }
     }
-
-
 }
 
 

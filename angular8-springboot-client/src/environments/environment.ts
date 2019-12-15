@@ -3,9 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
+  production: true,
   environmentName: 'DEVELOP',
   apiUrl: 'http://localhost:8080/builtrix/v1'
+  // apiUrl: 'http://metrics-server.us-east-2.elasticbeanstalk.com/builtrix/v1/'
 };
 
 /*

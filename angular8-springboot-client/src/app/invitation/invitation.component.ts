@@ -20,8 +20,8 @@ export class InvitationComponent implements OnInit {
     private alertService: AlertService
   ) {
     // redirect to home if already logged in
-    if (this.authenticationService.currentUserValue) {
-      this.router.navigate(['/']);
+    if (this.authenticationService.getCurrentUser()) {
+      this.router.navigate(['/overall']);
     }
   }
 
@@ -32,7 +32,7 @@ export class InvitationComponent implements OnInit {
     });
 
     // get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/overall';
   }
 
   // convenience getter for easy access to form fields

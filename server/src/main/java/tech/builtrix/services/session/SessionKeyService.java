@@ -4,13 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
+import tech.builtrix.exceptions.ExceptionBase;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.exceptions.session.SessionDisabledException;
 import tech.builtrix.exceptions.session.SessionExpiredException;
 import tech.builtrix.models.session.Session;
 import tech.builtrix.models.user.User;
-
-import javax.transaction.Transactional;
 
 /**
  * @author : pc`
@@ -30,7 +29,6 @@ public class SessionKeyService {
     public static final String VersionKey = "X-Version";
     public static final String OsVersionNoKey = "OS-Version";
 
-    //private DeviceService deviceService;
     private SessionService sessionService;
 
     @Autowired
@@ -38,21 +36,15 @@ public class SessionKeyService {
         this.sessionService = sessionService;
     }
 
-    public String createToken(User user) {
+    public String createToken(User user) throws ExceptionBase {
         Session session = this.sessionService.create(user);
         return session.getSessionKey();
     }
 
-   /* Session getTestSession(String mobileNumber) {
-        return this.sessionService.getTestSession(mobileNumber);
-    }*/
-
-
-    void expireToken(String sessionKey) throws NotFoundException {
+    public void expireToken(String sessionKey) throws NotFoundException {
         this.sessionService.expireSession(sessionKey);
     }
 
-    @Transactional
     public Session getAndValidateSession(String accessToken) throws NotFoundException, SessionDisabledException, SessionExpiredException {
         Session session = this.sessionService.getSession(accessToken);
         this.sessionService.validate(session);

@@ -10,7 +10,7 @@ import {Router} from '@angular/router';
   styleUrls: ['./electricity-consumption-over-time.component.css']
 })
 export class ElectricityConsumptionOverTimeComponent implements OnInit {
-  buildingId: string;
+
   highcharts = Highcharts;
   loading = true;
   chartOptions: any;
@@ -20,7 +20,7 @@ export class ElectricityConsumptionOverTimeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.chartService.consumptionStackData(this.buildingId)
+    this.chartService.consumptionStackData()
       .pipe(first())
       .subscribe(
         data => {

@@ -8,6 +8,7 @@ import {User} from '../user/user';
 import {BuildingFileService} from '../building/service/buildingFile.service';
 import {HttpResponse} from '@angular/common/http';
 import {BillType} from '../building/enums/BillType';
+import {AuthenticationService} from '../_services';
 
 @Component({
   templateUrl: './wizard-form.component.html',
@@ -18,11 +19,15 @@ export class WizardFormComponent implements OnInit {
   constructor(private buildingService: BuildingService,
               private userService: UserService,
               private fileService: BuildingFileService,
+              private authService: AuthenticationService,
               private router: Router) {
   }
 
-  building: Building = new Building();
-  user: User = new User();
+  building: Building;
+  isNew: boolean;
+  // = new Building();
+  user: User;
+  // = new User();
   submitted = false;
   // userInfo: Object;
   // buildingInfo: Object;
@@ -54,7 +59,21 @@ export class WizardFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.reloadData();
+    if (!this.building) {
+      this.building = new Building();
+      this.isNew = true;
+    }
+  }
 
+  reloadData() {
+    this.user = this.authService.getCurrentUser();
+    this.buildingService.getBuildingByOwner(this.user).subscribe(
+      data => {
+        this.building = data.content;
+      },
+      error => console.log(error)
+    );
   }
 
   onSubmit() {
@@ -71,7 +90,9 @@ export class WizardFormComponent implements OnInit {
     this.building.electricityBill = this.electricityFile;
     this.building.waterBill = this.waterFile;
     console.log(this.building.name);
-    this.buildingService.createBuilding(this.building).subscribe(data => this.buildingInfo.next(data), error => console.log(error));
+    this.buildingService.createOrUpdateBuilding(this.building, this.isNew).subscribe(
+      data => this.buildingInfo.next(data),
+      error => console.log(error));
 
 
     /*this.uploadFile(this.gasFile, '', BillType.Gas);

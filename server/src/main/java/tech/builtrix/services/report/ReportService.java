@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import tech.builtrix.controllers.report.ConsumptionNormalWeatherDto;
-import tech.builtrix.controllers.report.PredictedWeatherVsRealDto;
 import tech.builtrix.dtos.bill.BillDto;
 import tech.builtrix.dtos.bill.BillParameterDto;
 import tech.builtrix.dtos.bill.BuildingDto;

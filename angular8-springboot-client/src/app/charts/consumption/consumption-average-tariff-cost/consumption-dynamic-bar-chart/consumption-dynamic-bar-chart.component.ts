@@ -15,7 +15,7 @@ import {DatePartType} from '../filter-form/enum/DatePartType';
 export class ConsumptionDynamicBarChartComponent implements OnInit {
   title = 'app';
   chart;
-  buildingId: string;
+
   highcharts = Highcharts;
   @Input()
   chartOptions: any;
@@ -28,7 +28,7 @@ export class ConsumptionDynamicBarChartComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.chartService.consumptionDynamicData(this.buildingId, YearFilterType.YEAR_2019, TimePeriodType.MONTHLY, DatePartType.PEAK_HOURS)
+    this.chartService.consumptionDynamicData(YearFilterType.YEAR_2019, TimePeriodType.MONTHLY, DatePartType.PEAK_HOURS)
       .pipe(first())
       .subscribe(
         data => {

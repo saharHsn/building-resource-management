@@ -5,7 +5,7 @@ import {first} from 'rxjs/operators';
 
 import {AlertService, AuthenticationService} from '../_services';
 import {UserService} from '../user/user.service';
-import {RxwebValidators} from "@rxweb/reactive-form-validators";
+import {RxwebValidators} from '@rxweb/reactive-form-validators';
 
 @Component({templateUrl: 'register.component.html'})
 export class RegisterComponent implements OnInit {
@@ -21,7 +21,7 @@ export class RegisterComponent implements OnInit {
     private alertService: AlertService
   ) {
     // redirect to home if already logged in
-    if (this.authenticationService.currentUserValue) {
+    if (this.authenticationService.getCurrentUser()) {
       this.router.navigate(['/']);
     }
   }
@@ -61,8 +61,8 @@ export class RegisterComponent implements OnInit {
           this.router.navigate(['/login']);
         },
         error => {
-          let errorMessage = "Unknown Error (Internal server error!)";
-          if (error.status = 400 && error.error.errors) {
+          let errorMessage = 'Unknown Error (Internal server error!)';
+          if (error.status === 400 && error.error.errors) {
             errorMessage = error.error.errors;
           } else {
             errorMessage = error.error.message;

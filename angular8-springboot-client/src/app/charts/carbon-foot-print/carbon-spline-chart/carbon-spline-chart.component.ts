@@ -10,7 +10,6 @@ import {first} from 'rxjs/operators';
   styleUrls: ['./carbon-spline-chart.component.css']
 })
 export class CarbonSplineChartComponent implements OnInit {
-  buildingId: string;
   highcharts = Highcharts;
   chartOptions: any;
 
@@ -19,7 +18,7 @@ export class CarbonSplineChartComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.chartService.carbonSPLineData(this.buildingId)
+    this.chartService.carbonSPLineData()
       .pipe(first())
       .subscribe(
         data => {

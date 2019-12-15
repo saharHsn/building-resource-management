@@ -1,17 +1,21 @@
 package tech.builtrix.dtos.emailToken;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import tech.builtrix.validations.PasswordMatches;
+import tech.builtrix.validations.ValidEmail;
 import tech.builtrix.validations.ValidPassword;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
+@JsonInclude
+@NoArgsConstructor
 @PasswordMatches
 public class RegisterUserDto {
-
     @NotNull
     @Size(min = 1, message = "{Size.userDto.firstName}")
     private String firstName;
@@ -20,6 +24,7 @@ public class RegisterUserDto {
     private String lastName;
 
     @NotNull
+    @ValidEmail
     private String emailAddress;
     @NotNull
     @ValidPassword

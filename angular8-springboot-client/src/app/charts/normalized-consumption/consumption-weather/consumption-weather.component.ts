@@ -10,7 +10,6 @@ import {Router} from '@angular/router';
   styleUrls: ['./consumption-weather.component.css']
 })
 export class ConsumptionWeatherComponent implements OnInit {
-  buildingId: string;
   highcharts = Highcharts;
   chartOptions: any;
 
@@ -19,7 +18,7 @@ export class ConsumptionWeatherComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.chartService.normalizedConsumptionWeatherData(this.buildingId)
+    this.chartService.normalizedConsumptionWeatherData()
       .pipe(first())
       .subscribe(
         data => {

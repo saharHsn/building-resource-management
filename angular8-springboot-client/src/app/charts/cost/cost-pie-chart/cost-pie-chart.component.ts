@@ -10,7 +10,7 @@ import {Router} from '@angular/router';
   styleUrls: ['./cost-pie-chart.component.css']
 })
 export class CostPieChartComponent implements OnInit {
-  buildingId: string;
+
   highcharts = Highcharts;
   loading = true;
   chartOptions: any;
@@ -20,7 +20,7 @@ export class CostPieChartComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.chartService.costPieData(this.buildingId)
+    this.chartService.costPieData()
       .pipe(first())
       .subscribe(
         data => {

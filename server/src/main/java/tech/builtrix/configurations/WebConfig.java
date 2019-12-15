@@ -7,10 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 import tech.builtrix.context.ContextHandlerInterceptor;
 import tech.builtrix.context.RequestLimitInterceptor;
 import tech.builtrix.context.SecurityInterceptor;
@@ -27,8 +24,8 @@ public class WebConfig implements WebMvcConfigurer {
     private ContextHandlerInterceptor contextHandlerInterceptor;
     @Autowired
     private SecurityInterceptor securityInterceptor;
-    @Autowired
-    private CorsInterceptor corsInterceptor;
+    /*@Autowired
+    private CorsInterceptor corsInterceptor;*/
     @Autowired
     private RequestLimitInterceptor requestLimitInterceptor;
    /* @Autowired
@@ -48,9 +45,14 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(this.requestLimitInterceptor);
-        registry.addInterceptor(this.corsInterceptor);
+        //registry.addInterceptor(this.corsInterceptor);
         registry.addInterceptor(this.contextHandlerInterceptor);
         registry.addInterceptor(this.securityInterceptor);
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**");
     }
 
     @Bean(name = "validator")

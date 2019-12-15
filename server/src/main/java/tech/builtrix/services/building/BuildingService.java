@@ -105,4 +105,13 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
     public void saveFile(MultipartFile file, String buildingId, BillType billType) {
         System.out.println();
     }
+
+    public BuildingDto findByOwner(String userId) {
+        Building building;
+        building = this.repository.findByOwner(userId);
+        if (building != null) {
+            return new BuildingDto(building);
+        }
+        return null;
+    }
 }

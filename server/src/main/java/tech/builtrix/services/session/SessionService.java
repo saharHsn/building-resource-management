@@ -4,12 +4,11 @@ import lombok.Setter;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import tech.builtrix.annotations.aspect.NoLog;
 import tech.builtrix.base.GenericCrudServiceBase;
 import tech.builtrix.exceptions.NotFoundException;
+import tech.builtrix.exceptions.session.InternalServerException;
 import tech.builtrix.exceptions.session.SessionDisabledException;
 import tech.builtrix.exceptions.session.SessionExpiredException;
 import tech.builtrix.models.session.Session;
@@ -20,6 +19,7 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Component
 @ConfigurationProperties("builtrix.security")
@@ -33,7 +33,6 @@ public class SessionService extends GenericCrudServiceBase<Session, SessionRepos
         super(sessionRepository);
     }
 
-
     @Cacheable(cacheNames = "SessionService.getSession", key = "#sessionKey")
     public Session getSession(String sessionKey) throws NotFoundException {
         Session session = this.repository.findBySessionKey(sessionKey);
@@ -42,11 +41,6 @@ public class SessionService extends GenericCrudServiceBase<Session, SessionRepos
         }
         return session;
     }
-
-  /*  @NoLog
-    public void getSessionIncrementRequestCount(Session session) {
-        this.repository.incrementRequests(session.getSessionKey());
-    }*/
 
     private Session createNewSession(@Nullable User user) {
         Session session = new Session();
@@ -57,29 +51,28 @@ public class SessionService extends GenericCrudServiceBase<Session, SessionRepos
         calendar.add(Calendar.SECOND, this.exp);
         session.setExpirationDate(calendar.getTime());
         session.setSessionKey(RandomStringUtils.random(36, true, true));
-        session.setUser(user);
+        session.setUser(user != null ? user.getId() : null);
         return this.repository.save(session);
     }
 
-
-   /* void touchSession(Session session) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.SECOND, this.exp);
-        this.repository.touchSession(session.getId(), calendar.getTime());
-    }*/
-
-    public Session create(@NotNull User user) {
-        Page<Session> sessions = this.repository.findByUser(user.getId(),
-                PageRequest.of(0, 1));
-        Session session = processOldSession(sessions);
-        if (session != null) return session;
+    Session create(@NotNull User user) throws InternalServerException {
+        List<Session> sessions;
+        try {
+            if (user != null) {
+                sessions = this.repository.findByUser(user.getId());
+                Session session = processOldSession(sessions);
+                if (session != null) return session;
+            }
+        } catch (Exception e) {
+            throw new InternalServerException();
+        }
         // this.repository.disableAllOtherSessions(user.getId());
         return createNewSession(user);
     }
 
-    private Session processOldSession(Page<Session> sessions) {
-        Session session = sessions.getContent().size() > 0 ?
-                sessions.getContent().get(0) : null;
+    private Session processOldSession(List<Session> sessions) {
+        Session session = sessions.size() > 0 ?
+                sessions.get(0) : null;
         if (session != null && session.getExpirationDate().after(new Date())) {
             // touchSession(session);
             return session;
@@ -105,16 +98,16 @@ public class SessionService extends GenericCrudServiceBase<Session, SessionRepos
         this.repository.save(session);
     }
 
-    public String findUserSession(String deviceId, String userId) {
-        Page<Session> sessions = repository.findByUser(userId, PageRequest.of(0, 1));
+    public String findUserSession(String userId) {
+        List<Session> sessions = repository.findByUser(userId);
         Session session = processOldSession(sessions);
         return session.getSessionKey();
 
     }
 
     public Session findUserSessionToken(String sessionId) throws NotFoundException {
-        Page<Session> sessions = repository.findBySessionKey(sessionId, PageRequest.of(0, 1));
-        Session session = processOldSession(sessions);
+        Session session = repository.findBySessionKey(sessionId);
+        //Session session = processOldSession(sessions);
         if (session == null) {
             throw new NotFoundException("Session", "sessionKey", sessionId);
         }
@@ -125,11 +118,4 @@ public class SessionService extends GenericCrudServiceBase<Session, SessionRepos
         repository.save(session);
     }
 
-    /*public Session getTestSession(String mobileNumber) {
-        List<Session> testSession = this.repository.getTestSession(mobileNumber);
-        if (!CollectionUtils.isEmpty(testSession)) {
-            return testSession.get(0);
-        } else
-            return null;
-    }*/
 }

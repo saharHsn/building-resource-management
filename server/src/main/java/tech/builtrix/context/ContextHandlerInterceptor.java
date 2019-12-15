@@ -10,10 +10,12 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import tech.builtrix.annotations.NoSession;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -50,6 +52,26 @@ public class ContextHandlerInterceptor implements HandlerInterceptor {
             }
         }
         requestContext.setClientIp(remoteAddr);
+
+        if (handler instanceof HandlerMethod) {
+            handlerMethod = (HandlerMethod) handler;
+            method = handlerMethod.getMethod();
+            if (!method.getDeclaringClass().getName().startsWith("tech.builtrix"))
+                return true;
+            MDC.put("date", (new Date()).toString());
+            MDC.put("correlationId", requestContext.getCorrelationId() != null ? requestContext.getCorrelationId() : "INTERNAL");
+            MDC.put("clientIp", requestContext.getClientIp() != null ? requestContext.getClientIp() : "NA");
+
+            if (!method.isAnnotationPresent(NoSession.class)) {
+                requestContext.setRequest(httpServletRequest);
+                // requestContext.updateDevice(httpServletRequest);
+            }
+            MDC.put("userId", requestContext.getUser() != null ? requestContext.getUser().getId() : "NA");
+            MDC.put("phoneNo", (requestContext.getUser() != null && requestContext.getUser().getPhoneNumber() != null) ? requestContext.getUser().getPhoneNumber() : "NA");
+        } else {
+            // todo wtf is wrong if no controller is assigned to handle this request
+            return true;
+        }
         logger.info(String.format("Request received [deviceId=%s,userId=%s,clientIp=%s]", MDC.get("deviceId"), MDC.get("userId"), MDC.get("clientIp")));
         return true;
     }

@@ -67,7 +67,7 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
     }*/
 
     private boolean emailExists(final String email) {
-        return repository.findByEmailAddress(email) != null;
+        return !CollectionUtils.isEmpty(repository.findByEmailAddress(email));
     }
 
     /*public List<String> getUsersFromSessionRegistry() {
@@ -137,7 +137,6 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
         final User user = new User();
         user.setFirstName(registerUserDto.getFirstName());
         user.setLastName(registerUserDto.getLastName());
-        //user.setPassword(passwordEncoder.encode(registerUserDto.getPassword()));
         user.setPassword(HashUtil.sha1(registerUserDto.getPassword()));
         user.setEmailAddress(registerUserDto.getEmailAddress());
         user.setRole(Role.Senior);

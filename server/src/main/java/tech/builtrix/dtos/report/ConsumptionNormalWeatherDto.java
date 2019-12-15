@@ -1,4 +1,4 @@
-package tech.builtrix.controllers.report;
+package tech.builtrix.dtos.report;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -10,11 +10,14 @@ import java.util.List;
  * Created By sahar at 12/6/19
  */
 
+
 @JsonInclude
 @Data
 @NoArgsConstructor
-public class PredictedWeatherVsRealDto {
+public class ConsumptionNormalWeatherDto {
     List<String> xValues;
-    List<Float> baseLineValues;
-    List<Float> consumptionValues;
+    List<Float> standardAValues;
+    List<Float> standardBValues;
+    List<Float> standardCValues;
+    List<Float> standardDValues;
 }

@@ -62,8 +62,9 @@ public class SpringbootAwsDynamoDBTests {
             table.waitForActive();*/
 
         //createTable("User_Token");
-        createTable("Bill");
-        createTable("BillParameterInfo");
+        //createTable("Bill");
+        //createTable("BillParameterInfo");
+        createTable("Session");
     }
 
     private void createTable(String tableName) {

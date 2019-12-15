@@ -1,6 +1,8 @@
 spring:
   profiles: dev
   security:
+    basic:
+      enable: false
 
 #    user:
 #      name: root

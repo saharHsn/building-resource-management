@@ -47,6 +47,13 @@ public class BuildingController {
         return Response.ok(building);
     }
 
+    @ApiOperation(value = "Request for getting a building details")
+    @GetMapping(value = "/findByOwner")
+    public Response<BuildingDto> getByOwner(@RequestParam String userId) throws NotFoundException {
+        BuildingDto building = service.findByOwner(userId);
+        return Response.ok(building);
+    }
+
     @ApiOperation(value = "Request for updating a specific building")
     @PutMapping
     public Response<Void> update(@RequestBody BuildingDto building) throws ParseException, BillParseException {

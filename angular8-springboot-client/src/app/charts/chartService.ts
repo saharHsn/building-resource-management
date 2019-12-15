@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
-import {Building} from '../building/model/building';
 import {YearFilterType} from './consumption/consumption-average-tariff-cost/filter-form/enum/YearFilterType';
 import {TimePeriodType} from './consumption/consumption-average-tariff-cost/filter-form/enum/TimePeriodType';
 import {DatePartType} from './consumption/consumption-average-tariff-cost/filter-form/enum/DatePartType';
+import {AuthenticationService} from '../_services';
 
 @Injectable({
   providedIn: 'root'
@@ -30,8 +30,10 @@ export class ChartService {
   private readonly energyConsumptionIndexUrl;
   private readonly nationalMedianUrl;
   private readonly propertyTargetUrl;
+  headers: HttpHeaders;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+              private authService: AuthenticationService) {
     this.environmentName = environment.environmentName;
     this.environmentUrl = environment.apiUrl;
     this.baseUrl = this.environmentUrl + '/reports';
@@ -51,79 +53,95 @@ export class ChartService {
     this.energyConsumptionIndexUrl = this.baseUrl + '/energyConsumptionIndex';
     this.nationalMedianUrl = this.baseUrl + '/nationalMedian';
     this.propertyTargetUrl = this.baseUrl + '/propertyTarget';
+    this.headers = this.authService.getHeaders();
   }
 
-  predict(building: Building): Observable<any> {
+  predict(): Observable<any> {
     const buildId = '0023499e-0bd1-44bb-b3d5-15da81f0ef12';
-    return this.http.get(`${this.predictUrl}/${buildId}`);
+    const headers = this.headers;
+    return this.http.get(`${this.predictUrl}`, {headers});
   }
 
-  savingThisMonth(buildingId: string): Observable<any> {
-    return this.http.get(`${this.savingUrl}/${'0023499e-0bd1-44bb-b3d5-15da81f0ef12'}`);
+  savingThisMonth(): Observable<any> {
+    const headers = this.headers;
+    return this.http.get(`${this.savingUrl}`, {headers});
   }
 
-  getBEScore(buildingId: any): Observable<any> {
-    return this.http.get(`${this.beScoreUrl}/${'0023499e-0bd1-44bb-b3d5-15da81f0ef12'}`);
+  getBEScore(): Observable<any> {
+    const headers = this.headers;
+    return this.http.get(`${this.beScoreUrl}`, {headers});
   }
 
-  costStackData(buildingId: string): Observable<any> {
-    return this.http.get(`${this.costStackUrl}/${'0023499e-0bd1-44bb-b3d5-15da81f0ef12'}`);
+  costStackData(): Observable<any> {
+    const headers = this.headers;
+    return this.http.get(`${this.costStackUrl}`, {headers});
   }
 
-  costPieData(buildingId: string): Observable<any> {
-    return this.http.get(`${this.costPieUrl}/${'0023499e-0bd1-44bb-b3d5-15da81f0ef12'}`);
+  costPieData(): Observable<any> {
+    const headers = this.headers;
+    return this.http.get(`${this.costPieUrl}`, {headers});
   }
 
-  consumptionStackData(buildingId: string): Observable<any> {
-    return this.http.get(`${this.consumptionUrl}/${'0023499e-0bd1-44bb-b3d5-15da81f0ef12'}`);
+  consumptionStackData(): Observable<any> {
+    const headers = this.headers;
+    return this.http.get(`${this.consumptionUrl}`, {headers});
   }
 
-  consumptionDynamicData(buildingId: string,
-                         year: YearFilterType,
+  consumptionDynamicData(year: YearFilterType,
                          timePeriod: TimePeriodType,
                          datePartType: DatePartType): Observable<any> {
+    const headers = this.headers;
     const params = new HttpParams()
       .set('year', year)
       .set('periodType', timePeriod)
       .set('datePartType', datePartType);
-    return this.http.get(`${this.consumptionDynamicUrl}/${'0023499e-0bd1-44bb-b3d5-15da81f0ef12'}`,
-      {params}
+    return this.http.get(`${this.consumptionDynamicUrl}`,
+      {headers, params}
     );
   }
 
-  normalizedConsumptionWeatherData(buildingId: string): Observable<any> {
-    return this.http.get(`${this.normalizedConsumptionWeatherUrl}/${'0023499e-0bd1-44bb-b3d5-15da81f0ef12'}`);
+  normalizedConsumptionWeatherData(): Observable<any> {
+    const headers = this.headers;
+    return this.http.get(`${this.normalizedConsumptionWeatherUrl}`, {headers});
   }
 
-  normalizedPerCapitaData(buildingId: string): Observable<any> {
-    return this.http.get(`${this.normalizedPerCapitaUrl}/${'0023499e-0bd1-44bb-b3d5-15da81f0ef12'}`);
+  normalizedPerCapitaData(): Observable<any> {
+    const headers = this.headers;
+    return this.http.get(`${this.normalizedPerCapitaUrl}`, {headers});
   }
 
-  normalizedVsEnergyEfficiency(buildingId: string): Observable<any> {
-    return this.http.get(`${this.normalizedVsEEUrl}/${'0023499e-0bd1-44bb-b3d5-15da81f0ef12'}`);
+  normalizedVsEnergyEfficiency(): Observable<any> {
+    const headers = this.headers;
+    return this.http.get(`${this.normalizedVsEEUrl}`, {headers});
   }
 
-  predictedWeatherVSReal(buildingId: string): Observable<any> {
-    return this.http.get(`${this.predictedWeatherVSRealUrl}/${'0023499e-0bd1-44bb-b3d5-15da81f0ef12'}`);
+  predictedWeatherVSReal(): Observable<any> {
+    const headers = this.headers;
+    return this.http.get(`${this.predictedWeatherVSRealUrl}`, {headers});
   }
 
-  carbonPieData(buildingId: string): Observable<any> {
-    return this.http.get(`${this.carbonPieDataUrl}/${'0023499e-0bd1-44bb-b3d5-15da81f0ef12'}`);
+  carbonPieData(): Observable<any> {
+    const headers = this.headers;
+    return this.http.get(`${this.carbonPieDataUrl}`, {headers});
   }
 
-  carbonSPLineData(buildingId: string): Observable<any> {
-    return this.http.get(`${this.carbonSPLineUrl}/${'0023499e-0bd1-44bb-b3d5-15da81f0ef12'}`);
+  carbonSPLineData(): Observable<any> {
+    const headers = this.headers;
+    return this.http.get(`${this.carbonSPLineUrl}`, {headers});
   }
 
-  getAllEnergyConsumptionIndexes(buildingId: number): Observable<any> {
-    return this.http.get(`${this.energyConsumptionIndexUrl}/${'0023499e-0bd1-44bb-b3d5-15da81f0ef12'}`);
+  getAllEnergyConsumptionIndexes(): Observable<any> {
+    const headers = this.headers;
+    return this.http.get(`${this.energyConsumptionIndexUrl}`, {headers});
   }
 
-  getNationalMedian(buildingId: number): Observable<any> {
-    return this.http.get(`${this.nationalMedianUrl}/${'0023499e-0bd1-44bb-b3d5-15da81f0ef12'}`);
+  getNationalMedian(): Observable<any> {
+    const headers = this.headers;
+    return this.http.get(`${this.nationalMedianUrl}`, {headers});
   }
 
-  getPropertyTarget(buildingId: number): Observable<any> {
-    return this.http.get(`${this.propertyTargetUrl}/${'0023499e-0bd1-44bb-b3d5-15da81f0ef12'}`);
+  getPropertyTarget(): Observable<any> {
+    const headers = this.headers;
+    return this.http.get(`${this.propertyTargetUrl}`, {headers});
   }
 }

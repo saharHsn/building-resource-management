@@ -8,4 +8,5 @@ import tech.builtrix.models.building.Building;
 @EnableScan
 public interface BuildingRepository extends RepositoryBase<Building> {
 
+    Building findByOwner(String id);
 }

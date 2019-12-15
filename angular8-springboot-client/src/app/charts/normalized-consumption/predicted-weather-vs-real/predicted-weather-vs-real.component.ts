@@ -10,7 +10,6 @@ import {first} from 'rxjs/operators';
   styleUrls: ['./predicted-weather-vs-real.component.css']
 })
 export class PredictedWeatherVsRealComponent implements OnInit {
-  buildingId: string;
   highcharts = Highcharts;
   chartOptions: any;
 
@@ -20,7 +19,7 @@ export class PredictedWeatherVsRealComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.chartService.predictedWeatherVSReal(this.buildingId)
+    this.chartService.predictedWeatherVSReal()
       .pipe(first())
       .subscribe(
         data => {
@@ -37,7 +36,6 @@ export class PredictedWeatherVsRealComponent implements OnInit {
               text: ''
             },
             xAxis: {
-              // categories: ['Jan-2019', 'Feb-2019', 'Mar-2019'],
               categories: data.content.xvalues,
               labels: {
                 style: {
