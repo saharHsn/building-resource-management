@@ -22,7 +22,7 @@ export class RegisterComponent implements OnInit {
   ) {
     // redirect to home if already logged in
     if (this.authenticationService.getCurrentUser()) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/wizard']);
     }
   }
 

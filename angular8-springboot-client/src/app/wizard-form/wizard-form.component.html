@@ -207,7 +207,8 @@
         <div class="form-group col-md-12">
           <label class="col-md-2 control-lable" for="gasFile">Gas Bill</label>
           <div class="col-md-6">
-            <input #gasFile type="file" id="gasFile" name="gasFile" accept=".zip" placeholder="Upload Gas Bills Here."
+            <input #gasFile type="file" id="gasFile" name="gasFile" accept=".zip, .pfd"
+                   placeholder="Upload Gas Bills Here."
                    (change)="selectFile($event, 'Gas')">
             <button [hidden]="!gasFile.value" class="remove-button"
                     (click)="removeSelectedFile(gasFile)">X
@@ -220,7 +221,7 @@
         <div class="form-group col-md-12">
           <label class="col-md-2 control-lable" for="gasFile">Water Bill</label>
           <div class="col-md-6">
-            <input #waterFile type="file" id="waterFile" name="gasFile" accept=".zip" size="1 m"
+            <input #waterFile type="file" id="waterFile" name="gasFile" accept=".zip, .pdf" size="1 m"
                    placeholder="Upload Water Bills Here."
                    (change)="selectFile($event, 'Water')">
             <button [hidden]="!waterFile.value" class="remove-button"
@@ -234,7 +235,7 @@
         <div class="form-group col-md-12">
           <label class="col-md-2 control-lable" for="gasFile">Electricity Bill</label>
           <div class="col-md-6">
-            <input #electricityFile type="file" id="electricityFile" name="electricityFile" accept=".zip"
+            <input #electricityFile type="file" id="electricityFile" name="electricityFile" accept=".zip, .pdf"
                    placeholder="Upload Electricity Bills Here."
                    (change)="selectFile($event, 'Electricity')">
             <button [hidden]="!electricityFile.value" class="remove-button"

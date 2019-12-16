@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import tech.builtrix.Response;
+import tech.builtrix.base.ControllerBase;
 import tech.builtrix.dtos.user.UserDto;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.services.user.UserService;
@@ -14,7 +15,7 @@ import tech.builtrix.services.user.UserService;
 @RestController
 @RequestMapping("/v1/users")
 @Api(value = "User Controller", tags = {"User Controller"})
-public class UserController {
+public class UserController extends ControllerBase {
 
     private final UserService service;
 

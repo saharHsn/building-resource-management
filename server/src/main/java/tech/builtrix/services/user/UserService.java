@@ -122,8 +122,9 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
         return user;
     }
 
-    public void update(UserDto user) {
-        save(user);
+    //TODO change
+    public User update(UserDto user) {
+        return save(user);
     }
 
     public void delete(String userId) {

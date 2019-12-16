@@ -2,11 +2,14 @@ package tech.builtrix.services.building;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import tech.builtrix.base.GenericCrudServiceBase;
 import tech.builtrix.dtos.bill.BillDto;
 import tech.builtrix.dtos.bill.BuildingDto;
+import tech.builtrix.eventbus.MessageManager;
+import tech.builtrix.events.FileUploaded;
 import tech.builtrix.exceptions.BillParseException;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.building.BillType;
@@ -32,17 +35,20 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
     private final UserService userService;
     private final BillParser billParser;
     private final BillService billService;
+    private final MessageManager messageManager;
 
     @Autowired
     public BuildingService(BuildingRepository buildingRepository,
                            UserService userService,
                            FileUploader fileUploader,
-                           BillParser parser, BillService billService) {
+                           BillParser parser, BillService billService,
+                           MessageManager messageManager) {
         super(buildingRepository);
         this.userService = userService;
         this.fileUploader = fileUploader;
         this.billParser = parser;
         this.billService = billService;
+        this.messageManager = messageManager;
     }
 
     public BuildingDto findById(String id) throws NotFoundException {
@@ -59,35 +65,17 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
         buildingDto.getOwner().setId(userId);
         Building building = new Building(buildingDto);
         building = this.repository.save(building);
-
-        //uploadFile(building.getId(), buildingDto.getGasBill(), BillType.Gas);
-        String buildingId = building.getId();
-        String bucketName = "metrics-building-" + buildingId;
-        List<String> fileNames = uploadFile(bucketName, buildingDto.getElectricityBill(), BillType.Electricity);
-        for (String fileName : fileNames) {
-            if (fileName.endsWith(".pdf")) {
-                logger.info("Trying to parse file : " + fileName + " for building: " + buildingId);
-                BillDto billDto = this.billParser.parseBill(buildingId, bucketName, fileName);
-                this.billService.save(billDto);
-                logger.info("Parse done!");
-            }
-        }
-        //uploadFile(building.getId(), buildingDto.getWaterBill(), BillType.Water);
-        return buildingId;
+        buildingDto.setId(building.getId());
+        makeFileUploadEvent(buildingDto);
+        //uploadBillFiles(buildingDto);
+        return building.getId();
     }
 
-    private List<String> uploadFile(String bucketName, MultipartFile file, BillType billType) {
-        if (file != null) {
-            Map<String, String> metaData = new HashMap<>();
-            metaData.put("BillType", billType.name());
-            //bucket name should not contain uppercase characters
-            return this.fileUploader.uploadFile(file, metaData, bucketName);
-        }
-        return null;
-    }
-
-    public void update(BuildingDto building) throws ParseException, BillParseException {
-        save(building);
+    public void update(BuildingDto buildingDto) throws ParseException, BillParseException, NotFoundException {
+        //save(building);
+        Building building = getUpdatedBuilding(buildingDto);
+        this.repository.save(building);
+        makeFileUploadEvent(buildingDto);
     }
 
     public void deleteAll() {
@@ -113,5 +101,63 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
             return new BuildingDto(building);
         }
         return null;
+    }
+
+    @EventListener
+    public void processMessage(FileUploaded event) {
+        try {
+            parseBillFiles(event);
+        } catch (Exception e) {
+            logger.error("BuildingService -> processMessage -> FileUploaded ->" + e.getMessage());
+        }
+    }
+    //------------------------------------ private methods ---------------------------------------
+
+    private void parseBillFiles(FileUploaded fileUploaded) throws BillParseException, ParseException {
+        for (String fileName : fileUploaded.getFileNames()) {
+            if (fileName.endsWith(".pdf")) {
+                logger.info("Trying to parse file : " + fileName + " for building: " + fileUploaded.getBuildingId());
+                BillDto billDto = this.billParser.parseBill(fileUploaded.getBuildingId(), fileUploaded.getBucketName(), fileName);
+                this.billService.save(billDto);
+                logger.info("Parse done!");
+            }
+        }
+    }
+
+    private void makeFileUploadEvent(BuildingDto buildingDto) {
+        String buildingId = buildingDto.getId();
+        String bucketName = "metrics-building-" + buildingId;
+        List<String> fileNames = uploadFile(bucketName, buildingDto.getElectricityBill(), BillType.Electricity);
+        FileUploaded fileUploaded = new FileUploaded(buildingId, fileNames, bucketName);
+        if (buildingDto.getElectricityBill() != null) {
+            // publish add fileUploaded event
+            this.messageManager.publish(fileUploaded);
+        }
+    }
+
+    private List<String> uploadFile(String bucketName, MultipartFile file, BillType billType) {
+        if (file != null) {
+            Map<String, String> metaData = new HashMap<>();
+            metaData.put("BillType", billType.name());
+            //bucket name should not contain uppercase characters
+            return this.fileUploader.uploadFile(file, metaData, bucketName);
+        }
+        return null;
+    }
+
+    private Building getUpdatedBuilding(BuildingDto buildingDto) throws NotFoundException {
+        String userId = this.userService.update(buildingDto.getOwner()).getId();
+        Building building = getById(buildingDto.getId());
+        building.setAge(buildingDto.getAge());
+        building.setArea(buildingDto.getArea());
+        building.setEnergyCertificate(buildingDto.getEnergyCertificate());
+        building.setNumberOfPeople(buildingDto.getNumberOfPeople());
+        building.setName(building.getName());
+        building.setOwner(userId);
+        building.setPostalAddress(buildingDto.getPostalAddress());
+        building.setPostalCode(buildingDto.getPostalCode());
+        building.setUsage(buildingDto.getUsage());
+        building = this.repository.save(building);
+        return building;
     }
 }

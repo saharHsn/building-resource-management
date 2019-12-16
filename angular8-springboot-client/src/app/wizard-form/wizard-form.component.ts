@@ -8,7 +8,7 @@ import {User} from '../user/user';
 import {BuildingFileService} from '../building/service/buildingFile.service';
 import {HttpResponse} from '@angular/common/http';
 import {BillType} from '../building/enums/BillType';
-import {AuthenticationService} from '../_services';
+import {AlertService, AuthenticationService} from '../_services';
 
 @Component({
   templateUrl: './wizard-form.component.html',
@@ -20,17 +20,14 @@ export class WizardFormComponent implements OnInit {
               private userService: UserService,
               private fileService: BuildingFileService,
               private authService: AuthenticationService,
+              private alertService: AlertService,
               private router: Router) {
   }
 
-  building: Building;
-  isNew: boolean;
-  // = new Building();
+  building: Building = new Building();
   user: User;
-  // = new User();
   submitted = false;
-  // userInfo: Object;
-  // buildingInfo: Object;
+
   // @ts-ignore
   userInfo: BehaviorSubject<object> = new BehaviorSubject<object>(0);
 
@@ -59,18 +56,15 @@ export class WizardFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.user = this.authService.getCurrentUser();
     this.reloadData();
-    if (!this.building) {
-      this.building = new Building();
-      this.isNew = true;
-    }
   }
 
   reloadData() {
     this.user = this.authService.getCurrentUser();
     this.buildingService.getBuildingByOwner(this.user).subscribe(
       data => {
-        this.building = data.content;
+        this.building = data.content ? data.content : this.building;
       },
       error => console.log(error)
     );
@@ -82,25 +76,24 @@ export class WizardFormComponent implements OnInit {
   }
 
   save() {
-    /*this.userService.createUser(this.user)
-      .subscribe(data => this.userInfo.next(data), error => console.log(error));
-*/
     this.building.owner = this.user;
     this.building.gasBill = this.gasFile;
     this.building.electricityBill = this.electricityFile;
     this.building.waterBill = this.waterFile;
-    console.log(this.building.name);
-    this.buildingService.createOrUpdateBuilding(this.building, this.isNew).subscribe(
-      data => this.buildingInfo.next(data),
-      error => console.log(error));
-
-
-    /*this.uploadFile(this.gasFile, '', BillType.Gas);
-    this.uploadFile(this.electricityFile, '', BillType.Electricity);
-    this.uploadFile(this.waterFile, '', BillType.Water);
-    */
-    // this.user = new User();
-    // this.building = new Building();
+    if (!this.building.id) {
+      this.buildingService.createBuilding(this.building).subscribe(
+        data => {
+          this.buildingInfo.next(data);
+          this.alertService.success('Changes applied successfully', true);
+        },
+        error => {
+          this.alertService.error(error.toString());
+          console.log(error);
+        });
+    } else {
+      this.buildingService.updateBuilding(this.building).subscribe(data =>
+        this.buildingInfo.next(data), error => console.log(error));
+    }
   }
 
   private uploadFile(file: File, buildingId: string, billType: BillType) {
@@ -120,8 +113,9 @@ export class WizardFormComponent implements OnInit {
   selectFile(event, billType: string) {
     this.selectedFiles = event.target.files;
     this.currentFile = this.selectedFiles.item(0);
-    if (this.currentFile.size > 3000000) {
-      alert('File is too big!');
+    // 4 3 megs that for all bill years
+    if (this.currentFile.size > (10485760)) {
+      alert('File is too big! Maximum upload size is : 10MB');
       this.currentFile = null;
     }
     if (billType === 'Water') {

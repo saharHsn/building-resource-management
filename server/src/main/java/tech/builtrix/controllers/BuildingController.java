@@ -4,12 +4,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import tech.builtrix.Response;
+import tech.builtrix.annotations.NoSession;
+import tech.builtrix.base.ControllerBase;
 import tech.builtrix.dtos.bill.BuildingDto;
 import tech.builtrix.dtos.building.UploadFileDto;
 import tech.builtrix.exceptions.BillParseException;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.services.building.BuildingService;
-import tech.builtrix.utils.FileService;
 
 import java.text.ParseException;
 
@@ -19,17 +20,17 @@ import java.text.ParseException;
 @RestController
 @RequestMapping("/v1/buildings")
 @Api(value = "Building Controller", tags = {"Building Controller"})
-public class BuildingController {
+public class BuildingController extends ControllerBase {
     private final BuildingService service;
-    private final FileService fileService;
 
-    public BuildingController(BuildingService service, FileService fileService) {
+    public BuildingController(BuildingService service) {
         this.service = service;
-        this.fileService = fileService;
     }
 
     @ApiOperation(value = "Request for creating new building")
     @PostMapping
+    //TODO remove it latre
+    @NoSession
     public Response<String> save(@ModelAttribute BuildingDto building) {
         String buildingId = null;
         try {
@@ -56,7 +57,7 @@ public class BuildingController {
 
     @ApiOperation(value = "Request for updating a specific building")
     @PutMapping
-    public Response<Void> update(@RequestBody BuildingDto building) throws ParseException, BillParseException {
+    public Response<Void> update(@RequestBody BuildingDto building) throws ParseException, BillParseException, NotFoundException {
         service.update(building);
         return Response.ok();
     }

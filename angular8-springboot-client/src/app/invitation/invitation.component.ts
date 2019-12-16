@@ -32,7 +32,7 @@ export class InvitationComponent implements OnInit {
     });
 
     // get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/overall';
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/wizard';
   }
 
   // convenience getter for easy access to form fields
