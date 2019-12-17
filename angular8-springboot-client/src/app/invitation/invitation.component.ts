@@ -1,7 +1,6 @@
 ﻿import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {first} from 'rxjs/operators';
 
 import {AlertService, AuthenticationService} from '../_services';
 
@@ -20,8 +19,8 @@ export class InvitationComponent implements OnInit {
     private alertService: AlertService
   ) {
     // redirect to home if already logged in
-    if (this.authenticationService.getCurrentUser()) {
-      this.router.navigate(['/overall']);
+    if (this.authenticationService.currentUserValue) {
+      this.router.navigate(['/wizard']);
     }
   }
 
@@ -52,7 +51,7 @@ export class InvitationComponent implements OnInit {
     }
 
     this.loading = true;
-    this.authenticationService.sendInvitation(this.f.emailAddress.value, this.f.subject.value,
+    /*this.authenticationService.sendInvitation(this.f.emailAddress.value, this.f.subject.value,
       this.f.message.value)
       .pipe(first())
       .subscribe(
@@ -62,6 +61,6 @@ export class InvitationComponent implements OnInit {
         error => {
           this.alertService.error(error.error.message);
           this.loading = false;
-        });
+        });*/
   }
 }

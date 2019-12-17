@@ -15,6 +15,7 @@ import {AlertService, AuthenticationService} from '../_services';
   styleUrls: ['./wizard-form.component.css']
 })
 export class WizardFormComponent implements OnInit {
+  currentUser: User;
 
   constructor(private buildingService: BuildingService,
               private userService: UserService,
@@ -22,6 +23,7 @@ export class WizardFormComponent implements OnInit {
               private authService: AuthenticationService,
               private alertService: AlertService,
               private router: Router) {
+    this.currentUser = this.authService.currentUserValue;
   }
 
   building: Building = new Building();
@@ -56,12 +58,12 @@ export class WizardFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.user = this.authService.getCurrentUser();
     this.reloadData();
   }
 
   reloadData() {
-    this.user = this.authService.getCurrentUser();
+    // @ts-ignore
+    this.user = this.currentUser.content.user;
     this.buildingService.getBuildingByOwner(this.user).subscribe(
       data => {
         this.building = data.content ? data.content : this.building;
@@ -84,6 +86,8 @@ export class WizardFormComponent implements OnInit {
       this.buildingService.createBuilding(this.building).subscribe(
         data => {
           this.buildingInfo.next(data);
+          // @ts-ignore
+          localStorage.setItem('currentUser', JSON.stringify(data.content.owner));
           this.alertService.success('Changes applied successfully', true);
         },
         error => {
@@ -91,8 +95,15 @@ export class WizardFormComponent implements OnInit {
           console.log(error);
         });
     } else {
-      this.buildingService.updateBuilding(this.building).subscribe(data =>
-        this.buildingInfo.next(data), error => console.log(error));
+      this.buildingService.updateBuilding(this.building).subscribe(data => {
+          this.buildingInfo.next(data);
+          // @ts-ignore
+          localStorage.setItem('currentUser', JSON.stringify(data.content.owner));
+          this.alertService.success('Changes applied successfully', true);
+        }
+        , error => {
+          console.log(error);
+        });
     }
   }
 

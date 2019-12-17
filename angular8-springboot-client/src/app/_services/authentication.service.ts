@@ -2,52 +2,44 @@
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {environment} from 'src/environments/environment';
 import {User} from '../user/user';
-import {LoginRequest} from '../user/LoginRequest';
-import {InvitationRequest} from '../register/InvitationRequest';
-import {UserValue} from './UserValue';
+import {environment} from '../../environments/environment';
+import {LoginRequest} from "../user/LoginRequest";
+
 
 @Injectable({providedIn: 'root'})
 export class AuthenticationService {
-  private currentUserSubject: BehaviorSubject<UserValue>;
+  private currentUserSubject: BehaviorSubject<User>;
+  public currentUser: Observable<User>;
+
   environmentName = '';
   environmentUrl = 'Debug api';
-  public currentUser: Observable<UserValue>;
+  private readonly baseUrl;
   private loginRequest: LoginRequest;
-  private invitationRequest: InvitationRequest;
-  private userValue: UserValue;
+  private headers: HttpHeaders;
 
   constructor(private http: HttpClient) {
-    this.currentUserSubject = new BehaviorSubject<UserValue>(JSON.parse(localStorage.getItem('currentUser')));
+    this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
+
     this.environmentName = environment.environmentName;
     this.environmentUrl = environment.apiUrl;
   }
 
-  /* public getCurrentUserValue(): UserValue {
-     return this.currentUserSubject.value;
-   }
- */
-  public getCurrentUser(): User {
-    if (this.currentUserSubject.value) {
-      return this.currentUserSubject.value.user;
-    } else {
-      return null;
-    }
+  public get currentUserValue(): User {
+    return this.currentUserSubject.value;
   }
 
   login(emailAddress, password) {
     this.loginRequest = new LoginRequest();
-    this.loginRequest.email = emailAddress;
     this.loginRequest.password = password;
-
+    this.loginRequest.email = emailAddress;
     return this.http.post<any>(`${this.environmentUrl}/users/authenticate/login`, this.loginRequest)
       .pipe(map(user => {
         // store user details and jwt token in local storage to keep user logged in between page refreshes
-        localStorage.setItem('currentUser', JSON.stringify(user.content));
-        this.currentUserSubject.next(user.content);
-        return user.content;
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        this.currentUserSubject.next(user);
+        return user;
       }));
   }
 
@@ -57,15 +49,10 @@ export class AuthenticationService {
     this.currentUserSubject.next(null);
   }
 
-  sendInvitation(inviteeEmail: string, subject: string, message: string) {
-    return this.http.post<any>(`${this.environmentUrl}/users/registration`, this.loginRequest)
-      .pipe(map(user => {
-      }));
-  }
-
   public getHeaders() {
     let headers;
-    const user = this.getCurrentUser();
+    // @ts-ignore
+    const user = this.currentUserValue.content.user;
     if (user && user.token) {
       headers = new HttpHeaders()
         .set('X-Session', user.token)
@@ -74,4 +61,11 @@ export class AuthenticationService {
     }
     return headers;
   }
+
+  /* sendInvitation(inviteeEmail: string, subject: string, message: string) {
+     return this.http.post<any>(`${this.environmentUrl}/users/registration`, this.loginRequest)
+       .pipe(map(user => {
+       }));
+   }*/
+
 }

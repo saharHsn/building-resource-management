@@ -53,7 +53,7 @@ public class AuthenticationService {
         }
     }
 
-    public boolean resetPassword(UserDto user) {
+    public boolean resetPassword(UserDto user) throws NotFoundException {
         String password = RandomString.make(8);
         String hashPassword = HashUtil.sha1(password);
         user.setPassword(hashPassword);
@@ -73,7 +73,7 @@ public class AuthenticationService {
                                   String newPassword,
                                   String confirmNewPassword) throws
             InvalidPasswordException,
-            InvalidPasswordConfirmationException {
+            InvalidPasswordConfirmationException, NotFoundException {
         String hashOldPassword = HashUtil.sha1(oldPassword);
 
         if (!user.getPassword().equals(hashOldPassword)) {

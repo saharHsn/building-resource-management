@@ -31,14 +31,14 @@ public class BuildingController extends ControllerBase {
     @PostMapping
     //TODO remove it latre
     @NoSession
-    public Response<String> save(@ModelAttribute BuildingDto building) {
-        String buildingId = null;
+    public Response<BuildingDto> save(@ModelAttribute BuildingDto building) {
+        BuildingDto buildingDto = null;
         try {
-            buildingId = service.save(building);
+            buildingDto = service.save(building);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Response.ok(buildingId);
+        return Response.ok(buildingDto);
     }
 
     @ApiOperation(value = "Request for getting a building details")
@@ -57,9 +57,8 @@ public class BuildingController extends ControllerBase {
 
     @ApiOperation(value = "Request for updating a specific building")
     @PutMapping
-    public Response<Void> update(@RequestBody BuildingDto building) throws ParseException, BillParseException, NotFoundException {
-        service.update(building);
-        return Response.ok();
+    public Response<BuildingDto> update(@RequestBody BuildingDto building) throws ParseException, BillParseException, NotFoundException {
+        return Response.ok(this.service.update(building));
     }
 
     @ApiOperation(value = "Request for deleting a specific building")

@@ -60,7 +60,7 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
         }
     }
 
-    public String save(BuildingDto buildingDto) throws ParseException, BillParseException {
+    public BuildingDto save(BuildingDto buildingDto) throws ParseException, BillParseException {
         String userId = this.userService.save(buildingDto.getOwner()).getId();
         buildingDto.getOwner().setId(userId);
         Building building = new Building(buildingDto);
@@ -68,14 +68,18 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
         buildingDto.setId(building.getId());
         makeFileUploadEvent(buildingDto);
         //uploadBillFiles(buildingDto);
-        return building.getId();
+        BuildingDto result = new BuildingDto(building);
+        result.setOwner(buildingDto.getOwner());
+        return result;
     }
 
-    public void update(BuildingDto buildingDto) throws ParseException, BillParseException, NotFoundException {
-        //save(building);
+    public BuildingDto update(BuildingDto buildingDto) throws NotFoundException {
         Building building = getUpdatedBuilding(buildingDto);
         this.repository.save(building);
         makeFileUploadEvent(buildingDto);
+        BuildingDto result = new BuildingDto(building);
+        result.setOwner(buildingDto.getOwner());
+        return result;
     }
 
     public void deleteAll() {

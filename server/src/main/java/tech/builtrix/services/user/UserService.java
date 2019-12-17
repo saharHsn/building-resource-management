@@ -98,14 +98,16 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
     }
 
 
-    public UserDto findById(String id) throws NotFoundException {
+    public User findById(String id) throws NotFoundException {
         Optional<User> optionalUser = this.repository.findById(id);
         if (optionalUser.isPresent()) {
-            return new UserDto(optionalUser.get());
+            return optionalUser.get();
+            //return new UserDto(optionalUser.get());
         } else {
             throw new NotFoundException("user", "id", id);
         }
     }
+
 
     public User findByEmail(String email) throws NotFoundException {
         List<User> users = this.repository.findByEmailAddress(email);
@@ -122,9 +124,20 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
         return user;
     }
 
-    //TODO change
-    public User update(UserDto user) {
-        return save(user);
+    public User update(UserDto userDto) throws NotFoundException {
+        User oldUser = this.findById(userDto.getId());
+        return this.repository.save(getUserFromDto(oldUser, userDto));
+    }
+
+    private User getUserFromDto(User oldUser, UserDto userDto) {
+        oldUser.setFirstName(userDto.getFirstName());
+        oldUser.setLastName(userDto.getLastName());
+        oldUser.setJob(userDto.getJob());
+        oldUser.setGender(userDto.getGender());
+        oldUser.setEmailAddress(userDto.getEmailAddress());
+        oldUser.setPhoneNumber(userDto.getPhone());
+        oldUser.setBirthDate(userDto.getBirthDate());
+        return oldUser;
     }
 
     public void delete(String userId) {
@@ -133,14 +146,14 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
 
     public User registerNewUserAccount(final RegisterUserDto registerUserDto) throws AlreadyExistException {
         if (emailExists(registerUserDto.getEmailAddress())) {
-            throw new AlreadyExistException("There is an account with that email address: " + registerUserDto.getEmailAddress());
+            throw new AlreadyExistException("email", registerUserDto.getEmailAddress());
         }
         final User user = new User();
         user.setFirstName(registerUserDto.getFirstName());
         user.setLastName(registerUserDto.getLastName());
         user.setPassword(HashUtil.sha1(registerUserDto.getPassword()));
         user.setEmailAddress(registerUserDto.getEmailAddress());
-        user.setRole(Role.Senior);
+        user.setRole(Role.Junior);
         user.setEnabled(true);
         //TODO
         /*user.setUsing2FA(registerUserDto.isUsing2FA());

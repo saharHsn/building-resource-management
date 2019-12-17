@@ -7,6 +7,7 @@ import tech.builtrix.Response;
 import tech.builtrix.base.ControllerBase;
 import tech.builtrix.dtos.user.UserDto;
 import tech.builtrix.exceptions.NotFoundException;
+import tech.builtrix.models.user.User;
 import tech.builtrix.services.user.UserService;
 
 /**
@@ -33,13 +34,13 @@ public class UserController extends ControllerBase {
     @ApiOperation(value = "Request for getting a owner details")
     @GetMapping(value = "{userId}")
     public Response<UserDto> getById(@PathVariable("userId") String userId) throws NotFoundException {
-        UserDto user = service.findById(userId);
-        return Response.ok(user);
+        User user = service.findById(userId);
+        return Response.ok(new UserDto(user));
     }
 
     @ApiOperation(value = "Request for updating a specific user")
     @PutMapping
-    public Response<Void> update(@RequestBody UserDto user) {
+    public Response<Void> update(@RequestBody UserDto user) throws NotFoundException {
         service.update(user);
         return Response.ok();
     }

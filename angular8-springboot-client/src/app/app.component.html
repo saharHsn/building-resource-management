@@ -7,8 +7,8 @@
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <div class="collapse navbar-collapse" id="navbarCollapse">
-    <div class="navbar-nav" *ngIf="currentUser">
+  <div class="collapse navbar-collapse" id="navbarCollapse" *ngIf="currentUser">
+    <div class="navbar-nav">
       <a class="nav-link" href="#" routerLink="/overall">Overall</a>
       <a class="nav-link" href="#" routerLink="/cost">Cost</a>
       <a class="nav-link" href="#" routerLink="/consumption-component">Consumption</a>
@@ -16,12 +16,12 @@
       <a class="nav-link" routerLink="/carbon-footprint">Carbon Footprint</a>
       <a class="nav-link" routerLink="/report">Report</a>
     </div>
-    <div class="navbar-nav ml-auto nav-flex-icons" *ngIf="currentUser">
+    <div class="navbar-nav ml-auto nav-flex-icons">
       <a class="nav-item avatar dropdown nav-link" (click)="logout()">Logout</a>
     </div>
-    <div class="navbar-nav ml-auto" *ngIf="!currentUser">
-      <a href="#" routerLink="/login" class="nav-item nav-link">Login</a>
-    </div>
+    <!-- <div class="navbar-nav ml-auto" *ngIf="!currentUser">
+       <a href="#" routerLink="/login" class="nav-item nav-link">Login</a>
+     </div>-->
   </div>
 </nav>
 <!-- main app container -->

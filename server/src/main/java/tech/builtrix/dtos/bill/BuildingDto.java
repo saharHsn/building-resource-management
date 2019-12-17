@@ -35,6 +35,7 @@ public class BuildingDto extends EntityDtoBase {
     private MultipartFile electricityBill;
     private UserDto owner;
     private Map<Date, Integer> numOfPeopleMap;
+
     public BuildingDto(Building building) {
         this.name = building.getName();
         this.usage = building.getUsage();
@@ -45,6 +46,7 @@ public class BuildingDto extends EntityDtoBase {
         this.age = building.getAge();
         this.area = building.getArea();
         this.numberOfPeople = building.getNumberOfPeople();
+        //this.owner = new UserDto(building.getOwner());
        // this.owner = building.();
         //this.numOfPeopleMap = building.getNumOfPeopleMap();
 

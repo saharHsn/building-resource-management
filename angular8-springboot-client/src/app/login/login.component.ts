@@ -17,11 +17,11 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService,
-    private alertService: AlertService,
+    private alertService: AlertService
   ) {
     // redirect to home if already logged in
-    if (this.authenticationService.getCurrentUser()) {
-      this.router.navigate(['/wizard']);
+    if (this.authenticationService.currentUserValue) {
+      this.router.navigate(['/']);
     }
   }
 
@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
     });
 
     // get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/wizard';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/wizard';
   }
 
   // convenience getter for easy access to form fields
