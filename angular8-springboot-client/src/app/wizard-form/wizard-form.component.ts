@@ -29,6 +29,7 @@ export class WizardFormComponent implements OnInit {
   building: Building = new Building();
   user: User;
   submitted = false;
+  loading = false;
 
   // @ts-ignore
   userInfo: BehaviorSubject<object> = new BehaviorSubject<object>(0);
@@ -63,7 +64,7 @@ export class WizardFormComponent implements OnInit {
 
   reloadData() {
     // @ts-ignore
-    this.user = this.currentUser.content.user;
+    this.user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
     this.buildingService.getBuildingByOwner(this.user).subscribe(
       data => {
         this.building = data.content ? data.content : this.building;
@@ -82,26 +83,33 @@ export class WizardFormComponent implements OnInit {
     this.building.gasBill = this.gasFile;
     this.building.electricityBill = this.electricityFile;
     this.building.waterBill = this.waterFile;
+    this.loading = true;
     if (!this.building.id) {
       this.buildingService.createBuilding(this.building).subscribe(
         data => {
           this.buildingInfo.next(data);
           // @ts-ignore
-          localStorage.setItem('currentUser', JSON.stringify(data.content.owner));
+          // localStorage.setItem('currentUser', JSON.stringify(data.content.owner));
+          this.loading = false;
           this.alertService.success('Changes applied successfully', true);
         },
         error => {
-          this.alertService.error(error.toString());
+          this.alertService.error('Unknown Error!');
+          this.loading = false;
           console.log(error);
         });
     } else {
-      this.buildingService.updateBuilding(this.building).subscribe(data => {
+      this.buildingService.updateBuilding(this.building).subscribe(
+        data => {
           this.buildingInfo.next(data);
           // @ts-ignore
-          localStorage.setItem('currentUser', JSON.stringify(data.content.owner));
+          // localStorage.setItem('currentUser', JSON.stringify(data.content.owner));
+          this.loading = false;
           this.alertService.success('Changes applied successfully', true);
         }
         , error => {
+          this.alertService.error('Unknown Error!');
+          this.loading = false;
           console.log(error);
         });
     }
@@ -125,8 +133,8 @@ export class WizardFormComponent implements OnInit {
     this.selectedFiles = event.target.files;
     this.currentFile = this.selectedFiles.item(0);
     // 4 3 megs that for all bill years
-    if (this.currentFile.size > (10485760)) {
-      alert('File is too big! Maximum upload size is : 10MB');
+    if (this.currentFile.size > (8000000)) {
+      alert('File is too big! Maximum upload size is : 8MB');
       this.currentFile = null;
     }
     if (billType === 'Water') {

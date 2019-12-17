@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import tech.builtrix.Response;
-import tech.builtrix.annotations.NoSession;
 import tech.builtrix.base.ControllerBase;
 import tech.builtrix.dtos.bill.BuildingDto;
 import tech.builtrix.dtos.building.UploadFileDto;
@@ -29,8 +28,6 @@ public class BuildingController extends ControllerBase {
 
     @ApiOperation(value = "Request for creating new building")
     @PostMapping
-    //TODO remove it latre
-    @NoSession
     public Response<BuildingDto> save(@ModelAttribute BuildingDto building) {
         BuildingDto buildingDto = null;
         try {
@@ -57,7 +54,7 @@ public class BuildingController extends ControllerBase {
 
     @ApiOperation(value = "Request for updating a specific building")
     @PutMapping
-    public Response<BuildingDto> update(@RequestBody BuildingDto building) throws ParseException, BillParseException, NotFoundException {
+    public Response<BuildingDto> update(@ModelAttribute BuildingDto building) throws ParseException, BillParseException, NotFoundException {
         return Response.ok(this.service.update(building));
     }
 

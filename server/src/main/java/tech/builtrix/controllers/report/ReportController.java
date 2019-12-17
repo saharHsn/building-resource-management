@@ -184,5 +184,4 @@ public class ReportController extends ControllerBase {
         }
         return null;
     }
-
 }

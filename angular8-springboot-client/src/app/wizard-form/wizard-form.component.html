@@ -251,8 +251,14 @@
         <i class="fa fa-arrow-right"></i>
       </button>
 
-      <button type="submit" class="btn btn-success" (click)="finishFunction()"
-              [disabled]="!gasFile && !electricityFile && !waterFile ">Finish
+        <!--<button [disabled]="loading" class="btn btn-primary">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            Login
+          </button>-->
+      <button type="submit" [disabled]="loading || (!gasFile && !electricityFile && !waterFile)"
+              class="btn btn-success" (click)="finishFunction()">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Finish
         <i class="fa fa-arrow-right"></i>
       </button>
     </span>

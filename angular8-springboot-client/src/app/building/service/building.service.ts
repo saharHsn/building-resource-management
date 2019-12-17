@@ -30,9 +30,27 @@ export class BuildingService {
   }
 
   createBuilding(building: Building): Observable<object> {
-    const headers = this.authService.getHeaders();
+    let headers;
+    // @ts-ignore
+    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
+    if (user && user.token) {
+      headers = new HttpHeaders()
+        .set('X-Session', user.token);
+    }
     const formData: FormData = this.createFormData(building, null, null);
-    return this.http.post(this.baseUrl, formData);
+    return this.http.post(this.baseUrl, formData, {headers});
+  }
+
+  updateBuilding(building: Building): Observable<object> {
+    let headers;
+    // @ts-ignore
+    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
+    if (user && user.token) {
+      headers = new HttpHeaders()
+        .set('X-Session', user.token);
+    }
+    const formData: FormData = this.createFormData(building, null, null);
+    return this.http.put(`${this.baseUrl}`, formData, {headers});
   }
 
   createFormData(object: object, form?: FormData, namespace?: string): FormData {
@@ -51,11 +69,6 @@ export class BuildingService {
       }
     }
     return formData;
-  }
-
-  updateBuilding(building: Building): Observable<object> {
-    const headers = this.authService.getHeaders();
-    return this.http.put(`${this.baseUrl}`, building, {headers});
   }
 
   deleteBuilding(id: number): Observable<any> {

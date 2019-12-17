@@ -52,7 +52,7 @@ export class AuthenticationService {
   public getHeaders() {
     let headers;
     // @ts-ignore
-    const user = this.currentUserValue.content.user;
+    const user = this.currentUserValue.id ? this.currentUserValue : this.currentUserValue.content.user;
     if (user && user.token) {
       headers = new HttpHeaders()
         .set('X-Session', user.token)
