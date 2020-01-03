@@ -64,7 +64,12 @@ export class WizardFormComponent implements OnInit {
 
   reloadData() {
     // @ts-ignore
-    this.user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
+    this.user = this.authService.currentUserValue ?
+      (this.authService.currentUserValue.id ?
+          this.authService.currentUserValue :
+          (this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user)
+      )
+      : null;
     this.buildingService.getBuildingByOwner(this.user).subscribe(
       data => {
         this.building = data.content ? data.content : this.building;
@@ -91,7 +96,7 @@ export class WizardFormComponent implements OnInit {
           // @ts-ignore
           // localStorage.setItem('currentUser', JSON.stringify(data.content.owner));
           this.loading = false;
-          this.alertService.success('Changes applied successfully', true);
+          this.alertService.success('Your dashboard will be rendered in a few minutes.\n', true);
         },
         error => {
           this.alertService.error('Unknown Error!');
@@ -105,7 +110,7 @@ export class WizardFormComponent implements OnInit {
           // @ts-ignore
           // localStorage.setItem('currentUser', JSON.stringify(data.content.owner));
           this.loading = false;
-          this.alertService.success('Changes applied successfully', true);
+          this.alertService.success('Your dashboard will be rendered in a few minutes.\n', true);
         }
         , error => {
           this.alertService.error('Unknown Error!');

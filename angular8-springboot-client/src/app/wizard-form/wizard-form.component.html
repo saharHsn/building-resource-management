@@ -200,36 +200,36 @@
     <form #fileForm="ngForm" (ngSubmit)="onSubmit()" name="fileForm" class="form-horizontal">
       <div class="row">
         <div class="form-group col-md-12">
-          Please upload at least one type of bill in zip format
+          Please upload Electricity bill(s) in zip or pdf format
         </div>
       </div>
-      <div class="row">
-        <div class="form-group col-md-12">
-          <label class="col-md-2 control-lable" for="gasFile">Gas Bill</label>
-          <div class="col-md-6">
-            <input #gasFile type="file" id="gasFile" name="gasFile" accept=".zip, .pfd"
-                   placeholder="Upload Gas Bills Here."
-                   (change)="selectFile($event, 'Gas')">
-            <button [hidden]="!gasFile.value" class="remove-button"
-                    (click)="removeSelectedFile(gasFile)">X
-            </button>
+      <!--  <div class="row">
+          <div class="form-group col-md-12">
+            <label class="col-md-2 control-lable" for="gasFile">Gas Bill</label>
+            <div class="col-md-6">
+              <input #gasFile type="file" id="gasFile" name="gasFile" accept=".zip, .pfd"
+                     placeholder="Upload Gas Bills Here."
+                     (change)="selectFile($event, 'Gas')">
+              <button [hidden]="!gasFile.value" class="remove-button"
+                      (click)="removeSelectedFile(gasFile)">X
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="form-group col-md-12">
-          <label class="col-md-2 control-lable" for="gasFile">Water Bill</label>
-          <div class="col-md-6">
-            <input #waterFile type="file" id="waterFile" name="gasFile" accept=".zip, .pdf" size="1 m"
-                   placeholder="Upload Water Bills Here."
-                   (change)="selectFile($event, 'Water')">
-            <button [hidden]="!waterFile.value" class="remove-button"
-                    (click)="removeSelectedFile(waterFile)">X
-            </button>
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label class="col-md-2 control-lable" for="waterFile">Water Bill</label>
+            <div class="col-md-6">
+              <input #waterFile type="file" id="waterFile" name="gasFile" accept=".zip, .pdf" size="1 m"
+                     placeholder="Upload Water Bills Here."
+                     (change)="selectFile($event, 'Water')">
+              <button [hidden]="!waterFile.value" class="remove-button"
+                      (click)="removeSelectedFile(waterFile)">X
+              </button>
+            </div>
           </div>
-        </div>
-      </div>
+        </div>-->
 
       <div class="row">
         <div class="form-group col-md-12">
