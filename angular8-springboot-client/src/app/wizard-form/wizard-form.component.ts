@@ -63,13 +63,7 @@ export class WizardFormComponent implements OnInit {
   }
 
   reloadData() {
-    // @ts-ignore
-    this.user = this.authService.currentUserValue ?
-      (this.authService.currentUserValue.id ?
-          this.authService.currentUserValue :
-          (this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user)
-      )
-      : null;
+    this.user = this.authService.currentUserValue;
     this.buildingService.getBuildingByOwner(this.user).subscribe(
       data => {
         this.building = data.content ? data.content : this.building;
