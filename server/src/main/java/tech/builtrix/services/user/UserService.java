@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import tech.builtrix.base.GenericCrudServiceBase;
@@ -32,30 +30,24 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 
 @Component
 @Slf4j
 public class UserService extends GenericCrudServiceBase<User, UserRepository> {
-    public static final String TOKEN_INVALID = "invalidToken";
-    public static final String TOKEN_EXPIRED = "expired";
-    public static final String TOKEN_VALID = "valid";
+    private static final String TOKEN_INVALID = "invalidToken";
+    private static final String TOKEN_EXPIRED = "expired";
+    private static final String TOKEN_VALID = "valid";
 
-    public static String QR_PREFIX = "https://chart.googleapis.com/chart?chs=200x200&chld=M%%7C0&cht=qr&chl=";
-    public static String APP_NAME = "SpringRegistration";
     @Value("${metrics.email.url}")
     private String emailUrl;
     @Value("${metrics.redirect.url}")
     private String redirectUrl;
 
-    private final PasswordEncoder passwordEncoder;
     private final CodeService codeService;
     private final ValidationService validationService;
     private final EmailSender emailSender;
     private final VerificationTokenRepository tokenRepository;
-    private final SessionRegistry sessionRegistry;
-    //private final PasswordEncoder passwordEncoder;
 
     // API
 
@@ -64,16 +56,12 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
                        CodeService codeService,
                        ValidationService validationService,
                        EmailSender emailSender,
-                       VerificationTokenRepository tokenRepository,
-                       PasswordEncoder passwordEncoder,
-                       SessionRegistry sessionRegistry) {
+                       VerificationTokenRepository tokenRepository) {
         super(repository);
         this.codeService = codeService;
         this.validationService = validationService;
         this.emailSender = emailSender;
         this.tokenRepository = tokenRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.sessionRegistry = sessionRegistry;
     }
 
 
@@ -139,18 +127,6 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
         /*user.setUsing2FA(registerUserDto.isUsing2FA());
         user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));*/
         return repository.save(user);
-    }
-
-    private void sendConfirmationEmail(User user) {
-       /* UserToken userToken;
-        userToken = this.codeService.createEmailToken(user, TokenPurpose.Register);
-        String url = String.format("%s/%s&%s", emailUrl, sessionKey, userToken.getValue());
-        String body = messageSource.getMessage("email.register_investment_user.template",
-                new Object[]{url},
-                LocaleContextHolder.getLocale());
-        String subject = emailSubject;
-        String sender = emailSender;
-        this.emailService.sendEmail(email, subject, body, true, sender);*/
     }
 
     public User registerUserViaInvitation(InvitationDto invitationDto, User parent) throws AlreadyExistException {
@@ -331,11 +307,6 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
         return !CollectionUtils.isEmpty(repository.findByEmailAddress(email));
     }
 
-    public boolean checkIfValidOldPassword(final User user, final String oldPassword) {
-        return passwordEncoder.matches(oldPassword, user.getPassword());
-    }
-
-
     public String validateVerificationToken(String token) throws NotFoundException {
         final VerificationToken verificationToken = tokenRepository.findByToken(token);
         if (verificationToken == null) {
@@ -370,53 +341,8 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
         return currentUser;
     }
 
-
-    public List<String> getUsersFromSessionRegistry() {
-        return sessionRegistry.getAllPrincipals()
-                .stream()
-                .filter((u) -> !sessionRegistry.getAllSessions(u, false)
-                        .isEmpty())
-                .map(o -> {
-                    if (o instanceof User) {
-                        return ((User) o).getEmailAddress();
-                    } else {
-                        return o.toString();
-                    }
-                })
-                .collect(Collectors.toList());
-
-    }
-
     public String getRedirectUrl() {
         return redirectUrl;
     }
 
-
-   /* @Transactional
-    public void addSuccessfulLogin(User user, String reason) {
-        User dbUser = this.repository.findById(user.getId()).get();
-        UserLogin login = new UserLogin();
-        login.setUser(dbUser);
-        login.setMessage(reason);
-        login.setStatus(true);
-        dbUser.setFailedLogin((byte) 0);
-        dbUser.setLockedOutEndTime(null);
-        dbUser.getLogins().add(login);
-        this.repository.save(dbUser);
-    }
-
-    @Transactional
-    public void addFailedLogin(User user, String reason) {
-        User dbUser = this.repository.findById(user.getId()).get();
-        UserLogin login = new UserLogin();
-        login.setUser(dbUser);
-        login.setMessage(reason);
-        login.setStatus(false);
-        dbUser.getLogins().add(login);
-        dbUser.setFailedLogin((byte) (dbUser.getFailedLogin() + 1));
-        if (dbUser.getFailedLogin() > MaxFailedLogin) {
-            dbUser.setLockedOutEndTime(DateHelper.utcNowAddSeconds(LockedOutSeconds));
-        }
-        this.repository.save(dbUser);
-    }*/
 }
