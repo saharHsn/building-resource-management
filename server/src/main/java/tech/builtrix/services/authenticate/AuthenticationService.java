@@ -5,7 +5,6 @@ import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
-import tech.builtrix.dtos.user.UserDto;
 import tech.builtrix.exceptions.InactiveUserException;
 import tech.builtrix.exceptions.InvalidPasswordConfirmationException;
 import tech.builtrix.exceptions.InvalidPasswordException;
@@ -13,6 +12,7 @@ import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.user.User;
 import tech.builtrix.services.user.UserService;
 import tech.builtrix.utils.HashUtil;
+import tech.builtrix.web.dtos.user.UserDto;
 
 /**
  * Created By sahar at 10/17/19
@@ -37,7 +37,7 @@ public class AuthenticationService {
             throw new InvalidPasswordException();
         }
 
-        if (!user.getActive()) {
+        if (!user.getEnabled()) {
             throw new InactiveUserException();
         }
 

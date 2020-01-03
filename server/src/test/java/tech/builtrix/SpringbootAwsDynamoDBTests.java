@@ -47,10 +47,6 @@ public class SpringbootAwsDynamoDBTests {
         boolean addressTableExist = false;
         boolean buildingTableExist = false;
 
-        /*createTable("User");
-        createTable("Building");
-        createTable("Address");
-*/
         /*CreateTableRequest createBuildingTableRequest = dynamoDBMapper.generateCreateTableRequest(Building.class);
         createBuildingTableRequest.withProvisionedThroughput(new ProvisionedThroughput(2L, 2L));
         dynamoDBConfig.getDynamoDB().createTable(createBuildingTableRequest);
@@ -60,11 +56,13 @@ public class SpringbootAwsDynamoDBTests {
                     Collections.singletonList(new AttributeDefinition("id", ScalarAttributeType.S)),
                     new ProvisionedThroughput(10L, 10L));
             table.waitForActive();*/
-
-        //createTable("User_Token");
-        //createTable("Bill");
-        //createTable("BillParameterInfo");
-        createTable("InternalMessages");
+        createTable("User");
+        createTable("Building");
+        createTable("Address");
+        createTable("User_Token");
+        createTable("Bill");
+        createTable("BillParameterInfo");
+        createTable("Verification_Token");
     }
 
     private void createTable(String tableName) {

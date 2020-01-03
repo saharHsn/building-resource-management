@@ -5,8 +5,8 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import lombok.Getter;
 import lombok.Setter;
 import tech.builtrix.base.EntityBase;
-import tech.builtrix.dtos.bill.BillDto;
 import tech.builtrix.utils.DateUtil;
+import tech.builtrix.web.dtos.bill.BillDto;
 
 import java.util.Date;
 

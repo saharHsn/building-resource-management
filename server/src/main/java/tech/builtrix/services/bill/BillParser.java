@@ -4,13 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import tech.builtrix.dtos.bill.BillDto;
-import tech.builtrix.dtos.bill.BillParameterDto;
 import tech.builtrix.exceptions.BillParseException;
 import tech.builtrix.parseEngine.PdfParser;
 import tech.builtrix.utils.DateUtil;
 import tech.builtrix.utils.MyTable;
 import tech.builtrix.utils.TExtractDto;
+import tech.builtrix.web.dtos.bill.BillDto;
+import tech.builtrix.web.dtos.bill.BillParameterDto;
 
 import java.text.ParseException;
 import java.util.Date;

@@ -8,10 +8,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import tech.builtrix.dtos.bill.BillDto;
 import tech.builtrix.parseEngine.PdfParser;
 import tech.builtrix.services.bill.BillParser;
 import tech.builtrix.services.bill.BillService;
+import tech.builtrix.web.dtos.bill.BillDto;
 
 import java.util.Arrays;
 import java.util.List;

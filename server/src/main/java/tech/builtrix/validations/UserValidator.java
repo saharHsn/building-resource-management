@@ -3,7 +3,7 @@ package tech.builtrix.validations;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import tech.builtrix.dtos.emailToken.RegisterUserDto;
+import tech.builtrix.web.dtos.emailToken.RegisterUserDto;
 
 public class UserValidator implements Validator {
 

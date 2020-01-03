@@ -34,6 +34,8 @@ public class AWSEmailSender implements EmailSender {
     private String defaultAccount;
     @Setter
     private int port;
+    @Setter
+    private String from;
 
     @Override
     public void sendEmail(String sender, String receiver, String title, String content, Boolean isHtml) throws UnsupportedEncodingException, MessagingException {
@@ -60,7 +62,7 @@ public class AWSEmailSender implements EmailSender {
             Session session = Session.getDefaultInstance(props);
 
             MimeMessage msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress(fromUserEmail, "fromUserFullName"));
+            msg.setFrom(new InternetAddress(from, "Builtrix Metrics"));
             msg.setRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
             msg.setSubject(subject);
             msg.setContent(body, "text/html");

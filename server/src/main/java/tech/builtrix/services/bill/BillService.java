@@ -16,13 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import tech.builtrix.base.GenericCrudServiceBase;
-import tech.builtrix.dtos.bill.BillDto;
-import tech.builtrix.dtos.bill.BillParameterDto;
-import tech.builtrix.dtos.bill.BuildingDto;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.bill.Bill;
 import tech.builtrix.models.bill.BillParameterInfo;
 import tech.builtrix.repositories.bill.BillRepository;
+import tech.builtrix.web.dtos.bill.BillDto;
+import tech.builtrix.web.dtos.bill.BillParameterDto;
+import tech.builtrix.web.dtos.bill.BuildingDto;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

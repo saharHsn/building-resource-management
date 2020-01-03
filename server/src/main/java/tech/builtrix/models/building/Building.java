@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import tech.builtrix.base.EntityBase;
-import tech.builtrix.dtos.bill.BuildingDto;
+import tech.builtrix.web.dtos.bill.BuildingDto;
 
 /**
  * Created By sahar-hoseini at 20. Jun 2019 4:03 PM

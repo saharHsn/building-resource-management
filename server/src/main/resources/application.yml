@@ -2,6 +2,7 @@ server:
   port: 8080
   servlet:
     context-path: /builtrix
+  address:
 
 spring:
   profiles:
@@ -21,10 +22,14 @@ metrics:
       expiration: 300
 
   email:
+    url: "http://${server.address}:${server.port}/v1/auth/emailConfirmation"
     template-path: classpath:templates.email
     aws:
-      server:
-      userName:
-      password:
-      port: 9090
-      default-account:
+      server: email-smtp.us-east-1.amazonaws.com
+      userName: AKIA3JX2C3UJMAETIRKP
+      password: BL8aNm+rflWqVg2sypbb3W824SfWMXW4mFjDGe2ouzxi
+      port: 587
+      default-account: info@builtrix.tech
+      from: info@builtrix.tech
+  redirect:
+    url: "http://localhost:4200/login?returnUrl=%2F"

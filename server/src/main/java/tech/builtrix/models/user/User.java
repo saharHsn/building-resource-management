@@ -8,8 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jboss.aerogear.security.otp.api.Base32;
 import tech.builtrix.base.EntityBase;
-import tech.builtrix.dtos.user.UserDto;
 import tech.builtrix.models.EnumConverter;
+import tech.builtrix.web.dtos.user.UserDto;
 
 import java.util.Date;
 

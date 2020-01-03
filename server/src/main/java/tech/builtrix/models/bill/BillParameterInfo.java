@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import tech.builtrix.base.EntityBase;
-import tech.builtrix.dtos.bill.BillParameterDto;
+import tech.builtrix.web.dtos.bill.BillParameterDto;
 
 import java.util.Date;
 

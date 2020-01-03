@@ -2,11 +2,11 @@ package tech.builtrix.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import tech.builtrix.dtos.bill.BillDto;
-import tech.builtrix.dtos.report.ConsumptionDto;
-import tech.builtrix.dtos.report.ConsumptionDynamicDto;
-import tech.builtrix.dtos.report.CostStackDto;
 import tech.builtrix.models.building.EnergyCertificate;
+import tech.builtrix.web.dtos.bill.BillDto;
+import tech.builtrix.web.dtos.report.ConsumptionDto;
+import tech.builtrix.web.dtos.report.ConsumptionDynamicDto;
+import tech.builtrix.web.dtos.report.CostStackDto;
 
 import java.util.ArrayList;
 import java.util.Arrays;

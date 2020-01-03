@@ -50,7 +50,7 @@ public class CORSFilter extends GenericFilterBean implements Filter {
     @Bean
     public FilterRegistrationBean filterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean(new CORSFilter());
-        registrationBean.setName("CORS FIlter");
+        registrationBean.setName("CORS Filter");
         registrationBean.addUrlPatterns("/*");
         registrationBean.setOrder(1);
         return registrationBean;

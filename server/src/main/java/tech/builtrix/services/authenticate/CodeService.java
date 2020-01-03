@@ -9,8 +9,8 @@ import tech.builtrix.exceptions.TokenNotExistException;
 import tech.builtrix.exceptions.TokenUsedException;
 import tech.builtrix.models.user.TokenPurpose;
 import tech.builtrix.models.user.User;
-import tech.builtrix.models.user.UserToken;
-import tech.builtrix.repositories.user.UserTokenRepository;
+import tech.builtrix.models.user.VerificationToken;
+import tech.builtrix.repositories.user.VerificationTokenRepository;
 
 import java.security.SecureRandom;
 import java.util.Calendar;
@@ -36,20 +36,20 @@ public class CodeService {
     @Value("${metrics.token.phone.expiration}")
     private int phoneTokenExpiration;*/
 
-    private final UserTokenRepository userTokenRepository;
+    private final VerificationTokenRepository userTokenRepository;
 
     @Autowired
-    public CodeService(UserTokenRepository userTokenRepository) {
+    public CodeService(VerificationTokenRepository userTokenRepository) {
         this.userTokenRepository = userTokenRepository;
     }
 
 
-    public UserToken createToken(User user, TokenPurpose purpose) {
+    public VerificationToken createToken(User user, TokenPurpose purpose) {
         return createToken(user, purpose, emailTokenExpiration, emailTokenLength, false);
     }
 
     public String validateToken(String token, TokenPurpose purpose) throws TokenNotExistException, TokenUsedException, TokenExpiredException {
-        UserToken userToken = userTokenRepository.findByToken(token);
+        VerificationToken userToken = userTokenRepository.findByToken(token);
         if (userToken == null) {
             throw new TokenNotExistException();
         }
@@ -59,7 +59,7 @@ public class CodeService {
         if (!userToken.getPurpose().equals(purpose)) {
             throw new TokenExpiredException("Token purpose not correct");
         }
-        if (userToken.getExpirationTime().before(new Date())) {
+        if (userToken.getExpiryDate().before(new Date())) {
             throw new TokenExpiredException("Token expired");
         }
         String userId = userToken.getUser();
@@ -83,13 +83,13 @@ public class CodeService {
         return TOKEN_VALID;*/
     }
 
-    private UserToken createToken(User user, TokenPurpose purpose, int secondsToExpire, int length, boolean justNumber) {
-        UserToken token = new UserToken();
+    private VerificationToken createToken(User user, TokenPurpose purpose, int secondsToExpire, int length, boolean justNumber) {
+        VerificationToken token = new VerificationToken();
         // getById current time
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         // add expiration time
         calendar.add(Calendar.SECOND, secondsToExpire);
-        token.setExpirationTime(calendar.getTime());
+        token.setExpiryDate(calendar.getTime());
         token.setUser(user.getId());
         token.setPurpose(purpose);
         token.setToken(justNumber ? generateRandomNumber(length) : RandomString.make(length));

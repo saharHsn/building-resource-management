@@ -6,8 +6,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import tech.builtrix.base.GenericCrudServiceBase;
-import tech.builtrix.dtos.bill.BillDto;
-import tech.builtrix.dtos.bill.BuildingDto;
 import tech.builtrix.eventbus.MessageManager;
 import tech.builtrix.events.FileUploaded;
 import tech.builtrix.exceptions.BillParseException;
@@ -19,6 +17,8 @@ import tech.builtrix.repositories.building.BuildingRepository;
 import tech.builtrix.services.bill.BillParser;
 import tech.builtrix.services.bill.BillService;
 import tech.builtrix.services.user.UserService;
+import tech.builtrix.web.dtos.bill.BillDto;
+import tech.builtrix.web.dtos.bill.BuildingDto;
 
 import java.text.ParseException;
 import java.util.HashMap;

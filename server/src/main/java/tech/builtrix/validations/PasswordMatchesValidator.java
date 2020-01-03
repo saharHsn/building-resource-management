@@ -1,7 +1,7 @@
 package tech.builtrix.validations;
 
 import com.google.common.base.Joiner;
-import tech.builtrix.dtos.emailToken.RegisterUserDto;
+import tech.builtrix.web.dtos.emailToken.RegisterUserDto;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

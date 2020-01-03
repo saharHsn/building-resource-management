@@ -6,7 +6,7 @@
 
     <groupId>tech.builtrix</groupId>
     <artifactId>metrics</artifactId>
-    <version>0.1.1</version>
+    <version>0.2.1</version>
     <packaging>jar</packaging>
 
     <name>metrics</name>
@@ -53,11 +53,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-envers -->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-envers</artifactId>
-        </dependency>
+        <!--   &lt;!&ndash; https://mvnrepository.com/artifact/org.hibernate/hibernate-envers &ndash;&gt;
+           <dependency>
+               <groupId>org.hibernate</groupId>
+               <artifactId>hibernate-envers</artifactId>
+           </dependency>-->
         <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -164,29 +164,29 @@
         </dependency>
         <!-- Used to work with the older excel file format - `.xls` -->
         <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>3.17</version>
-        </dependency>
+        <!--  <dependency>
+              <groupId>org.apache.poi</groupId>
+              <artifactId>poi</artifactId>
+              <version>3.17</version>
+          </dependency>-->
 
         <!-- Used to work with the newer excel file format - `.xlsx` -->
         <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>3.17</version>
-        </dependency>
+        <!--  <dependency>
+              <groupId>org.apache.poi</groupId>
+              <artifactId>poi-ooxml</artifactId>
+              <version>3.17</version>
+          </dependency>-->
         <dependency>
             <groupId>com.github.derjust</groupId>
             <artifactId>spring-data-dynamodb</artifactId>
             <version>5.1.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>DynamoDBLocal</artifactId>
-            <version>[1.11,2.0)</version>
-        </dependency>
+        <!-- <dependency>
+             <groupId>com.amazonaws</groupId>
+             <artifactId>DynamoDBLocal</artifactId>
+             <version>[1.11,2.0)</version>
+         </dependency>-->
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-dynamodb</artifactId>
@@ -225,9 +225,9 @@
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator -->
         <dependency>
-             <groupId>org.springframework.boot</groupId>
-             <artifactId>spring-boot-starter-actuator</artifactId>
-             <version>2.1.2.RELEASE</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <version>2.1.2.RELEASE</version>
         </dependency>
 
         <dependency>
@@ -254,7 +254,6 @@
         </dependency>
     </dependencies>
 
-
     <repositories>
         <repository>
             <id>dynamodb-local-oregon</id>
@@ -268,6 +267,46 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <!-- <plugin>
+                 <artifactId>maven-war-plugin</artifactId>
+                 <version>3.1.0</version>
+                 <configuration>
+                     <webResources>
+                         <resource>
+                             <directory>src/main/ebextensions</directory>
+                             <targetPath>.ebextensions</targetPath>
+                             <filtering>true</filtering>
+                         </resource>
+                     </webResources>
+                 </configuration>
+             </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>prepare</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <tasks>
+                                <unzip src="${project.build.directory}/${project.build.finalName}.jar"
+                                       dest="${project.build.directory}/${project.build.finalName}"/>
+                                <copy todir="${project.build.directory}/${project.build.finalName}/" overwrite="false">
+                                    <fileset dir="./" includes=".ebextensions/**"/>
+                                </copy>
+                                <!-- <jar jarfile="${project.build.directory}/${project.build.finalName}.jar" basedir="${project.build.directory}/${project.build.finalName}"/>-->
+                                <zip compress="false"
+                                     destfile="${project.build.directory}/${project.build.finalName}.jar"
+                                     basedir="${project.build.directory}/${project.build.finalName}"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

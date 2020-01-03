@@ -2,99 +2,78 @@ package tech.builtrix.services.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import tech.builtrix.base.GenericCrudServiceBase;
-import tech.builtrix.dtos.emailToken.RegisterUserDto;
-import tech.builtrix.dtos.user.InvitationDto;
-import tech.builtrix.dtos.user.UserDto;
+import tech.builtrix.commons.EmailSender;
 import tech.builtrix.exceptions.*;
 import tech.builtrix.models.user.Role;
 import tech.builtrix.models.user.TokenPurpose;
 import tech.builtrix.models.user.User;
-import tech.builtrix.models.user.UserToken;
+import tech.builtrix.models.user.VerificationToken;
 import tech.builtrix.repositories.user.UserRepository;
-import tech.builtrix.repositories.user.UserTokenRepository;
+import tech.builtrix.repositories.user.VerificationTokenRepository;
 import tech.builtrix.services.authenticate.CodeService;
 import tech.builtrix.services.authenticate.ValidationService;
 import tech.builtrix.utils.HashUtil;
+import tech.builtrix.web.dtos.emailToken.RegisterUserDto;
+import tech.builtrix.web.dtos.user.InvitationDto;
+import tech.builtrix.web.dtos.user.UserDto;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Component
 @Slf4j
 public class UserService extends GenericCrudServiceBase<User, UserRepository> {
+    public static final String TOKEN_INVALID = "invalidToken";
+    public static final String TOKEN_EXPIRED = "expired";
+    public static final String TOKEN_VALID = "valid";
+
+    public static String QR_PREFIX = "https://chart.googleapis.com/chart?chs=200x200&chld=M%%7C0&cht=qr&chl=";
+    public static String APP_NAME = "SpringRegistration";
+    @Value("${metrics.email.url}")
+    private String emailUrl;
+    @Value("${metrics.redirect.url}")
+    private String redirectUrl;
+
+    private final PasswordEncoder passwordEncoder;
     private final CodeService codeService;
     private final ValidationService validationService;
-
-    private final UserTokenRepository tokenRepository;
+    private final EmailSender emailSender;
+    private final VerificationTokenRepository tokenRepository;
+    private final SessionRegistry sessionRegistry;
     //private final PasswordEncoder passwordEncoder;
 
     // API
-    public String getUser(final String userToken) {
-        final UserToken token = tokenRepository.findByToken(userToken);
-        if (token != null) {
-            return token.getUser();
-        }
-        return null;
-    }
-
-    public void changeUserPassword(final User user, final String password) {
-        user.setPassword(HashUtil.sha1(password));
-        repository.save(user);
-    }
-
-    public String generateQRUrl(User user) throws UnsupportedEncodingException {
-        String APP_NAME = "Metrics";
-        String QR_PREFIX = "https://chart.googleapis.com/chart?chs=200x200&chld=M%%7C0&cht=qr&chl=";
-        return QR_PREFIX + URLEncoder.encode(String.format("otpauth://totp/%s:%s?secret=%s&issuer=%s", APP_NAME, user.getEmailAddress(), user.getSecret(), APP_NAME), "UTF-8");
-    }
-
-   /* public User updateUser2FA(boolean use2FA) {
-        final Authentication curAuth = SecurityContextHolder.getContext()
-                .getAuthentication();
-        User currentUser = (User) curAuth.getPrincipal();
-        //currentUser.setUsing2FA(use2FA);
-        currentUser = repository.save(currentUser);
-        final Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, currentUser.getPassword(), curAuth.getAuthorities());
-        SecurityContextHolder.getContext()
-                .setAuthentication(auth);
-        return currentUser;
-    }*/
-
-    private boolean emailExists(final String email) {
-        return !CollectionUtils.isEmpty(repository.findByEmailAddress(email));
-    }
-
-    /*public List<String> getUsersFromSessionRegistry() {
-        return sessionRegistry.getAllPrincipals()
-                .stream()
-                .filter((u) -> !sessionRegistry.getAllSessions(u, false)
-                        .isEmpty())
-                .map(o -> {
-                    if (o instanceof User) {
-                        return ((User) o).getEmailAddress();
-                    } else {
-                        return o.toString();
-                    }
-                })
-                .collect(Collectors.toList());
-
-    }*/
 
     @Autowired
     public UserService(UserRepository repository,
                        CodeService codeService,
                        ValidationService validationService,
-                       UserTokenRepository tokenRepository) {
+                       EmailSender emailSender,
+                       VerificationTokenRepository tokenRepository,
+                       PasswordEncoder passwordEncoder,
+                       SessionRegistry sessionRegistry) {
         super(repository);
         this.codeService = codeService;
         this.validationService = validationService;
+        this.emailSender = emailSender;
         this.tokenRepository = tokenRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.sessionRegistry = sessionRegistry;
     }
 
 
@@ -146,7 +125,7 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
 
     public User registerNewUserAccount(final RegisterUserDto registerUserDto) throws AlreadyExistException {
         if (emailExists(registerUserDto.getEmailAddress())) {
-            throw new AlreadyExistException("email", registerUserDto.getEmailAddress());
+            throw new AlreadyExistException("Email Address", registerUserDto.getEmailAddress());
         }
         final User user = new User();
         user.setFirstName(registerUserDto.getFirstName());
@@ -154,11 +133,24 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
         user.setPassword(HashUtil.sha1(registerUserDto.getPassword()));
         user.setEmailAddress(registerUserDto.getEmailAddress());
         user.setRole(Role.Junior);
-        user.setEnabled(true);
+        // sendConfirmationEmail(user);
+        //user.setEnabled(true);
         //TODO
         /*user.setUsing2FA(registerUserDto.isUsing2FA());
         user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));*/
         return repository.save(user);
+    }
+
+    private void sendConfirmationEmail(User user) {
+       /* UserToken userToken;
+        userToken = this.codeService.createEmailToken(user, TokenPurpose.Register);
+        String url = String.format("%s/%s&%s", emailUrl, sessionKey, userToken.getValue());
+        String body = messageSource.getMessage("email.register_investment_user.template",
+                new Object[]{url},
+                LocaleContextHolder.getLocale());
+        String subject = emailSubject;
+        String sender = emailSender;
+        this.emailService.sendEmail(email, subject, body, true, sender);*/
     }
 
     public User registerUserViaInvitation(InvitationDto invitationDto, User parent) throws AlreadyExistException {
@@ -186,7 +178,7 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
                                String confirmPassword,
                                String sessionKey) throws ExceptionBase {
         User user = updateUserByEmail(firstName, lastName, email, password, confirmPassword);
-        UserToken userToken;
+        VerificationToken userToken;
         userToken = this.codeService.createToken(user, TokenPurpose.Register);
         return userToken.getToken();
     }
@@ -226,6 +218,177 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
         User user = this.getById(userId);
         user.setEnabled(true);
         this.repository.save(user);
+    }
+
+
+   
+   /* public User registerNewUserAccount(final UserDto accountDto) {
+        if (emailExists(accountDto.getEmail())) {
+            throw new UserAlreadyExistException("There is an account with that email adress: " + accountDto.getEmail());
+        }
+        final User user = new User();
+
+        user.setFirstName(accountDto.getFirstName());
+        user.setLastName(accountDto.getLastName());
+        user.setPassword(passwordEncoder.encode(accountDto.getPassword()));
+        user.setEmail(accountDto.getEmail());
+        user.setUsing2FA(accountDto.isUsing2FA());
+        user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
+        return repository.save(user);
+    }*/
+
+    public User getUser(final String userToken) throws NotFoundException {
+        final VerificationToken token = tokenRepository.findByToken(userToken);
+        if (token != null) {
+            return findById(token.getUser());
+        }
+        return null;
+    }
+
+    public VerificationToken getVerificationToken(final String VerificationToken) {
+        return tokenRepository.findByToken(VerificationToken);
+    }
+
+
+    public void saveRegisteredUser(final User user) {
+        repository.save(user);
+    }
+
+   
+   /* public void deleteUser(final User user) {
+        final VerificationToken verificationToken = tokenRepository.findByUser(user);
+
+        if (verificationToken != null) {
+            tokenRepository.delete(verificationToken);
+        }
+
+        final PasswordResetToken passwordToken = passwordTokenRepository.findByUser(user);
+
+        if (passwordToken != null) {
+            passwordTokenRepository.delete(passwordToken);
+        }
+
+        repository.delete(user);
+    }*/
+
+
+    public void createVerificationTokenForUser(final User user, final String token) {
+        final VerificationToken myToken = new VerificationToken(token, user);
+        tokenRepository.save(myToken);
+    }
+
+
+    public VerificationToken generateNewVerificationToken(final String existingVerificationToken) {
+        VerificationToken vToken = tokenRepository.findByToken(existingVerificationToken);
+        vToken.updateToken(UUID.randomUUID()
+                .toString());
+        vToken = tokenRepository.save(vToken);
+        return vToken;
+    }
+
+   
+   /* public void createPasswordResetTokenForUser(final User user, final String token) {
+        final PasswordResetToken myToken = new PasswordResetToken(token, user);
+        passwordTokenRepository.save(myToken);
+    }*/
+
+
+   /* public PasswordResetToken getPasswordResetToken(final String token) {
+        return passwordTokenRepository.findByToken(token);
+    }*/
+
+   
+   /* public User getUserByPasswordResetToken(final String token) {
+        return passwordTokenRepository.findByToken(token)
+                .getUser();
+    }*/
+
+
+    public void changeUserPassword(final User user, final String password) {
+        user.setPassword(HashUtil.sha1(password));
+        repository.save(user);
+    }
+
+    public String generateQRUrl(User user) throws UnsupportedEncodingException {
+        String APP_NAME = "Metrics";
+        String QR_PREFIX = "https://chart.googleapis.com/chart?chs=200x200&chld=M%%7C0&cht=qr&chl=";
+        return QR_PREFIX + URLEncoder.encode(String.format("otpauth://totp/%s:%s?secret=%s&issuer=%s", APP_NAME, user.getEmailAddress(), user.getSecret(), APP_NAME), "UTF-8");
+    }
+
+   /* public User updateUser2FA(boolean use2FA) {
+        final Authentication curAuth = SecurityContextHolder.getContext()
+                .getAuthentication();
+        User currentUser = (User) curAuth.getPrincipal();
+        //currentUser.setUsing2FA(use2FA);
+        currentUser = repository.save(currentUser);
+        final Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, currentUser.getPassword(), curAuth.getAuthorities());
+        SecurityContextHolder.getContext()
+                .setAuthentication(auth);
+        return currentUser;
+    }*/
+
+    private boolean emailExists(final String email) {
+        return !CollectionUtils.isEmpty(repository.findByEmailAddress(email));
+    }
+
+    public boolean checkIfValidOldPassword(final User user, final String oldPassword) {
+        return passwordEncoder.matches(oldPassword, user.getPassword());
+    }
+
+
+    public String validateVerificationToken(String token) throws NotFoundException {
+        final VerificationToken verificationToken = tokenRepository.findByToken(token);
+        if (verificationToken == null) {
+            return TOKEN_INVALID;
+        }
+
+        final User user = findById(verificationToken.getUser());
+        final Calendar cal = Calendar.getInstance();
+        if ((verificationToken.getExpiryDate()
+                .getTime()
+                - cal.getTime()
+                .getTime()) <= 0) {
+            // tokenRepository.delete(verificationToken);
+            return TOKEN_EXPIRED;
+        }
+
+        user.setEnabled(true);
+        // tokenRepository.delete(verificationToken);
+        repository.save(user);
+        return TOKEN_VALID;
+    }
+
+    public User updateUser2FA(boolean use2FA) {
+        final Authentication curAuth = SecurityContextHolder.getContext()
+                .getAuthentication();
+        User currentUser = (User) curAuth.getPrincipal();
+        currentUser.setIsUsing2FA(use2FA);
+        currentUser = repository.save(currentUser);
+        final Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, currentUser.getPassword(), curAuth.getAuthorities());
+        SecurityContextHolder.getContext()
+                .setAuthentication(auth);
+        return currentUser;
+    }
+
+
+    public List<String> getUsersFromSessionRegistry() {
+        return sessionRegistry.getAllPrincipals()
+                .stream()
+                .filter((u) -> !sessionRegistry.getAllSessions(u, false)
+                        .isEmpty())
+                .map(o -> {
+                    if (o instanceof User) {
+                        return ((User) o).getEmailAddress();
+                    } else {
+                        return o.toString();
+                    }
+                })
+                .collect(Collectors.toList());
+
+    }
+
+    public String getRedirectUrl() {
+        return redirectUrl;
     }
 
 
