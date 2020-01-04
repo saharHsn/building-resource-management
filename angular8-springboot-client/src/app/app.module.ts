@@ -3,10 +3,6 @@ import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
-// import { AngularWeatherWidgetModule, WeatherApiName } from 'angular-weather-widget';
-import {HighchartsChartComponent} from 'highcharts-angular';
-
-
 import {appRoutingModule} from './app.routing';
 import {JwtInterceptor} from './_helpers';
 import {AppComponent} from './app.component';
@@ -60,6 +56,14 @@ import {ReportComponent} from './charts/report/report.component';
 // tslint:disable-next-line:max-line-length
 import {EnergyEfficiencySymbolsComponent} from './charts/report/energy-efficiency/energy_efficiency_symbols/energy-efficiency-symbols.component';
 import {TooltipModule} from 'ng2-tooltip-directive';
+import {UserListComponent} from "./user/user-list/user-list.component";
+import {UserDetailsComponent} from "./user/user-details/user-details.component";
+import {BuildingListComponent} from "./building/building-list/building-list.component";
+import {CreateBuildingComponent} from "./building/create-building/create-building.component";
+import {CreateUserComponent} from "./user/create-user/create-user.component";
+import {HighchartsChartModule} from "highcharts-angular";
+// import { AngularWeatherWidgetModule, WeatherApiName } from 'angular-weather-widget';
+// import {HighchartsChartComponent} from 'highcharts-angular';
 
 @NgModule({
   imports: [
@@ -72,12 +76,18 @@ import {TooltipModule} from 'ng2-tooltip-directive';
     CommonModule,
     NgSelectModule,
     TooltipModule,
+    HighchartsChartModule,
   ],
   declarations: [
     AppComponent,
     HomeComponent,
     LoginComponent,
     RegisterComponent,
+    UserListComponent,
+    UserDetailsComponent,
+    CreateUserComponent,
+    BuildingListComponent,
+    CreateBuildingComponent,
     InvitationComponent,
     AlertComponent,
     WizardFormComponent,
@@ -90,7 +100,7 @@ import {TooltipModule} from 'ng2-tooltip-directive';
     CostComponent,
     ConsumptionComponent,
     PredictionsComponent,
-    HighchartsChartComponent,
+    // HighchartsChartComponent,
     ReportBeScoreComponent,
     CostPieChartComponent,
     CostStackChartComponent,

@@ -32,4 +32,5 @@ metrics:
       default-account: info@builtrix.tech
       from: info@builtrix.tech
   redirect:
-    url: "http://localhost:4200/login?returnUrl=%2F"
+    #    url: "http://localhost:4200/login?returnUrl=%2F"
+    url: http://metric-clients-virginia.s3-website-us-east-1.amazonaws.com

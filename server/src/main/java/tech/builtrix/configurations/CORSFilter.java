@@ -3,6 +3,8 @@ package tech.builtrix.configurations;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -16,6 +18,7 @@ import java.io.IOException;
  * Created By sahar at 12/15/19
  */
 @Configuration
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class CORSFilter extends GenericFilterBean implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
