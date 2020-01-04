@@ -9,7 +9,7 @@ import lombok.Setter;
 import tech.builtrix.base.EntityBase;
 
 @Data
-@DynamoDBTable(tableName = "InternalMessages")
+@DynamoDBTable(tableName = "Internal_Messages")
 @NoArgsConstructor
 @Getter
 @Setter

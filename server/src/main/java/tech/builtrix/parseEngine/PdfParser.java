@@ -51,13 +51,13 @@ public class PdfParser {
     @Value("${amazon.region}")
     private String awsRegion;
 
-    @Value("${amazon.roleArn}")
+    @Value("${amazon.textract.roleArn}")
     private String roleArn;
 
     public TExtractDto parseFile(String bucket, String document) throws Exception {
-        sns = AmazonSNSClientBuilder.defaultClient();
-        sqs = AmazonSQSClientBuilder.defaultClient();
-        textract = AmazonTextractClientBuilder.defaultClient();
+        sns = AmazonSNSClientBuilder.standard().withRegion(awsRegion).build();
+        sqs = AmazonSQSClientBuilder.standard().withRegion(awsRegion).build();
+        textract = AmazonTextractClientBuilder.standard().withRegion(awsRegion).build();
 
         createTopicAndQueue();
         List<Block> blockList = processDocument(bucket, document, roleArn, ProcessType.ANALYSIS);

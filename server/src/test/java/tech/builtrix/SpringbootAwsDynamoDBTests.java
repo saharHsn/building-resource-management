@@ -61,8 +61,10 @@ public class SpringbootAwsDynamoDBTests {
         createTable("Address");
         createTable("User_Token");
         createTable("Bill");
-        createTable("BillParameterInfo");
+        createTable("Bill_Parameter_Info");
         createTable("Verification_Token");
+        createTable("Session");
+        createTable("Internal_Messages");
     }
 
     private void createTable(String tableName) {

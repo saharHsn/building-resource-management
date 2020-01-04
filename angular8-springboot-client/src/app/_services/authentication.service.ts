@@ -4,13 +4,15 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {User} from '../user/user';
 import {environment} from '../../environments/environment';
-import {LoginRequest} from "../user/LoginRequest";
+import {LoginRequest} from '../user/LoginRequest';
+import {ActivatedRoute, Router} from '@angular/router';
 
 
 @Injectable({providedIn: 'root'})
 export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
+  returnUrl: string;
 
   environmentName = '';
   environmentUrl = 'Debug api';
@@ -18,7 +20,9 @@ export class AuthenticationService {
   private loginRequest: LoginRequest;
   private headers: HttpHeaders;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+              private router: Router,
+              private route: ActivatedRoute) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
 
@@ -27,7 +31,11 @@ export class AuthenticationService {
   }
 
   public get currentUserValue(): User {
-    return this.currentUserSubject.value;
+    if (this.currentUserSubject.value) {
+      // @ts-ignore
+      return this.currentUserSubject.value.content.user;
+    }
+    return null;
   }
 
   login(emailAddress, password) {
@@ -47,6 +55,7 @@ export class AuthenticationService {
     // remove user from local storage and set current user to null
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+    // this.router.navigate([this.route.snapshot.queryParams.returnUrl || '/']);
   }
 
   public getHeaders() {

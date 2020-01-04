@@ -248,7 +248,7 @@
 
                 <!-- Button : BEGIN -->
                 <table role="presentation" align="center" cellspacing="0" cellpadding="0" border="0" class="center-on-narrow">
-                  <a href={555}>Register</a>
+                  <a href={555}>Login</a>
                 </table>
                 <!-- Button : END -->
 

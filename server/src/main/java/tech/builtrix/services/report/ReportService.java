@@ -118,7 +118,7 @@ public class ReportService {
 
     public CostStackDto getCostStackData(String buildingId) throws NotFoundException {
         Integer year = DateUtil.getCurrentYear();
-        List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, 2018);
+        List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, year);
         /* dto.setContractedPowerValues(Arrays.asList(833.69f, 846.81f, 739.59f, 896.43f, 684.86f, 672.34f, 742.91f, 782.83f, 753.81f, 762.87f, 714.73f, 786.84f));
         dto.setFreeValues(Arrays.asList(437.62f, 402.36f, 467.34f, 460.2f, 369.59f, 414.66f, 368.28f, 406.59f, 453.63f, 397.01f, 427.34f, 556.36f));
         dto.setOffValues(Arrays.asList(265.96f, 282.73f, 238.51f, 250.71f, 211.15f, 209.45f, 209f, 228.47f, 227.03f, 220.12f, 245.33f, 310.36f));
@@ -140,9 +140,9 @@ public class ReportService {
         float powerInPeakHours = 0f;
         float reactivePower = 0f;
         float peakHours = 0f;
-        List<BillDto> billsOfYear = billService.getBillsOfYear(buildingId, 2018);
+        List<BillDto> billsOfYear = billService.getBillsOfYear(buildingId, year);
         /*for (int i = 0; i < 12; i++) {
-            BillDto billDto = billService.filterByMonthAndYear(buildingId, i, 2018);
+            BillDto billDto = billService.filterByMonthAndYear(buildingId, i, year);
             dtoList.add(billDto);
         }*/
         for (BillDto billDto : billsOfYear) {
@@ -281,7 +281,7 @@ public class ReportService {
         List<Float> standardBVals = new ArrayList<>(Collections.nCopies(12, 0f));
         List<Float> standardCVals = new ArrayList<>(Collections.nCopies(12, 0f));
         List<Float> standardDVals = new ArrayList<>(Collections.nCopies(12, 0f));
-        List<BillDto> billsOfYear = billService.getBillsOfYear(buildingId, 2018);
+        List<BillDto> billsOfYear = billService.getBillsOfYear(buildingId, currentYear);
         for (int i = 0; i < 12; i++) {
             Integer numOfDaysOfMonth = DateUtil.getNumOfDaysOfMonth(currentYear, i + 1);
             // If the result is 0, we must put 1
@@ -342,7 +342,18 @@ public class ReportService {
                 consumptionPerMonth.add(i, 0f);
             }
         }
-        dto.setXValues(Arrays.asList("Jan-2018", "Feb-2018", "Mar-2018", "Apr-2018", "May-2018", "Jun-2018", "Jul-2018", "Aug-2018", "Sept-2018", "Oct-2018", "Nov-2018", "Dec-2018"));
+        dto.setXValues(Arrays.asList("Jan-" + currentYear,
+                "Feb-" + currentYear,
+                "Mar-" + currentYear,
+                "Apr-" + currentYear,
+                "May-" + currentYear,
+                "Jun-" + currentYear,
+                "Jul-" + currentYear,
+                "Aug-" + currentYear,
+                "Sept-" + currentYear,
+                "Oct-" + currentYear,
+                "Nov-" + currentYear,
+                "Dec-" + currentYear));
         //The baseline is (100 kWh/cap) multiplied by the number of people in the building and the constant
         // value and divided by the area of the building.
         List<Float> baseLineList = new ArrayList<>();

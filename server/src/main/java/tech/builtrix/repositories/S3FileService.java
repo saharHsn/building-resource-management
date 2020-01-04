@@ -35,26 +35,28 @@ public class S3FileService implements FileUploader {
     private String awsRegion;
 
     @Override
-    public List<String> uploadFile(MultipartFile file, Map<String, String> metaData, String bucketName) {
+    public List<String> uploadFile(MultipartFile file, String bucketName, String pathName, Map<String, String> metaData) {
         List<String> fileNames = new ArrayList<>();
         if (file.getContentType() != null && file.getContentType().equalsIgnoreCase("application/zip")) {
             //file is zipped
-            File destFiles = new File(bucketName + "_" + file.getName());
+            File destFiles = new File(pathName);
             String destination = destFiles.getAbsolutePath();
             try {
                 FileUtil.unzipMultipartFile(file, destination);
             } catch (IOException e) {
                 throw new RuntimeException("Encounter IO error in unzipping files : " + file.getName());
             }
-            fileNames.addAll(uploadMultiFiles(destFiles, bucketName, metaData));
+            fileNames.addAll(uploadMultiFiles(destFiles, bucketName, pathName, metaData));
         } else {
-            uploadSingleFile(file, bucketName, metaData);
-            fileNames.add(file.getName());
+            boolean isFileExist = uploadSingleFile(file, bucketName, pathName, metaData);
+            if (!isFileExist) {
+                fileNames.add(file.getOriginalFilename());
+            }
         }
         return fileNames;
     }
 
-    private List<String> uploadMultiFiles(File destination, String bucketName, Map<String, String> metaData) {
+    private List<String> uploadMultiFiles(File destination, String bucketName, String pathName, Map<String, String> metaData) {
         List<String> fileNames = new ArrayList<>();
         List<File> directoryFiles = FileUtil.getDirectoryFiles(destination);
         for (File directoryFile : directoryFiles) {
@@ -64,18 +66,22 @@ public class S3FileService implements FileUploader {
             } catch (IOException e) {
                 throw new RuntimeException("Encounter error : " + e + " during creating multiPart files");
             }
-            uploadSingleFile(multiPartFile, bucketName, metaData);
-            fileNames.add(multiPartFile.getName());
+            boolean isFileExist = uploadSingleFile(multiPartFile, bucketName, pathName, metaData);
+            if (!isFileExist) {
+                fileNames.add(multiPartFile.getName());
+            }
         }
         return fileNames;
     }
 
-    private void uploadSingleFile(MultipartFile file, String bucketName, Map<String, String> metaData) {
+    private boolean uploadSingleFile(MultipartFile file, String bucketName, String pathName, Map<String, String> metaData) {
         ObjectMetadata omd = getObjectMetadata(file, metaData);
         AmazonS3 s3 = getAmazonS3();
+        if (exists(s3, bucketName, pathName)) {
+            return true;
+        }
         if (s3.doesBucketExistV2(bucketName)) {
-            logger.info("Bucket name is not available."
-                    + " Try again with a different Bucket name.");
+            logger.info("Bucket name is available.");
         } else {
             s3.createBucket(bucketName);
         }
@@ -85,7 +91,8 @@ public class S3FileService implements FileUploader {
             ByteArrayInputStream bis = new ByteArrayInputStream(file.getBytes());
             s3Object.setObjectContent(bis);
             //"bill-" + UUID.randomUUID().toString()
-            s3.putObject(new PutObjectRequest(bucketName, file.getName(), bis, omd));
+
+            s3.putObject(new PutObjectRequest(bucketName, pathName, bis, omd));
             s3Object.close();
             result = "Uploaded Successfully.";
         } catch (AmazonServiceException ase) {
@@ -105,10 +112,18 @@ public class S3FileService implements FileUploader {
         } catch (Exception e) {
             result = result + e.getMessage();
         }
-        //return result;
+        return false;
     }
 
 
+    public boolean exists(AmazonS3 s3, String bucket, String fileName) {
+        try {
+            s3.getObjectMetadata(bucket, fileName);
+        } catch (AmazonServiceException e) {
+            return false;
+        }
+        return true;
+    }
     private ObjectMetadata getObjectMetadata(MultipartFile file, Map<String, String> metaData) {
         ObjectMetadata omd = new ObjectMetadata();
         omd.setContentType(file.getContentType());

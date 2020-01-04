@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import tech.builtrix.base.GenericCrudServiceBase;
 import tech.builtrix.eventbus.MessageManager;
@@ -60,8 +61,14 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
         }
     }
 
-    public BuildingDto save(BuildingDto buildingDto) throws ParseException, BillParseException {
-        String userId = this.userService.save(buildingDto.getOwner()).getId();
+    public BuildingDto save(BuildingDto buildingDto) throws ParseException, BillParseException, NotFoundException {
+        String userId;
+        if (!StringUtils.isEmpty(buildingDto.getOwner().getId())) {
+            userId = buildingDto.getOwner().getId();
+            this.userService.update(buildingDto.getOwner());
+        } else {
+            userId = this.userService.save(buildingDto.getOwner()).getId();
+        }
         buildingDto.getOwner().setId(userId);
         Building building = new Building(buildingDto);
         building = this.repository.save(building);
@@ -121,7 +128,8 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
         for (String fileName : fileUploaded.getFileNames()) {
             if (fileName.endsWith(".pdf")) {
                 logger.info("Trying to parse file : " + fileName + " for building: " + fileUploaded.getBuildingId());
-                BillDto billDto = this.billParser.parseBill(fileUploaded.getBuildingId(), fileUploaded.getBucketName(), fileName);
+                BillDto billDto = this.billParser.parseBill(fileUploaded.getBuildingId(), fileUploaded.getBucketName(),
+                        fileUploaded.getBuildingId() + "-" + fileName);
                 this.billService.save(billDto);
                 logger.info("Parse done!");
             }
@@ -130,21 +138,23 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
 
     private void makeFileUploadEvent(BuildingDto buildingDto) {
         String buildingId = buildingDto.getId();
-        String bucketName = "metrics-building-" + buildingId;
-        List<String> fileNames = uploadFile(bucketName, buildingDto.getElectricityBill(), BillType.Electricity);
-        FileUploaded fileUploaded = new FileUploaded(buildingId, fileNames, bucketName);
-        if (buildingDto.getElectricityBill() != null) {
-            // publish add fileUploaded event
-            this.messageManager.publish(fileUploaded);
+        String bucketName = "metrics-building";
+        List<String> fileNames = uploadFile(bucketName, buildingId, buildingDto.getElectricityBill(), BillType.Electricity);
+        if (!StringUtils.isEmpty(fileNames)) {
+            FileUploaded fileUploaded = new FileUploaded(buildingId, fileNames, bucketName);
+            if (buildingDto.getElectricityBill() != null) {
+                // publish add fileUploaded event
+                this.messageManager.publish(fileUploaded);
+            }
         }
     }
 
-    private List<String> uploadFile(String bucketName, MultipartFile file, BillType billType) {
+    private List<String> uploadFile(String bucketName, String pathName, MultipartFile file, BillType billType) {
         if (file != null) {
             Map<String, String> metaData = new HashMap<>();
             metaData.put("BillType", billType.name());
             //bucket name should not contain uppercase characters
-            return this.fileUploader.uploadFile(file, metaData, bucketName);
+            return this.fileUploader.uploadFile(file, bucketName, pathName + "-" + file.getOriginalFilename(), metaData);
         }
         return null;
     }

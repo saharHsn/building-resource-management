@@ -44,7 +44,7 @@ public class AuthenticationController {
     }
 
     @ApiOperation(value = "Request for login user")
-    @RequestMapping(value = "login", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     @NoSession
     public Response<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request) throws ExceptionBase {
         User userLogin = this.service.loginByPassword(request.getEmail(), request.getPassword());
@@ -56,7 +56,7 @@ public class AuthenticationController {
 
     @Limited(requestsPerMinutes = 5)
     @ApiOperation(value = "sign out the device")
-    @RequestMapping(value = "signout", method = RequestMethod.POST)
+    @RequestMapping(value = "/signout", method = RequestMethod.POST)
     @Countable("hadaf.auth.signout")
     public Response<Void> signout() throws NotFoundException {
         this.sessionKeyService.expireToken(requestContext.getSessionKey());
@@ -64,7 +64,7 @@ public class AuthenticationController {
     }
 
     @ApiOperation(value = "Get session for communicating to server")
-    @RequestMapping(value = "session", method = RequestMethod.POST)
+    @RequestMapping(value = "/session", method = RequestMethod.POST)
     @NoSession
     @Limited(requestsPerMinutes = 5)
     @Countable("hadaf.auth.getsession")

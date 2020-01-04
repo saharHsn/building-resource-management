@@ -44,6 +44,7 @@ export class BuildingService {
   updateBuilding(building: Building): Observable<object> {
     let headers;
     // @ts-ignore
+    // tslint:disable-next-line:max-line-length
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
     if (user && user.token) {
       headers = new HttpHeaders()
