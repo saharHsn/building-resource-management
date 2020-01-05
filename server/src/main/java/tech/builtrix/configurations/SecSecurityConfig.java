@@ -1,5 +1,6 @@
-package tech.builtrix.configurations;
 
+package tech.builtrix.configurations;
+/*
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,4 +24,4 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.authorizeRequests().anyRequest().permitAll();
     }
-}
+}*/

@@ -2,9 +2,9 @@ package tech.builtrix.services.authenticate;
 
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.utility.RandomString;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.thymeleaf.util.StringUtils;
 import tech.builtrix.exceptions.InactiveUserException;
 import tech.builtrix.exceptions.InvalidPasswordConfirmationException;
 import tech.builtrix.exceptions.InvalidPasswordException;

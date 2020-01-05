@@ -6,7 +6,6 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
 import lombok.Getter;
 import lombok.Setter;
-import org.jboss.aerogear.security.otp.api.Base32;
 import tech.builtrix.base.EntityBase;
 import tech.builtrix.models.EnumConverter;
 import tech.builtrix.web.dtos.user.UserDto;
@@ -78,7 +77,7 @@ public class User extends EntityBase<User> {
 
     public User() {
         super();
-        this.secret = Base32.random();
+        // this.secret = Base32.random();
         this.enabled = false;
     }
 

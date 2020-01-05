@@ -3,9 +3,6 @@ package tech.builtrix.services.user;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import tech.builtrix.base.GenericCrudServiceBase;
@@ -329,18 +326,18 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
         return TOKEN_VALID;
     }
 
-    public User updateUser2FA(boolean use2FA) {
-        final Authentication curAuth = SecurityContextHolder.getContext()
-                .getAuthentication();
-        User currentUser = (User) curAuth.getPrincipal();
-        currentUser.setIsUsing2FA(use2FA);
-        currentUser = repository.save(currentUser);
-        final Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, currentUser.getPassword(), curAuth.getAuthorities());
-        SecurityContextHolder.getContext()
-                .setAuthentication(auth);
-        return currentUser;
-    }
-
+    /* public User updateUser2FA(boolean use2FA) {
+         final Authentication curAuth = SecurityContextHolder.getContext()
+                 .getAuthentication();
+         User currentUser = (User) curAuth.getPrincipal();
+         currentUser.setIsUsing2FA(use2FA);
+         currentUser = repository.save(currentUser);
+         final Authentication auth = new UsernamePasswordAuthenticationToken(currentUser, currentUser.getPassword(), curAuth.getAuthorities());
+         SecurityContextHolder.getContext()
+                 .setAuthentication(auth);
+         return currentUser;
+     }
+ */
     public String getRedirectUrl() {
         return redirectUrl;
     }

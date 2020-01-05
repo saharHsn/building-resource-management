@@ -15,7 +15,6 @@ import tech.builtrix.models.session.Session;
 import tech.builtrix.models.user.User;
 import tech.builtrix.repositories.session.SessionRepository;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,7 +41,7 @@ public class SessionService extends GenericCrudServiceBase<Session, SessionRepos
         return session;
     }
 
-    private Session createNewSession(@Nullable User user) {
+    private Session createNewSession(User user) {
         Session session = new Session();
         session.setRequestCount(1);
         session.setLastRequestDate(new Date());
