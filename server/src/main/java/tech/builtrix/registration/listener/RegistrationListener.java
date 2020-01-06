@@ -8,6 +8,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
 import tech.builtrix.commons.EmailSender;
+import tech.builtrix.exceptions.session.InternalServerException;
 import tech.builtrix.models.user.TokenPurpose;
 import tech.builtrix.models.user.User;
 import tech.builtrix.models.user.VerificationToken;
@@ -49,10 +50,12 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
             logger.error("UnsupportedEncodingException: " + e);
         } catch (MessagingException e) {
             logger.error("MessagingException: " + e);
+        } catch (InternalServerException e) {
+            logger.error("InternalServerException: " + e);
         }
     }
 
-    private void confirmRegistration(final OnRegistrationCompleteEvent event) throws UnsupportedEncodingException, MessagingException {
+    private void confirmRegistration(final OnRegistrationCompleteEvent event) throws UnsupportedEncodingException, MessagingException, InternalServerException {
         final User user = event.getUser();
         VerificationToken token = codeService.createToken(user, TokenPurpose.Register);
 

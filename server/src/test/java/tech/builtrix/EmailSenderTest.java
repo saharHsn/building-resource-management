@@ -27,7 +27,7 @@ public class EmailSenderTest {
 
     // Replace recipient@example.com with a "To" address. If your account
     // is still in the sandbox, this address must be verified.
-    static final String TO = "hoseinisahar999@gmail.com";
+    static final String TO = "m.kamarloei@gmail.com";
 
     // Replace smtp_username with your Amazon SES SMTP user name.
     static final String SMTP_USERNAME = "AKIA3JX2C3UJMAETIRKP";
@@ -97,6 +97,7 @@ public class EmailSenderTest {
         } catch (Exception ex) {
             System.out.println("The email was not sent.");
             System.out.println("Error message: " + ex.getMessage());
+            ex.printStackTrace();
         } finally {
             // Close and terminate the connection.
             transport.close();

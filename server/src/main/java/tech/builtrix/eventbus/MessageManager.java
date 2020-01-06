@@ -27,9 +27,9 @@ public class MessageManager {
 
     @Scheduled(fixedDelay = 1000)
     private void sendMessageTask() {
-        if (!this.hasNewMessage) {
+       /* if (!this.hasNewMessage) {
             return;
-        }
+        }*/
         List<EventEntity> unsentMessages = this.repository.findAllBySentIsFalse();
         List<EventEntity> sentMessages = new ArrayList<>(unsentMessages.size());
         for (EventEntity msg : unsentMessages) {
@@ -50,6 +50,8 @@ public class MessageManager {
                 this.repository.save(sentMessage);
             }
         }
+        this.hasNewMessage = false;
+
     }
 
     public <TMessage> void publish(TMessage msg) {

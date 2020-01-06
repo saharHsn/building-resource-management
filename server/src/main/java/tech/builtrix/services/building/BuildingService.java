@@ -1,5 +1,6 @@
 package tech.builtrix.services.building;
 
+import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -18,14 +19,14 @@ import tech.builtrix.repositories.building.BuildingRepository;
 import tech.builtrix.services.bill.BillParser;
 import tech.builtrix.services.bill.BillService;
 import tech.builtrix.services.user.UserService;
+import tech.builtrix.utils.FileUtil;
 import tech.builtrix.web.dtos.bill.BillDto;
 import tech.builtrix.web.dtos.bill.BuildingDto;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -119,7 +120,8 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
         try {
             parseBillFiles(event);
         } catch (Exception e) {
-            logger.error("BuildingService -> processMessage -> FileUploaded ->" + e.getMessage());
+            logger.error("BuildingService -> processMessage ->" + e.getMessage());
+            throw new InternalException(e.getMessage());
         }
     }
     //------------------------------------ private methods ---------------------------------------
@@ -130,8 +132,10 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
                 logger.info("Trying to parse file : " + fileName + " for building: " + fileUploaded.getBuildingId());
                 BillDto billDto = this.billParser.parseBill(fileUploaded.getBuildingId(), fileUploaded.getBucketName(),
                         fileUploaded.getBuildingId() + "-" + fileName);
-                this.billService.save(billDto);
-                logger.info("Parse done!");
+                if (billDto != null) {
+                    this.billService.save(billDto);
+                    logger.info("Parse done!");
+                }
             }
         }
     }
@@ -154,9 +158,37 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
             Map<String, String> metaData = new HashMap<>();
             metaData.put("BillType", billType.name());
             //bucket name should not contain uppercase characters
-            return this.fileUploader.uploadFile(file, bucketName, pathName + "-" + file.getOriginalFilename(), metaData);
+            if (file.getContentType() != null && file.getContentType().equalsIgnoreCase("application/zip")) {
+                //file is zipped
+                File destFiles = new File(pathName);
+                String destination = destFiles.getAbsolutePath();
+                try {
+                    FileUtil.unzipMultipartFile(file, destination);
+                } catch (IOException e) {
+                    throw new RuntimeException("Encounter IO error in unzipping files : " + file.getName());
+                }
+                return uploadMultiFiles(destFiles, bucketName, pathName, metaData);
+                //fileNames.addAll(uploadMultiFiles(destFiles, bucketName, pathName, metaData));
+            } else {
+                return this.fileUploader.uploadFile(file, bucketName, pathName + "-" + file.getOriginalFilename(), metaData);
+            }
         }
         return null;
+    }
+
+    private List<String> uploadMultiFiles(File destination, String bucketName, String pathName, Map<String, String> metaData) {
+        List<String> fileNames = new ArrayList<>();
+        List<File> directoryFiles = FileUtil.getDirectoryFiles(destination);
+        for (File directoryFile : directoryFiles) {
+            MultipartFile multiPartFile;
+            try {
+                multiPartFile = FileUtil.createMultiPartFile(directoryFile.getName(), directoryFile.getAbsolutePath());
+            } catch (IOException e) {
+                throw new RuntimeException("Encounter error : " + e + " during creating multiPart files");
+            }
+            fileNames.addAll(this.fileUploader.uploadFile(multiPartFile, bucketName, pathName + "-" + multiPartFile.getName(), metaData));
+        }
+        return fileNames;
     }
 
     private Building getUpdatedBuilding(BuildingDto buildingDto) throws NotFoundException {

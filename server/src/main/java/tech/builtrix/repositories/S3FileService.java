@@ -14,11 +14,10 @@ import com.amazonaws.services.s3.model.S3Object;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import tech.builtrix.utils.FileUtil;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,42 +36,17 @@ public class S3FileService implements FileUploader {
     @Override
     public List<String> uploadFile(MultipartFile file, String bucketName, String pathName, Map<String, String> metaData) {
         List<String> fileNames = new ArrayList<>();
-        if (file.getContentType() != null && file.getContentType().equalsIgnoreCase("application/zip")) {
-            //file is zipped
-            File destFiles = new File(pathName);
-            String destination = destFiles.getAbsolutePath();
-            try {
-                FileUtil.unzipMultipartFile(file, destination);
-            } catch (IOException e) {
-                throw new RuntimeException("Encounter IO error in unzipping files : " + file.getName());
-            }
-            fileNames.addAll(uploadMultiFiles(destFiles, bucketName, pathName, metaData));
-        } else {
-            boolean isFileExist = uploadSingleFile(file, bucketName, pathName, metaData);
-            if (!isFileExist) {
+        boolean isFileExist = uploadSingleFile(file, bucketName, pathName, metaData);
+        if (!isFileExist) {
+            if (!StringUtils.isEmpty(file.getOriginalFilename())) {
                 fileNames.add(file.getOriginalFilename());
+            } else {
+                fileNames.add(file.getName());
             }
         }
         return fileNames;
     }
 
-    private List<String> uploadMultiFiles(File destination, String bucketName, String pathName, Map<String, String> metaData) {
-        List<String> fileNames = new ArrayList<>();
-        List<File> directoryFiles = FileUtil.getDirectoryFiles(destination);
-        for (File directoryFile : directoryFiles) {
-            MultipartFile multiPartFile;
-            try {
-                multiPartFile = FileUtil.createMultiPartFile(directoryFile.getName(), directoryFile.getAbsolutePath());
-            } catch (IOException e) {
-                throw new RuntimeException("Encounter error : " + e + " during creating multiPart files");
-            }
-            boolean isFileExist = uploadSingleFile(multiPartFile, bucketName, pathName, metaData);
-            if (!isFileExist) {
-                fileNames.add(multiPartFile.getName());
-            }
-        }
-        return fileNames;
-    }
 
     private boolean uploadSingleFile(MultipartFile file, String bucketName, String pathName, Map<String, String> metaData) {
         ObjectMetadata omd = getObjectMetadata(file, metaData);
@@ -92,7 +66,7 @@ public class S3FileService implements FileUploader {
             s3Object.setObjectContent(bis);
             //"bill-" + UUID.randomUUID().toString()
 
-            s3.putObject(new PutObjectRequest(bucketName, pathName, bis, omd));
+            s3.putObject(new PutObjectRequest(bucketName, pathName, bis, null));
             s3Object.close();
             result = "Uploaded Successfully.";
         } catch (AmazonServiceException ase) {
@@ -124,6 +98,7 @@ public class S3FileService implements FileUploader {
         }
         return true;
     }
+
     private ObjectMetadata getObjectMetadata(MultipartFile file, Map<String, String> metaData) {
         ObjectMetadata omd = new ObjectMetadata();
         omd.setContentType(file.getContentType());

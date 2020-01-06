@@ -1,23 +1,149 @@
 package tech.builtrix;
 
-/*
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.bind.annotation.RequestParam;
+import tech.builtrix.enums.DatePartType;
+import tech.builtrix.enums.TimePeriodType;
+import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.services.bill.BillService;
+import tech.builtrix.services.report.ReportService;
+import tech.builtrix.web.dtos.bill.EnergyConsumptionIndex;
+import tech.builtrix.web.dtos.report.*;
+
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ApplicationTests {
     @Autowired
-    BillService billService;
+    private BillService billService;
+    @Autowired
+    private ReportService reportService;
+    private static String BUILDING_ID = "";
 
     @Test
-    public void contextLoads() {
-        //billService.filterByFromDateAndMonthAndBuilding(new Date(), 1, 2, 4, "999999");
+    public void contextLoads() throws NotFoundException {
+        prediction();
+        savings();
+
     }
 
+    private void savings() throws NotFoundException {
+        SavingDto savingDto = null;
+        savingDto = this.reportService.savingThisMonth(BUILDING_ID);
+    }
+
+    private void prediction() {
+        //prediction
+        PredictionDto predictionDto = null;
+        predictionDto = this.reportService.predict(BUILDING_ID);
+    }
+
+    public Float getBEScore() throws NotFoundException {
+        Float beScore = null;
+        beScore = this.reportService.getBEScore(BUILDING_ID);
+        return beScore;
+    }
+
+    public Float getNationalMedian() throws NotFoundException {
+        Float nationalMedian = null;
+        nationalMedian = this.reportService.getNationalMedian(BUILDING_ID);
+        return nationalMedian;
+    }
+
+
+    public Float getPropertyTarget() throws NotFoundException {
+        Float propertyTarget = null;
+        propertyTarget = this.reportService.getDefaultPropertyTarget(BUILDING_ID, null);
+        return propertyTarget;
+    }
+
+
+    public CostStackDto getCostStackData() throws NotFoundException {
+        CostStackDto costStackData = null;
+        costStackData = this.reportService.getCostStackData(BUILDING_ID);
+        return costStackData;
+    }
+
+
+    public CostPieDto getCostPieData() throws NotFoundException {
+        CostPieDto costPieDto = null;
+        costPieDto = this.reportService.getCostPieData(BUILDING_ID);
+        return costPieDto;
+    }
+
+
+    public ConsumptionDto getConsumption() throws NotFoundException {
+        ConsumptionDto consumption = null;
+        consumption = this.reportService.getConsumption(BUILDING_ID);
+        return consumption;
+    }
+
+
+    public ConsumptionDynamicDto getConsumptionDynamicData(
+            @RequestParam(value = "year") int year,
+            @RequestParam(value = "periodType") TimePeriodType periodType,
+            @RequestParam(value = "datePartType") DatePartType datePartType) throws NotFoundException {
+        ConsumptionDynamicDto consumption = null;
+        consumption = this.reportService.getConsumptionDynamicData(BUILDING_ID, year, periodType, datePartType);
+        return consumption;
+    }
+
+    public ConsumptionNormalWeatherDto getConsumptionNormalWeather() throws NotFoundException {
+        ConsumptionNormalWeatherDto consumption = null;
+        consumption = this.reportService.getConsumptionNormalWeather(BUILDING_ID);
+        return consumption;
+    }
+
+
+    public NormalPerCapitaDto getNormalizedPerCapita() throws NotFoundException {
+        NormalPerCapitaDto normalizedPerCapita = null;
+        normalizedPerCapita = this.reportService.getNormalizedPerCapita(BUILDING_ID);
+        return normalizedPerCapita;
+    }
+
+
+    public NormalVsEEDto getNormalizedVsEnergyEfficiency() {
+        NormalVsEEDto dto = null;
+        dto = this.reportService.getNormalizedVsEnergyEfficiency(BUILDING_ID);
+        return dto;
+    }
+
+
+    public PredictedWeatherVsRealDto getPredictedWeatherVSReal() throws NotFoundException {
+        PredictedWeatherVsRealDto dto = null;
+        dto = this.reportService.getPredictedWeatherVSReal(BUILDING_ID);
+        return dto;
+    }
+
+
+    public CarbonPieDto getCarbonPieData() throws NotFoundException {
+        CarbonPieDto dto = null;
+        dto = this.reportService.getCarbonPieData(BUILDING_ID);
+        return dto;
+    }
+
+
+    public CarbonSPLineDto getCarbonSPLineData() throws NotFoundException {
+        CarbonSPLineDto dto = null;
+        dto = this.reportService.getCarbonSPLineData(BUILDING_ID);
+        return dto;
+    }
+
+
+    public EnergyConsumptionIndexDto getEnergyConsumptionIndex() throws NotFoundException {
+        List<EnergyConsumptionIndex> indexes;
+        EnergyConsumptionIndexDto dto = null;
+        indexes = this.reportService.getAllEnergyConsumptionIndexes(BUILDING_ID);
+        dto = new EnergyConsumptionIndexDto(indexes.get(0),
+                indexes.get(1),
+                indexes.get(2),
+                indexes.get(3));
+        return dto;
+    }
 }
-*/
+

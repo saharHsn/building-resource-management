@@ -28,7 +28,7 @@ public class DynamoDBConfig {
     private String awsSecretKey;
     @Value("${amazon.region}")
     private String awsRegion;
-    @Value("${amazon.end-point.url}")
+    @Value("${amazon.dynamo-db.end-point.url}")
     private String awsDynamoDBEndPoint;
 
     AmazonDynamoDB dynamoDB;

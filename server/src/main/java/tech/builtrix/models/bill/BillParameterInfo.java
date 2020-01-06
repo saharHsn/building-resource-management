@@ -17,7 +17,7 @@ import java.util.Date;
 @Setter
 @Getter
 @AllArgsConstructor
-@DynamoDBTable(tableName = "Bill+Parameter_Info")
+@DynamoDBTable(tableName = "Bill_Parameter_Info")
 public class BillParameterInfo extends EntityBase<BillParameterInfo> {
     /*5 columns (initial date, end date, consumption, tariff price, total cost of each tariff);*/
     @DynamoDBAttribute

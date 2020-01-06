@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import tech.builtrix.exceptions.session.InternalServerException;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -38,7 +39,7 @@ public class AWSEmailSender implements EmailSender {
     private String from;
 
     @Override
-    public void sendEmail(String sender, String receiver, String title, String content, Boolean isHtml) throws UnsupportedEncodingException, MessagingException {
+    public void sendEmail(String sender, String receiver, String title, String content, Boolean isHtml) throws UnsupportedEncodingException, MessagingException, InternalServerException {
         logger.info("trying to send email for email : " + receiver);
         if (StringUtils.isEmpty(sender)) {
             sender = this.defaultAccount;
@@ -47,11 +48,11 @@ public class AWSEmailSender implements EmailSender {
     }
 
     @Override
-    public void sendEmail(SimpleMailMessage email) throws UnsupportedEncodingException, MessagingException {
+    public void sendEmail(SimpleMailMessage email) throws UnsupportedEncodingException, MessagingException, InternalServerException {
         this.sendEmail(email.getFrom(), email.getTo()[0], email.getSubject(), email.getText(), true);
     }
 
-    void sendMail(String fromUserEmail, String toEmail, String subject, String body) {
+    void sendMail(String fromUserEmail, String toEmail, String subject, String body) throws InternalServerException {
         try {
             Properties props = System.getProperties();
             props.put("mail.transport.protocol", "smtp");
@@ -72,6 +73,7 @@ public class AWSEmailSender implements EmailSender {
             transport.sendMessage(msg, msg.getAllRecipients());
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
+            throw new InternalServerException();
         }
     }
 }

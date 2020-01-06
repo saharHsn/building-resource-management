@@ -1,7 +1,9 @@
 package tech.builtrix.eventbus;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperFieldModel;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTyped;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,8 +18,9 @@ import tech.builtrix.base.EntityBase;
 public class EventEntity extends EntityBase {
     @DynamoDBAttribute(attributeName = "message")
     private String msg;
+    @DynamoDBTyped(DynamoDBMapperFieldModel.DynamoDBAttributeType.BOOL)
     @DynamoDBAttribute(attributeName = "isSent")
-    private Boolean sent;
+    private boolean sent;
     @DynamoDBAttribute(attributeName = "type")
     private String type;
 }

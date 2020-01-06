@@ -20,6 +20,7 @@ import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.bill.Bill;
 import tech.builtrix.models.bill.BillParameterInfo;
 import tech.builtrix.repositories.bill.BillRepository;
+import tech.builtrix.utils.DateUtil;
 import tech.builtrix.web.dtos.bill.BillDto;
 import tech.builtrix.web.dtos.bill.BillParameterDto;
 import tech.builtrix.web.dtos.bill.BuildingDto;
@@ -126,7 +127,22 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
 
     public Bill getLastBill(String buildingId) throws NotFoundException {
         //TODO find a way for fetching data order by fromDate
-        return findById("0bdd7f99-f3af-4cec-a2e2-269a65de9df1");
+        Map<String, AttributeValue> exprAtrVals = new HashMap<>();
+        exprAtrVals.put(":buildingId", new AttributeValue().withS(buildingId));
+        String filterExpression = "buildingId = :buildingId ";
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
+                .withFilterExpression(filterExpression)
+                .withExpressionAttributeValues(exprAtrVals);
+        PaginatedScanList<Bill> bills = mapper.scan(Bill.class, scanExpression);
+        Date maxDate = DateUtil.increaseDate(new Date(), -10, DateUtil.DateType.YEAR);
+        Bill lastBill = null;
+        for (Bill bill : bills) {
+            if (bill.getToDate().after(maxDate)) {
+                maxDate = bill.getToDate();
+                lastBill = bill;
+            }
+        }
+        return lastBill;
     }
 
     public BillDto getLastBillDto(String buildingId) throws NotFoundException {
