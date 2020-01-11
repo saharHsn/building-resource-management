@@ -46,7 +46,7 @@ public class FileParserTest {
         try {
             // String document = "2017-DEC-2018-JAN.pdf";
 
-            String bucket = "metrics-building-0023499e-0bd1-44bb-b3d5-15da81f0ef12";
+            String bucket = "metrics-building";
             /* "2017-DEC-2018-JAN.pdf",
                     "2018-APR-MAY.pdf",
                     "2018-AUG-SEP.pdf",
@@ -68,11 +68,11 @@ public class FileParserTest {
                  /* ,
                     ,
                     */
-            List<String> documents = Arrays.asList("2019-FEB-MAR.pdf");
+            List<String> documents = Arrays.asList("8a199ea5-7c6a-4e80-8658-7ad2c53e69bf-1.pdf");
             for (String document : documents) {
                 BillDto billDto;
                 try {
-                    billDto = this.billParser.parseBill("0023499e-0bd1-44bb-b3d5-15da81f0ef12", bucket, document);
+                    billDto = this.billParser.parseBill("8a199ea5-7c6a-4e80-8658-7ad2c53e69bf", bucket, document);
                     billService.save(billDto);
                 } catch (Exception e) {
                     e.printStackTrace();

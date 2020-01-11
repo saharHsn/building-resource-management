@@ -62,7 +62,9 @@ public class BillParser {
         }
         Map<String, String> keyValueResult = tExtractDto.getKeyValueResult();
         List<MyTable> tablesResult = tExtractDto.getTablesResult();
-        MyTable table = tablesResult.get(3);
+        // MyTable table = tablesResult.get(3);
+        MyTable table = findMainTable(tablesResult);
+        assert table != null;
         Map<String, List<String>> column_value = table.getColumn_value();
         String billPeriod = keyValueResult.get(PERIODO_DE_FATURACAO_);
         String[] periods = billPeriod.trim().split("a");
@@ -134,7 +136,10 @@ public class BillParser {
         if (column_value.get(REATIVA_FORNECIDA_NO_VAZIO) == null) {
             REATIVA_FORNECIDA_NO_VAZIO = REATIVA_FORNECIDA_NO_VAZIO2;
         }
-        BillParameterDto rDReactivePower = getBillParameter(column_value, REATIVA_FORNECIDA_NO_VAZIO);
+        BillParameterDto rDReactivePower = null;
+        if (column_value.get(REATIVA_FORNECIDA_NO_VAZIO) != null) {
+            rDContractedPower = getBillParameter(column_value, REATIVA_FORNECIDA_NO_VAZIO);
+        }
         Float totalMonthlyConsumption = aEOffHours.getConsumption() +
                 aEFreeHours.getConsumption() +
                 aENormalHours.getConsumption() +
@@ -162,6 +167,18 @@ public class BillParser {
         return bill;
     }
 
+    private MyTable findMainTable(List<MyTable> tablesResult) {
+        for (MyTable myTable : tablesResult) {
+            Map<String, List<String>> column_value = myTable.getColumn_value();
+            for (String s : column_value.keySet()) {
+                if (s.equalsIgnoreCase(SUPER_VAZIO) || s.equalsIgnoreCase(SUPER_VAZIO2)) {
+                    return myTable;
+                }
+            }
+        }
+        return null;
+    }
+
     private Float getAmount(String e) {
         e = e.trim();
         return Float.valueOf(e.replaceAll("\\.", "")
@@ -169,6 +186,7 @@ public class BillParser {
                 .replaceAll("E", "")
                 .replaceAll("e", "")
                 .replaceAll(" ", "")
+                .replaceAll(":", "")
                 .replaceAll("%", ""));
     }
 

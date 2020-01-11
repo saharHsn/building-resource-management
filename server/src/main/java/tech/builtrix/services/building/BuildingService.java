@@ -1,6 +1,5 @@
 package tech.builtrix.services.building;
 
-import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -120,8 +119,8 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
         try {
             parseBillFiles(event);
         } catch (Exception e) {
-            logger.error("BuildingService -> processMessage ->" + e.getMessage());
-            throw new InternalException(e.getMessage());
+            logger.error("BuildingService -> processMessage ->" + e.getCause() + ": " + e.getMessage());
+            throw new RuntimeException(e);
         }
     }
     //------------------------------------ private methods ---------------------------------------

@@ -73,7 +73,10 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         BillParameterDto rdPeakHoursDto = billDto.getRDPeakHours();
         BillParameterInfo rdPeakHours = this.billParameterService.save(rdPeakHoursDto);
         BillParameterDto rdReactivePowerDto = billDto.getRDReactivePower();
-        BillParameterInfo rdReactivePower = this.billParameterService.save(rdReactivePowerDto);
+        BillParameterInfo rdReactivePower = null;
+        if (rdReactivePowerDto != null) {
+            rdReactivePower = this.billParameterService.save(rdReactivePowerDto);
+        }
         Bill bill = new Bill(billDto);
         bill.setAEPeakHours(aePeakHours.getId());
         bill.setAEOffHours(aeOffHours.getId());
@@ -81,7 +84,9 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         bill.setAENormalHours(aeNormalHours.getId());
         bill.setRDContractedPower(rdContractedPower.getId());
         bill.setRDPeakHours(rdPeakHours.getId());
-        bill.setRDReactivePower(rdReactivePower.getId());
+        if (rdReactivePower != null) {
+            bill.setRDReactivePower(rdReactivePower.getId());
+        }
         bill = this.repository.save(bill);
         return bill;
     }

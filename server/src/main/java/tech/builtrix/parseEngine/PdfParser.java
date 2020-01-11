@@ -138,11 +138,10 @@ public class PdfParser {
         //loop until the job status is published. Ignore other messages in queue.
         do {
             messages = sqs.receiveMessage(sqsQueueUrl).getMessages();
-            if (dotLine++ < 40) {
-                logger.info(".");
-            } else {
+            if (dotLine++ >= 40) {
                 dotLine = 0;
-            }
+            }  //logger.info("");
+
 
             if (!messages.isEmpty()) {
                 //Loop through messages received.
