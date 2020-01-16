@@ -35,9 +35,11 @@ public class S3FileService implements FileUploader {
 
     @Override
     public List<String> uploadFile(MultipartFile file, String bucketName, String pathName, Map<String, String> metaData) {
+        logger.info("Uploading file : " + file.getOriginalFilename() + " with bucket name and pathName : " + bucketName + " ," + pathName);
         List<String> fileNames = new ArrayList<>();
         boolean isFileExist = uploadSingleFile(file, bucketName, pathName, metaData);
         if (!isFileExist) {
+            logger.info("File doesnt exist in this bucket we create it ...");
             if (!StringUtils.isEmpty(file.getOriginalFilename())) {
                 fileNames.add(file.getOriginalFilename());
             } else {
@@ -86,11 +88,13 @@ public class S3FileService implements FileUploader {
         } catch (Exception e) {
             result = result + e.getMessage();
         }
+        logger.info(result);
         return false;
     }
 
 
     public boolean exists(AmazonS3 s3, String bucket, String fileName) {
+        logger.info("Checking if file exists in this bucket ...");
         try {
             s3.getObjectMetadata(bucket, fileName);
         } catch (AmazonServiceException e) {

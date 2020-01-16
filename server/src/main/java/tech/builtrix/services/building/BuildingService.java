@@ -156,9 +156,11 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
         if (file != null) {
             Map<String, String> metaData = new HashMap<>();
             metaData.put("BillType", billType.name());
+            logger.info("file content type: " + file.getContentType());
             //bucket name should not contain uppercase characters
             if (file.getContentType() != null && file.getContentType().equalsIgnoreCase("application/zip")) {
-                //file is zipped
+                logger.info("file:"
+                        + file.getOriginalFilename() + " is zipped!");
                 File destFiles = new File(pathName);
                 String destination = destFiles.getAbsolutePath();
                 try {

@@ -64,8 +64,8 @@ export class PredictionsComponent implements OnInit {
                   fontSize: '15px'
                 }
               },
-              categories: [0, 2500, 5000, 7500],
-              tickInterval: 2500
+              categories: [0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500],
+              tickInterval: 500
             },
             tooltip: {
               valueSuffix: ' €'

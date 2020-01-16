@@ -68,20 +68,20 @@ export class ElectricityConsumptionOverTimeComponent implements OnInit {
             ,
 
             series: [
-              {
+              /*{
                 type: 'column',
                 name: 'Contracted\n' +
                   'Power',
                 // data: [125.79, 131.4, 118.36, 131.4, 126.81, 131.04, 126.81, 131.04, 131.04, 131.99, 136.69, 131.99],
                 data: data.content.contractedPowerValues,
                 color: '#0066cc'
-              },
-              {
-                name: 'Power in\nPeak Hours',
-                // data: [833.69, 846.81, 739.59, 896.43, 684.86, 672.34, 742.91, 782.83, 753.81, 762.87, 714.73, 786.84],
-                data: data.content.powerInPeakValues,
-                color: '#ff6666'
-              },
+              },*/
+              /* {
+                 name: 'Power in\nPeak Hours',
+                 // data: [833.69, 846.81, 739.59, 896.43, 684.86, 672.34, 742.91, 782.83, 753.81, 762.87, 714.73, 786.84],
+                 data: data.content.powerInPeakValues,
+                 color: '#ff6666'
+               },*/
               {
                 name: 'Reactive\nPower',
                 // data: [9.34, 9.32, 10.21, 10.56, 13.36, 16.35, 9.78, 6.43, 6.4, 9.37, 12.25, 6.02],

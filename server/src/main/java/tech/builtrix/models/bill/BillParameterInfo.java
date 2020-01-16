@@ -2,6 +2,7 @@ package tech.builtrix.models.bill;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +33,9 @@ public class BillParameterInfo extends EntityBase<BillParameterInfo> {
     private Float tariffPrice;
     @DynamoDBAttribute
     private Float totalTariffCost;
+    @DynamoDBTypeConverted(converter = ParameterTypeConverter.class)
+    @DynamoDBAttribute(attributeName = "parameter_type")
+    private ParameterType parameterType;
 
     public BillParameterInfo() {
     }
@@ -43,6 +47,7 @@ public class BillParameterInfo extends EntityBase<BillParameterInfo> {
         this.consumption = billParameterDto.getConsumption();
         this.tariffPrice = billParameterDto.getTariffPrice();
         this.totalTariffCost = billParameterDto.getTotalTariffCost();
+        this.parameterType = billParameterDto.getParamType();
     }
 
     /*initial date, end date, consumption, tariff price, total cost of each tariff*/

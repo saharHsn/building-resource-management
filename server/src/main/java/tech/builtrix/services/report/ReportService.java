@@ -31,20 +31,11 @@ import java.util.stream.IntStream;
 @Component
 @Slf4j
 public class ReportService {
-    private static String FREEHOURS_COLOR = "#ffff00";
-    private static String NORMALHOURS_COLOR = "#0066cc";
-    private static String OFFHOURS_COLOR = "#248f24";
-    private static String PEAKHOURS_COLOR = "#ff0000";
-    private static String FREE_HOURS = "Free Hours";
-    private static String NORMAL_HOUR = "Normal Hour";
-    private static String OFF_HOURS = "Off Hours";
-    private static String PEAK_HOURS = "Peak Hours";
 
     // private static float kg_CO2_per_each_kWh = 0.408f;
     private static float COMFORT_TEMPERATURE = 20f;
     private static float ANNUAL_EFFICIENCY_REF = 51f;
     private static float CO2_CONS = 0.3332f; //kg/Kwh
-    private static float NORM_CONS = 100f; //kWh/cap
 
     private final BillService billService;
     private final BuildingService buildingService;
@@ -69,12 +60,12 @@ public class ReportService {
         Float month2Cost = predictionData.getMonth2Cost();
         Float month3Cost = predictionData.getMonth3Cost();
         List<Bill> bills = predictionData.getBills();
-        // dto.setCostYValues(Arrays.asList(6135.5f, 7130.4f, 6234.3f));
         int billsSize = bills.size();
-        dto.setCostYValues(Arrays.asList(month1Cost / billsSize, month2Cost / billsSize, month3Cost / billsSize));
-        // dto.setSavingYValues(Arrays.asList(321f, 420f, 360f));
+        float m1Str = ReportUtil.roundDecimal(month1Cost);
+        float m2Str = ReportUtil.roundDecimal(month2Cost);
+        float m3Str = ReportUtil.roundDecimal(month3Cost);
+        dto.setCostYValues(Arrays.asList(m1Str, m2Str, m3Str));
         dto.setSavingYValues(ReportUtil.getSavings(month1Cost, month2Cost, month3Cost, billsSize));
-        //dto.setXValues(Arrays.asList("Oct-2019", "Nov-2019", "Dec-2019"));
 
         int currentYear = DateUtil.getCurrentYear();
         dto.setXValues(Arrays.asList(
@@ -94,45 +85,31 @@ public class ReportService {
         logger.info("getBEScore start --> getBEScore: " + new Date());
         Float beScore = this.billService.getBEScore(building, dtoList);
         logger.info("getBEScore end -->  getBEScore: " + new Date());
-        return beScore;
+        return ReportUtil.roundDecimal(beScore);
     }
 
     public SavingDto savingThisMonth(String buildingId) throws NotFoundException {
         Bill lastBill = billService.getLastBill(buildingId);
-
-        PreviousYearsParamData previousYearsParamData = new PreviousYearsParamData(getAllPreviousBills(buildingId)).invoke();
-
-        Integer billSize = previousYearsParamData.getBillSize();
-        Float consumptionSum = previousYearsParamData.getConsumptionSum();
-        Float costSum = previousYearsParamData.getCostSum();
-        Float environmentSum = previousYearsParamData.getEnvironmentSum();
+        BillDto lastYearBill = this.billService.filterByMonthAndYear(buildingId, lastBill.getFromMonth(), lastBill.getFromYear() - 1);
         SavingDto dto = new SavingDto();
-        dto.setConsumption(lastBill.getTotalMonthlyConsumption() - (consumptionSum / billSize));
-        dto.setCost(lastBill.getTotalPayable() - (costSum / billSize));
-        dto.setEnvironmental(lastBill.getTotalMonthlyConsumption() * CO2_CONS - (environmentSum / billSize));
-        /*dto.setConsumption(1263f);
-        dto.setCost(190f);
-        dto.setEnvironmental(515f);*/
+        float consumption = lastBill.getTotalMonthlyConsumption() - lastYearBill.getTotalMonthlyConsumption();
+        dto.setConsumption(ReportUtil.roundDecimal(consumption));
+        float cost = lastBill.getTotalPayable() - lastYearBill.getTotalPayable();
+        dto.setCost(ReportUtil.roundDecimal(cost));
+        float environmental = lastBill.getTotalMonthlyConsumption() * CO2_CONS - lastYearBill.getTotalMonthlyConsumption() * CO2_CONS;
+        dto.setEnvironmental(ReportUtil.roundDecimal(environmental));
         return dto;
     }
 
     public CostStackDto getCostStackData(String buildingId) throws NotFoundException {
         Integer year = DateUtil.getCurrentYear();
         List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, year);
-        /* dto.setContractedPowerValues(Arrays.asList(833.69f, 846.81f, 739.59f, 896.43f, 684.86f, 672.34f, 742.91f, 782.83f, 753.81f, 762.87f, 714.73f, 786.84f));
-        dto.setFreeValues(Arrays.asList(437.62f, 402.36f, 467.34f, 460.2f, 369.59f, 414.66f, 368.28f, 406.59f, 453.63f, 397.01f, 427.34f, 556.36f));
-        dto.setOffValues(Arrays.asList(265.96f, 282.73f, 238.51f, 250.71f, 211.15f, 209.45f, 209f, 228.47f, 227.03f, 220.12f, 245.33f, 310.36f));
-        dto.setPeakValues(Arrays.asList(878.11f, 944.15f, 829.95f, 690.54f, 473.42f, 429.33f, 513.55f, 547.49f, 481.35f, 527.35f, 695.46f, 865.32f));
-        dto.setPowerInPeakValues(Arrays.asList(833.69f, 846.81f, 739.59f, 896.43f, 684.86f, 672.34f, 742.91f, 782.83f, 753.81f, 762.87f, 714.73f, 786.84f));
-        dto.setNormalValues(Arrays.asList(1844.74f, 1932.34f, 1715.54f, 1833.96f, 1538.25f, 1451.76f, 1729.1f, 878.35f, 1743.17f, 1881.22f, 1728.28f, 1834.11f));
-        dto.setReactivePowerValues(Arrays.asList(9.34f, 9.32f, 10.21f, 10.56f, 13.36f, 16.35f, 9.78f, 6.43f, 6.4f, 9.37f, 12.25f, 6.02f));*/
         return ReportUtil.getCostStackDto(dtoList);
     }
 
     public CostPieDto getCostPieData(String buildingId) throws NotFoundException {
         Date currentDate = ReportUtil.getCurrentDate();
         int year = DateUtil.getYear(currentDate);
-        List<BillDto> dtoList = new ArrayList<>();
         float contractedPower = 0f;
         float freeHours = 0f;
         float normalHours = 0f;
@@ -141,10 +118,7 @@ public class ReportService {
         float reactivePower = 0f;
         float peakHours = 0f;
         List<BillDto> billsOfYear = billService.getBillsOfYear(buildingId, year);
-        /*for (int i = 0; i < 12; i++) {
-            BillDto billDto = billService.filterByMonthAndYear(buildingId, i, year);
-            dtoList.add(billDto);
-        }*/
+
         for (BillDto billDto : billsOfYear) {
             if (billDto.getRDContractedPower() != null) {
                 contractedPower += billDto.getRDContractedPower().getTotalTariffCost();
@@ -169,31 +143,21 @@ public class ReportService {
             }
         }
         CostPieDto dto = new CostPieDto();
-        dto.setContractedPower(contractedPower / 12);
-        dto.setFreeHours(freeHours / 12);
-        dto.setNormalHours(normalHours / 12);
-        dto.setOffHours(offHours / 12);
-        dto.setPowerInPeakHours(powerInPeakHours / 12);
-        dto.setReactivePower(reactivePower / 12);
-        dto.setPeakHours(peakHours / 12);
+        dto.setContractedPower(ReportUtil.roundDecimal(contractedPower / 12));
+        dto.setFreeHours(ReportUtil.roundDecimal(freeHours / 12));
+        dto.setNormalHours(ReportUtil.roundDecimal(normalHours / 12));
+        dto.setOffHours(ReportUtil.roundDecimal(offHours / 12));
+        dto.setPowerInPeakHours(ReportUtil.roundDecimal(powerInPeakHours / 12));
+        dto.setReactivePower(ReportUtil.roundDecimal(reactivePower / 12));
+        dto.setPeakHours(ReportUtil.roundDecimal(peakHours / 12));
         return dto;
     }
 
     public ConsumptionDto getConsumption(String buildingId) throws NotFoundException {
-        List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, DateUtil.getCurrentYear());
-        ConsumptionDto dto = ReportUtil.getConsumptionDto(dtoList);
-        /*dto.setContractedPowerValues(Arrays.asList(125.79f, 131.4f, 118.36f, 131.4f, 126.81f, 131.04f, 126.81f, 131.04f, 131.04f, 131.99f, 136.69f, 131.99f));
-        dto.setPowerInPeakValues(Arrays.asList(833.69f, 846.81f, 739.59f, 896.43f, 684.86f, 672.34f, 742.91f, 782.83f, 753.81f, 762.87f, 714.73f, 786.84f));
-        dto.setReactivePowerValues(Arrays.asList(9.34f, 9.32f, 10.21f, 10.56f, 13.36f, 16.35f, 9.78f, 6.43f, 6.4f, 9.37f, 12.25f, 6.02f));
-        dto.setNormalValues(Arrays.asList(1844.74f, 1932.34f, 1715.54f, 1833.96f, 1538.25f, 1451.76f, 1729.1f, 878.35f, 1743.17f, 1881.22f, 1728.28f, 1834.11f));
-        dto.setPeakValues(Arrays.asList(878.11f, 944.15f, 829.95f, 690.54f, 473.42f, 429.33f, 513.55f, 547.49f, 481.35f, 527.35f, 695.46f, 865.32f));
-        dto.setFreeValues(Arrays.asList(437.62f, 402.36f, 467.34f, 460.2f, 369.59f, 414.66f, 368.28f, 406.59f, 453.63f, 397.01f, 427.34f, 556.36f));
-        dto.setOffValues(Arrays.asList(265.96f, 282.73f, 238.51f, 250.71f, 211.15f, 209.45f, 209f, 228.47f, 227.03f, 220.12f, 245.33f, 310.36f));*/
-        /*This baseline is now calculated using the data of the previous years
-        (we are comparing the monthly consumption of the building with the same months of the previous year).
-         */
+        int currentYear = DateUtil.getCurrentYear();
+        List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, currentYear);
+        ConsumptionDto dto = ReportUtil.getConsumptionDto(dtoList, currentYear);
         List<Float> monthConsVals = calculateBaseLine(buildingId);
-        //dto.setBaseLineValues(Arrays.asList(1844.74f, 1932.34f, 1715.54f, 1833.96f, 1538.25f, 1451.76f, 1729.1f, 878.35f, 1743.17f, 1881.22f, 1728.28f, 1834.11f));
         dto.setBaseLineValues(monthConsVals);
         return dto;
     }
@@ -203,9 +167,17 @@ public class ReportService {
                                                            TimePeriodType periodType,
                                                            DatePartType datePartType) throws NotFoundException {
         List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, year);
-        ConsumptionDto monthlyConsDto = ReportUtil.getConsumptionDto(dtoList);
+        ConsumptionDto monthlyConsDto = ReportUtil.getConsumptionDto(dtoList, year);
         //TODO calculate quarter later
         boolean isQuarter = periodType.equals(TimePeriodType.QUARTERS);
+        String PEAK_HOURS = "Peak Hours";
+        String OFF_HOURS = "Off Hours";
+        String NORMAL_HOUR = "Normal Hour";
+        String FREE_HOURS = "Free Hours";
+        String PEAKHOURS_COLOR = "#ff0000";
+        String OFFHOURS_COLOR = "#248f24";
+        String NORMALHOURS_COLOR = "#0066cc";
+        String FREEHOURS_COLOR = "#ffff00";
         switch (datePartType) {
             case FREE_HOURS:
                 return !isQuarter ? ReportUtil.getConsumptionDynamicDto(FREEHOURS_COLOR, FREE_HOURS, monthlyConsDto.getFreeValues()) : ReportUtil.getConsumptionDynamicDto(FREEHOURS_COLOR, FREE_HOURS, 9.34f, 9.32f, 10.21f, 10.56f);
@@ -231,38 +203,36 @@ public class ReportService {
         Float month2Consumption = predictionData.getMonth2Consumption();
         Float month3Consumption = predictionData.getMonth3Consumption();
         List<Bill> bills = predictionData.getBills();
-        // dto.setCostYValues(Arrays.asList(6135.5f, 7130.4f, 6234.3f));
         int billsSize = bills.size();
         dto.setConsumptionValues(Arrays.asList((month1Consumption / billsSize) / building.getArea(),
                 (month2Consumption / billsSize) / building.getArea(),
                 (month3Consumption / billsSize) / building.getArea()));
 
-        //dto.setXValues(Arrays.asList("Jan-2019", "Feb-2019", "Mar-2019"));
         int currentYear = DateUtil.getCurrentYear();
         dto.setXValues(Arrays.asList(
                 ReportUtil.getDateTitle(month1, currentYear),
                 ReportUtil.getDateTitle(month2, currentYear),
                 ReportUtil.getDateTitle(month3, currentYear)));
         dto.setBaseLineValues(Arrays.asList(10.62f, 9.85f, 9.38f));
-        // dto.setConsumptionValues(Arrays.asList(10.94f, 11.21f, 9.3f));
         return dto;
     }
 
     //not needed now
     public NormalVsEEDto getNormalizedVsEnergyEfficiency(String buildingId) {
+        int currentYear = DateUtil.getCurrentYear();
         NormalVsEEDto dto = new NormalVsEEDto();
-        dto.setXValues(Arrays.asList("Jan-2018",
-                "Feb-2018",
-                "Mar-2018",
-                "Apr-2018",
-                "May-2018",
-                "Jun-2018",
-                "Jul-2018",
-                "Aug-2018",
-                "Sep-2018",
-                "Oct-2018",
-                "Nov-2018",
-                "Dec-2018"));
+        dto.setXValues(Arrays.asList("Jan-" + currentYear,
+                "Feb-" + currentYear,
+                "Mar-" + currentYear,
+                "Apr-" + currentYear,
+                "May-" + currentYear,
+                "Jun-" + currentYear,
+                "Jul-" + currentYear,
+                "Aug-" + currentYear,
+                "Sep-" + currentYear,
+                "Oct-" + currentYear,
+                "Nov-" + currentYear,
+                "Dec-" + currentYear));
         dto.setStandardAValues(Arrays.asList(7.5f, 7.5f, 7.5f, 7.5f, 7.5f, 7.5f, 7.5f, 7.5f, 7.5f, 7.5f, 7.5f, 7.5f));
         dto.setStandardBValues(Arrays.asList(9.17f, 9.17f, 9.17f, 9.17f, 9.17f, 9.17f, 9.17f, 9.17f, 9.17f, 9.17f, 9.17f, 9.17f));
         dto.setStandardCValues(Arrays.asList(10.83f, 10.83f, 10.83f, 10.83f, 10.83f, 10.83f, 10.83f, 10.83f, 10.83f, 10.83f, 10.83f, 10.83f));
@@ -315,13 +285,9 @@ public class ReportService {
                 "Oct-" + currentYear,
                 "Nov-" + currentYear,
                 "Dec-" + currentYear));
-        //dto.setStandardAValues(Arrays.asList(0f, 0f, 0f, 0.042f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f));
         dto.setStandardAValues(standardAVals);
-        //dto.setStandardBValues(Arrays.asList(0f, 0f, 0f, 0f, 0.07f, 0.092f, 0f, 0.08f, 0.067f, 0f, 0f, 0f));
         dto.setStandardBValues(standardBVals);
-        //dto.setStandardCValues(Arrays.asList(0.04f, 0.04f, 0.045f, 0f, 0f, 0f, 0.14f, 0f, 0f, 0.092f, 0.066f, 0.05f));
         dto.setStandardCValues(standardCVals);
-        //dto.setStandardDValues(Arrays.asList(0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f));
         dto.setStandardDValues(standardDVals);
         return dto;
     }
@@ -334,10 +300,8 @@ public class ReportService {
         BuildingDto building = this.buildingService.findById(buildingId);
         int numOfPeople = building.getNumberOfPeople();
         for (int i = 0; i < 12; i++) {
-            //Date date = DateUtil.getCustomDate(currentYear, i);
-            //Integer numOfPeople = building.getNumOfPeopleMap().get(date);
             if (bills.size() > i) {
-                consumptionPerMonth.add(i, (bills.get(i).getTotalMonthlyConsumption()) / numOfPeople);
+                consumptionPerMonth.add(i, (ReportUtil.roundDecimal(bills.get(i).getTotalMonthlyConsumption()) / numOfPeople));
             } else {
                 consumptionPerMonth.add(i, 0f);
             }
@@ -358,11 +322,12 @@ public class ReportService {
         // value and divided by the area of the building.
         List<Float> baseLineList = new ArrayList<>();
 
-        Float baseLine = (NORM_CONS * building.getNumberOfPeople() * CO2_CONS) / building.getArea();
+        //kWh/cap
+        float NORM_CONS = 100f;
+        Float baseLine = ReportUtil.roundDecimal(((NORM_CONS * building.getNumberOfPeople() * CO2_CONS) / building.getArea()));
         for (int i = 0; i < 12; i++) {
             baseLineList.add(baseLine);
         }
-        //dto.setBaseLine(Arrays.asList(98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f, 98.13f));
         dto.setTotal(consumptionPerMonth);
         dto.setBaseLine(baseLineList);
         return dto;
@@ -375,14 +340,13 @@ public class ReportService {
         List<Float> totalValues = new ArrayList<>();
         for (BillDto billDto : dtoList) {
             Float totalMonthlyConsumption = billDto.getTotalMonthlyConsumption();
-            totalValues.add(((totalMonthlyConsumption != null ? totalMonthlyConsumption : 1) * CO2_CONS) / building.getArea());
+            float total = ReportUtil.roundDecimal((totalMonthlyConsumption != null ?
+                    totalMonthlyConsumption : 1) * CO2_CONS) / building.getArea();
+            totalValues.add(total);
         }
-        // ConsumptionDto dto = getConsumptionDto(dtoList);
         CarbonSPLineDto dto = new CarbonSPLineDto();
-        // dto.setTotalValues(Arrays.asList(4.28f, 4.51f, 3.95f, 4.07f, 3.27f, 3.2f, 3.53f, 3.83f, 3.69f, 3.78f, 3.88f, 4.52f));
         dto.setTotalValues(totalValues);
-        float baseLineValue = (100 * CO2_CONS * building.getNumberOfPeople()) / building.getArea();
-        // dto.setBaseLineValues(Arrays.asList(3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f, 3.74f));
+        float baseLineValue = ReportUtil.roundDecimal((100 * CO2_CONS * building.getNumberOfPeople()) / building.getArea());
         List<Float> baseLineValues = IntStream.range(0, 12).mapToObj(i -> baseLineValue).collect(Collectors.toList());
         dto.setBaseLineValues(baseLineValues);
         List<String> xValues = new ArrayList<>();
@@ -390,18 +354,6 @@ public class ReportService {
             xValues.add(ReportUtil.getDateTitle(i, currentYear));
         }
         dto.setXValues(xValues);
-       /* dto.setXValues(Arrays.asList("Jan-2018",
-                "Feb-2018",
-                "Mar-2018",
-                "Apr-2018",
-                "May-2018",
-                "Jun-2018",
-                "Jul-2018",
-                "Aug-2018",
-                "Sep-2018",
-                "Oct-2018",
-                "Nov-2018",
-                "Dec-2018"));*/
         return dto;
     }
 
@@ -409,32 +361,23 @@ public class ReportService {
         BillDto lastBill = billService.getLastBillDto(buildingId);
         BillParameterDto aeFreeHours = lastBill.getAEFreeHours();
         Float consumption = getaConsumptionOfParam(aeFreeHours);
-        // Float producedCO2 = lastBill.getProducedCO2();
-        Float producedCO2 = lastBill.getTotalMonthlyConsumption() * CO2_CONS;
-        Float co2Free = (consumption * CO2_CONS) / producedCO2;
+        float producedCO2 = lastBill.getTotalMonthlyConsumption() * CO2_CONS;
+        float co2Free = (consumption * CO2_CONS) / producedCO2;
         BillParameterDto aeNormalHours = lastBill.getAENormalHours();
         Float consumptionNorm = getaConsumptionOfParam(aeNormalHours);
-        Float co2Normal = consumptionNorm * CO2_CONS / producedCO2;
+        float co2Normal = consumptionNorm * CO2_CONS / producedCO2;
         BillParameterDto aeOffHours = lastBill.getAEOffHours();
         Float consumptionOff = getaConsumptionOfParam(aeOffHours);
-        Float co2Off = consumptionOff * CO2_CONS / producedCO2;
+        float co2Off = consumptionOff * CO2_CONS / producedCO2;
         BillParameterDto aePeakHours = lastBill.getAEPeakHours();
         Float consumptionPeak = getaConsumptionOfParam(aePeakHours);
-        Float co2Peak = (consumptionPeak * CO2_CONS) / producedCO2;
+        float co2Peak = (consumptionPeak * CO2_CONS) / producedCO2;
         CarbonPieDto dto = new CarbonPieDto();
-        dto.setCo2Free(co2Free);
-        dto.setCo2Normal(co2Normal);
-        dto.setCo2Off(co2Off);
-        dto.setCo2Peak(co2Peak);
-        /*dto.setCo2Free(19.4f);
-        dto.setCo2Normal(51f);
-        dto.setCo2Off(11.4f);
-        dto.setCo2Peak(18.1f);*/
+        dto.setCo2Free(ReportUtil.roundDecimal(co2Free));
+        dto.setCo2Normal(ReportUtil.roundDecimal(co2Normal));
+        dto.setCo2Off(ReportUtil.roundDecimal(co2Off));
+        dto.setCo2Peak(ReportUtil.roundDecimal(co2Peak));
         return dto;
-    }
-
-    private Float getaConsumptionOfParam(BillParameterDto aeFreeHours) {
-        return aeFreeHours != null ? (aeFreeHours.getConsumption() != null ? aeFreeHours.getConsumption() : 1f) : 1f;
     }
 
     //Report
@@ -443,13 +386,13 @@ public class ReportService {
         if (beScore == null) {
             beScore = billService.getBEScore(this.buildingService.findById(buildingId), this.billService.getBillsOfYear(buildingId, DateUtil.getCurrentYear()));
         }
-        return beScore + 0.05f * beScore;
+        return ReportUtil.roundDecimal(beScore + 0.05f * beScore);
     }
 
     public Float getNationalMedian(String buildingId) throws NotFoundException {
         Float nationalMedianBEScore = (5 / 50f * 100);
-        Float nationalMedian = BillService.getReference(buildingId) * 100;
-        return nationalMedian;
+        float nationalMedian = BillService.getReference(buildingId) * 100;
+        return ReportUtil.roundDecimal(nationalMedian);
     }
 
     //TODO next phase
@@ -515,7 +458,7 @@ public class ReportService {
             //This value exists in the energy certificate of the building and we have to request it from users in building profile form
             //annual efficiency reference if not available  51 kwh/m2/year
             float referenceOfMonth = (ANNUAL_EFFICIENCY_REF / 12) / HCDD;
-            Float efficiencyLevel = 0f;
+            float efficiencyLevel = 0f;
             if (billsOfYear.size() > i) {
                 Float normalizedConsumption = billsOfYear.get(i).getTotalMonthlyConsumption();
                 //divide the normalized consumption indexes by the normalized reference
@@ -529,11 +472,11 @@ public class ReportService {
             sumOfEf += monthlyEff;
         }
         float baseline = sumOfEf / 12;
-        energyEfficiencyLevel.setBaseline(baseline);
+        energyEfficiencyLevel.setBaseline(ReportUtil.roundDecimal(baseline));
         EnergyCertificate baseLineEE = ReportUtil.getEnergyEfficiency(baseline);
         energyEfficiencyLevel.setBaseLineCert(baseLineEE);
         Float efficiencyLevel = monthlyEfficiencyList.get(DateUtil.geCurrentMonth());
-        energyEfficiencyLevel.setThisMonth(efficiencyLevel);
+        energyEfficiencyLevel.setThisMonth(ReportUtil.roundDecimal(efficiencyLevel));
         energyEfficiencyLevel.setThisMonthCert(ReportUtil.getEnergyEfficiency(efficiencyLevel));
         energyEfficiencyLevel.setPropertyTargetCert(ReportUtil.getPropertyTargetCert(baseLineEE));
         energyEfficiencyLevel.setNationalMedianCert(ReportUtil.getNationalMedianCert());
@@ -549,49 +492,41 @@ public class ReportService {
                                                            Float target) throws NotFoundException {
         logger.info("start in " + new Date());
         EnergyConsumptionIndex consumptionIndex = new EnergyConsumptionIndex();
-        Float cnsCapBase = 0f;
+        float cnsCapBase = 0f;
         for (BillDto billDto : billsOfYear) {
             Float totalMonthlyConsumption = billDto.getTotalMonthlyConsumption();
             cnsCapBase += totalMonthlyConsumption != null ? totalMonthlyConsumption : 0f;
         }
+        Float cnsCapNationalMedian = getCnsCapNationalMedian(divideParam, buildingDto, beScore, target, consumptionIndex, cnsCapBase, lastBillDto.getTotalMonthlyConsumption());
+        consumptionIndex.setNationalMedian(ReportUtil.roundDecimal(cnsCapNationalMedian));
+        logger.info("end in " + new Date());
+        return consumptionIndex;
+    }
+
+    private Float getCnsCapNationalMedian(Float divideParam, BuildingDto buildingDto, Float beScore, Float target, EnergyConsumptionIndex consumptionIndex, Float cnsCapBase, Float totalMonthlyConsumption2) throws NotFoundException {
         cnsCapBase = (cnsCapBase / 12) / buildingDto.getArea();
         consumptionIndex.setBaseline(cnsCapBase);
         String buildingId = buildingDto.getId();
-        Float totalMonthlyConsumption = lastBillDto.getTotalMonthlyConsumption();
-        Float cnsAreaLastMonth = (totalMonthlyConsumption != null ? totalMonthlyConsumption : 0) / divideParam;
+        Float cnsAreaLastMonth = (totalMonthlyConsumption2 != null ? totalMonthlyConsumption2 : 0) / divideParam;
         consumptionIndex.setThisMonth(cnsAreaLastMonth);
         //TODO ask if propTarget is calculated correctly
         float cnsCapPropsTarget = (cnsCapBase * beScore) / target;
-        consumptionIndex.setPropertiesTarget(cnsCapPropsTarget);
+        consumptionIndex.setPropertiesTarget(ReportUtil.roundDecimal(cnsCapPropsTarget));
         Float nationalMedian = getNationalMedian(buildingId);
-        Float cnsCapNationalMedian = cnsCapBase * (beScore / nationalMedian);
-        consumptionIndex.setNationalMedian(cnsCapNationalMedian);
-        logger.info("end in " + new Date());
-        return consumptionIndex;
+        return cnsCapBase * (beScore / nationalMedian);
     }
 
     private EnergyConsumptionIndex getIndexCostData(Float divideParam,
                                                     BuildingDto buildingDto,
                                                     List<BillDto> billsOfYear, BillDto lastBillDto, Float beScore, Float target) throws NotFoundException {
         EnergyConsumptionIndex consumptionIndex = new EnergyConsumptionIndex();
-        Float cnsCapBase = 0f;
+        float cnsCapBase = 0f;
         for (BillDto billDto : billsOfYear) {
             Float totalPayable = billDto.getTotalPayable();
             cnsCapBase += totalPayable != null ? totalPayable : 0;
         }
-        cnsCapBase = (cnsCapBase / 12) / buildingDto.getArea();
-        consumptionIndex.setBaseline(cnsCapBase);
-        String buildingId = buildingDto.getId();
-        Float totalPayable = lastBillDto.getTotalPayable();
-        Float cnsAreaLastMonth = (totalPayable != null ? totalPayable : 0) / divideParam;
-        consumptionIndex.setThisMonth(cnsAreaLastMonth);
-
-        float cnsCapPropsTarget = (cnsCapBase * beScore) / target;
-        consumptionIndex.setPropertiesTarget(cnsCapPropsTarget);
-
-        Float nationalMedian = getNationalMedian(buildingId);
-        Float cnsCapNationalMedian = cnsCapBase * (beScore / nationalMedian);
-        consumptionIndex.setNationalMedian(cnsCapNationalMedian);
+        Float cnsCapNationalMedian = getCnsCapNationalMedian(divideParam, buildingDto, beScore, target, consumptionIndex, cnsCapBase, lastBillDto.getTotalPayable());
+        consumptionIndex.setNationalMedian(ReportUtil.roundDecimal(cnsCapNationalMedian));
 
         return consumptionIndex;
     }
@@ -607,13 +542,10 @@ public class ReportService {
         return monthConsVals;
     }
 
-    private List<Bill> getAllPreviousBills(String buildingId) {
-        Date currentDate = new Date();
-        Date previousYear = DateUtil.increaseDate(currentDate, -1, DateUtil.DateType.YEAR);
-        List<Bill> bills = this.billService.filterByFromDateAndMonthAndBuilding(previousYear,
-                DateUtil.getMonth(currentDate),
-                buildingId);
-        return bills;
+
+    private Float getaConsumptionOfParam(BillParameterDto parameterDto) {
+        return parameterDto != null ?
+                (parameterDto.getConsumption() != null ? parameterDto.getConsumption() : 1f) : 1f;
     }
 
     //---------------------------------------------------Inner Classes --------------------------------------------------------------
@@ -652,7 +584,7 @@ public class ReportService {
             month2Consumption = 0f;
             month3Consumption = 0f;
 
-            bills = billService.filterByFromDateAndMonthAndBuilding(previousYear,
+            bills = billService.filterByFromDateAndMonthAndBuilding(DateUtil.getYear(previousYear),
                     month1,
                     month2,
                     month3,
@@ -680,34 +612,23 @@ public class ReportService {
             nextThreeMonths.add(DateUtil.getNextNMonth(date, 3));
             return nextThreeMonths;
         }
+
     }
 
-    @Getter
-    public static class PreviousYearsParamData {
-        public List<Bill> bills;
-        public Float consumptionSum;
-        public Float costSum;
-        public Float environmentSum;
+    public static void main(String[] args) {
+        Date currentDate = new Date();
+        Date date = DateUtil.increaseDate(currentDate, -1, DateUtil.DateType.YEAR);
+        List<Integer> nextThreeMonths = new ArrayList<>();
+        nextThreeMonths.add(DateUtil.getNextNMonth(date, 1));
+        nextThreeMonths.add(DateUtil.getNextNMonth(date, 2));
+        nextThreeMonths.add(DateUtil.getNextNMonth(date, 3));
+        System.out.println(nextThreeMonths.get(0) + "\n" +
+                nextThreeMonths.get(1) + "\n" +
+                nextThreeMonths.get(2));
+        int currentYear = DateUtil.getCurrentYear();
+        System.out.println(ReportUtil.getDateTitle(nextThreeMonths.get(0), currentYear));
+        System.out.println(ReportUtil.getDateTitle(nextThreeMonths.get(1), currentYear));
+        System.out.println(ReportUtil.getDateTitle(nextThreeMonths.get(2), currentYear));
 
-        PreviousYearsParamData(List<Bill> bills) {
-            this.bills = bills;
-        }
-
-        Integer getBillSize() {
-            return this.bills.size();
-        }
-
-        PreviousYearsParamData invoke() {
-            consumptionSum = 0f;
-            costSum = 0f;
-            environmentSum = 0f;
-            for (Bill bill : bills) {
-                consumptionSum += bill.getTotalMonthlyConsumption();
-                costSum += bill.getTotalPayable();
-                // environmentSum += bill.getProducedCO2();
-                environmentSum += bill.getTotalMonthlyConsumption() * CO2_CONS;
-            }
-            return this;
-        }
     }
 }

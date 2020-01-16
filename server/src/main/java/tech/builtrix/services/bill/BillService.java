@@ -95,19 +95,19 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         save(billDto);
     }
 
-    public List<Bill> filterByFromDateAndMonthAndBuilding(Date fromDate,
+    public List<Bill> filterByFromDateAndMonthAndBuilding(Integer year,
                                                           Integer month1,
                                                           Integer month2,
                                                           Integer month3,
                                                           String buildingId) {
-        String fromDateStr = getDateStr(fromDate);
+        // String fromDateStr = getDateStr(fromDate);
         Map<String, AttributeValue> exprAtrVals = new HashMap<>();
-        exprAtrVals.put(":from_date", new AttributeValue().withS(fromDateStr));
+        exprAtrVals.put(":year", new AttributeValue().withN(year.toString()));
         exprAtrVals.put(":buildingId", new AttributeValue().withS(buildingId));
         exprAtrVals.put(":month1", new AttributeValue().withN(month1.toString()));
         exprAtrVals.put(":month2", new AttributeValue().withN(month2.toString()));
         exprAtrVals.put(":month3", new AttributeValue().withN(month3.toString()));
-        String filterExpression = "buildingId = :buildingId and fromDate <= :from_date " +
+        String filterExpression = "buildingId = :buildingId and fromYear = :year " +
                 "and fromMonth in (:month1, :month2, :month3)";
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
                 .withFilterExpression(filterExpression)
@@ -228,8 +228,13 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         BillParameterDto rdContractedDto = new BillParameterDto(rdContracted);
         BillParameterInfo rdPeak = this.billParameterService.findById(bill.getRDPeakHours());
         BillParameterDto rdPeakDto = new BillParameterDto(rdPeak);
-        BillParameterInfo rdReactive = this.billParameterService.findById(bill.getRDReactivePower());
-        BillParameterDto rdReactiveDto = new BillParameterDto(rdReactive);
+        BillParameterInfo rdReactive = null;
+        BillParameterDto rdReactiveDto = null;
+        if (bill.getRDReactivePower() != null) {
+            rdReactive = this.billParameterService.findById(bill.getRDReactivePower());
+            rdReactiveDto = new BillParameterDto(rdReactive);
+        }
+
         BillDto billDto = new BillDto(bill.getBuildingId(),
                 bill.getAddress(),
                 bill.getFromDate(),
@@ -271,6 +276,6 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
     public static void main(String[] args) throws ParseException {
         BillService billService = new BillService(null, null);
         // billService.filterByFromDateAndMonthAndBuilding(new Date(), 1, 2, 4, "999999");
-        billService.filterByFromDateAndMonthAndBuilding(new Date(), 1, 2, 4, "999999");
+        billService.filterByFromDateAndMonthAndBuilding(2019, 1, 2, 4, "999999");
     }
 }

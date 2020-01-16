@@ -8,6 +8,7 @@ import tech.builtrix.web.dtos.report.ConsumptionDto;
 import tech.builtrix.web.dtos.report.ConsumptionDynamicDto;
 import tech.builtrix.web.dtos.report.CostStackDto;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -52,10 +53,19 @@ public class ReportUtil {
     }
 
     public static List<Float> getSavings(Float month1Cost, Float month2Cost, Float month3Cost, int billsSize) {
-        Float savings1 = 0.05f * (month1Cost / billsSize);
-        Float savings2 = 0.05f * (month2Cost / billsSize);
-        Float savings3 = 0.05f * month3Cost / billsSize;
+        Float savings1 = ReportUtil.roundDecimal(0.05f * (month1Cost));
+        Float savings2 = ReportUtil.roundDecimal(0.05f * (month2Cost));
+        Float savings3 = ReportUtil.roundDecimal(0.05f * (month3Cost));
         return Arrays.asList(savings1, savings2, savings3);
+    }
+
+    public static float roundDecimal(float input) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        return Float.parseFloat(df.format(input));
+    }
+
+    public static void main(String[] args) {
+        System.out.println(roundDecimal(324.449494949f));
     }
 
     public static Date getCurrentDate() {
@@ -93,34 +103,34 @@ public class ReportUtil {
     private static void extractCostValues(List<BillDto> dtoList, List<Float> contractedPowerValues, List<Float> powerInPeakValues, List<Float> reactivePowerValues, List<Float> normalValues, List<Float> peakValues, List<Float> freeValues, List<Float> offValues) {
         for (BillDto billDto : dtoList) {
             if (billDto.getRDContractedPower() != null) {
-                contractedPowerValues.add(billDto.getRDContractedPower().getTotalTariffCost());
+                contractedPowerValues.add(ReportUtil.roundDecimal(billDto.getRDContractedPower().getTotalTariffCost()));
             }
             if (billDto.getAEFreeHours() != null) {
-                freeValues.add(billDto.getAEFreeHours().getTotalTariffCost());
+                freeValues.add(ReportUtil.roundDecimal(billDto.getAEFreeHours().getTotalTariffCost()));
             }
             if (billDto.getAEOffHours() != null) {
-                offValues.add(billDto.getAEOffHours().getTotalTariffCost());
+                offValues.add(ReportUtil.roundDecimal(billDto.getAEOffHours().getTotalTariffCost()));
             }
             if (billDto.getAEPeakHours() != null) {
-                peakValues.add(billDto.getAEPeakHours().getTotalTariffCost());
+                peakValues.add(ReportUtil.roundDecimal(billDto.getAEPeakHours().getTotalTariffCost()));
             }
             if (billDto.getRDPeakHours() != null) {
-                powerInPeakValues.add(billDto.getRDPeakHours().getTotalTariffCost());
+                powerInPeakValues.add(ReportUtil.roundDecimal(billDto.getRDPeakHours().getTotalTariffCost()));
             }
             if (billDto.getAENormalHours() != null) {
-                normalValues.add(billDto.getAENormalHours().getTotalTariffCost());
+                normalValues.add(ReportUtil.roundDecimal(billDto.getAENormalHours().getTotalTariffCost()));
             }
             if (billDto.getRDReactivePower() != null) {
-                reactivePowerValues.add(billDto.getRDReactivePower().getTotalTariffCost());
+                reactivePowerValues.add(ReportUtil.roundDecimal(billDto.getRDReactivePower().getTotalTariffCost()));
             }
         }
     }
 
-    public static ConsumptionDto getConsumptionDto(List<BillDto> dtoList) {
+    public static ConsumptionDto getConsumptionDto(List<BillDto> dtoList, Integer year) {
         ConsumptionDto dto = new ConsumptionDto();
         //TODO refine later
-        dto.setXValues(Arrays.asList("Jan-2018", "Feb-2018", "Mar-2018", "Apr-2018", "May-2018", "Jun-2018",
-                "Jul-2018", "Aug-2018", "Sept-2018", "Oct-2018", "Nov-2018", "Dec-2018"));
+        dto.setXValues(Arrays.asList("Jan-" + year, "Feb-" + year, "Mar-" + year, "Apr-" + year, "May-" + year, "Jun-" + year,
+                "Jul-" + year, "Aug-" + year, "Sept-" + year, "Oct-" + year, "Nov-" + year, "Dec-" + year));
 
         List<Float> contractedPowerValues = new ArrayList<>();
         List<Float> powerInPeakValues = new ArrayList<>();
@@ -157,25 +167,25 @@ public class ReportUtil {
                                                  List<Float> offValues) {
         for (BillDto billDto : dtoList) {
             if (billDto.getRDContractedPower() != null) {
-                contractedPowerValues.add(billDto.getRDContractedPower().getConsumption());
+                contractedPowerValues.add(ReportUtil.roundDecimal(billDto.getRDContractedPower().getConsumption()));
             }
             if (billDto.getAEFreeHours() != null) {
-                freeValues.add(billDto.getAEFreeHours().getConsumption());
+                freeValues.add(ReportUtil.roundDecimal(billDto.getAEFreeHours().getConsumption()));
             }
             if (billDto.getAEOffHours() != null) {
-                offValues.add(billDto.getAEOffHours().getConsumption());
+                offValues.add(ReportUtil.roundDecimal(billDto.getAEOffHours().getConsumption()));
             }
             if (billDto.getAEPeakHours() != null) {
-                peakValues.add(billDto.getAEPeakHours().getConsumption());
+                peakValues.add(ReportUtil.roundDecimal(billDto.getAEPeakHours().getConsumption()));
             }
             if (billDto.getRDPeakHours() != null) {
-                powerInPeakValues.add(billDto.getRDPeakHours().getConsumption());
+                powerInPeakValues.add(ReportUtil.roundDecimal(billDto.getRDPeakHours().getConsumption()));
             }
             if (billDto.getAENormalHours() != null) {
-                normalValues.add(billDto.getAENormalHours().getConsumption());
+                normalValues.add(ReportUtil.roundDecimal(billDto.getAENormalHours().getConsumption()));
             }
             if (billDto.getRDReactivePower() != null) {
-                reactivePowerValues.add(billDto.getRDReactivePower().getConsumption());
+                reactivePowerValues.add(ReportUtil.roundDecimal(billDto.getRDReactivePower().getConsumption()));
             }
         }
     }
@@ -188,11 +198,6 @@ public class ReportUtil {
         freeHoursQ.setData(Arrays.asList(v, v2, v3, v4));
         return freeHoursQ;
     }
-
-   /* public Integer getCurrentYear() {
-        Date currentDate = getCurrentDate();
-        return DateUtil.getYear(currentDate);
-    }*/
 
     public static ConsumptionDynamicDto getConsumptionDynamicDto(String color, String name, List<Float> data) {
         ConsumptionDynamicDto dto = new ConsumptionDynamicDto();
@@ -240,28 +245,15 @@ public class ReportUtil {
                                   int month) {
         if (efficiency.equals(EnergyCertificate.A) || efficiency.equals(EnergyCertificate.APlus)) {
             standardAVals.add(month, efficiencyLevel);
-            /*standardBVals.add(month, 0f);
-            standardCVals.add(month, 0f);
-            standardDVals.add(month, 0f);*/
         } else if (efficiency.equals(EnergyCertificate.B) || efficiency.equals(EnergyCertificate.BMinus)) {
             standardBVals.add(month, efficiencyLevel);
-          /*  standardAVals.add(month, 0f);
-            standardCVals.add(month, 0f);
-            standardDVals.add(month, 0f);*/
         } else if (efficiency.equals(EnergyCertificate.C)) {
-            /*standardAVals.add(month, 0f);
-            standardBVals.add(month, 0f);*/
             standardCVals.add(month, efficiencyLevel);
-            //standardDVals.add(month, 0f);
         } else if (efficiency.equals(EnergyCertificate.D)
                 || efficiency.equals(EnergyCertificate.F)
                 || efficiency.equals(EnergyCertificate.E)) {
-            /*standardAVals.add(month, 0f);
-            standardBVals.add(month, 0f);
-            standardCVals.add(month, 0f);*/
             standardDVals.add(month, efficiencyLevel);
         }
-
     }
 
 

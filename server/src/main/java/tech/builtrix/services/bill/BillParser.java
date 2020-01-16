@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import tech.builtrix.exceptions.BillParseException;
+import tech.builtrix.models.bill.ParameterType;
 import tech.builtrix.parseEngine.PdfParser;
 import tech.builtrix.utils.DateUtil;
 import tech.builtrix.utils.MyTable;
@@ -108,37 +109,37 @@ public class BillParser {
         if (column_value.get(SUPER_VAZIO) == null) {
             SUPER_VAZIO = SUPER_VAZIO2;
         }
-        BillParameterDto aEOffHours = getBillParameter(column_value, SUPER_VAZIO);
+        BillParameterDto aEOffHours = getBillParameter(column_value, SUPER_VAZIO, ParameterType.AE_OFF_HOURS);
         if (column_value.get(VAZIO_NORMAL) == null) {
             VAZIO_NORMAL = VAZIO_NORMAL1;
             if (column_value.get(VAZIO_NORMAL) == null) {
                 VAZIO_NORMAL = VAZIO_NORMAL2;
             }
         }
-        BillParameterDto aEFreeHours = getBillParameter(column_value, VAZIO_NORMAL);
+        BillParameterDto aEFreeHours = getBillParameter(column_value, VAZIO_NORMAL, ParameterType.AE_FREE_HOURS);
         if (column_value.get(CHEIA) == null) {
             CHEIA = CHEIA1;
         }
-        BillParameterDto aENormalHours = getBillParameter(column_value, CHEIA);
+        BillParameterDto aENormalHours = getBillParameter(column_value, CHEIA, ParameterType.AE_NORMAL_HOURS);
         if (column_value.get(PONTA) == null) {
             PONTA = PONTA2;
         }
-        BillParameterDto aEPeakHours = getBillParameter(column_value, PONTA);
+        BillParameterDto aEPeakHours = getBillParameter(column_value, PONTA, ParameterType.AE_PEAK_HOURS);
         if (column_value.get(POTENCIA_HORAS_DE_PONTA_) == null) {
             POTENCIA_HORAS_DE_PONTA_ = POTENCIA_HORAS_DE_PONTA_2;
         }
-        BillParameterDto rDPeakHours = getBillParameter(column_value, POTENCIA_HORAS_DE_PONTA_);
+        BillParameterDto rDPeakHours = getBillParameter(column_value, POTENCIA_HORAS_DE_PONTA_, ParameterType.RD_PEAK_HOURS);
         if (column_value.get(POTENCIA_CONTRATADA_) == null) {
             POTENCIA_CONTRATADA_ = POTENCIA_CONTRATADA_2;
         }
-        BillParameterDto rDContractedPower = getBillParameter(column_value, POTENCIA_CONTRATADA_);
+        BillParameterDto rDContractedPower = getBillParameter(column_value, POTENCIA_CONTRATADA_, ParameterType.RD_CONTRACTED_POWER);
 
         if (column_value.get(REATIVA_FORNECIDA_NO_VAZIO) == null) {
             REATIVA_FORNECIDA_NO_VAZIO = REATIVA_FORNECIDA_NO_VAZIO2;
         }
         BillParameterDto rDReactivePower = null;
         if (column_value.get(REATIVA_FORNECIDA_NO_VAZIO) != null) {
-            rDContractedPower = getBillParameter(column_value, REATIVA_FORNECIDA_NO_VAZIO);
+            rDContractedPower = getBillParameter(column_value, REATIVA_FORNECIDA_NO_VAZIO, ParameterType.RD_REACTIVE_POWER);
         }
         Float totalMonthlyConsumption = aEOffHours.getConsumption() +
                 aEFreeHours.getConsumption() +
@@ -191,7 +192,7 @@ public class BillParser {
     }
 
     private BillParameterDto getBillParameter(Map<String, List<String>> column_value,
-                                              String paramName) throws ParseException {
+                                              String paramName, ParameterType parameterType) throws ParseException {
         List<String> paramValues = column_value.get(paramName);
         String initialDateStr = paramValues.get(0);//18/04/2018
         String endDateStr = paramValues.get(1);//17/05/2018
@@ -218,6 +219,7 @@ public class BillParser {
         if (!StringUtils.isEmpty(totalTariffCostStr)) {
             parameterDto.setTotalTariffCost(getAmount(totalTariffCostStr));
         }
+        parameterDto.setParamType(parameterType);
         return parameterDto;
     }
 

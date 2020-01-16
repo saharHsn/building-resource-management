@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import tech.builtrix.models.bill.BillParameterInfo;
+import tech.builtrix.models.bill.ParameterType;
 
 import java.util.Date;
 
@@ -24,6 +25,7 @@ public class BillParameterDto {
     private Float consumption = 0f;
     private Float tariffPrice = 0f;
     private Float totalTariffCost = 0f;
+    private ParameterType paramType;
 
     public BillParameterDto(BillParameterInfo billParameterInfo) {
         this.initialDate = billParameterInfo.getInitialDate();
@@ -33,5 +35,6 @@ public class BillParameterDto {
         this.paramId = billParameterInfo.getId();
         this.tariffPrice = billParameterInfo.getTariffPrice();
         this.totalTariffCost = billParameterInfo.getTotalTariffCost();
+        this.paramType = billParameterInfo.getParameterType();
     }
 }

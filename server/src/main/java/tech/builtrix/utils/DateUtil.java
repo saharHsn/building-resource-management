@@ -184,7 +184,7 @@ public class DateUtil {
     }
 
     public static String getMonth(Integer monthNumber) {
-        return monthNames[monthNumber];
+        return monthNames[monthNumber - 1];
     }
 
     public static Date getCustomDate(Integer currentYear, int i) {
