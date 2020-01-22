@@ -1,11 +1,11 @@
 package tech.builtrix;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import tech.builtrix.enums.DatePartType;
 import tech.builtrix.enums.TimePeriodType;
 import tech.builtrix.exceptions.NotFoundException;
@@ -16,14 +16,18 @@ import tech.builtrix.web.dtos.report.*;
 
 import java.util.List;
 
-@RunWith(SpringRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
+@Slf4j
 public class ApplicationTests {
     @Autowired
     private BillService billService;
     @Autowired
     private ReportService reportService;
-    private static String BUILDING_ID = "";
+    private static String BUILDING_ID = "f50b0504-ee37-4a82-89a8-01588fce5d66";
+    private Integer year = 2020;
+    private TimePeriodType periodType = TimePeriodType.MONTHLY;
+    private DatePartType datePartType = DatePartType.FREE_HOURS;
 
     @Test
     public void contextLoads() throws NotFoundException {
@@ -77,20 +81,21 @@ public class ApplicationTests {
     }
 
 
-    public ConsumptionDto getConsumption() throws NotFoundException {
+    @Test
+    public void getConsumption() throws NotFoundException {
         ConsumptionDto consumption = null;
         consumption = this.reportService.getConsumption(BUILDING_ID);
-        return consumption;
+        System.out.println(consumption);
+        // return consumption;
     }
 
 
-    public ConsumptionDynamicDto getConsumptionDynamicData(
-            @RequestParam(value = "year") int year,
-            @RequestParam(value = "periodType") TimePeriodType periodType,
-            @RequestParam(value = "datePartType") DatePartType datePartType) throws NotFoundException {
+    @Test
+    public void getConsumptionDynamicData() throws NotFoundException {
         ConsumptionDynamicDto consumption = null;
         consumption = this.reportService.getConsumptionDynamicData(BUILDING_ID, year, periodType, datePartType);
-        return consumption;
+        System.out.println(consumption);
+        // return consumption;
     }
 
     public ConsumptionNormalWeatherDto getConsumptionNormalWeather() throws NotFoundException {

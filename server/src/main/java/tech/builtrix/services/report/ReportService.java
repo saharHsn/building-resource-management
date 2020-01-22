@@ -156,7 +156,7 @@ public class ReportService {
     public ConsumptionDto getConsumption(String buildingId) throws NotFoundException {
         int currentYear = DateUtil.getCurrentYear();
         List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, currentYear);
-        ConsumptionDto dto = ReportUtil.getConsumptionDto(dtoList, currentYear);
+        ConsumptionDto dto = ReportUtil.getConsumptionDto(dtoList, currentYear, true);
         List<Float> monthConsVals = calculateBaseLine(buildingId);
         dto.setBaseLineValues(monthConsVals);
         return dto;
@@ -167,7 +167,7 @@ public class ReportService {
                                                            TimePeriodType periodType,
                                                            DatePartType datePartType) throws NotFoundException {
         List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, year);
-        ConsumptionDto monthlyConsDto = ReportUtil.getConsumptionDto(dtoList, year);
+        ConsumptionDto monthlyConsDto = ReportUtil.getConsumptionDto(dtoList, year, false);
         //TODO calculate quarter later
         boolean isQuarter = periodType.equals(TimePeriodType.QUARTERS);
         String PEAK_HOURS = "Peak Hours";
@@ -533,11 +533,10 @@ public class ReportService {
 
     private List<Float> calculateBaseLine(String buildingId) throws NotFoundException {
         List<BillDto> lastYearBills = this.billService.getBillsOfYear(buildingId, DateUtil.getCurrentYear() - 1);
-        List<Float> monthConsVals = new ArrayList<>();
-        for (int i = 0; i < 12; i++) {
-            if (lastYearBills.size() > i) {
-                monthConsVals.add(i, lastYearBills.get(i).getTotalMonthlyConsumption());
-            }
+        List<Float> monthConsVals = new ArrayList<>(Collections.nCopies(12, 0f));
+        for (BillDto lastYearBill : lastYearBills) {
+            int index = lastYearBill.getFromMonth() - 1;
+            monthConsVals.set(index, lastYearBill.getTotalMonthlyConsumption());
         }
         return monthConsVals;
     }

@@ -270,7 +270,9 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
                 }
             }
         }
-        return (x) / 12f;
+        // return (x) / 12f;
+        //According to Mr.Kamarlouei statement
+        return x;
     }
 
     public static void main(String[] args) throws ParseException {
