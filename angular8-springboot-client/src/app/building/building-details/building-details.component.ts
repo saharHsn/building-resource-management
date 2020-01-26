@@ -2,6 +2,7 @@ import {Building} from '../model/building';
 import {Component, OnInit} from '@angular/core';
 import {BuildingService} from '../service/building.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {BuildingAge} from '../enums/buildingAge';
 
 @Component({
   selector: 'app-building-details',
@@ -13,18 +14,20 @@ export class BuildingDetailsComponent implements OnInit {
   id: number;
   building: Building;
 
-  constructor(private route: ActivatedRoute, private router: Router,
+  constructor(private route: ActivatedRoute,
+              private router: Router,
               private buildingService: BuildingService) {
   }
 
   ngOnInit() {
-    this.building = new Building();
+    // this.building = new Building();
     this.id = this.route.snapshot.params.id;
-    /*this.buildingService.getBuilding(this.id)
+    this.buildingService.getCurrentBuilding()
       .subscribe(data => {
-        console.log(data);
-        this.building = data;
-      }, error => console.log(error));*/
+        console.log('Building Info: ' + data);
+        this.building = data.content;
+        this.building.builtIn = BuildingAge[this.building.age];
+      }, error => console.log(error));
   }
 
   /* list() {

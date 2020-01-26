@@ -89,4 +89,9 @@ export class BuildingService {
     return this.http.get(`${this.baseUrl + '/findByOwner'}`, {headers, params});
   }
 
+  getCurrentBuilding(): Observable<any> {
+    // @ts-ignore
+    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
+    return this.getBuildingByOwner(user);
+  }
 }
