@@ -1,6 +1,5 @@
 package tech.builtrix.exceptions;
 
-
 import org.springframework.http.HttpStatus;
 import tech.builtrix.base.ErrorMessage;
 

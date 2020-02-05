@@ -15,40 +15,40 @@ import tech.builtrix.web.dtos.user.UserDto;
  **/
 @RestController
 @RequestMapping("/v1/users")
-@Api(value = "User Controller", tags = {"User Controller"})
+@Api(value = "User Controller", tags = { "User Controller" })
 public class UserController extends ControllerBase {
 
-    private final UserService service;
+	private final UserService service;
 
-    public UserController(UserService service) {
-        this.service = service;
-    }
+	public UserController(UserService service) {
+		this.service = service;
+	}
 
-    @ApiOperation(value = "Request for creating new user")
-    @PostMapping
-    public Response<String> save(@RequestBody UserDto user) {
-        String userId = service.save(user).getId();
-        return Response.ok(userId);
-    }
+	@ApiOperation(value = "Request for creating new user")
+	@PostMapping
+	public Response<String> save(@RequestBody UserDto user) {
+		String userId = service.save(user).getId();
+		return Response.ok(userId);
+	}
 
-    @ApiOperation(value = "Request for getting a owner details")
-    @GetMapping(value = "{userId}")
-    public Response<UserDto> getById(@PathVariable("userId") String userId) throws NotFoundException {
-        User user = service.findById(userId);
-        return Response.ok(new UserDto(user));
-    }
+	@ApiOperation(value = "Request for getting a owner details")
+	@GetMapping(value = "{userId}")
+	public Response<UserDto> getById(@PathVariable("userId") String userId) throws NotFoundException {
+		User user = service.findById(userId);
+		return Response.ok(new UserDto(user));
+	}
 
-    @ApiOperation(value = "Request for updating a specific user")
-    @PutMapping
-    public Response<Void> update(@RequestBody UserDto user) throws NotFoundException {
-        service.update(user);
-        return Response.ok();
-    }
+	@ApiOperation(value = "Request for updating a specific user")
+	@PutMapping
+	public Response<Void> update(@RequestBody UserDto user) throws NotFoundException {
+		service.update(user);
+		return Response.ok();
+	}
 
-    @ApiOperation(value = "Request for deleting a specific user")
-    @DeleteMapping(value = "{userId}")
-    public Response<Void> delete(@PathVariable("userId") String userId) {
-        service.delete(userId);
-        return Response.ok();
-    }
+	@ApiOperation(value = "Request for deleting a specific user")
+	@DeleteMapping(value = "{userId}")
+	public Response<Void> delete(@PathVariable("userId") String userId) {
+		service.delete(userId);
+		return Response.ok();
+	}
 }

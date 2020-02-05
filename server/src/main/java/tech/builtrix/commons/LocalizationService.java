@@ -1,6 +1,5 @@
 package tech.builtrix.commons;
 
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -12,38 +11,36 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LocalizationService {
 
-    private final MessageSource messageSource;
+	private final MessageSource messageSource;
 
-    @Autowired
-    public LocalizationService(MessageSource messageSource) {
-        this.messageSource = messageSource;
-    }
+	@Autowired
+	public LocalizationService(MessageSource messageSource) {
+		this.messageSource = messageSource;
+	}
 
+	@Cacheable(cacheNames = "LocalizationService.localizedText")
+	public String localizedText(String path, Object... params) {
+		try {
+			return this.messageSource.getMessage(path, params, null);
+		} catch (NoSuchMessageException ex) {
+			logger.warn(String.format("Message [%s] not found", path));
+			return path;
+		}
+	}
 
-    @Cacheable(cacheNames = "LocalizationService.localizedText")
-    public String localizedText(String path, Object... params) {
-        try {
-            return this.messageSource.getMessage(path, params, null);
-        } catch (NoSuchMessageException ex) {
-            logger.warn(String.format("Message [%s] not found", path));
-            return path;
-        }
-    }
+	@Cacheable(cacheNames = "LocalizationService.localizedError")
+	public String localizedError(String path) {
+		return this.localizedText("errors." + path);
+	}
 
-    @Cacheable(cacheNames = "LocalizationService.localizedError")
-    public String localizedError(String path) {
-        return this.localizedText("errors." + path);
-    }
-
-    @Cacheable(cacheNames = "LocalizationService.localizedText")
-    public String localizedText(String path) {
-        try {
-            return this.messageSource.getMessage(path, null, null);
-        } catch (NoSuchMessageException ex) {
-            logger.warn(String.format("Message [%s] not found", path));
-            return path;
-        }
-    }
+	@Cacheable(cacheNames = "LocalizationService.localizedText")
+	public String localizedText(String path) {
+		try {
+			return this.messageSource.getMessage(path, null, null);
+		} catch (NoSuchMessageException ex) {
+			logger.warn(String.format("Message [%s] not found", path));
+			return path;
+		}
+	}
 
 }
-

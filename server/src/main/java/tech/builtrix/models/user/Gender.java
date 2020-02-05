@@ -1,7 +1,5 @@
 package tech.builtrix.models.user;
 
 public enum Gender {
-    Male,
-    Female,
-    NA
+	Male, Female, NA
 }

@@ -18,59 +18,60 @@ import java.text.ParseException;
  **/
 @RestController
 @RequestMapping("/v1/buildings")
-@Api(value = "Building Controller", tags = {"Building Controller"})
+@Api(value = "Building Controller", tags = { "Building Controller" })
 public class BuildingController extends ControllerBase {
-    private final BuildingService service;
+	private final BuildingService service;
 
-    public BuildingController(BuildingService service) {
-        this.service = service;
-    }
+	public BuildingController(BuildingService service) {
+		this.service = service;
+	}
 
-    @ApiOperation(value = "Request for creating new building")
-    @PostMapping
-    public Response<BuildingDto> save(@ModelAttribute BuildingDto building) {
-        BuildingDto buildingDto = null;
-        try {
-            buildingDto = service.save(building);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Response.ok(buildingDto);
-    }
+	@ApiOperation(value = "Request for creating new building")
+	@PostMapping
+	public Response<BuildingDto> save(@ModelAttribute BuildingDto building) {
+		BuildingDto buildingDto = null;
+		try {
+			buildingDto = service.save(building);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return Response.ok(buildingDto);
+	}
 
-    @ApiOperation(value = "Request for getting a building details")
-    @GetMapping(value = "{buildingId}")
-    public Response<BuildingDto> get(@PathVariable("buildingId") String buildingId) throws NotFoundException {
-        BuildingDto building = service.findById(buildingId);
-        return Response.ok(building);
-    }
+	@ApiOperation(value = "Request for getting a building details")
+	@GetMapping(value = "{buildingId}")
+	public Response<BuildingDto> get(@PathVariable("buildingId") String buildingId) throws NotFoundException {
+		BuildingDto building = service.findById(buildingId);
+		return Response.ok(building);
+	}
 
-    @ApiOperation(value = "Request for getting a building details")
-    @GetMapping(value = "/findByOwner")
-    public Response<BuildingDto> getByOwner(@RequestParam String userId) throws NotFoundException {
-        BuildingDto building = service.findByOwner(userId);
-        return Response.ok(building);
-    }
+	@ApiOperation(value = "Request for getting a building details")
+	@GetMapping(value = "/findByOwner")
+	public Response<BuildingDto> getByOwner(@RequestParam String userId) throws NotFoundException {
+		BuildingDto building = service.findByOwner(userId);
+		return Response.ok(building);
+	}
 
-    @ApiOperation(value = "Request for updating a specific building")
-    @PutMapping
-    public Response<BuildingDto> update(@ModelAttribute BuildingDto building) throws ParseException, BillParseException, NotFoundException {
-        return Response.ok(this.service.update(building));
-    }
+	@ApiOperation(value = "Request for updating a specific building")
+	@PutMapping
+	public Response<BuildingDto> update(@ModelAttribute BuildingDto building)
+			throws ParseException, BillParseException, NotFoundException {
+		return Response.ok(this.service.update(building));
+	}
 
-    @ApiOperation(value = "Request for deleting a specific building")
-    @DeleteMapping(value = "{buildingId}")
-    public Response<Void> deleteBuildingDetails(@PathVariable("buildingId") String buildingId) {
-        service.delete(buildingId);
-        return Response.ok();
-    }
+	@ApiOperation(value = "Request for deleting a specific building")
+	@DeleteMapping(value = "{buildingId}")
+	public Response<Void> deleteBuildingDetails(@PathVariable("buildingId") String buildingId) {
+		service.delete(buildingId);
+		return Response.ok();
+	}
 
-    @ApiOperation(value = "Request for uploading a file of type GAS - ELECTRICITY or WATER for specific building")
-    @PostMapping(value = "/files")
-    public Response<Void> uploadFile(@ModelAttribute UploadFileDto model) {
-        /* */
-        //fileService.storeFile(file);
-        // this.service.saveFile(file, buildingId, billType);
-        return Response.ok();
-    }
+	@ApiOperation(value = "Request for uploading a file of type GAS - ELECTRICITY or WATER for specific building")
+	@PostMapping(value = "/files")
+	public Response<Void> uploadFile(@ModelAttribute UploadFileDto model) {
+		/* */
+		// fileService.storeFile(file);
+		// this.service.saveFile(file, buildingId, billType);
+		return Response.ok();
+	}
 }

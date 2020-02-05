@@ -5,5 +5,5 @@ import org.springframework.data.repository.NoRepositoryBean;
 
 @NoRepositoryBean
 public interface RepositoryBase<TEntity extends EntityBase> extends CrudRepository<TEntity, String> {
-    int DefaultPageSize = 10;
+	int DefaultPageSize = 10;
 }

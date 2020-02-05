@@ -16,20 +16,20 @@ import tech.builtrix.commands.CommandBase;
 @Component
 public class AddAdditionalCommandsAspect {
 
-    private final RequestContext requestContext;
+	private final RequestContext requestContext;
 
-    public AddAdditionalCommandsAspect(RequestContext requestContext) {
-        this.requestContext = requestContext;
-    }
+	public AddAdditionalCommandsAspect(RequestContext requestContext) {
+		this.requestContext = requestContext;
+	}
 
-    @Around("target(tech.builtrix.base.ControllerBase+)")
-    public Object addCommands(ProceedingJoinPoint joinPoint) throws Throwable {
-        Object result = joinPoint.proceed();
-        if (result instanceof Response && this.requestContext.getMustBeAddCommands().size() > 0) {
-            for (CommandBase command : this.requestContext.getMustBeAddCommands()) {
-                ((Response) result).addCommand(command);
-            }
-        }
-        return result;
-    }
+	@Around("target(tech.builtrix.base.ControllerBase+)")
+	public Object addCommands(ProceedingJoinPoint joinPoint) throws Throwable {
+		Object result = joinPoint.proceed();
+		if (result instanceof Response && this.requestContext.getMustBeAddCommands().size() > 0) {
+			for (CommandBase command : this.requestContext.getMustBeAddCommands()) {
+				((Response) result).addCommand(command);
+			}
+		}
+		return result;
+	}
 }

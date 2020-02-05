@@ -11,12 +11,11 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class SetSessionCommand extends CommandBase {
 
-    @NotBlank
-    private String session;
+	@NotBlank
+	private String session;
 
-    public SetSessionCommand(String session) {
-        super("set_session");
-        this.session = session;
-    }
+	public SetSessionCommand(String session) {
+		super("set_session");
+		this.session = session;
+	}
 }
-

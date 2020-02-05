@@ -21,34 +21,35 @@ import tech.builtrix.models.user.User;
 @ConfigurationProperties
 public class SessionKeyService {
 
-    public static final String HeaderKey = "X-Session";
-    public static final String CookieKey = "SESSION";
-    public static final String QueryKey = "session";
+	public static final String HeaderKey = "X-Session";
+	public static final String CookieKey = "SESSION";
+	public static final String QueryKey = "session";
 
-    public static final String BuildNoKey = "X-BuildNo";
-    public static final String VersionKey = "X-Version";
-    public static final String OsVersionNoKey = "OS-Version";
+	public static final String BuildNoKey = "X-BuildNo";
+	public static final String VersionKey = "X-Version";
+	public static final String OsVersionNoKey = "OS-Version";
 
-    private SessionService sessionService;
+	private SessionService sessionService;
 
-    @Autowired
-    public SessionKeyService(SessionService sessionService) {
-        this.sessionService = sessionService;
-    }
+	@Autowired
+	public SessionKeyService(SessionService sessionService) {
+		this.sessionService = sessionService;
+	}
 
-    public String createToken(User user) throws ExceptionBase {
-        Session session = this.sessionService.create(user);
-        return session.getSessionKey();
-    }
+	public String createToken(User user) throws ExceptionBase {
+		Session session = this.sessionService.create(user);
+		return session.getSessionKey();
+	}
 
-    public void expireToken(String sessionKey) throws NotFoundException {
-        this.sessionService.expireSession(sessionKey);
-    }
+	public void expireToken(String sessionKey) throws NotFoundException {
+		this.sessionService.expireSession(sessionKey);
+	}
 
-    public Session getAndValidateSession(String accessToken) throws NotFoundException, SessionDisabledException, SessionExpiredException {
-        Session session = this.sessionService.getSession(accessToken);
-        this.sessionService.validate(session);
-        // this.sessionService.getSessionIncrementRequestCount(session);
-        return session;
-    }
+	public Session getAndValidateSession(String accessToken)
+			throws NotFoundException, SessionDisabledException, SessionExpiredException {
+		Session session = this.sessionService.getSession(accessToken);
+		this.sessionService.validate(session);
+		// this.sessionService.getSessionIncrementRequestCount(session);
+		return session;
+	}
 }

@@ -24,97 +24,96 @@ import java.util.List;
 @ConfigurationProperties("builtrix.security")
 public class SessionService extends GenericCrudServiceBase<Session, SessionRepository> {
 
-    @Setter
-    private int exp = 10000 * 24 * 3600;
+	@Setter
+	private int exp = 1 * 24 * 3600;
 
+	protected SessionService(SessionRepository sessionRepository) {
+		super(sessionRepository);
+	}
 
-    protected SessionService(SessionRepository sessionRepository) {
-        super(sessionRepository);
-    }
+	@Cacheable(cacheNames = "SessionService.getSession", key = "#sessionKey")
+	public Session getSession(String sessionKey) throws NotFoundException {
+		Session session = this.repository.findBySessionKey(sessionKey);
+		if (session == null) {
+			throw new NotFoundException("Session", "sessionKey", sessionKey);
+		}
+		return session;
+	}
 
-    @Cacheable(cacheNames = "SessionService.getSession", key = "#sessionKey")
-    public Session getSession(String sessionKey) throws NotFoundException {
-        Session session = this.repository.findBySessionKey(sessionKey);
-        if (session == null) {
-            throw new NotFoundException("Session", "sessionKey", sessionKey);
-        }
-        return session;
-    }
+	private Session createNewSession(User user) {
+		Session session = new Session();
+		session.setRequestCount(1);
+		session.setLastRequestDate(new Date());
+		setActive(session, true);
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.SECOND, this.exp);
+		session.setExpirationDate(calendar.getTime());
+		session.setSessionKey(RandomStringUtils.random(36, true, true));
+		session.setUser(user != null ? user.getId() : null);
+		return this.repository.save(session);
+	}
 
-    private Session createNewSession(User user) {
-        Session session = new Session();
-        session.setRequestCount(1);
-        session.setLastRequestDate(new Date());
-        setActive(session, true);
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.SECOND, this.exp);
-        session.setExpirationDate(calendar.getTime());
-        session.setSessionKey(RandomStringUtils.random(36, true, true));
-        session.setUser(user != null ? user.getId() : null);
-        return this.repository.save(session);
-    }
+	Session create(@NotNull User user) throws InternalServerException {
+		List<Session> sessions;
+		try {
+			if (user != null) {
+				sessions = this.repository.findByUser(user.getId());
+				Session session = processOldSession(sessions);
+				if (session != null)
+					return session;
+			}
+		} catch (Exception e) {
+			throw new InternalServerException();
+		}
+		// this.repository.disableAllOtherSessions(user.getId());
+		return createNewSession(user);
+	}
 
-    Session create(@NotNull User user) throws InternalServerException {
-        List<Session> sessions;
-        try {
-            if (user != null) {
-                sessions = this.repository.findByUser(user.getId());
-                Session session = processOldSession(sessions);
-                if (session != null) return session;
-            }
-        } catch (Exception e) {
-            throw new InternalServerException();
-        }
-        // this.repository.disableAllOtherSessions(user.getId());
-        return createNewSession(user);
-    }
+	private Session processOldSession(List<Session> sessions) {
+		Session session = sessions.size() > 0 ? sessions.get(0) : null;
+		if (session != null && session.getExpirationDate().after(new Date())) {
+			// touchSession(session);
+			return session;
+		}
+		return null;
+	}
 
-    private Session processOldSession(List<Session> sessions) {
-        Session session = sessions.size() > 0 ?
-                sessions.get(0) : null;
-        if (session != null && session.getExpirationDate().after(new Date())) {
-            // touchSession(session);
-            return session;
-        }
-        return null;
-    }
+	@NoLog
+	public void validate(Session session) throws SessionDisabledException, SessionExpiredException {
+		if (!session.getActive()) {
+			throw new SessionDisabledException();
+		}
+		if (session.getExpirationDate().before(new Date())) {
+			throw new SessionExpiredException();
+		}
 
-    @NoLog
-    public void validate(Session session) throws SessionDisabledException, SessionExpiredException {
-        if (!session.getActive()) {
-            throw new SessionDisabledException();
-        }
-        if (session.getExpirationDate().before(new Date())) {
-            throw new SessionExpiredException();
-        }
+	}
 
-    }
+	public void expireSession(String sessionKey) throws NotFoundException {
+		Session session = this.getSession(sessionKey);
+		session.setExpirationDate(new Date());
 
-    public void expireSession(String sessionKey) throws NotFoundException {
-        Session session = this.getSession(sessionKey);
-        session.setExpirationDate(new Date());
+		this.repository.save(session);
+	}
 
-        this.repository.save(session);
-    }
+	public String findUserSession(String userId) {
+		List<Session> sessions = repository.findByUser(userId);
+		Session session = processOldSession(sessions);
+		return session.getSessionKey();
 
-    public String findUserSession(String userId) {
-        List<Session> sessions = repository.findByUser(userId);
-        Session session = processOldSession(sessions);
-        return session.getSessionKey();
+	}
 
-    }
+	public Session findUserSessionToken(String sessionId) throws NotFoundException {
+		Session session = repository.findBySessionKey(sessionId);
+		// Session session = processOldSession(sessions);
+		if (session == null) {
+			throw new NotFoundException("Session", "sessionKey", sessionId);
+		}
+		return session;
+	}
 
-    public Session findUserSessionToken(String sessionId) throws NotFoundException {
-        Session session = repository.findBySessionKey(sessionId);
-        //Session session = processOldSession(sessions);
-        if (session == null) {
-            throw new NotFoundException("Session", "sessionKey", sessionId);
-        }
-        return session;
-    }
-
-    public void updateSessionUserId(Session session) {
-        repository.save(session);
-    }
+	public void updateSessionUserId(Session session) {
+		repository.save(session);
+	}
 
 }

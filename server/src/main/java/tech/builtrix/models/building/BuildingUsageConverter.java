@@ -7,16 +7,13 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverter;
  **/
 public class BuildingUsageConverter implements DynamoDBTypeConverter<String, BuildingUsage> {
 
-    @Override
-    public String convert(BuildingUsage object) {
-        return object.name();
-    }
+	@Override
+	public String convert(BuildingUsage object) {
+		return object.name();
+	}
 
-    @Override
-    public BuildingUsage unconvert(String s) {
-        return BuildingUsage.valueOf(s);
-    }
+	@Override
+	public BuildingUsage unconvert(String s) {
+		return BuildingUsage.valueOf(s);
+	}
 }
-
-          
- 

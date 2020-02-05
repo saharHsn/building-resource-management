@@ -18,23 +18,23 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BillParameterDto {
-    String paramId;
-    private Date initialDate;
-    private Date endDate;
-    private Float cost = 0f;
-    private Float consumption = 0f;
-    private Float tariffPrice = 0f;
-    private Float totalTariffCost = 0f;
-    private ParameterType paramType;
+	String paramId;
+	private Date initialDate;
+	private Date endDate;
+	private Float cost = 0f;
+	private Float consumption = 0f;
+	private Float tariffPrice = 0f;
+	private Float totalTariffCost = 0f;
+	private ParameterType paramType;
 
-    public BillParameterDto(BillParameterInfo billParameterInfo) {
-        this.initialDate = billParameterInfo.getInitialDate();
-        this.consumption = billParameterInfo.getConsumption();
-        this.cost = billParameterInfo.getCost();
-        this.endDate = billParameterInfo.getEndDate();
-        this.paramId = billParameterInfo.getId();
-        this.tariffPrice = billParameterInfo.getTariffPrice();
-        this.totalTariffCost = billParameterInfo.getTotalTariffCost();
-        this.paramType = billParameterInfo.getParameterType();
-    }
+	public BillParameterDto(BillParameterInfo billParameterInfo) {
+		this.initialDate = billParameterInfo.getInitialDate();
+		this.consumption = billParameterInfo.getConsumption();
+		this.cost = billParameterInfo.getCost();
+		this.endDate = billParameterInfo.getEndDate();
+		this.paramId = billParameterInfo.getId();
+		this.tariffPrice = billParameterInfo.getTariffPrice();
+		this.totalTariffCost = billParameterInfo.getTotalTariffCost();
+		this.paramType = billParameterInfo.getParameterType();
+	}
 }

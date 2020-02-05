@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CarbonPieDto {
-    Float co2Free;
-    Float co2Peak;
-    Float co2Normal;
-    Float co2Off;
+	Float co2Free;
+	Float co2Peak;
+	Float co2Normal;
+	Float co2Off;
 
 }

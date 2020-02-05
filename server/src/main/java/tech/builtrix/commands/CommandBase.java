@@ -5,15 +5,13 @@ package tech.builtrix.commands;
  **/
 
 public abstract class CommandBase {
-    private String type;
+	private String type;
 
-    CommandBase(String type) {
-        this.type = type;
-    }
+	CommandBase(String type) {
+		this.type = type;
+	}
 
-    public String getType() {
-        return type;
-    }
+	public String getType() {
+		return type;
+	}
 }
-
-

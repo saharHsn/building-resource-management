@@ -16,11 +16,11 @@ import tech.builtrix.base.EntityBase;
 @Getter
 @Setter
 public class EventEntity extends EntityBase {
-    @DynamoDBAttribute(attributeName = "message")
-    private String msg;
-    @DynamoDBTyped(DynamoDBMapperFieldModel.DynamoDBAttributeType.BOOL)
-    @DynamoDBAttribute(attributeName = "isSent")
-    private boolean sent;
-    @DynamoDBAttribute(attributeName = "type")
-    private String type;
+	@DynamoDBAttribute(attributeName = "message")
+	private String msg;
+	@DynamoDBTyped(DynamoDBMapperFieldModel.DynamoDBAttributeType.BOOL)
+	@DynamoDBAttribute(attributeName = "isSent")
+	private boolean sent;
+	@DynamoDBAttribute(attributeName = "type")
+	private String type;
 }

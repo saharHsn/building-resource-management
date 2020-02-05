@@ -4,13 +4,11 @@ import org.springframework.boot.logging.LogLevel;
 
 import java.lang.annotation.*;
 
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Loggable {
-    LogLevel level() default LogLevel.DEBUG;
+	LogLevel level() default LogLevel.DEBUG;
 
-    String prefixMessage() default "";
+	String prefixMessage() default "";
 }
-
-

@@ -20,135 +20,120 @@ import java.util.List;
 @SpringBootTest
 @Slf4j
 public class ApplicationTests {
-    @Autowired
-    private BillService billService;
-    @Autowired
-    private ReportService reportService;
-    private static String BUILDING_ID = "f50b0504-ee37-4a82-89a8-01588fce5d66";
-    private Integer year = 2020;
-    private TimePeriodType periodType = TimePeriodType.MONTHLY;
-    private DatePartType datePartType = DatePartType.FREE_HOURS;
+	@Autowired
+	private BillService billService;
+	@Autowired
+	private ReportService reportService;
+	private static String BUILDING_ID = "f50b0504-ee37-4a82-89a8-01588fce5d66";
+	private Integer year = 2020;
+	private TimePeriodType periodType = TimePeriodType.MONTHLY;
+	private DatePartType datePartType = DatePartType.FREE_HOURS;
 
-    @Test
-    public void contextLoads() throws NotFoundException {
-        prediction();
-        savings();
+	@Test
+	public void contextLoads() throws NotFoundException {
+		prediction();
+		savings();
 
-    }
+	}
 
-    private void savings() throws NotFoundException {
-        SavingDto savingDto = null;
-        savingDto = this.reportService.savingThisMonth(BUILDING_ID);
-    }
+	private void savings() throws NotFoundException {
+		SavingDto savingDto = null;
+		savingDto = this.reportService.savingThisMonth(BUILDING_ID);
+	}
 
-    private void prediction() {
-        //prediction
-        PredictionDto predictionDto = null;
-        predictionDto = this.reportService.predict(BUILDING_ID);
-    }
+	private void prediction() {
+		// prediction
+		PredictionDto predictionDto = null;
+		predictionDto = this.reportService.predict(BUILDING_ID);
+	}
 
-    public Float getBEScore() throws NotFoundException {
-        Float beScore = null;
-        beScore = this.reportService.getBEScore(BUILDING_ID);
-        return beScore;
-    }
+	public Float getBEScore() throws NotFoundException {
+		Float beScore = null;
+		beScore = this.reportService.getBEScore(BUILDING_ID);
+		return beScore;
+	}
 
-    public Float getNationalMedian() throws NotFoundException {
-        Float nationalMedian = null;
-        nationalMedian = this.reportService.getNationalMedian(BUILDING_ID);
-        return nationalMedian;
-    }
+	public Float getNationalMedian() throws NotFoundException {
+		Float nationalMedian = null;
+		nationalMedian = this.reportService.getNationalMedian(BUILDING_ID);
+		return nationalMedian;
+	}
 
+	public Float getPropertyTarget() throws NotFoundException {
+		Float propertyTarget = null;
+		propertyTarget = this.reportService.getDefaultPropertyTarget(BUILDING_ID, null);
+		return propertyTarget;
+	}
 
-    public Float getPropertyTarget() throws NotFoundException {
-        Float propertyTarget = null;
-        propertyTarget = this.reportService.getDefaultPropertyTarget(BUILDING_ID, null);
-        return propertyTarget;
-    }
+	public CostStackDto getCostStackData() throws NotFoundException {
+		CostStackDto costStackData = null;
+		costStackData = this.reportService.getCostStackData(BUILDING_ID);
+		return costStackData;
+	}
 
+	public CostPieDto getCostPieData() throws NotFoundException {
+		CostPieDto costPieDto = null;
+		costPieDto = this.reportService.getCostPieData(BUILDING_ID);
+		return costPieDto;
+	}
 
-    public CostStackDto getCostStackData() throws NotFoundException {
-        CostStackDto costStackData = null;
-        costStackData = this.reportService.getCostStackData(BUILDING_ID);
-        return costStackData;
-    }
+	@Test
+	public void getConsumption() throws NotFoundException {
+		ConsumptionDto consumption = null;
+		consumption = this.reportService.getConsumption(BUILDING_ID);
+		System.out.println(consumption);
+		// return consumption;
+	}
 
+	@Test
+	public void getConsumptionDynamicData() throws NotFoundException {
+		ConsumptionDynamicDto consumption = null;
+		consumption = this.reportService.getConsumptionDynamicData(BUILDING_ID, year, periodType, datePartType);
+		System.out.println(consumption);
+		// return consumption;
+	}
 
-    public CostPieDto getCostPieData() throws NotFoundException {
-        CostPieDto costPieDto = null;
-        costPieDto = this.reportService.getCostPieData(BUILDING_ID);
-        return costPieDto;
-    }
+	public ConsumptionNormalWeatherDto getConsumptionNormalWeather() throws NotFoundException {
+		ConsumptionNormalWeatherDto consumption = null;
+		consumption = this.reportService.getConsumptionNormalWeather(BUILDING_ID);
+		return consumption;
+	}
 
+	public NormalPerCapitaDto getNormalizedPerCapita() throws NotFoundException {
+		NormalPerCapitaDto normalizedPerCapita = null;
+		normalizedPerCapita = this.reportService.getNormalizedPerCapita(BUILDING_ID);
+		return normalizedPerCapita;
+	}
 
-    @Test
-    public void getConsumption() throws NotFoundException {
-        ConsumptionDto consumption = null;
-        consumption = this.reportService.getConsumption(BUILDING_ID);
-        System.out.println(consumption);
-        // return consumption;
-    }
+	public NormalVsEEDto getNormalizedVsEnergyEfficiency() {
+		NormalVsEEDto dto = null;
+		dto = this.reportService.getNormalizedVsEnergyEfficiency(BUILDING_ID);
+		return dto;
+	}
 
+	public PredictedWeatherVsRealDto getPredictedWeatherVSReal() throws NotFoundException {
+		PredictedWeatherVsRealDto dto = null;
+		dto = this.reportService.getPredictedWeatherVSReal(BUILDING_ID);
+		return dto;
+	}
 
-    @Test
-    public void getConsumptionDynamicData() throws NotFoundException {
-        ConsumptionDynamicDto consumption = null;
-        consumption = this.reportService.getConsumptionDynamicData(BUILDING_ID, year, periodType, datePartType);
-        System.out.println(consumption);
-        // return consumption;
-    }
+	public CarbonPieDto getCarbonPieData() throws NotFoundException {
+		CarbonPieDto dto = null;
+		dto = this.reportService.getCarbonPieData(BUILDING_ID);
+		return dto;
+	}
 
-    public ConsumptionNormalWeatherDto getConsumptionNormalWeather() throws NotFoundException {
-        ConsumptionNormalWeatherDto consumption = null;
-        consumption = this.reportService.getConsumptionNormalWeather(BUILDING_ID);
-        return consumption;
-    }
+	public CarbonSPLineDto getCarbonSPLineData() throws NotFoundException {
+		CarbonSPLineDto dto = null;
+		dto = this.reportService.getCarbonSPLineData(BUILDING_ID);
+		return dto;
+	}
 
-
-    public NormalPerCapitaDto getNormalizedPerCapita() throws NotFoundException {
-        NormalPerCapitaDto normalizedPerCapita = null;
-        normalizedPerCapita = this.reportService.getNormalizedPerCapita(BUILDING_ID);
-        return normalizedPerCapita;
-    }
-
-
-    public NormalVsEEDto getNormalizedVsEnergyEfficiency() {
-        NormalVsEEDto dto = null;
-        dto = this.reportService.getNormalizedVsEnergyEfficiency(BUILDING_ID);
-        return dto;
-    }
-
-
-    public PredictedWeatherVsRealDto getPredictedWeatherVSReal() throws NotFoundException {
-        PredictedWeatherVsRealDto dto = null;
-        dto = this.reportService.getPredictedWeatherVSReal(BUILDING_ID);
-        return dto;
-    }
-
-
-    public CarbonPieDto getCarbonPieData() throws NotFoundException {
-        CarbonPieDto dto = null;
-        dto = this.reportService.getCarbonPieData(BUILDING_ID);
-        return dto;
-    }
-
-
-    public CarbonSPLineDto getCarbonSPLineData() throws NotFoundException {
-        CarbonSPLineDto dto = null;
-        dto = this.reportService.getCarbonSPLineData(BUILDING_ID);
-        return dto;
-    }
-
-
-    public EnergyConsumptionIndexDto getEnergyConsumptionIndex() throws NotFoundException {
-        List<EnergyConsumptionIndex> indexes;
-        EnergyConsumptionIndexDto dto = null;
-        indexes = this.reportService.getAllEnergyConsumptionIndexes(BUILDING_ID);
-        dto = new EnergyConsumptionIndexDto(indexes.get(0),
-                indexes.get(1),
-                indexes.get(2),
-                indexes.get(3));
-        return dto;
-    }
+	public EnergyConsumptionIndexDto getEnergyConsumptionIndex() throws NotFoundException {
+		List<EnergyConsumptionIndex> indexes;
+		EnergyConsumptionIndexDto dto = null;
+		indexes = this.reportService.getAllEnergyConsumptionIndexes(BUILDING_ID);
+		dto = new EnergyConsumptionIndexDto(indexes.get(0), indexes.get(1), indexes.get(2), indexes.get(3));
+		return dto;
+	}
 }
-

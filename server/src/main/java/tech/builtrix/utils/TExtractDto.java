@@ -18,11 +18,11 @@ import java.util.Map;
 @Getter
 @Setter
 public class TExtractDto {
-    List<MyTable> tablesResult;
-    Map<String, String> keyValueResult;
+	List<MyTable> tablesResult;
+	Map<String, String> keyValueResult;
 
-    public TExtractDto(List<MyTable> tableResult, Map<String, String> keyValueResult) {
-        this.tablesResult = tableResult;
-        this.keyValueResult = keyValueResult;
-    }
+	public TExtractDto(List<MyTable> tableResult, Map<String, String> keyValueResult) {
+		this.tablesResult = tableResult;
+		this.keyValueResult = keyValueResult;
+	}
 }

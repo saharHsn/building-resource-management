@@ -1,6 +1,5 @@
 package tech.builtrix.models.session;
 
-
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import lombok.Getter;
@@ -15,16 +14,14 @@ import java.util.Date;
 @Getter
 @NoArgsConstructor
 public class Session extends EntityBase<Session> {
-    @DynamoDBAttribute
-    private String sessionKey;
-    @DynamoDBAttribute
-    private String user;
-    @DynamoDBAttribute
-    private Date expirationDate;
-    @DynamoDBAttribute
-    private Date lastRequestDate;
-    @DynamoDBAttribute
-    private Integer requestCount;
+	@DynamoDBAttribute
+	private String sessionKey;
+	@DynamoDBAttribute
+	private String user;
+	@DynamoDBAttribute
+	private Date expirationDate;
+	@DynamoDBAttribute
+	private Date lastRequestDate;
+	@DynamoDBAttribute
+	private Integer requestCount;
 }
-
-

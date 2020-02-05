@@ -9,9 +9,9 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class LoginResponseDto {
-    private UserDto user;
+	private UserDto user;
 
-    public LoginResponseDto(UserDto user) {
-        this.user = user;
-    }
+	public LoginResponseDto(UserDto user) {
+		this.user = user;
+	}
 }

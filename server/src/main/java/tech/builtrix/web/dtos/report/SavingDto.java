@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class SavingDto {
-    private Float consumption;
-    private Float cost;
-    private Float environmental;
+	private Float consumption;
+	private Float cost;
+	private Float environmental;
 }

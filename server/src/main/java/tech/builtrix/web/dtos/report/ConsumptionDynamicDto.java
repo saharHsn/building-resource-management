@@ -16,10 +16,10 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class ConsumptionDynamicDto {
-    List<Float> data;
-    TimePeriodType periodType;
-    Long year;
-    DatePartType datePartType;
-    String color;
-    String name;
+	List<Float> data;
+	TimePeriodType periodType;
+	Long year;
+	DatePartType datePartType;
+	String color;
+	String name;
 }

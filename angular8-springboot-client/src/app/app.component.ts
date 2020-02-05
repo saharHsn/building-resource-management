@@ -1,16 +1,22 @@
-﻿import {Component} from '@angular/core';
+﻿import {Component, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {AuthenticationService} from './_services';
 import {User} from './_models';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import './_content/app.less';
+import {DEFAULT_INTERRUPTSOURCES, Idle} from "@ng-idle/core";
+import {Keepalive} from "@ng-idle/keepalive";
+import {AppService} from "./_services/app.service";
 
 @Component({selector: 'app-root', templateUrl: 'app.component.html'})
 export class AppComponent {
   currentUser: User;
 
-  constructor(
+ /* constructor(
     private router: Router,
     private authenticationService: AuthenticationService
   ) {
@@ -18,6 +24,100 @@ export class AppComponent {
   }
 
   logout() {
+    this.authenticationService.logout();
+    this.router.navigate(['/login']);
+  }*/
+  idleState = 'Not started.';
+  timedOut = false;
+  lastPing?: Date = null;
+  title = 'angular-idle-timeout';
+
+  public modalRef: BsModalRef;
+
+  @ViewChild('childModal', { static: false }) childModal: ModalDirective;
+
+  constructor(private idle: Idle, private keepalive: Keepalive,
+              private router: Router, private modalService: BsModalService,
+              private authenticationService: AuthenticationService,
+              private appService: AppService) {
+    // sets an idle timeout of 15 minutes, for testing purposes.
+    // idle.setIdle(15*60);
+    idle.setIdle(40);
+    // sets a timeout period of 1 hour. after 10 seconds of inactivity, the user will be considered timed out.
+    // idle.setTimeout(60*60);
+    idle.setTimeout(40);
+    // sets the default interrupts, in this case, things like clicks, scrolls, touches to the document
+    idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
+    idle.onIdleEnd.subscribe(() => {
+      this.idleState = 'No longer idle.'
+      console.log(this.idleState);
+      this.reset();
+    });
+
+    idle.onTimeout.subscribe(() => {
+      this.childModal.hide();
+      this.idleState = 'Timed out!';
+      this.timedOut = true;
+      console.log(this.idleState);
+      this.authenticationService.logout();
+      this.router.navigate(['/login']);
+    });
+
+    idle.onIdleStart.subscribe(() => {
+      this.idleState = 'You\'ve gone idle!'
+      console.log(this.idleState);
+      this.childModal.show();
+    });
+
+    idle.onTimeoutWarning.subscribe((countdown) => {
+      this.idleState = 'You will time out in ' + countdown + ' seconds!'
+      console.log(this.idleState);
+    });
+
+    // sets the ping interval to 15 seconds
+    keepalive.interval(15);
+
+    keepalive.onPing.subscribe(() => this.lastPing = new Date());
+
+    this.router.events
+      .subscribe(event => {
+        this.appService.setUserLoggedIn(!!this.authenticationService.currentUserValue);
+       /* if (!timeoutService.idleStarted) {
+          timeoutService.start();
+        }*/
+      });
+
+    this.appService.getUserLoggedIn().subscribe(userLoggedIn => {
+      if (userLoggedIn) {
+        idle.watch();
+        this.timedOut = false;
+      } else {
+        idle.stop();
+      }
+    });
+    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+    // this.reset();
+  }
+
+  reset() {
+    this.idle.watch();
+    //xthis.idleState = 'Started.';
+    this.timedOut = false;
+  }
+
+  hideChildModal(): void {
+    this.childModal.hide();
+  }
+
+  stay() {
+    this.childModal.hide();
+    this.reset();
+  }
+
+  logout() {
+    this.childModal.hide();
+    this.appService.setUserLoggedIn(false);
+    // this.router.navigate(['/']);
     this.authenticationService.logout();
     this.router.navigate(['/login']);
   }

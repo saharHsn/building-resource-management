@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CostPieDto {
-    Float contractedPower;
-    Float offHours;
-    Float freeHours;
-    Float peakHours;
-    Float normalHours;
-    Float powerInPeakHours;
-    Float reactivePower;
+	Float contractedPower;
+	Float offHours;
+	Float freeHours;
+	Float peakHours;
+	Float normalHours;
+	Float powerInPeakHours;
+	Float reactivePower;
 }

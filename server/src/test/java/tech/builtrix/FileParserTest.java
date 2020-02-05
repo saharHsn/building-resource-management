@@ -23,67 +23,60 @@ import java.util.List;
 @SpringBootTest
 @Slf4j
 public class FileParserTest {
-    @Autowired
-    private BillParser billParser;
-    @Autowired
-    private PdfParser pdfParser;
-    @Autowired
-    private BillService billService;
+	@Autowired
+	private BillParser billParser;
+	@Autowired
+	private PdfParser pdfParser;
+	@Autowired
+	private BillService billService;
 
-    public FileParserTest() {
-    }
+	public FileParserTest() {
+	}
 
-    @Before
-    public void setup() throws Exception {
-    }
+	@Before
+	public void setup() throws Exception {
+	}
 
-    @After
-    public void onFinish() throws Exception {
-    }
+	@After
+	public void onFinish() throws Exception {
+	}
 
-    @Test
-    public void fileExtractorTest() {
-        try {
-            // String document = "2017-DEC-2018-JAN.pdf";
+	@Test
+	public void fileExtractorTest() {
+		try {
+			// String document = "2017-DEC-2018-JAN.pdf";
 
-            String bucket = "metrics-building";
-            /* "2017-DEC-2018-JAN.pdf",
-                    "2018-APR-MAY.pdf",
-                    "2018-AUG-SEP.pdf",
-                     "2018-DEC-2019-JAN.pdf",
-                      "2018-FEB-MAR.pdf",
-                       "2018-JAN-FEB.pdf",
-                    "2018-JUL-Aug.pdf",
-                       "2018-JUN-JUL.pdf",
-                    "2018-MAR-APR.pdf",
-                    "2018-MAY-JUN.pdf",
-                    "2018-OCT-NOV.pdf",
-                    "2018-SEP-OCT.pdf",
-                    "2019-FEB-MAR.pdf",
-                    "2019-JAN-FEB.pdf",
-                    "2018-JUN-JUL.pdf",
-                    "2018-MAR-APR.pdf",
-                    "2018-SEP-OCT.pdf"*/
+			String bucket = "metrics-building";
+			/*
+			 * "2017-DEC-2018-JAN.pdf", "2018-APR-MAY.pdf", "2018-AUG-SEP.pdf",
+			 * "2018-DEC-2019-JAN.pdf", "2018-FEB-MAR.pdf", "2018-JAN-FEB.pdf",
+			 * "2018-JUL-Aug.pdf", "2018-JUN-JUL.pdf", "2018-MAR-APR.pdf",
+			 * "2018-MAY-JUN.pdf", "2018-OCT-NOV.pdf", "2018-SEP-OCT.pdf",
+			 * "2019-FEB-MAR.pdf", "2019-JAN-FEB.pdf", "2018-JUN-JUL.pdf",
+			 * "2018-MAR-APR.pdf", "2018-SEP-OCT.pdf"
+			 */
 
-                 /* ,
-                    ,
-                    */
-            List<String> documents = Arrays.asList("8a199ea5-7c6a-4e80-8658-7ad2c53e69bf-1.pdf");
-            for (String document : documents) {
-                BillDto billDto;
-                try {
-                    billDto = this.billParser.parseBill("8a199ea5-7c6a-4e80-8658-7ad2c53e69bf", bucket, document);
-                    billService.save(billDto);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            /*TExtractDto tExtractDto = this.pdfParser.parseFile(bucket, document);
-            System.out.println("key value result : " + tExtractDto.getKeyValueResult());
-            System.out.println("table result : " + tExtractDto.getTablesResult());*/
-        } catch (Exception e) {
-            // logger.error();
-            System.out.println("Error : " + e.getMessage());
-        }
-    }
+			/*
+			 * , ,
+			 */
+			List<String> documents = Arrays.asList("8a199ea5-7c6a-4e80-8658-7ad2c53e69bf-1.pdf");
+			for (String document : documents) {
+				BillDto billDto;
+				try {
+					billDto = this.billParser.parseBill("8a199ea5-7c6a-4e80-8658-7ad2c53e69bf", bucket, document);
+					billService.save(billDto);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			/*
+			 * TExtractDto tExtractDto = this.pdfParser.parseFile(bucket, document);
+			 * System.out.println("key value result : " + tExtractDto.getKeyValueResult());
+			 * System.out.println("table result : " + tExtractDto.getTablesResult());
+			 */
+		} catch (Exception e) {
+			// logger.error();
+			System.out.println("Error : " + e.getMessage());
+		}
+	}
 }

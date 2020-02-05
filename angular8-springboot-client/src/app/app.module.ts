@@ -5,6 +5,9 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import {appRoutingModule} from './app.routing';
 import {JwtInterceptor} from './_helpers';
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive'; // this includes the core NgIdleModule but includes keepalive providers for easy wireup
+import { MomentModule } from 'angular2-moment'; // optional, provides moment-style pipes for date formatting
+import { ModalModule } from 'ngx-bootstrap/modal';
 import {AppComponent} from './app.component';
 import {HomeComponent} from './home';
 import {LoginComponent} from './login';
@@ -71,12 +74,15 @@ import {HighchartsChartModule} from "highcharts-angular";
     ReactiveFormsModule,
     HttpClientModule,
     appRoutingModule,
+    NgIdleKeepaliveModule.forRoot(),
+    MomentModule,
     FormsModule,
     ArchwizardModule,
     CommonModule,
     NgSelectModule,
     TooltipModule,
     HighchartsChartModule,
+    ModalModule.forRoot(),
   ],
   declarations: [
     AppComponent,

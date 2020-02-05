@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class PredictedWeatherVsRealDto {
-    List<String> xValues;
-    List<Float> baseLineValues;
-    List<Float> consumptionValues;
+	List<String> xValues;
+	List<Float> baseLineValues;
+	List<Float> consumptionValues;
 }

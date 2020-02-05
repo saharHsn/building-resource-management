@@ -14,8 +14,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class PredictionDto {
-    List<String> xValues;
-    List<Float> costYValues;
-    List<Float> savingYValues;
-    String buildingId;
+	List<String> xValues;
+	List<Float> costYValues;
+	List<Float> savingYValues;
+	String buildingId;
 }

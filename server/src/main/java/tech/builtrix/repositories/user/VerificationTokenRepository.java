@@ -11,11 +11,11 @@ import tech.builtrix.models.user.VerificationToken;
 @EnableScan
 public interface VerificationTokenRepository extends RepositoryBase<VerificationToken> {
 
-    VerificationToken findByToken(String token);
+	VerificationToken findByToken(String token);
 
-    // VerificationToken findByUser(User user);
+	// VerificationToken findByUser(User user);
 
-    // Stream<VerificationToken> findAllByExpirationTimeLessThan(Date now);
+	// Stream<VerificationToken> findAllByExpirationTimeLessThan(Date now);
 
-    // void deleteByExpirationTimeLessThan(Date now);
+	// void deleteByExpirationTimeLessThan(Date now);
 }

@@ -16,25 +16,17 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BillDateCostDto implements Serializable {
-    private String id;
-    private Date fromDate;
-    private Float totalPayable;
-    private Integer fromYear;
-    private Integer fromMonth;
+	private String id;
+	private Date fromDate;
+	private Float totalPayable;
+	private Integer fromYear;
+	private Integer fromMonth;
 
-    /*public enum ColumnNames {
-        ID("id"),
-        FROM_DATE("creationTime"),
-        COST("countOfUses"),
-        FROM_YEAR("timeToLive"),
-        FROM_MONTH("timeToIdle");
-        private final String name;
-        ColumnNames(final String name) {
-            this.name = name;
-        }
-        public static String getName() {
-            return name;
-        }
-    }*/
+	/*
+	 * public enum ColumnNames { ID("id"), FROM_DATE("creationTime"),
+	 * COST("countOfUses"), FROM_YEAR("timeToLive"), FROM_MONTH("timeToIdle");
+	 * private final String name; ColumnNames(final String name) { this.name = name;
+	 * } public static String getName() { return name; } }
+	 */
 
 }

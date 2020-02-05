@@ -15,9 +15,9 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class InvitationDto {
 
-    @NotNull
-    private String inviteeEmail;
+	@NotNull
+	private String inviteeEmail;
 
-    private String subject;
-    private String message;
+	private String subject;
+	private String message;
 }

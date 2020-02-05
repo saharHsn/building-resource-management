@@ -11,8 +11,9 @@ import java.util.stream.Collectors;
 
 @ErrorMessage(code = 401005, status = HttpStatus.FORBIDDEN)
 public class PermissionDeniedException extends ExceptionBase {
-    public PermissionDeniedException(Role... roles) {
-        List<String> rolesString = Lists.newArrayList(roles).stream().map(x -> x.toString()).collect(Collectors.toList());
-        addParameter("roles", String.join(",", rolesString));
-    }
+	public PermissionDeniedException(Role... roles) {
+		List<String> rolesString = Lists.newArrayList(roles).stream().map(x -> x.toString())
+				.collect(Collectors.toList());
+		addParameter("roles", String.join(",", rolesString));
+	}
 }

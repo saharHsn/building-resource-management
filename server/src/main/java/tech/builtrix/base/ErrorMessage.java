@@ -11,15 +11,15 @@ import java.lang.annotation.*;
  * @class : ErrorMessage
  */
 
-@Target({ElementType.TYPE})
+@Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface ErrorMessage {
-    HttpStatus status() default HttpStatus.BAD_REQUEST;
+	HttpStatus status() default HttpStatus.BAD_REQUEST;
 
-    int code() default 400;
+	int code() default 400;
 
-    String message() default "";
+	String message() default "";
 
-    String developerMessage() default "";
+	String developerMessage() default "";
 }

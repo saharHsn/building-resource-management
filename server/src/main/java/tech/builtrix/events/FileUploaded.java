@@ -16,13 +16,13 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class FileUploaded {
-    private String bucketName;
-    private List<String> fileNames;
-    private String buildingId;
+	private String bucketName;
+	private List<String> fileNames;
+	private String buildingId;
 
-    public FileUploaded(String buildingId, List<String> fileNames, String bucketName) {
-        this.buildingId = buildingId;
-        this.fileNames = fileNames;
-        this.bucketName = bucketName;
-    }
+	public FileUploaded(String buildingId, List<String> fileNames, String bucketName) {
+		this.buildingId = buildingId;
+		this.fileNames = fileNames;
+		this.bucketName = bucketName;
+	}
 }

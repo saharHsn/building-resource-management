@@ -12,6 +12,6 @@ import java.util.Map;
 @Setter
 @Getter
 public class MyTable {
-    Map<String, List<String>> column_value;
-    List<String> rowHeaders;
+	Map<String, List<String>> column_value;
+	List<String> rowHeaders;
 }

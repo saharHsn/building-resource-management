@@ -28,54 +28,54 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/v1/users/authenticate")
-@Api(value = "User Controller", tags = {"User Controller"})
+@Api(value = "User Controller", tags = { "User Controller" })
 public class AuthenticationController {
-    private final AuthenticationService service;
-    private final SessionKeyService sessionKeyService;
-    private final RequestContext requestContext;
+	private final AuthenticationService service;
+	private final SessionKeyService sessionKeyService;
+	private final RequestContext requestContext;
 
-    @Autowired
-    public AuthenticationController(AuthenticationService service,
-                                    SessionKeyService sessionKeyService,
-                                    RequestContext requestContext) {
-        this.service = service;
-        this.sessionKeyService = sessionKeyService;
-        this.requestContext = requestContext;
-    }
+	@Autowired
+	public AuthenticationController(AuthenticationService service, SessionKeyService sessionKeyService,
+			RequestContext requestContext) {
+		this.service = service;
+		this.sessionKeyService = sessionKeyService;
+		this.requestContext = requestContext;
+	}
 
-    @ApiOperation(value = "Request for login user")
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    @NoSession
-    public Response<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request) throws ExceptionBase {
-        User userLogin = this.service.loginByPassword(request.getEmail(), request.getPassword());
-        String token = this.sessionKeyService.createToken(userLogin);
-        UserDto user = new UserDto(userLogin);
-        user.setToken(token);
-        return Response.ok(new LoginResponseDto(user));
-    }
+	@ApiOperation(value = "Request for login user")
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	@NoSession
+	public Response<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request) throws ExceptionBase {
+		User userLogin = this.service.loginByPassword(request.getEmail(), request.getPassword());
+		String token = this.sessionKeyService.createToken(userLogin);
+		UserDto user = new UserDto(userLogin);
+		user.setToken(token);
+		return Response.ok(new LoginResponseDto(user));
+	}
 
-    @Limited(requestsPerMinutes = 5)
-    @ApiOperation(value = "sign out the device")
-    @RequestMapping(value = "/signout", method = RequestMethod.POST)
-    @Countable("hadaf.auth.signout")
-    public Response<Void> signout() throws NotFoundException {
-        this.sessionKeyService.expireToken(requestContext.getSessionKey());
-        return Response.ok();
-    }
+	@Limited(requestsPerMinutes = 5)
+	@ApiOperation(value = "sign out the device")
+	@RequestMapping(value = "/signout", method = RequestMethod.POST)
+	@Countable("hadaf.auth.signout")
+	public Response<Void> signout() throws NotFoundException {
+		this.sessionKeyService.expireToken(requestContext.getSessionKey());
+		return Response.ok();
+	}
 
-    @ApiOperation(value = "Get session for communicating to server")
-    @RequestMapping(value = "/session", method = RequestMethod.POST)
-    @NoSession
-    @Limited(requestsPerMinutes = 5)
-    @Countable("hadaf.auth.getsession")
-    public Response<GetSessionResponse> getSession(HttpServletRequest servletRequest) throws ExceptionBase {
-        String sessionKey = this.sessionKeyService.createToken(null);
+	@ApiOperation(value = "Get session for communicating to server")
+	@RequestMapping(value = "/session", method = RequestMethod.POST)
+	@NoSession
+	@Limited(requestsPerMinutes = 5)
+	@Countable("hadaf.auth.getsession")
+	public Response<GetSessionResponse> getSession(HttpServletRequest servletRequest) throws ExceptionBase {
+		String sessionKey = this.sessionKeyService.createToken(null);
 
-        Response<GetSessionResponse> response = Response.ok(new GetSessionResponse());
-        response.getContent().setSession(sessionKey);
-        response = response.addCommand(new SetSessionCommand(sessionKey));
-        //.addCommand(new SetPushTagsCommand().add(this.pushNotificationService.getDeviceTags(device).getMap())
-        //);
-        return response;
-    }
+		Response<GetSessionResponse> response = Response.ok(new GetSessionResponse());
+		response.getContent().setSession(sessionKey);
+		response = response.addCommand(new SetSessionCommand(sessionKey));
+		// .addCommand(new
+		// SetPushTagsCommand().add(this.pushNotificationService.getDeviceTags(device).getMap())
+		// );
+		return response;
+	}
 }

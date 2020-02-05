@@ -10,14 +10,13 @@ import java.util.List;
  * Created By sahar at 12/6/19
  */
 
-
 @JsonInclude
 @Data
 @NoArgsConstructor
 public class ConsumptionNormalWeatherDto {
-    List<String> xValues;
-    List<Float> standardAValues;
-    List<Float> standardBValues;
-    List<Float> standardCValues;
-    List<Float> standardDValues;
+	List<String> xValues;
+	List<Float> standardAValues;
+	List<Float> standardBValues;
+	List<Float> standardCValues;
+	List<Float> standardDValues;
 }

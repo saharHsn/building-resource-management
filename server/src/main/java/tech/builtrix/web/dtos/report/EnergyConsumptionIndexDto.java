@@ -12,8 +12,8 @@ import tech.builtrix.web.dtos.bill.EnergyConsumptionIndex;
 @Data
 @AllArgsConstructor
 public class EnergyConsumptionIndexDto {
-    private EnergyConsumptionIndex consumptionArea;
-    private EnergyConsumptionIndex consumptionCap;
-    private EnergyConsumptionIndex cost;
-    private EnergyConsumptionIndex energyEfficiencyLevel;
+	private EnergyConsumptionIndex consumptionArea;
+	private EnergyConsumptionIndex consumptionCap;
+	private EnergyConsumptionIndex cost;
+	private EnergyConsumptionIndex energyEfficiencyLevel;
 }

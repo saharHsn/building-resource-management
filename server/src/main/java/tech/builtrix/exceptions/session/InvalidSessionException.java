@@ -6,11 +6,11 @@ import tech.builtrix.exceptions.ExceptionBase;
 
 @ErrorMessage(code = 401001, status = HttpStatus.UNAUTHORIZED)
 public class InvalidSessionException extends ExceptionBase {
-    public InvalidSessionException() {
+	public InvalidSessionException() {
 
-    }
+	}
 
-    public InvalidSessionException(Throwable inner) {
-        initCause(inner);
-    }
+	public InvalidSessionException(Throwable inner) {
+		initCause(inner);
+	}
 }

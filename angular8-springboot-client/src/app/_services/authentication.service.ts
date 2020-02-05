@@ -60,6 +60,10 @@ export class AuthenticationService {
 
   public getHeaders() {
     let headers;
+
+    if(!this.currentUserValue){
+      this.router.navigate(['/login']);
+    }
     // @ts-ignore
     const user = this.currentUserValue.id ? this.currentUserValue : this.currentUserValue.content.user;
     if (user && user.token) {

@@ -8,14 +8,12 @@ import tech.builtrix.base.ErrorMessage;
  **/
 
 @ErrorMessage(code = 400011, status = HttpStatus.BAD_REQUEST)
-public
-class AlreadyExistException extends ExceptionBase {
-    public AlreadyExistException(String field, String value) {
-        addParameter("field", field)
-                .addParameter("value", value);
-    }
+public class AlreadyExistException extends ExceptionBase {
+	public AlreadyExistException(String field, String value) {
+		addParameter("field", field).addParameter("value", value);
+	}
 
-    public AlreadyExistException(String message) {
-        super(message);
-    }
+	public AlreadyExistException(String message) {
+		super(message);
+	}
 }

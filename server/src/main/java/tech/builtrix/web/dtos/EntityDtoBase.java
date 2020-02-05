@@ -10,12 +10,12 @@ import tech.builtrix.base.EntityBase;
 @Data
 public abstract class EntityDtoBase {
 
-    protected String id;
+	protected String id;
 
-    public EntityDtoBase(EntityBase modelBase) {
-        this.id = modelBase.getId();
-    }
+	public EntityDtoBase(EntityBase modelBase) {
+		this.id = modelBase.getId();
+	}
 
-    public EntityDtoBase() {
-    }
+	public EntityDtoBase() {
+	}
 }

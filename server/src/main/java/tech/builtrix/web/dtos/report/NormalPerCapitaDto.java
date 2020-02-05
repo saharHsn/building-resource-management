@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class NormalPerCapitaDto {
-    List<String> xValues;
-    List<Float> baseLine;
-    List<Float> total;
+	List<String> xValues;
+	List<Float> baseLine;
+	List<Float> total;
 }

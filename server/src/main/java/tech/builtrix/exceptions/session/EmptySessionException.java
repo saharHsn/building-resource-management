@@ -7,4 +7,3 @@ import tech.builtrix.exceptions.ExceptionBase;
 @ErrorMessage(code = 401002, status = HttpStatus.UNAUTHORIZED)
 public class EmptySessionException extends ExceptionBase {
 }
-

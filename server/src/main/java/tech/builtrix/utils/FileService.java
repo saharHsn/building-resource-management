@@ -12,11 +12,11 @@ import java.nio.file.StandardCopyOption;
 @Component
 public class FileService {
 
-    private static final String FILE_DIRECTORY = "/var/files";
+	private static final String FILE_DIRECTORY = "/var/files";
 
-    public void storeFile(MultipartFile file) throws IOException {
-        Path filePath = Paths.get(FILE_DIRECTORY + "/" + file.getOriginalFilename());
+	public void storeFile(MultipartFile file) throws IOException {
+		Path filePath = Paths.get(FILE_DIRECTORY + "/" + file.getOriginalFilename());
 
-        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-    }
+		Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+	}
 }

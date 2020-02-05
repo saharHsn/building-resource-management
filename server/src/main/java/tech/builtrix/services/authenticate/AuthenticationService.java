@@ -20,75 +20,69 @@ import tech.builtrix.web.dtos.user.UserDto;
 @Component
 @Slf4j
 public class AuthenticationService {
-    private final UserService userService;
+	private final UserService userService;
 
-    @Autowired
-    public AuthenticationService(UserService userService) {
-        this.userService = userService;
-    }
+	@Autowired
+	public AuthenticationService(UserService userService) {
+		this.userService = userService;
+	}
 
-    public User loginByPassword(String email, String password) throws
-            InvalidPasswordException,
-            InactiveUserException {
-        User user;
-        try {
-            user = this.userService.findByEmail(email);
-        } catch (NotFoundException ex) {
-            throw new InvalidPasswordException();
-        }
+	public User loginByPassword(String email, String password) throws InvalidPasswordException, InactiveUserException {
+		User user;
+		try {
+			user = this.userService.findByEmail(email);
+		} catch (NotFoundException ex) {
+			throw new InvalidPasswordException();
+		}
 
-        if (!user.getEnabled()) {
-            throw new InactiveUserException();
-        }
+		if (!user.getEnabled()) {
+			throw new InactiveUserException();
+		}
 
-        password = HashUtil.sha1(password);
+		password = HashUtil.sha1(password);
 
-        if (!StringUtils.isEmpty(user.getPassword()) &&
-                user.getPassword().equals(password)) {
-            //this.userService.addSuccessfulLogin(user, "Email/Password");
-            return user;
-        } else {
-            //this.userService.addFailedLogin(user, "Invalid password");
-            throw new InvalidPasswordException();
-        }
-    }
+		if (!StringUtils.isEmpty(user.getPassword()) && user.getPassword().equals(password)) {
+			// this.userService.addSuccessfulLogin(user, "Email/Password");
+			return user;
+		} else {
+			// this.userService.addFailedLogin(user, "Invalid password");
+			throw new InvalidPasswordException();
+		}
+	}
 
-    public boolean resetPassword(UserDto user) throws NotFoundException {
-        String password = RandomString.make(8);
-        String hashPassword = HashUtil.sha1(password);
-        user.setPassword(hashPassword);
-        //user.setEmailConfirmed(false);
-        userService.update(user);
-        /*String body = messageSource.getMessage("email.reset_password.template",
-                new Object[]{password},
-                LocaleContextHolder.getLocale());
-        String subject = "change password";
-        String sender = "investment.efarda.ir";
-        this.emailService.sendEmail(user.getEmailAddress(), subject, body, true, sender);*/
-        return true;
-    }
+	public boolean resetPassword(UserDto user) throws NotFoundException {
+		String password = RandomString.make(8);
+		String hashPassword = HashUtil.sha1(password);
+		user.setPassword(hashPassword);
+		// user.setEmailConfirmed(false);
+		userService.update(user);
+		/*
+		 * String body = messageSource.getMessage("email.reset_password.template", new
+		 * Object[]{password}, LocaleContextHolder.getLocale()); String subject =
+		 * "change password"; String sender = "investment.efarda.ir";
+		 * this.emailService.sendEmail(user.getEmailAddress(), subject, body, true,
+		 * sender);
+		 */
+		return true;
+	}
 
-    public boolean changePassword(UserDto user,
-                                  String oldPassword,
-                                  String newPassword,
-                                  String confirmNewPassword) throws
-            InvalidPasswordException,
-            InvalidPasswordConfirmationException, NotFoundException {
-        String hashOldPassword = HashUtil.sha1(oldPassword);
+	public boolean changePassword(UserDto user, String oldPassword, String newPassword, String confirmNewPassword)
+			throws InvalidPasswordException, InvalidPasswordConfirmationException, NotFoundException {
+		String hashOldPassword = HashUtil.sha1(oldPassword);
 
-        if (!user.getPassword().equals(hashOldPassword)) {
-            throw new InvalidPasswordException();
-        }
+		if (!user.getPassword().equals(hashOldPassword)) {
+			throw new InvalidPasswordException();
+		}
 
-        if (!newPassword.equals(confirmNewPassword)) {
-            throw new InvalidPasswordConfirmationException();
-        }
+		if (!newPassword.equals(confirmNewPassword)) {
+			throw new InvalidPasswordConfirmationException();
+		}
 
-        String hashNewPassword = HashUtil.sha1(newPassword);
-        user.setPassword(hashNewPassword);
-        userService.update(user);
+		String hashNewPassword = HashUtil.sha1(newPassword);
+		user.setPassword(hashNewPassword);
+		userService.update(user);
 
-        return true;
-    }
+		return true;
+	}
 
 }

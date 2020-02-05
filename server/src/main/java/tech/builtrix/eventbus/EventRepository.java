@@ -7,9 +7,7 @@ import java.util.List;
 
 @EnableScan
 public interface EventRepository extends CrudRepository<EventEntity, Long> {
-    List<EventEntity> findAllBySentIsFalse();
+	List<EventEntity> findAllBySentIsFalse();
 
-    List<EventEntity> getAllByType(String type);
+	List<EventEntity> getAllByType(String type);
 }
-
-

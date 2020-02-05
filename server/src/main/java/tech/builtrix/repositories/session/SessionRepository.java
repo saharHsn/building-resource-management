@@ -8,32 +8,32 @@ import tech.builtrix.models.session.Session;
 
 import java.util.List;
 
-
 @EnableScan
 public interface SessionRepository extends RepositoryBase<Session> {
 
-    // Session getBySessionKey(String sessionKey);
+	// Session getBySessionKey(String sessionKey);
 
-    // Integer incrementRequests(@Param("key") String key);
+	// Integer incrementRequests(@Param("key") String key);
 
-    List<Session> findByUser(String userId);
+	List<Session> findByUser(String userId);
 
+	/*
+	 * void touchSession(@Param("id") String id,
+	 * 
+	 * @Param("expTime") Date expTime);
+	 */
 
-   /* void touchSession(@Param("id") String id,
-                      @Param("expTime") Date expTime);*/
+	Page<Session> findBySessionKey(String sessionId, Pageable pageable);
 
+	/*
+	 * void updateSessionUserId(@Param("userId") String userId,
+	 * 
+	 * @Param("sessionKey") String sessionKey );
+	 */
 
-    Page<Session> findBySessionKey(String sessionId, Pageable pageable);
+	Session findBySessionKey(String sessionKey);
 
+	// List<Session> getTestSession(@Param("mobileNumber") String mobileNumber);
 
-   /* void updateSessionUserId(@Param("userId") String userId,
-                             @Param("sessionKey") String sessionKey
-    );*/
-
-    Session findBySessionKey(String sessionKey);
-
-    // List<Session> getTestSession(@Param("mobileNumber") String mobileNumber);
-
-    // void disableAllOtherSessions(@Param("userId") String userId);
+	// void disableAllOtherSessions(@Param("userId") String userId);
 }
-

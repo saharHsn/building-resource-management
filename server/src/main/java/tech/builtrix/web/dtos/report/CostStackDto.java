@@ -14,14 +14,13 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class CostStackDto {
-    List<String> xValues;
-    List<Float> contractedPowerValues;
-    List<Float> powerInPeakValues;
-    List<Float> reactivePowerValues;
-    List<Float> normalValues;
-    List<Float> peakValues;
-    List<Float> freeValues;
-    List<Float> offValues;
-
+	List<String> xValues;
+	List<Float> contractedPowerValues;
+	List<Float> powerInPeakValues;
+	List<Float> reactivePowerValues;
+	List<Float> normalValues;
+	List<Float> peakValues;
+	List<Float> freeValues;
+	List<Float> offValues;
 
 }
