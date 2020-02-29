@@ -197,7 +197,7 @@ public class PdfParser {
 		GetDocumentTextDetectionResult response = null;
 		Boolean finished = false;
 
-		while (finished == false) {
+		while (!finished) {
 			GetDocumentTextDetectionRequest documentTextDetectionRequest = new GetDocumentTextDetectionRequest()
 					.withJobId(startJobId).withMaxResults(maxResults).withNextToken(paginationToken);
 			response = textract.getDocumentTextDetection(documentTextDetectionRequest);
