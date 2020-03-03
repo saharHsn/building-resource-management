@@ -5,9 +5,9 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import {appRoutingModule} from './app.routing';
 import {JwtInterceptor} from './_helpers';
-import { NgIdleKeepaliveModule } from '@ng-idle/keepalive'; // this includes the core NgIdleModule but includes keepalive providers for easy wireup
-import { MomentModule } from 'angular2-moment'; // optional, provides moment-style pipes for date formatting
-import { ModalModule } from 'ngx-bootstrap/modal';
+import {NgIdleKeepaliveModule} from '@ng-idle/keepalive'; // this includes the core NgIdleModule but includes keepalive providers for easy wireup
+import {MomentModule} from 'angular2-moment'; // optional, provides moment-style pipes for date formatting
+import {ModalModule} from 'ngx-bootstrap/modal';
 import {AppComponent} from './app.component';
 import {HomeComponent} from './home';
 import {LoginComponent} from './login';
@@ -65,6 +65,7 @@ import {BuildingListComponent} from "./building/building-list/building-list.comp
 import {CreateBuildingComponent} from "./building/create-building/create-building.component";
 import {CreateUserComponent} from "./user/create-user/create-user.component";
 import {HighchartsChartModule} from "highcharts-angular";
+import {GoogleAnalyticsService} from "./_analytics/google-analytics.service";
 // import { AngularWeatherWidgetModule, WeatherApiName } from 'angular-weather-widget';
 // import {HighchartsChartComponent} from 'highcharts-angular';
 
@@ -134,6 +135,7 @@ import {HighchartsChartModule} from "highcharts-angular";
     CarbonComponent,
     EnergyEfficiencySymbolsComponent],
   providers: [
+    GoogleAnalyticsService,
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
     // {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true}
 

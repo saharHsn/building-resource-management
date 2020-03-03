@@ -5,6 +5,7 @@ import {first} from 'rxjs/operators';
 
 import {AlertService, AuthenticationService} from '../_services';
 import {AppService} from "../_services/app.service";
+import {GoogleAnalyticsService} from "../_analytics/google-analytics.service";
 
 @Component({templateUrl: 'login.component.html'})
 export class LoginComponent implements OnInit {
@@ -19,7 +20,8 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService,
     private appService: AppService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private googleAnalyticsService: GoogleAnalyticsService
   ) {
     // redirect to home if already logged in
     /*if (this.authenticationService.currentUserValue) {
@@ -58,6 +60,7 @@ export class LoginComponent implements OnInit {
       .pipe(first())
       .subscribe(
         data => {
+          this.googleAnalyticsService.eventEmitter("user-login", "user", "login", "login", 10);
           // this.router.navigate([this.returnUrl]);
           this.appService.setUserLoggedIn(true)
           this.router.navigate(['/overall']);

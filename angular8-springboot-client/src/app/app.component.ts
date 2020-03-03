@@ -1,32 +1,33 @@
 ﻿import {Component, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
+import {NavigationEnd, Router} from '@angular/router';
 
 import {AuthenticationService} from './_services';
 import {User} from './_models';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { BsModalRef } from 'ngx-bootstrap/modal';
-import { ModalDirective } from 'ngx-bootstrap/modal';
+import {BsModalRef, BsModalService, ModalDirective} from 'ngx-bootstrap/modal';
 
 import './_content/app.less';
 import {DEFAULT_INTERRUPTSOURCES, Idle} from "@ng-idle/core";
 import {Keepalive} from "@ng-idle/keepalive";
 import {AppService} from "./_services/app.service";
+import {filter} from "rxjs/operators";
+
+declare let gtag: Function;
 
 @Component({selector: 'app-root', templateUrl: 'app.component.html'})
 export class AppComponent {
   currentUser: User;
 
- /* constructor(
-    private router: Router,
-    private authenticationService: AuthenticationService
-  ) {
-    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
-  }
+  /* constructor(
+     private router: Router,
+     private authenticationService: AuthenticationService
+   ) {
+     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+   }
 
-  logout() {
-    this.authenticationService.logout();
-    this.router.navigate(['/login']);
-  }*/
+   logout() {
+     this.authenticationService.logout();
+     this.router.navigate(['/login']);
+   }*/
   idleState = 'Not started.';
   timedOut = false;
   lastPing?: Date = null;
@@ -40,6 +41,13 @@ export class AppComponent {
               private router: Router, private modalService: BsModalService,
               private authenticationService: AuthenticationService,
               private appService: AppService) {
+    const navEndEvent$ = router.events.pipe(
+      filter(e => e instanceof NavigationEnd)
+    );
+    navEndEvent$.subscribe((e: NavigationEnd) => {
+      gtag('config', 'UA-159293470-1', {'page_path': e.urlAfterRedirects});
+    });
+
     // sets an idle timeout of 15 minutes, for testing purposes.
     // idle.setIdle(15*60);
     idle.setIdle(40);
