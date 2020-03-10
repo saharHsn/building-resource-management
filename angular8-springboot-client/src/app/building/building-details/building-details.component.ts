@@ -26,7 +26,11 @@ export class BuildingDetailsComponent implements OnInit {
       .subscribe(data => {
         console.log('Building Info: ' + data);
         this.building = data.content;
-        this.building.builtIn = BuildingAge[this.building.age];
+        if (this.building != null) {
+          this.building.builtIn = BuildingAge[this.building.age];
+        } else {
+          this.building = new Building();
+        }
       }, error => console.log(error));
   }
 

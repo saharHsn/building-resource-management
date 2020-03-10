@@ -49,11 +49,11 @@ export class AppComponent {
     });
 
     // sets an idle timeout of 15 minutes, for testing purposes.
-    // idle.setIdle(15*60);
-    idle.setIdle(40);
+    idle.setIdle(60 * 60);
+    //idle.setIdle(40);
     // sets a timeout period of 1 hour. after 10 seconds of inactivity, the user will be considered timed out.
-    // idle.setTimeout(60*60);
-    idle.setTimeout(40);
+    idle.setTimeout(60 * 60);
+    //idle.setTimeout(40);
     // sets the default interrupts, in this case, things like clicks, scrolls, touches to the document
     idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
     idle.onIdleEnd.subscribe(() => {
