@@ -5,6 +5,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import {appRoutingModule} from './app.routing';
 import {JwtInterceptor} from './_helpers';
+// tslint:disable-next-line:max-line-length
 import {NgIdleKeepaliveModule} from '@ng-idle/keepalive'; // this includes the core NgIdleModule but includes keepalive providers for easy wireup
 import {MomentModule} from 'angular2-moment'; // optional, provides moment-style pipes for date formatting
 import {ModalModule} from 'ngx-bootstrap/modal';
@@ -59,13 +60,14 @@ import {ReportComponent} from './charts/report/report.component';
 // tslint:disable-next-line:max-line-length
 import {EnergyEfficiencySymbolsComponent} from './charts/report/energy-efficiency/energy_efficiency_symbols/energy-efficiency-symbols.component';
 import {TooltipModule} from 'ng2-tooltip-directive';
-import {UserListComponent} from "./user/user-list/user-list.component";
-import {UserDetailsComponent} from "./user/user-details/user-details.component";
-import {BuildingListComponent} from "./building/building-list/building-list.component";
-import {CreateBuildingComponent} from "./building/create-building/create-building.component";
-import {CreateUserComponent} from "./user/create-user/create-user.component";
-import {HighchartsChartModule} from "highcharts-angular";
-import {GoogleAnalyticsService} from "./_analytics/google-analytics.service";
+import {UserListComponent} from './user/user-list/user-list.component';
+import {UserDetailsComponent} from './user/user-details/user-details.component';
+import {BuildingListComponent} from './building/building-list/building-list.component';
+import {CreateBuildingComponent} from './building/create-building/create-building.component';
+import {CreateUserComponent} from './user/create-user/create-user.component';
+import {HighchartsChartModule} from 'highcharts-angular';
+import {GoogleAnalyticsService} from './_analytics/google-analytics.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // import { AngularWeatherWidgetModule, WeatherApiName } from 'angular-weather-widget';
 // import {HighchartsChartComponent} from 'highcharts-angular';
 
@@ -84,6 +86,7 @@ import {GoogleAnalyticsService} from "./_analytics/google-analytics.service";
     TooltipModule,
     HighchartsChartModule,
     ModalModule.forRoot(),
+    BrowserAnimationsModule
   ],
   declarations: [
     AppComponent,
