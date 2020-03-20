@@ -1,3 +1,4 @@
+// tslint:disable-next-line:ban-types
 declare let gtag: Function;
 
 export class GoogleAnalyticsService {
@@ -12,10 +13,10 @@ export class GoogleAnalyticsService {
     eventLabel: string = null,
     eventValue: number = null) {
     gtag('event', eventName, {
-      eventCategory: eventCategory,
-      eventLabel: eventLabel,
-      eventAction: eventAction,
-      eventValue: eventValue
-    })
+      eventCategory,
+      eventLabel,
+      eventAction,
+      eventValue
+    });
   }
 }
