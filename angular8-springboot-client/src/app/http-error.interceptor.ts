@@ -8,7 +8,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
       .pipe(
         retry(1),
         catchError((error: HttpErrorResponse) => {
-          let errorMessage = error.error.message;
+          const errorMessage = error.error.message;
           /*if (error.error instanceof ErrorEvent) {
             // client-side error
             errorMessage = `Error: ${error.error.message}`;
@@ -16,9 +16,9 @@ export class HttpErrorInterceptor implements HttpInterceptor {
             // server-side error
             errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
           }*/
-          //window.alert(errorMessage);
+          // window.alert(errorMessage);
           return throwError(errorMessage);
         })
-      )
+      );
   }
 }

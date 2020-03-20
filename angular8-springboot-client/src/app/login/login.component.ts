@@ -4,8 +4,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {first} from 'rxjs/operators';
 
 import {AlertService, AuthenticationService} from '../_services';
-import {AppService} from "../_services/app.service";
-import {GoogleAnalyticsService} from "../_analytics/google-analytics.service";
+import {AppService} from '../_services/app.service';
+import {GoogleAnalyticsService} from '../_analytics/google-analytics.service';
 
 @Component({templateUrl: 'login.component.html'})
 export class LoginComponent implements OnInit {
@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
     });
 
     // get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/wizard';
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/wizard';
   }
 
   // convenience getter for easy access to form fields
@@ -60,9 +60,9 @@ export class LoginComponent implements OnInit {
       .pipe(first())
       .subscribe(
         data => {
-          this.googleAnalyticsService.eventEmitter("user-login", "user", "login", "login", 10);
+          this.googleAnalyticsService.eventEmitter('user-login', 'user', 'login', 'login', 10);
           // this.router.navigate([this.returnUrl]);
-          this.appService.setUserLoggedIn(true)
+          this.appService.setUserLoggedIn(true);
           this.router.navigate(['/overall']);
         },
         error => {

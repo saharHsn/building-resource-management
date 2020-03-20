@@ -1,7 +1,7 @@
-import { BuildingService } from '../service/building.service';
-import { Building } from '../model/building';
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import {BuildingService} from '../service/building.service';
+import {Building} from '../model/building';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-create-building',
@@ -14,7 +14,8 @@ export class CreateBuildingComponent implements OnInit {
   submitted = false;
 
   constructor(private buildingService: BuildingService,
-    private router: Router) { }
+              private router: Router) {
+  }
 
   ngOnInit() {
   }
@@ -33,7 +34,7 @@ export class CreateBuildingComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-    this.save();    
+    this.save();
   }
 
   gotoList() {

@@ -1,5 +1,5 @@
-const express = require('express');
-const http = require('http');
+const express = require("express");
+const http = require("http");
 
 const app = express();
 
@@ -9,4 +9,4 @@ app.use(express.static(__dirname));
 
 const server = http.createServer(app);
 
-server.listen(port, ()=> console.log("Running..."));
+server.listen(port, () => console.log("Running..."));

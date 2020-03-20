@@ -1,16 +1,16 @@
 import {Component, OnInit} from '@angular/core';
-//import { WeatherSettings, TemperatureScale, ForecastMode, WeatherLayout } from 'angular-weather-widget';
-//import {CurrentWeather, Forecast} from "angular-weather-widget/services/api/weather.api.service";
+// import { WeatherSettings, TemperatureScale, ForecastMode, WeatherLayout } from 'angular-weather-widget';
+// import {CurrentWeather, Forecast} from "angular-weather-widget/services/api/weather.api.service";
 
 @Component({
-  //template: '<weather-widget [currentWeather]=currentWeather [forecast]=forecast  [settings]="settings"></weather-widget>'
+  // template: '<weather-widget [currentWeather]=currentWeather [forecast]=forecast  [settings]="settings"></weather-widget>'
   selector: 'app-weather',
   templateUrl: './weather.component.html',
   styleUrls: ['./weather.component.css']
 })
 export class WeatherComponent implements OnInit {
-  //currentWeather: CurrentWeather = CURRENT_WATHER_MOCK;
-  //forecast: Forecast[] = FORECAST_MOCK;
+  // currentWeather: CurrentWeather = CURRENT_WATHER_MOCK;
+  // forecast: Forecast[] = FORECAST_MOCK;
   /*settings: WeatherSettings = {
     location: {
       cityName: 'Lisbon'

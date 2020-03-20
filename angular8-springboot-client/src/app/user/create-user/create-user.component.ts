@@ -1,7 +1,7 @@
-import { UserService } from '../user.service';
-import { User } from '../user';
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import {UserService} from '../user.service';
+import {User} from '../user';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-create-user',
@@ -14,7 +14,8 @@ export class CreateUserComponent implements OnInit {
   submitted = false;
 
   constructor(private userService: UserService,
-    private router: Router) { }
+              private router: Router) {
+  }
 
   ngOnInit() {
   }
@@ -33,7 +34,7 @@ export class CreateUserComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-    this.save();    
+    this.save();
   }
 
   gotoList() {
