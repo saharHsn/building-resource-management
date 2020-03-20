@@ -43,7 +43,7 @@ export class CostPieChartComponent implements OnInit {
                 cursor: 'pointer',
 
                 dataLabels: {
-                  enabled: false
+                  enabled: true
                 },
 
                 showInLegend: true
@@ -58,39 +58,39 @@ export class CostPieChartComponent implements OnInit {
 
               data: [
                 {
-                  name: 'Contracted\n' +
+                  name: 'Contracted Power' +
                     'Power',
-                  y: data.content.contractedPower,
+                  y:  6.1,    /* data.content.contractedPower, */
                   color: '#36B37E'
                 },
                 {
                   name: 'Off-hours',
-                  y: data.content.offHours,
+                  y:  34.5, /* data.content.offHours, */
                   color: '#6554C0'
                 },
                 {
                   name: 'Free-hours',
-                  y: data.content.freeHours,
+                  y: 7.2, /* data.content.freeHours, */
                   color: '#FFAB00'
                 },
                 {
-                  name: 'Peak-hours',
-                  y: data.content.peakHours,
-                  color: '#FF5630'
+                  name: 'Power in Peak Hours',
+                  y:7.62, /* data.content.peakHours, */
+                  color: '#00B8D9'
                 },
                 {
                   name: 'Normal-hours',
-                  y: data.content.normalHours,
+                  y:34.5, /* data.content.normalHours, */
                   color: '#3A9AFC'
                 },
                 {
                   name: 'Peak Hours',
-                  y: data.content.powerInPeakHours,
+                  y:11.8,/*  data.content.powerInPeakHours, */
                   color: '#FF5630'
                 },
                 {
                   name: 'Reactive Power',
-                  y: data.content.reactivePower,
+                  y:4.02, /* data.content.reactivePower, */
                   color: '#0065FF'
                 },
               ]
