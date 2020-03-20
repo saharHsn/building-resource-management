@@ -42,16 +42,16 @@ export class PredictedWeatherVsRealComponent implements OnInit {
                   fontSize: '15px'
                 }
               }
-            }, 
+            },
             plotOptions: {
               line: {
-                  dataLabels: {
-                      enabled: true
-                  },
-                  enableMouseTracking: false
+                dataLabels: {
+                  enabled: true
+                },
+                enableMouseTracking: false
               }
-          },credits:{
-              enabled:false
+            }, credits: {
+              enabled: false
             }
             ,
             yAxis: {
@@ -71,7 +71,7 @@ export class PredictedWeatherVsRealComponent implements OnInit {
               name: 'Baseline',
               // data: [10.62, 9.85, 9.38],
               data: data.content.baseLineValues,
-              color:'#4C5E81',
+              color: '#4C5E81',
               dashStyle: 'shortdot',
             },
               {

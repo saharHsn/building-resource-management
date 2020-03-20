@@ -89,8 +89,8 @@ export class BeScoreComponent implements OnInit, OnDestroy {
           innerRadius: '103%'
         }]
       },
-      credits:{
-        enabled:false
+      credits: {
+        enabled: false
       }
       ,
       tooltip: {
@@ -113,13 +113,13 @@ export class BeScoreComponent implements OnInit, OnDestroy {
 
         min: 0,
         max: 55,
-  
+
         minorTickInterval: 'auto',
         minorTickWidth: 1,
         minorTickLength: 25,
         minorTickPosition: 'outside',
         minorTickColor: '#0052D4',
-  
+
         tickPixelInterval: 30,
         tickWidth: 1,
         tickPosition: 'outside',

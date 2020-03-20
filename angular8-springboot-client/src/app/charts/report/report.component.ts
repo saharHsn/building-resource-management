@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ChartService} from '../chartService';
+
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
@@ -11,7 +12,7 @@ export class ReportComponent implements OnInit {
   nationalMedian: number;
   propertyTarget: number;
   constructor(private route: ActivatedRoute, private router: Router,
-    private chartService: ChartService) {
+              private chartService: ChartService) {
   }
 
   ngOnInit() {
@@ -20,12 +21,12 @@ export class ReportComponent implements OnInit {
       console.log(data);
       this.beScore = data.content;
     }, error => console.log(error));
-  this.chartService.getNationalMedian()
+    this.chartService.getNationalMedian()
     .subscribe(data => {
       console.log(data);
       this.nationalMedian = data.content;
     }, error => console.log(error));
-  this.chartService.getPropertyTarget()
+    this.chartService.getPropertyTarget()
     .subscribe(data => {
       console.log(data);
       this.propertyTarget = data.content;

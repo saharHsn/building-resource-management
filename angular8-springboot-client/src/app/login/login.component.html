@@ -1,48 +1,79 @@
-﻿<h2 align="center">Login</h2>
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <div class="container>">
-    <div class="row justify-content-md-center">
-      <div class="col-sm-3">
-        <div class="form-group">
-          <label for="emailAddress">Email</label>
-          <input type="text" id="emailAddress" formControlName="emailAddress" class="form-control" [email]="true"
-                 placeholder="Enter your email address."
-                 [ngClass]="{ 'is-invalid': submitted && f.emailAddress.errors }"/>
+﻿<nav class="navbar navbar-expand-md navbar-light bg-info">
+  <!--<a href="#" class="navbar-brand">Brand</a>-->
+  <a class="navbar-brand" href="#">
+    <img src="../../assets/images/bafa157a-cb70-4b75-9b84-670ea85efb19.png" style="width:170px;height: 100px">
+  </a>
+  <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+</nav>
+<!-- main app container -->
+<div>
+  <div class="container-fluid full-page" style="background-color: #e9ecef;">
+    <alert></alert>
+    <h2 align="center">Login</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="container>">
+        <div class="row justify-content-md-center">
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="emailAddress">Email</label>
+              <input type="text" id="emailAddress" formControlName="emailAddress" class="form-control" [email]="true"
+                     placeholder="Enter your email address."
+                     [ngClass]="{ 'is-invalid': submitted && f.emailAddress.errors }"/>
 
-          <div *ngIf="f.emailAddress.invalid && (f.emailAddress.dirty || f.emailAddress.touched)"
-               class="alert alert-danger">
-            <div *ngIf="f.emailAddress.errors.required">Email is required</div>
-            <div *ngIf="f.emailAddress.errors.email">
-              Email Address is invalid.
+              <div *ngIf="f.emailAddress.invalid && (f.emailAddress.dirty || f.emailAddress.touched)"
+                   class="alert alert-danger">
+                <div *ngIf="f.emailAddress.errors.required">Email is required</div>
+                <div *ngIf="f.emailAddress.errors.email">
+                  Email Address is invalid.
+                </div>
+              </div>
+
             </div>
           </div>
-
         </div>
-      </div>
-    </div>
-    <div class="row justify-content-md-center">
-      <div class="col-sm-3">
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" formControlName="password" placeholder="Enter your password"
-                 class="form-control"
-                 [ngClass]="{ 'is-invalid': submitted && f.password.errors }"/>
-          <div *ngIf="submitted && f.password.errors" class="alert alert-danger">
-            <div *ngIf="f.password.errors.required">Password is required</div>
+        <div class="row justify-content-md-center">
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" formControlName="password" placeholder="Enter your password"
+                     class="form-control"
+                     [ngClass]="{ 'is-invalid': submitted && f.password.errors }"/>
+              <div *ngIf="submitted && f.password.errors" class="alert alert-danger">
+                <div *ngIf="f.password.errors.required">Password is required</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-md-center">
+          <div class="col-sm-3">
+            <div class="form-group">
+              <button [disabled]="loading" class="btn btn-primary">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Login
+              </button>
+              <a routerLink="/register" class="btn btn-link">Register</a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row justify-content-md-center">
-      <div class="col-sm-3">
-        <div class="form-group">
-          <button [disabled]="loading" class="btn btn-primary">
-            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-            Login
-          </button>
-          <a routerLink="/register" class="btn btn-link">Register</a>
-        </div>
-      </div>
-    </div>
+    </form>
   </div>
-</form>
+</div>
+
+<!-- main app container -->
+
+<!-- Footer -->
+<footer class="page-footer font-small bg-info">
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-3">© 2020 Copyright:
+    <a href="https://www.builtrix.tech/">Builtrix : Trusted METRICs for Your Buildings!</a>
+  </div>
+  <!-- Copyright -->
+</footer>
+<!-- Footer -->
+
+
+
+

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import * as Highcharts from 'highcharts';
-import HC_exporting from 'highcharts/modules/exporting';
+
 @Component({
   selector: 'app-percentile',
   templateUrl: './percentile.component.html',
@@ -13,7 +13,7 @@ export class PercentileComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.chartOptions={
+    this.chartOptions = {
       chart: {
         type: 'areaspline',
         plotBorderWidth: null,
@@ -21,9 +21,9 @@ export class PercentileComponent implements OnInit {
         backgroundColor: null,
         height: 300,
         width: 300,
-    },
-    
-    title: {
+      },
+
+      title: {
         text: 'Percentile'
     },
     legend: {
@@ -35,23 +35,23 @@ export class PercentileComponent implements OnInit {
         floating: true,
         borderWidth: 1,
         backgroundColor: '#FFFFFF' */
-        enabled:null
+      enabled: null
     },
 
     xAxis: {
-        categories: [
-            'Monday',
-            'Tuesday',
-            'Wednesday',
-            'Thursday',
-            'Friday',
-            'Saturday',
-            'Sunday'
-        ],
-        labels:{
-            enabled:false//default is true
-        }
-   
+      categories: [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday'
+      ],
+      labels: {
+        enabled: false// default is true
+      }
+
     },
     yAxis: {
         title: {
@@ -71,18 +71,18 @@ export class PercentileComponent implements OnInit {
         }
     },
     series: [{
-        name: 'Your score is higher than 63% of Builtrix METRIC members',
-        data: [1, 3, 6, 10,11,10, null, 3, 1],
-        color:'#3A9AFC'
+      name: 'Your score is higher than 63% of Builtrix METRIC members',
+      data: [1, 3, 6, 10, 11, 10, null, 3, 1],
+      color: '#3A9AFC'
     },
-    {
-        type:'line',
+      {
+        type: 'line',
         name: 'Your score is higher than 63% of Builtrix METRIC members',
-        data: [null, null, null, null,null,10, 6, 3, 1],
-        color:'#3A9AFC'
-    }]
-    }
-    
+        data: [null, null, null, null, null, 10, 6, 3, 1],
+        color: '#3A9AFC'
+      }]
+    };
+
 
   }
 

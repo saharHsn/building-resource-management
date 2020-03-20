@@ -32,8 +32,8 @@ export class CarbonPieChartComponent implements OnInit {
             title: {
               text: 'Average Contribution of Tariffs in Carbon Footprint'
             },
-            credits:{
-              enabled:false
+            credits: {
+              enabled: false
             }
             ,
             tooltip: {

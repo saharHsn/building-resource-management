@@ -67,22 +67,27 @@ import {CreateBuildingComponent} from './building/create-building/create-buildin
 import {CreateUserComponent} from './user/create-user/create-user.component';
 import {HighchartsChartModule} from 'highcharts-angular';
 import {GoogleAnalyticsService} from './_analytics/google-analytics.service';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {HeaderComponent} from './default/header/header.component';
+import {SidebarComponent} from './default/sidebar/sidebar.component';
+// tslint:disable-next-line:max-line-length
+import {
+  MatBadgeModule,
+  MatButtonModule,
+  MatIconModule,
+  MatListModule,
+  MatSidenavModule,
+  MatTabsModule,
+  MatToolbarModule
+} from '@angular/material';
+import {MatCardModule} from '@angular/material/card';
+import {ColorEnergyComponent} from './charts/report/color-energy/color-energy.component';
+import {GeneralComponent} from './charts/profile/general/general.component';
+import {BuildingComponent} from './charts/profile/building/building.component';
+import {ProfileViewComponent} from './charts/profile/profile-view/profile-view.component';
 // import { AngularWeatherWidgetModule, WeatherApiName } from 'angular-weather-widget';
 // import {HighchartsChartComponent} from 'highcharts-angular';
-//angular material
-
-import { HeaderComponent } from "./default/header/header.component";
-import { SidebarComponent } from "./default/sidebar/sidebar.component";
-import { MatToolbarModule, MatListModule, MatButtonModule,MatIconModule,MatSidenavModule,MatBadgeModule,MatTabsModule } from '@angular/material';
-import {MatCardModule} from '@angular/material/card';;
-import { ColorEnergyComponent } from './charts/report/color-energy/color-energy.component'
-;
-import { GeneralComponent } from './charts/profile/general/general.component'
-;
-import { BuildingComponent } from './charts/profile/building/building.component'
-;
-import { ProfileViewComponent } from './charts/profile/profile-view/profile-view.component'
+// angular material
 
 @NgModule({
   imports: [
@@ -164,9 +169,8 @@ import { ProfileViewComponent } from './charts/profile/profile-view/profile-view
     CarbonComponent,
     EnergyEfficiencySymbolsComponent,
     ColorEnergyComponent],
-    
-    
-    
+
+
   providers: [
     GoogleAnalyticsService,
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},

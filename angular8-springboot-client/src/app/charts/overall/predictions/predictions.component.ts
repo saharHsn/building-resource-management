@@ -56,8 +56,8 @@ export class PredictionsComponent implements OnInit {
                 }
               }
             },
-            credits:{
-              enabled:false
+            credits: {
+              enabled: false
             }
             ,
             yAxis: {
@@ -80,15 +80,15 @@ export class PredictionsComponent implements OnInit {
               // data: [321, 420, 360]
               data: data.content.savingYValues,
               dashStyle: 'shortdot',
-              color:''
-              
+              color: ''
+
             },
               {
                 name: 'Cost',
                 // data: [6135.5, 7130.4, 6234.3]
                 data: data.content.costYValues,
                 dashStyle: 'shortdot',
-                color:'#4C5E81'
+                color: '#4C5E81'
               }
             ]
           };
