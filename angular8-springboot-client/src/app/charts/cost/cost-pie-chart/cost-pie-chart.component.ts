@@ -43,51 +43,55 @@ export class CostPieChartComponent implements OnInit {
                 cursor: 'pointer',
 
                 dataLabels: {
-                  enabled: false
+                  enabled: true
                 },
 
                 showInLegend: true
               }
             },
+            credits:{
+              enabled:false
+            }
+            ,
             series: [{
               type: 'pie',
 
               data: [
                 {
-                  name: 'Contracted\n' +
+                  name: 'Contracted Power' +
                     'Power',
-                  y: data.content.contractedPower,
-                  color: '#0066cc'
+                  y:  6.1,    /* data.content.contractedPower, */
+                  color: '#36B37E'
                 },
                 {
                   name: 'Off-hours',
-                  y: data.content.offHours,
-                  color: '#248f24'
+                  y:  34.5, /* data.content.offHours, */
+                  color: '#6554C0'
                 },
                 {
                   name: 'Free-hours',
-                  y: data.content.freeHours,
-                  color: '#ffff00'
-                },
-                {
-                  name: 'Peak-hours',
-                  y: data.content.peakHours,
-                  color: '#ff0000'
-                },
-                {
-                  name: 'Normal-hours',
-                  y: data.content.normalHours,
-                  color: '#ff944d'
+                  y: 7.2, /* data.content.freeHours, */
+                  color: '#FFAB00'
                 },
                 {
                   name: 'Power in Peak Hours',
-                  y: data.content.powerInPeakHours,
-                  color: '#ff6666'
+                  y:7.62, /* data.content.peakHours, */
+                  color: '#00B8D9'
+                },
+                {
+                  name: 'Normal-hours',
+                  y:34.5, /* data.content.normalHours, */
+                  color: '#3A9AFC'
+                },
+                {
+                  name: 'Peak Hours',
+                  y:11.8,/*  data.content.powerInPeakHours, */
+                  color: '#FF5630'
                 },
                 {
                   name: 'Reactive Power',
-                  y: data.content.reactivePower,
-                  color: '#ff00ff'
+                  y:4.02, /* data.content.reactivePower, */
+                  color: '#0065FF'
                 },
               ]
             }]

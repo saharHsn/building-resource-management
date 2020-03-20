@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import * as Highcharts from 'highcharts';
 import {Router} from '@angular/router';
+
 import {ChartService} from '../../chartService';
 import {Building} from '../../../building/model/building';
 import {first} from 'rxjs/operators';
@@ -38,9 +39,9 @@ export class PredictionsComponent implements OnInit {
           this.chartOptions = {
             chart: {
               type: 'spline',
-              backgroundColor: null,
+             /*  backgroundColor: null,
               width: 330,
-              height: 300,
+              height: 300, */
               grid: true
             },
             title: {
@@ -55,6 +56,10 @@ export class PredictionsComponent implements OnInit {
                 }
               }
             },
+            credits:{
+              enabled:false
+            }
+            ,
             yAxis: {
               title: {
                 text: '€'
@@ -73,12 +78,17 @@ export class PredictionsComponent implements OnInit {
             series: [{
               name: 'Saving',
               // data: [321, 420, 360]
-              data: data.content.savingYValues
+              data: data.content.savingYValues,
+              dashStyle: 'shortdot',
+              color:''
+              
             },
               {
                 name: 'Cost',
                 // data: [6135.5, 7130.4, 6234.3]
-                data: data.content.costYValues
+                data: data.content.costYValues,
+                dashStyle: 'shortdot',
+                color:'#4C5E81'
               }
             ]
           };

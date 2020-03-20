@@ -70,6 +70,19 @@ import {GoogleAnalyticsService} from './_analytics/google-analytics.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // import { AngularWeatherWidgetModule, WeatherApiName } from 'angular-weather-widget';
 // import {HighchartsChartComponent} from 'highcharts-angular';
+//angular material
+
+import { HeaderComponent } from "./default/header/header.component";
+import { SidebarComponent } from "./default/sidebar/sidebar.component";
+import { MatToolbarModule, MatListModule, MatButtonModule,MatIconModule,MatSidenavModule,MatBadgeModule,MatTabsModule } from '@angular/material';
+import {MatCardModule} from '@angular/material/card';;
+import { ColorEnergyComponent } from './charts/report/color-energy/color-energy.component'
+;
+import { GeneralComponent } from './charts/profile/general/general.component'
+;
+import { BuildingComponent } from './charts/profile/building/building.component'
+;
+import { ProfileViewComponent } from './charts/profile/profile-view/profile-view.component'
 
 @NgModule({
   imports: [
@@ -86,7 +99,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     TooltipModule,
     HighchartsChartModule,
     ModalModule.forRoot(),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatListModule,
+    MatCardModule,
+    MatBadgeModule,
+    MatTabsModule
   ],
   declarations: [
     AppComponent,
@@ -110,6 +131,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CostComponent,
     ConsumptionComponent,
     PredictionsComponent,
+    SidebarComponent,
+    HeaderComponent,
+    ProfileViewComponent,
+    BuildingComponent,
+    GeneralComponent,
     // HighchartsChartComponent,
     ReportBeScoreComponent,
     CostPieChartComponent,
@@ -136,7 +162,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     PercentileComponent,
     EnergyEfficiencyComponent,
     CarbonComponent,
-    EnergyEfficiencySymbolsComponent],
+    EnergyEfficiencySymbolsComponent,
+    ColorEnergyComponent],
+    
+    
+    
   providers: [
     GoogleAnalyticsService,
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},

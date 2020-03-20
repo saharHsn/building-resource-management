@@ -28,12 +28,12 @@ export class CostStackChartComponent implements OnInit {
           this.chartOptions = {
             chart: {
               type: 'column',
-              backgroundColor: null,
-              grid: true,
-              gridLineColor: '#0066cc',
-              plotBackgroundColor: '#F7F7F7',
-              width: 800,
-              height: 400
+          /*     backgroundColor: null, */
+              /* grid: true, */
+           /*    gridLineColor: '#0066cc', */
+              /* plotBackgroundColor: '#F7F7F7', */
+           /*    width: 800,
+              height: 400 */
             },
             title: {
               text: 'Cost of Electricity Over Time'
@@ -64,47 +64,50 @@ export class CostStackChartComponent implements OnInit {
             ,
             plotOptions: {
               column: {
-                stacking: 'normal'
+                stacking: 'normal',
+                pointPadding:0.4,
+                // borderWidth: 0,
+               groupPadding: 0,
               }
             }
             ,
 
             series: [
               {
-                name: 'Contracted\n' +
+                name: 'Contracted Power' +
                   'Power',
-                data: data.content.contractedPowerValues,
-                color: '#0066cc'
+                data:[50.94,50.94,  null, null,null,null,null, null, null,null, null],/*  data.content.contractedPowerValues, */
+                color: '#3A9AFC'
               },
               {
-                name: 'Power in\nPeak Hours',
-                data: data.content.powerInPeakValues,
-                color: '#ff6666'
+                name: 'Power in Peak Hours',
+                data: [64.48, 64.48,  null, null,null,null,null, null, null,null, null],/*  data.content.powerInPeakValues, */
+                color: '#6554C0'
               },
               {
                 name: 'Reactive\nPower',
-                data: data.content.reactivePowerValues,
-                color: '#ff00ff'
+                data:[64.48, 64.48,  null, null,null,null,null, null, null,null, null], /* data.content.reactivePowerValues, */
+                color: '#FF5630'
               },
               {
-                name: 'Normal\nHours',
-                data: data.content.normalValues,
-                color: '#ff944d'
+                name: 'Normal-hours',
+                data:[ 160.2,  160.2, null, null,null,null,null, null, null,null, null], /* data.content.normalValues, */
+                color: '#FFAB00'
               },
               {
-                name: 'Peak\nHours',
-                data: data.content.peakValues,
-                color: '#ff0000'
+                name: 'Peak-hours',
+                data:[ 160.2,  160.2, null, null,null,null,null, null, null,null, null],/*  data.content.peakValues, */
+                color: '#36B37E'
               },
               {
-                name: 'Free\nHours',
-                data: data.content.freeValues,
-                color: '#ffff00'
+                name: 'Free hours',
+                data: [33.37,33.37, null, null,null,null,null, null, null,null, null],/*  data.content.freeValues, */
+                color: '#00B8D9'
               },
               {
-                name: 'Off\nHours',
-                data: data.content.offValues,
-                color: '#248f24'
+                name: 'Off hours',
+                data:[25.89,25.89, null, null,null,null,null, null, null,null, null],
+                color: '#0065FF'
               }
             ]
             ,

@@ -27,13 +27,13 @@ export class PredictedWeatherVsRealComponent implements OnInit {
           this.chartOptions = {
             chart: {
               type: 'spline',
-              backgroundColor: null,
+              /* backgroundColor: null, */
               grid: true,
-              width: 800,
-              height: 500
+             /*  width: 800,
+              height: 500 */
             },
             title: {
-              text: ''
+              text: 'Predicted Baseline by Weather vs Real Consumption'
             },
             xAxis: {
               categories: data.content.xvalues,
@@ -42,7 +42,18 @@ export class PredictedWeatherVsRealComponent implements OnInit {
                   fontSize: '15px'
                 }
               }
-            },
+            }, 
+            plotOptions: {
+              line: {
+                  dataLabels: {
+                      enabled: true
+                  },
+                  enableMouseTracking: false
+              }
+          },credits:{
+              enabled:false
+            }
+            ,
             yAxis: {
               title: {
                 text: 'kWh/m2'
@@ -60,13 +71,15 @@ export class PredictedWeatherVsRealComponent implements OnInit {
               name: 'Baseline',
               // data: [10.62, 9.85, 9.38],
               data: data.content.baseLineValues,
-              color: '#0b0003'
+              color:'#4C5E81',
+              dashStyle: 'shortdot',
             },
               {
                 name: 'Consumption',
                 // data: [10.94, 11.21, 9.3],
                 data: data.content.consumptionValues,
-                color: '#46f620'
+                color: '#36B37E',
+                dashStyle: 'shortdot',
               }
             ]
           };

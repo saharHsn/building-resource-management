@@ -59,11 +59,11 @@ export class BeBreakdownComponent implements OnInit {
       series: [{
         data: [{
           name: 'Yes',
-          color: '#33cc33',
+          color: ' #FFAB00',
           y: 5
         }, {
           name: 'No',
-          color: '#248f24',
+          color: '#3A9AFC',
           y: 95
         }]
       }]

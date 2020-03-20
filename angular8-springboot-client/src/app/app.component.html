@@ -1,49 +1,12 @@
-﻿<nav class="navbar navbar-expand-md navbar-light bg-info">
-  <!--<a href="#" class="navbar-brand">Brand</a>-->
-  <a class="navbar-brand" href="#">
-    <img src="../assets/images/bafa157a-cb70-4b75-9b84-670ea85efb19.png" style="width:170px;height: 100px">
-  </a>
-  <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+﻿
+<app-header></app-header>
 
-  <div class="collapse navbar-collapse" id="navbarCollapse" *ngIf="currentUser">
-    <div class="navbar-nav">
-      <a class="nav-link" href="#" routerLink="/overall">Overall</a>
-      <a class="nav-link" href="#" routerLink="/cost">Cost</a>
-      <a class="nav-link" href="#" routerLink="/consumption-component">Consumption</a>
-      <a class="nav-link" routerLink="/normalized-consumption">Normalized Consumption</a>
-      <a class="nav-link" routerLink="/carbon-footprint">Carbon Footprint</a>
-      <a class="nav-link" routerLink="/report">Report</a>
-    </div>
-    <div class="navbar-nav ml-auto nav-flex-icons">
-      <a class="nav-item avatar dropdown nav-link" (click)="logout()">Logout</a>
-    </div>
-    <!-- <div class="navbar-nav ml-auto" *ngIf="!currentUser">
-       <a href="#" routerLink="/login" class="nav-item nav-link">Login</a>
-     </div>-->
-  </div>
-</nav>
-<!-- main app container -->
-<div class="container-fluid full-page">
-  <div class="row  bg-light">
-    <div class="col jumbotron">
-      <alert></alert>
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-</div>
-<!-- main app container -->
+ <mat-sidenav-container class="example-container">
+  <mat-sidenav opened mode="side" class="side"><app-sidebar></app-sidebar></mat-sidenav>
+  <router-outlet></router-outlet> 
+</mat-sidenav-container> 
 
-<!-- Footer -->
-<footer class="page-footer font-small bg-info">
-  <!-- Copyright -->
-  <div class="footer-copyright text-center py-3">© 2020 Copyright:
-    <a href="https://www.builtrix.tech/">Builtrix : Trusted METRICs for Your Buildings!</a>
-  </div>
-  <!-- Copyright -->
-</footer>
-<!-- Footer -->
+
 
 <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1"
      role="dialog" aria-labelledby="dialog-child-name">
@@ -69,6 +32,3 @@
     </div>
   </div>
 </div>
-
-
-

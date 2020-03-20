@@ -28,15 +28,15 @@ export class ElectricityConsumptionOverTimeComponent implements OnInit {
           this.chartOptions = {
             chart: {
               type: 'column',
-              backgroundColor: null,
+            /*   backgroundColor: null,
               grid: true,
               gridLineColor: '#0066cc',
-              plotBackgroundColor: '#F7F7F7',
-              width: 800,
-              height: 400
+              plotBackgroundColor: '#F7F7F7', */
+            /*   width: 800,
+              height: 400 */
             },
             title: {
-              text: ''
+              text: 'Cost of Electricity Over Time  '
             },
             xAxis: {
               /* categories: ['Jan-2018', 'Feb-2018', 'Mar-2018', 'Apr-2018', 'May-2018', 'Jun-2018',
@@ -57,12 +57,15 @@ export class ElectricityConsumptionOverTimeComponent implements OnInit {
               gridLineWidth: 2
             },
             tooltip: {
-              pointFormat: '{series.name}: <b>{point.y:.2f}</b><br/>',
+              /* pointFormat: '{series.name}: <b>{point.y:.2f}</b><br/>' */shared: true,
             }
             ,
             plotOptions: {
               column: {
-                stacking: 'normal'
+                stacking: 'normal',
+                pointPadding:0.4,
+                // borderWidth: 0,
+               groupPadding: 0,
               }
             }
             ,
@@ -85,39 +88,39 @@ export class ElectricityConsumptionOverTimeComponent implements OnInit {
               {
                 name: 'Reactive\nPower',
                 // data: [9.34, 9.32, 10.21, 10.56, 13.36, 16.35, 9.78, 6.43, 6.4, 9.37, 12.25, 6.02],
-                data: data.content.reactivePowerValues,
-                color: '#ff00ff'
+                data:[null, null, null, null, null, null,null, null, null, null], /* data.content.reactivePowerValues, */
+                color: ' #FF5630'
               },
               {
                 name: 'Normal\nHours',
                 // data: [1844.74, 1932.34, 1715.54, 1833.96, 1538.25, 1451.76, 1729.1, 878.35, 1743.17, 1881.22, 1728.28, 1834.11],
-                data: data.content.normalValues,
-                color: '#ff944d'
+                data:[1780.00,1700.00, null, null, null, null,null, null, null, null],/*  data.content.normalValues, */
+                color: '#FFAB00'
               },
               {
                 name: 'Peak\nHours',
                 // data: [878.11, 944.15, 829.95, 690.54, 473.42, 429.33, 513.55, 547.49, 481.35, 527.35, 695.46, 865.32],
-                data: data.content.peakValues,
-                color: '#ff0000'
+                data:[611.00, 516.00, null, null, null, null,null, null, null, null],/*  data.content.peakValues, */
+                color: ' #36B37E'
               },
               {
                 name: 'Free\nHours',
                 // data: [437.62, 402.36, 467.34, 460.2, 369.59, 414.66, 368.28, 406.59, 453.63, 397.01, 427.34, 556.36],
-                data: data.content.freeValues,
-                color: '#ffff00'
+                data:[430.00,300.00, null, null, null, null,null, null, null, null],   /*  data.content.freeValues, */
+                color: '#6554C0'
               },
               {
                 name: 'Off\nHours',
                 // data: [265.96, 282.73, 238.51, 250.71, 211.15, 209.45, 209, 228.47, 227.03, 220.12, 245.33, 310.36],
-                data: data.content.offValues,
-                color: '#248f24'
+                data: [366.00,320.00, null, null, null, null,null, null, null, null],/*  data.content.offValues, */
+                color: ' #3A9AFC'
               },
               {
                 type: 'spline',
                 name: 'Baseline',
                 // data: [1844.74, 1932.34, 1715.54, 1833.96, 1538.25, 1451.76, 1729.1, 878.35, 1743.17, 1881.22, 1728.28, 1834.11],
-                data: data.content.baseLineValues,
-                color: '#0b0003'
+                data: [1912, 1912, 2131,1912,2014,1739,2028, 2161,2016, 2332,2683,2673],/* data.content.baseLineValues */
+                color: '#4C5E81'
               }
             ]
             ,
