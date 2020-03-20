@@ -1,5 +1,5 @@
 <hr/>
-<h5 align="center">Building Details</h5>
+<!-- <h5 align="center">Building Details</h5>
 <br>
 <div class="container" *ngIf="building">
   <div hidden>
@@ -27,6 +27,50 @@
       <a routerLink="/wizard" class="btn btn-link">Update Form</a>
     </div>
   </div>
+</div> -->
+
+<div hidden>
+  {{building.id}}
 </div>
+
+<h3>General information</h3>
+<mat-card class="card-1">
+  <mat-card-header>
+    <div mat-card-avatar class="example-header-image"></div>
+
+    <mat-card-title id="title-color-card">Current Month Summary</mat-card-title>
+
+
+
+    <mat-card-subtitle></mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="container">
+      <div class="row">
+        <div class="col-6">
+          <h5>Property Function:</h5>
+          <h5>Gloss Floor Area(m2):</h5>
+          <h5>Built in:</h5>
+          <h5>Date of Report Generation:</h5>
+          <h5>Property Address:</h5>
+        </div>
+        <div class="col-6 fixed">
+          <h5>Office</h5>
+          <h5>{{building.area}} </h5>
+          <h5>11</h5>
+          <h5>Mar-11-2020</h5>
+          <h5>{{building.postalAddress}}</h5>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+
+</mat-card>
+<hr>
+
+
+
+
 
 <hr/>

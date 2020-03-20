@@ -89,11 +89,15 @@ export class BeScoreComponent implements OnInit, OnDestroy {
           innerRadius: '103%'
         }]
       },
+      credits:{
+        enabled:false
+      }
+      ,
       tooltip: {
         enabled: false
       },
       yAxis: {
-        min: 0,
+        /* min: 0,
         max: 55,
         minorTickInterval: 'auto',
         minorTickWidth: 1,
@@ -105,7 +109,22 @@ export class BeScoreComponent implements OnInit, OnDestroy {
         tickWidth: 2,
         tickPosition: 'inside',
         tickLength: 10,
-        tickColor: '#666',
+        tickColor: '#666', */
+
+        min: 0,
+        max: 55,
+  
+        minorTickInterval: 'auto',
+        minorTickWidth: 1,
+        minorTickLength: 25,
+        minorTickPosition: 'outside',
+        minorTickColor: '#0052D4',
+  
+        tickPixelInterval: 30,
+        tickWidth: 1,
+        tickPosition: 'outside',
+        tickLength: 40,
+        tickColor: '#0052D4',
         labels: {
           step: 2,
           rotation: 'auto'
@@ -117,19 +136,19 @@ export class BeScoreComponent implements OnInit, OnDestroy {
             bold: true
           }
         },
-        plotBands: [{
+        plotBands:  [{
           from: 0,
-          to: 27,
-          color: '#55BF3B' // green
-        }, {
-          from: 27,
-          to: 50,
-          color: '#DDDF0D'  // yellow
-        }, {
-          from: 50,
-          to: 55,
-          color: '#DF5353' // red
-        }]
+          to: 100,
+          color: 'rgba(58, 154, 252, 0.6)' // green
+      }, {
+          from: 100,
+          to: 160,
+          color: 'rgba(58, 154, 252, 0.4)' // yellow
+      }, {
+          from: 160,
+          to: 200,
+          color: 'rgba(58, 154, 252, 0.2)' // red
+      }]
       },
       series: [{
         name: 'Speed',

@@ -32,6 +32,10 @@ export class CarbonPieChartComponent implements OnInit {
             title: {
               text: 'Average Contribution of Tariffs in Carbon Footprint'
             },
+            credits:{
+              enabled:false
+            }
+            ,
             tooltip: {
               pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
             },
@@ -62,25 +66,25 @@ export class CarbonPieChartComponent implements OnInit {
                   name: 'CO2 Off-hours',
                   // y: 11.4,
                   y: data.content.co2Off,
-                  color: '#0099ff'
+                  color: '#6554C0'
                 },
                 {
                   name: 'CO2 Free-hours',
                   // y: 19.4,
                   y: data.content.co2Free,
-                  color: '#ffff00'
+                  color: '#FFAB00'
                 },
                 {
                   name: 'CO2 Peak-hours',
                   // y: 18.1,
                   y: data.content.co2Peak,
-                  color: '#ff0000'
+                  color: '#FF5630'
                 },
                 {
                   name: 'CO2 Normal-hours',
                   // y: 51,
                   y: data.content.co2Normal,
-                  color: '#ff944d'
+                  color: '#3A9AFC'
                 }
               ]
             }]

@@ -1,12 +1,23 @@
-<div class="container justify-content-md-center">
-  <div class="row" style="height: 500px;">
-    <div class="col highcharts-container">
+
       <app-cost-stack-chart></app-cost-stack-chart>
-    </div>
-  </div>
+ 
+ 
   <div class="row">
-    <div class="col highcharts-container">
+    <div class="col-6 highcharts-container">
       <app-cost-pie-chart></app-cost-pie-chart>
     </div>
+    <div class="col-6 highcharts-container">
+      <app-carbon-pie-chart></app-carbon-pie-chart>
+    </div>
+  </div>
+
+<div class="container justify-content-md-center">
+  <div class="row">
+    <div class="col highcharts-container">
+      <app-carbon-spline-chart></app-carbon-spline-chart>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 70px;">
+    
   </div>
 </div>

@@ -28,12 +28,12 @@ export class ElectricityConsumptionOverTimeComponent implements OnInit {
           this.chartOptions = {
             chart: {
               type: 'column',
-              backgroundColor: null,
+            /*   backgroundColor: null,
               grid: true,
               gridLineColor: '#0066cc',
-              plotBackgroundColor: '#F7F7F7',
-              width: 800,
-              height: 400
+              plotBackgroundColor: '#F7F7F7', */
+            /*   width: 800,
+              height: 400 */
             },
             title: {
               text: ''
@@ -117,7 +117,7 @@ export class ElectricityConsumptionOverTimeComponent implements OnInit {
                 name: 'Baseline',
                 // data: [1844.74, 1932.34, 1715.54, 1833.96, 1538.25, 1451.76, 1729.1, 878.35, 1743.17, 1881.22, 1728.28, 1834.11],
                 data: data.content.baseLineValues,
-                color: '#0b0003'
+                color: '#4C5E81'
               }
             ]
             ,

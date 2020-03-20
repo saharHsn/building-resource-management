@@ -49,6 +49,10 @@ export class CostPieChartComponent implements OnInit {
                 showInLegend: true
               }
             },
+            credits:{
+              enabled:false
+            }
+            ,
             series: [{
               type: 'pie',
 
@@ -57,37 +61,37 @@ export class CostPieChartComponent implements OnInit {
                   name: 'Contracted\n' +
                     'Power',
                   y: data.content.contractedPower,
-                  color: '#0066cc'
+                  color: '#36B37E'
                 },
                 {
                   name: 'Off-hours',
                   y: data.content.offHours,
-                  color: '#248f24'
+                  color: '#6554C0'
                 },
                 {
                   name: 'Free-hours',
                   y: data.content.freeHours,
-                  color: '#ffff00'
+                  color: '#FFAB00'
                 },
                 {
                   name: 'Peak-hours',
                   y: data.content.peakHours,
-                  color: '#ff0000'
+                  color: '#FF5630'
                 },
                 {
                   name: 'Normal-hours',
                   y: data.content.normalHours,
-                  color: '#ff944d'
+                  color: '#3A9AFC'
                 },
                 {
-                  name: 'Power in Peak Hours',
+                  name: 'Peak Hours',
                   y: data.content.powerInPeakHours,
-                  color: '#ff6666'
+                  color: '#FF5630'
                 },
                 {
                   name: 'Reactive Power',
                   y: data.content.reactivePower,
-                  color: '#ff00ff'
+                  color: '#0065FF'
                 },
               ]
             }]

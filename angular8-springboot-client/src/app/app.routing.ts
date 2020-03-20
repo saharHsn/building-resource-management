@@ -17,7 +17,7 @@ import {WizardFormComponent} from './wizard-form/wizard-form.component';
 import {NormalizedConsumptionComponent} from './charts/normalized-consumption/normalized-consumption.component';
 import {BuildingDetailsComponent} from './building/building-details/building-details.component';
 import {ReportComponent} from './charts/report/report.component';
-
+import {ProfileViewComponent  } from "./charts/profile/profile-view/profile-view.component";
 const routes: Routes = [
   {path: '', component: HomeComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent},
@@ -35,6 +35,7 @@ const routes: Routes = [
   {path: 'consumption-component', component: ConsumptionComponent},
   {path: 'normalized-consumption', component: NormalizedConsumptionComponent},
   {path: 'report', component: ReportComponent},
+  {path: 'profile', component: ProfileViewComponent},
 
   // otherwise redirect to home
   {path: '**', redirectTo: ''}

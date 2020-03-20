@@ -28,12 +28,12 @@ export class CostStackChartComponent implements OnInit {
           this.chartOptions = {
             chart: {
               type: 'column',
-              backgroundColor: null,
-              grid: true,
-              gridLineColor: '#0066cc',
-              plotBackgroundColor: '#F7F7F7',
-              width: 800,
-              height: 400
+          /*     backgroundColor: null, */
+              /* grid: true, */
+           /*    gridLineColor: '#0066cc', */
+              /* plotBackgroundColor: '#F7F7F7', */
+           /*    width: 800,
+              height: 400 */
             },
             title: {
               text: 'Cost of Electricity Over Time'
