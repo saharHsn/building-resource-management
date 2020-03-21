@@ -36,7 +36,7 @@ export class ElectricityConsumptionOverTimeComponent implements OnInit {
               height: 400 */
             },
             title: {
-              text: 'Cost of Electricity Over Time  '
+              text: '   Electricity Consumption Over Time '
             },
             xAxis: {
               /* categories: ['Jan-2018', 'Feb-2018', 'Mar-2018', 'Apr-2018', 'May-2018', 'Jun-2018',
