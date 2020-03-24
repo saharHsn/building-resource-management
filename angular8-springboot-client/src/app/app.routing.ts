@@ -18,6 +18,8 @@ import {NormalizedConsumptionComponent} from './charts/normalized-consumption/no
 import {BuildingDetailsComponent} from './building/building-details/building-details.component';
 import {ReportComponent} from './charts/report/report.component';
 import {ProfileViewComponent} from './charts/profile/profile-view/profile-view.component';
+import { PanelComponent } from './notification_panel/panel/panel.component';
+
 
 const routes: Routes = [
   {path: '', component: HomeComponent, canActivate: [AuthGuard]},
@@ -28,6 +30,7 @@ const routes: Routes = [
   // { path: 'weather', component: WeatherComponent },
   {path: 'predictions', component: PredictionsComponent},
   {path: 'overall', component: OverallComponent},
+  {path: 'notifications', component: PanelComponent},
   {path: 'be_score', component: BeScoreComponent},
   {path: 'cost', component: CostComponent},
   {path: 'cost-stack', component: CostStackChartComponent},
@@ -37,7 +40,7 @@ const routes: Routes = [
   {path: 'normalized-consumption', component: NormalizedConsumptionComponent},
   {path: 'report', component: ReportComponent},
   {path: 'profile', component: ProfileViewComponent},
-
+ 
   // otherwise redirect to home
   {path: '**', redirectTo: ''}
 ];

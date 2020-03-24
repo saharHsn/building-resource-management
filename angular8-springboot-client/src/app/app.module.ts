@@ -78,13 +78,20 @@ import {
   MatListModule,
   MatSidenavModule,
   MatTabsModule,
-  MatToolbarModule
+  MatToolbarModule,
+  MatFormFieldModule
 } from '@angular/material';
 import {MatCardModule} from '@angular/material/card';
 import {ColorEnergyComponent} from './charts/report/color-energy/color-energy.component';
 import {GeneralComponent} from './charts/profile/general/general.component';
 import {BuildingComponent} from './charts/profile/building/building.component';
 import {ProfileViewComponent} from './charts/profile/profile-view/profile-view.component';
+import {MatBottomSheetModule} from '@angular/material/bottom-sheet'; 
+import {MatDialogModule} from '@angular/material/dialog';;
+import { NotificationsComponent } from './default/notifications/notifications.component'
+import {MatMenuModule} from '@angular/material/menu';;
+import { PanelComponent } from './notification_panel/panel/panel.component';
+
 // import { AngularWeatherWidgetModule, WeatherApiName } from 'angular-weather-widget';
 // import {HighchartsChartComponent} from 'highcharts-angular';
 // angular material
@@ -112,7 +119,11 @@ import {ProfileViewComponent} from './charts/profile/profile-view/profile-view.c
     MatListModule,
     MatCardModule,
     MatBadgeModule,
-    MatTabsModule
+    MatTabsModule,
+    MatBottomSheetModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatMenuModule
   ],
   declarations: [
     AppComponent,
@@ -130,6 +141,7 @@ import {ProfileViewComponent} from './charts/profile/profile-view/profile-view.c
     BuildingUsageComponent,
     BuildingAgeComponent,
     EnergyCertificateComponent,
+    PanelComponent,
     OverallComponent,
     BeScoreComponent,
     WeatherComponent,
@@ -141,6 +153,7 @@ import {ProfileViewComponent} from './charts/profile/profile-view/profile-view.c
     ProfileViewComponent,
     BuildingComponent,
     GeneralComponent,
+    NotificationsComponent,
     // HighchartsChartComponent,
     ReportBeScoreComponent,
     CostPieChartComponent,
@@ -168,8 +181,14 @@ import {ProfileViewComponent} from './charts/profile/profile-view/profile-view.c
     EnergyEfficiencyComponent,
     CarbonComponent,
     EnergyEfficiencySymbolsComponent,
-    ColorEnergyComponent],
+    ColorEnergyComponent ,
+  
+   
+     ],
+  
+entryComponents:[ NotificationsComponent,]
 
+,
 
   providers: [
     GoogleAnalyticsService,
