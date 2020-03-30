@@ -24,21 +24,26 @@ import java.util.List;
 @ConfigurationProperties("builtrix.security")
 public class SessionService extends GenericCrudServiceBase<Session, SessionRepository> {
 
-	@Setter
-	private int exp = 1 * 24 * 3600;
+    @Setter
+    private int exp = 1 * 24 * 3600;
 
-	protected SessionService(SessionRepository sessionRepository) {
-		super(sessionRepository);
-	}
+    protected SessionService(SessionRepository sessionRepository) {
+        super(sessionRepository);
+    }
 
-	@Cacheable(cacheNames = "SessionService.getSession", key = "#sessionKey")
-	public Session getSession(String sessionKey) throws NotFoundException {
-		Session session = this.repository.findBySessionKey(sessionKey);
-		if (session == null) {
-			throw new NotFoundException("Session", "sessionKey", sessionKey);
-		}
-		return session;
-	}
+    @Override
+    public void delete(String id) throws NotFoundException {
+
+    }
+
+    @Cacheable(cacheNames = "SessionService.getSession", key = "#sessionKey")
+    public Session getSession(String sessionKey) throws NotFoundException {
+        Session session = this.repository.findBySessionKey(sessionKey);
+        if (session == null) {
+            throw new NotFoundException("Session", "sessionKey", sessionKey);
+        }
+        return session;
+    }
 
 	private Session createNewSession(User user) {
 		Session session = new Session();

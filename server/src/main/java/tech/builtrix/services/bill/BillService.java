@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import tech.builtrix.base.GenericCrudServiceBase;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.bill.Bill;
@@ -116,6 +117,12 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
 
     public void update(BillDto billDto) {
         save(billDto);
+    }
+
+    public List<Bill> findByBuilding(String buildingId) {
+        List<Bill> bills;
+        bills = this.repository.findByBuildingId(buildingId);
+        return bills;
     }
 
     public List<Bill> filterByFromDateAndMonthAndBuilding(Integer year, Integer month1, Integer month2, Integer month3,
@@ -226,30 +233,86 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
     }
 
     private BillDto convertBillToDto(Bill bill) throws NotFoundException {
-        BillParameterInfo aeFree = this.billParameterService.findById(bill.getAEFreeHours());
-        BillParameterDto aeFreeDto = new BillParameterDto(aeFree);
-        BillParameterInfo aeNormal = this.billParameterService.findById(bill.getAENormalHours());
-        BillParameterDto aeNormalDto = new BillParameterDto(aeNormal);
-        BillParameterInfo aeOff = this.billParameterService.findById(bill.getAEOffHours());
-        BillParameterDto aeOffDto = new BillParameterDto(aeOff);
-        BillParameterInfo aePeak = this.billParameterService.findById(bill.getAEPeakHours());
-        BillParameterDto aePeakDto = new BillParameterDto(aePeak);
-        BillParameterInfo rdContracted = this.billParameterService.findById(bill.getRDContractedPower());
-        BillParameterDto rdContractedDto = new BillParameterDto(rdContracted);
-        BillParameterInfo rdPeak = this.billParameterService.findById(bill.getRDPeakHours());
-        BillParameterDto rdPeakDto = new BillParameterDto(rdPeak);
-        BillParameterInfo rdReactive = null;
+
+        BillParameterDto aeFreeDto = null;
+        if (!StringUtils.isEmpty(bill.getAEFreeHours())) {
+            BillParameterInfo aeFree = this.billParameterService.findById(bill.getAEFreeHours());
+            aeFreeDto = new BillParameterDto(aeFree);
+        }
+
+        BillParameterDto aeNormalDto = null;
+        if (!StringUtils.isEmpty(bill.getAENormalHours())) {
+            BillParameterInfo aeNormal = this.billParameterService.findById(bill.getAENormalHours());
+            aeNormalDto = new BillParameterDto(aeNormal);
+        }
+
+        BillParameterDto aeOffDto = null;
+        if (!StringUtils.isEmpty(bill.getAEOffHours())) {
+            BillParameterInfo aeOff = this.billParameterService.findById(bill.getAEOffHours());
+            aeOffDto = new BillParameterDto(aeOff);
+        }
+        BillParameterDto aePeakDto = null;
+        if (!StringUtils.isEmpty(bill.getAEPeakHours())) {
+            BillParameterInfo aePeak = this.billParameterService.findById(bill.getAEPeakHours());
+            aePeakDto = new BillParameterDto(aePeak);
+        }
+        BillParameterDto rdContractedDto = null;
+        if (!StringUtils.isEmpty(bill.getRDContractedPower())) {
+            BillParameterInfo rdContracted = this.billParameterService.findById(bill.getRDContractedPower());
+            rdContractedDto = new BillParameterDto(rdContracted);
+        }
+        BillParameterDto rdPeakDto = null;
+        if (!StringUtils.isEmpty(bill.getRDPeakHours())) {
+            BillParameterInfo rdPeak = this.billParameterService.findById(bill.getRDPeakHours());
+            rdPeakDto = new BillParameterDto(rdPeak);
+        }
+        BillParameterDto rdFreeDto = null;
+        if (!StringUtils.isEmpty(bill.getRDFreeHours())) {
+            BillParameterInfo rdFree = this.billParameterService.findById(bill.getRDFreeHours());
+            rdFreeDto = new BillParameterDto(rdFree);
+        }
+        BillParameterDto rdOffDto = null;
+        if (!StringUtils.isEmpty(bill.getRDOffHours())) {
+            BillParameterInfo rdOff = this.billParameterService.findById(bill.getRDOffHours());
+            rdOffDto = new BillParameterDto(rdOff);
+        }
+        BillParameterDto rdNormalDto = null;
+        if (!StringUtils.isEmpty(bill.getRDNormalHours())) {
+            BillParameterInfo rdNormal = this.billParameterService.findById(bill.getRDNormalHours());
+            rdNormalDto = new BillParameterDto(rdNormal);
+        }
+        BillParameterInfo rdReactive;
         BillParameterDto rdReactiveDto = null;
         if (bill.getRDReactivePower() != null) {
             rdReactive = this.billParameterService.findById(bill.getRDReactivePower());
             rdReactiveDto = new BillParameterDto(rdReactive);
         }
 
-        BillDto billDto = new BillDto(bill.getBuildingId(), bill.getAddress(), bill.getFromDate(), bill.getFromYear(),
-                bill.getFromMonth(), bill.getFromDate(), bill.getTotalPayable(), bill.getActiveEnergyCost(),
-                bill.getProducedCO2(), bill.getPowerDemandCost(), bill.getAverageDailyConsumption(),
-                bill.getTotalMonthlyConsumption(), aeOffDto, aeFreeDto, aeNormalDto, aePeakDto, rdPeakDto,
-                rdContractedDto, rdReactiveDto);
+        BillDto billDto = new BillDto(bill.getBuildingId(),
+                bill.getElectricityCounterCode(),
+                bill.getCompanyTaxNumber(),
+                bill.getAddress(),
+                bill.getFromDate(),
+                bill.getToDate(),
+                bill.getFromYear(),
+                bill.getFromMonth(),
+                bill.getTotalPayable(),
+                bill.getActiveEnergyCost(),
+                bill.getProducedCO2(),
+                bill.getPowerDemandCost(),
+                bill.getAverageDailyConsumption(),
+                bill.getTotalMonthlyConsumption(),
+                aeFreeDto,
+                rdFreeDto,
+                rdOffDto,
+                aeOffDto,
+                aeNormalDto,
+                rdNormalDto,
+                aePeakDto,
+                rdPeakDto,
+                rdContractedDto,
+                rdReactiveDto
+        );
         return billDto;
     }
 
@@ -268,5 +331,41 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         // return (x) / 12f;
         // According to Mr.Kamarlouei statement
         return x;
+    }
+
+    @Override
+    public void delete(String id) throws NotFoundException {
+        Bill bill = findById(id);
+        if (!StringUtils.isEmpty(bill.getRDReactivePower())) {
+            this.billParameterService.delete(bill.getRDReactivePower());
+        }
+        if (!StringUtils.isEmpty(bill.getAEFreeHours())) {
+            this.billParameterService.delete(bill.getAEFreeHours());
+        }
+        if (!StringUtils.isEmpty(bill.getAENormalHours())) {
+            this.billParameterService.delete(bill.getAENormalHours());
+        }
+        if (!StringUtils.isEmpty(bill.getAEOffHours())) {
+            this.billParameterService.delete(bill.getAEOffHours());
+        }
+        if (!StringUtils.isEmpty(bill.getAEPeakHours())) {
+            this.billParameterService.delete(bill.getAEPeakHours());
+        }
+        if (!StringUtils.isEmpty(bill.getRDContractedPower())) {
+            this.billParameterService.delete(bill.getRDContractedPower());
+        }
+        if (!StringUtils.isEmpty(bill.getRDFreeHours())) {
+            this.billParameterService.delete(bill.getRDFreeHours());
+        }
+        if (!StringUtils.isEmpty(bill.getRDNormalHours())) {
+            this.billParameterService.delete(bill.getRDNormalHours());
+        }
+        if (!StringUtils.isEmpty(bill.getRDOffHours())) {
+            this.billParameterService.delete(bill.getRDOffHours());
+        }
+        if (!StringUtils.isEmpty(bill.getRDPeakHours())) {
+            this.billParameterService.delete(bill.getRDPeakHours());
+        }
+        this.repository.delete(bill);
     }
 }

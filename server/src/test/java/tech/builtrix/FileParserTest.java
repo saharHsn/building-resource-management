@@ -8,9 +8,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import tech.builtrix.exceptions.NotFoundException;
+import tech.builtrix.models.bill.Bill;
 import tech.builtrix.parseEngine.PdfParser;
 import tech.builtrix.services.bill.BillParser;
 import tech.builtrix.services.bill.BillService;
+import tech.builtrix.services.building.BuildingService;
 import tech.builtrix.web.dtos.bill.BillDto;
 
 import java.util.Arrays;
@@ -23,60 +26,71 @@ import java.util.List;
 @SpringBootTest
 @Slf4j
 public class FileParserTest {
-	@Autowired
-	private BillParser billParser;
-	@Autowired
-	private PdfParser pdfParser;
-	@Autowired
-	private BillService billService;
+    @Autowired
+    private BillParser billParser;
+    @Autowired
+    private PdfParser pdfParser;
+    @Autowired
+    private BillService billService;
+    @Autowired
+    private BuildingService buildingService;
 
-	public FileParserTest() {
-	}
+    public FileParserTest() {
+    }
 
-	@Before
-	public void setup() throws Exception {
-	}
+    @Before
+    public void setup() throws Exception {
+    }
 
-	@After
-	public void onFinish() throws Exception {
-	}
+    @After
+    public void onFinish() throws Exception {
+    }
 
-	@Test
-	public void fileExtractorTest() {
-		try {
-			// String document = "2017-DEC-2018-JAN.pdf";
+    @Test
+    public void fileExtractorTest() {
+        try {
+            // String document = "2017-DEC-2018-JAN.pdf";
 
-			String bucket = "metrics-building";
-			/*
-			 * "2017-DEC-2018-JAN.pdf", "2018-APR-MAY.pdf", "2018-AUG-SEP.pdf",
-			 * "2018-DEC-2019-JAN.pdf", "2018-FEB-MAR.pdf", "2018-JAN-FEB.pdf",
-			 * "2018-JUL-Aug.pdf", "2018-JUN-JUL.pdf", "2018-MAR-APR.pdf",
-			 * "2018-MAY-JUN.pdf", "2018-OCT-NOV.pdf", "2018-SEP-OCT.pdf",
-			 * "2019-FEB-MAR.pdf", "2019-JAN-FEB.pdf", "2018-JUN-JUL.pdf",
-			 * "2018-MAR-APR.pdf", "2018-SEP-OCT.pdf"
-			 */
+            String buildingId = "8a199ea5-7c6a-4e80-8658-7ad2c53e69bf";
+            deleteAllBuildingsBills(buildingId);
+            parseFiles(buildingId);
 
-			/*
-			 * , ,
-			 */
-			List<String> documents = Arrays.asList("11190000258792.pdf");
-			for (String document : documents) {
-				BillDto billDto;
-				try {
-					billDto = this.billParser.parseBill("8a199ea5-7c6a-4e80-8658-7ad2c53e69bf", bucket, document);
-					billService.save(billDto);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			/*
-			 * TExtractDto tExtractDto = this.pdfParser.parseFile(bucket, document);
-			 * System.out.println("key value result : " + tExtractDto.getKeyValueResult());
-			 * System.out.println("table result : " + tExtractDto.getTablesResult());
-			 */
-		} catch (Exception e) {
-			// logger.error();
-			System.out.println("Error : " + e.getMessage());
-		}
-	}
+        } catch (Exception e) {
+            // logger.error();
+            System.out.println("Error : " + e.getMessage());
+        }
+    }
+
+    private void parseFiles(String buildingId) {
+        String bucket = "metrics-bills-test";
+        List<String> documents = Arrays.asList(
+                "11190000169528.pdf",
+                "11190000258792.pdf",
+                "11190000316582.pdf",
+                "11190000368992.pdf",
+                "11190000368992.pdf",
+                "11190000426568.pdf",
+                "11190000473570.pdf",
+                "11190000522534.pdf",
+                "11190000568559.pdf",
+                "11200000029587.pdf",
+                "11200000032961.pdf",
+                "11200000103798.pdf");
+        for (String document : documents) {
+            BillDto billDto;
+            try {
+                billDto = this.billParser.parseBill(buildingId, bucket, document);
+                billService.save(billDto);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void deleteAllBuildingsBills(String buildingId) throws NotFoundException {
+        List<Bill> buildingsBills = this.billService.findByBuilding(buildingId);
+        for (Bill bill : buildingsBills) {
+            billService.delete(bill.getId());
+        }
+    }
 }

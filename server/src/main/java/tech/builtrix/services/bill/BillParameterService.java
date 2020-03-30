@@ -16,18 +16,23 @@ import java.util.Optional;
 @Component
 @Slf4j
 public class BillParameterService extends GenericCrudServiceBase<BillParameterInfo, BillParameterRepository> {
-	protected BillParameterService(BillParameterRepository repository) {
-		super(repository);
-	}
+    protected BillParameterService(BillParameterRepository repository) {
+        super(repository);
+    }
 
-	public BillParameterInfo findById(String id) throws NotFoundException {
-		Optional<BillParameterInfo> opitonal = this.repository.findById(id);
-		if (opitonal.isPresent()) {
-			return opitonal.get();
-		} else {
-			throw new NotFoundException("bill param", "id", id);
-		}
-	}
+    @Override
+    public void delete(String id) throws NotFoundException {
+        repository.delete(findById(id));
+    }
+
+    public BillParameterInfo findById(String id) throws NotFoundException {
+        Optional<BillParameterInfo> opitonal = this.repository.findById(id);
+        if (opitonal.isPresent()) {
+            return opitonal.get();
+        } else {
+            throw new NotFoundException("bill param", "id", id);
+        }
+    }
 
 	public BillParameterInfo save(BillParameterDto billParameterDto) {
 		BillParameterInfo billParameterInfo = new BillParameterInfo(billParameterDto);
