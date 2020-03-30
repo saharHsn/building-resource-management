@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ChartService} from '../chartService';
-import {Saving} from './Saving';
+import {CurrentMonthSummary} from './CurrentMonthSummary';
 
 @Component({
   templateUrl: './overall.component.html',
@@ -9,7 +9,7 @@ import {Saving} from './Saving';
 })
 export class OverallComponent implements OnInit {
   id: number;
-  saving: Saving;
+  currentMonthSummary: CurrentMonthSummary;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -18,13 +18,13 @@ export class OverallComponent implements OnInit {
 
   ngOnInit() {
     this.id = this.route.snapshot.params.id;
-    this.saving = new Saving();
-    this.chartService.savingThisMonth()
+    this.currentMonthSummary = new CurrentMonthSummary();
+    this.chartService.currentMonthSummary()
       .subscribe(data => {
         console.log(data);
-        this.saving.consumption = data.content.consumption;
-        this.saving.cost = data.content.cost;
-        this.saving.environmental = data.content.environmental;
+        this.currentMonthSummary.consumption = data.content.consumption;
+        this.currentMonthSummary.cost = data.content.cost;
+        this.currentMonthSummary.environmental = data.content.environmental;
       }, error => console.log(error));
   }
 
