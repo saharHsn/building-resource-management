@@ -79,7 +79,10 @@ import {
   MatSidenavModule,
   MatTabsModule,
   MatToolbarModule,
-  MatFormFieldModule
+  MatFormFieldModule,
+  MatDatepickerModule,
+    MatNativeDateModule,
+    MatInputModule
 } from '@angular/material';
 import {MatCardModule} from '@angular/material/card';
 import {ColorEnergyComponent} from './charts/report/color-energy/color-energy.component';
@@ -90,7 +93,8 @@ import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatDialogModule} from '@angular/material/dialog';;
 import { NotificationsComponent } from './default/notifications/notifications.component'
 import {MatMenuModule} from '@angular/material/menu';;
-import { PanelComponent } from './notification_panel/panel/panel.component';
+import { PanelComponent } from './notification_panel/panel/panel.component';;
+import { DownloadComponent } from './building/download/download.component'
 
 // import { AngularWeatherWidgetModule, WeatherApiName } from 'angular-weather-widget';
 // import {HighchartsChartComponent} from 'highcharts-angular';
@@ -123,7 +127,10 @@ import { PanelComponent } from './notification_panel/panel/panel.component';
     MatBottomSheetModule,
     MatDialogModule,
     MatFormFieldModule,
-    MatMenuModule
+    MatMenuModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatInputModule
   ],
   declarations: [
     AppComponent,
@@ -182,11 +189,12 @@ import { PanelComponent } from './notification_panel/panel/panel.component';
     CarbonComponent,
     EnergyEfficiencySymbolsComponent,
     ColorEnergyComponent ,
+    DownloadComponent,
   
    
      ],
   
-entryComponents:[ NotificationsComponent,]
+entryComponents:[ NotificationsComponent,DownloadComponent]
 
 ,
 
@@ -196,7 +204,7 @@ entryComponents:[ NotificationsComponent,]
     // {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true}
 
     // provider used to create fake backend
-  ],
+    MatDatepickerModule],
   bootstrap: [AppComponent]
 })
 export class AppModule {

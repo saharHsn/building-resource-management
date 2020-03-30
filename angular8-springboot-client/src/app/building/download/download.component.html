@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Hi SaharSadat!</h1>
+<div mat-dialog-content>
+  <p>You can download the row data including the meta data of building and electricity consumption.</p>
+  <mat-form-field class="mr-5">
+    <mat-label>From</mat-label>
+    <input matInput [matDatepicker]="picker1">
+    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+    <mat-datepicker #picker1></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>To</mat-label>
+    <input matInput [matDatepicker]="picker2">
+    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+    <mat-datepicker #picker2></mat-datepicker>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button  mat-dialog-close>Cancel</button>
+  <button mat-button style="background-color:#3A9AFC;color: white;">Download</button>
+</div>

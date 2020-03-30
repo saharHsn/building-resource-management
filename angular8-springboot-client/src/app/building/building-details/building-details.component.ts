@@ -3,7 +3,9 @@ import {Component, OnInit} from '@angular/core';
 import {BuildingService} from '../service/building.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BuildingAge} from '../enums/buildingAge';
-
+/* services of dialog */
+import { MatDialog } from "@angular/material";
+import { DownloadComponent } from '../download/download.component';
 @Component({
   selector: 'app-building-details',
   templateUrl: './building-details.component.html',
@@ -16,7 +18,8 @@ export class BuildingDetailsComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private buildingService: BuildingService) {
+              private buildingService: BuildingService,
+              public dialog:MatDialog) {
   }
 
   ngOnInit() {
@@ -34,6 +37,10 @@ export class BuildingDetailsComponent implements OnInit {
       }, error => console.log(error));
   }
 
+
+  openDialog(){
+    this.dialog.open(DownloadComponent);
+  }
   /* list() {
      this.router.navigate(['buildings']);
    }*/

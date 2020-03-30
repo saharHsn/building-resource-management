@@ -33,7 +33,31 @@
   {{building.id}}
 </div>
 
-<h3>General information</h3>
+
+<!-- title and buttons -->
+<div class="container ">
+  <div class="row justify-content-between " id="prueba">
+    <div class="col col-auto">
+      <h3>General information</h3>
+    </div>
+    <div class="example-button-row col col-auto">
+      <button mat-button  (click)="openDialog()">
+        <mat-icon >cloud_download</mat-icon> Download
+      </button>
+      <button mat-button color="Disabled" >
+        <mat-icon>print</mat-icon>Print
+      </button>
+      <button mat-button color="Disabled" >
+        <mat-icon>share</mat-icon> Share report
+      </button>
+     
+    </div>
+    
+  
+   
+  </div>
+</div>
+
 <mat-card class="card-1">
   <mat-card-header>
     <div mat-card-avatar class="example-header-image"></div>
