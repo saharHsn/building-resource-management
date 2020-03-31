@@ -80,29 +80,29 @@
 
 
 <div class="container justify-content-md-center">
-  <div class="row" style="height: 500px;" *ngIf="saving">
- <!--    <div class="col my-auto">
-      <app-predictions></app-predictions>
-    </div> -->
-<!--     <div class="col my-auto">
-      <div class="border border-info">
-        <div class="h5 text-center">
-          Savings This Month
-        </div>
-      </div>
-      <div class="border border-info">
-        <div class="text-center">
-          Consumption (kWh): {{saving.consumption}}
-        </div>
-        <div class="text-center">
-          <br>Cost (€): {{saving.cost}}
-        </div>
-        <div class="text-center">
-          <br>Environmental (kg CO2): {{saving.environmental}}
-          <br>
-        </div>
-      </div>
-    </div> -->
+  <div class="row" style="height: 500px;" *ngIf="currentMonthSummary">
+    <!--    <div class="col my-auto">
+         <app-predictions></app-predictions>
+       </div> -->
+    <!--     <div class="col my-auto">
+          <div class="border border-info">
+            <div class="h5 text-center">
+              Savings This Month
+            </div>
+          </div>
+          <div class="border border-info">
+            <div class="text-center">
+              Consumption (kWh): {{saving.consumption}}
+            </div>
+            <div class="text-center">
+              <br>Cost (€): {{saving.cost}}
+            </div>
+            <div class="text-center">
+              <br>Environmental (kg CO2): {{saving.environmental}}
+              <br>
+            </div>
+          </div>
+        </div> -->
     <div class="col my-auto">
       <app-be-score></app-be-score>
     </div>
