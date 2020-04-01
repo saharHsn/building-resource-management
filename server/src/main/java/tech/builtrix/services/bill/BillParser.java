@@ -139,10 +139,7 @@ public class BillParser {
             redes_ = "968,77 E ";
         }
         Float powerDemandCost = getAmount(redes_);
-        int year = DateUtil.getYear(fromDate);
-        int month = DateUtil.getMonth(fromDate);
-        float CO2_PRODUCTION_RATE = getCO2ProductionRate(year);
-        Float producedCo2 = totalMonthlyConsumption * CO2_PRODUCTION_RATE;
+
 
         ElectricityBillType electricityBillType;
         electricityBillType = detectBillType(table);
@@ -193,7 +190,13 @@ public class BillParser {
             rDContractedPower = getBillParameter(column_value, REATIVA_FORNECIDA_NO_VAZIO, ParameterType.RD_REACTIVE_POWER);
 
             totalMonthlyConsumption = getTotalConsumptionValue(column_value);
+
         }
+        int year = DateUtil.getYear(fromDate);
+        int month = DateUtil.getMonth(fromDate);
+        float CO2_PRODUCTION_RATE = getCO2ProductionRate(year);
+        Float producedCo2 = totalMonthlyConsumption * CO2_PRODUCTION_RATE;
+
         BillDto bill = new BillDto(buildingId,
                 electricityCounterCode,
                 companyTaxNumberStr,

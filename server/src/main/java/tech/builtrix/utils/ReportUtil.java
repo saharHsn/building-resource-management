@@ -100,29 +100,52 @@ public class ReportUtil {
             if (billDto.getRDContractedPower() != null) {
                 contractedPowerValues.add(ReportUtil.roundDecimal(billDto.getRDContractedPower().getTotalTariffCost()));
             }
+            Float aeFree = 0f;
+            Float rdFree = 0f;
             if (billDto.getAEFreeHours() != null) {
-                Float aeFree = billDto.getAEFreeHours().getTotalTariffCost();
-                Float rdFree = billDto.getRDFreeHours().getTotalTariffCost();
-                freeValues.add(ReportUtil.roundDecimal(aeFree + rdFree));
+                aeFree = billDto.getAEFreeHours().getTotalTariffCost();
             }
+            if (billDto.getRDFreeHours() != null) {
+                rdFree = billDto.getRDFreeHours().getTotalTariffCost();
+            }
+            freeValues.add(ReportUtil.roundDecimal(aeFree + rdFree));
+
+            Float aeOff = 0f;
+            Float rdOff = 0f;
             if (billDto.getAEOffHours() != null) {
-                Float aeOff = billDto.getAEOffHours().getTotalTariffCost();
-                Float rdOff = billDto.getAEOffHours().getTotalTariffCost();
-                offValues.add(ReportUtil.roundDecimal(aeOff + rdOff));
+                aeOff = billDto.getAEOffHours().getTotalTariffCost();
             }
+            if (billDto.getRDOffHours() != null) {
+                rdOff = billDto.getRDOffHours().getTotalTariffCost();
+            }
+            offValues.add(ReportUtil.roundDecimal(aeOff + rdOff));
+
+            Float aePeak = 0f;
+            Float rdPeak = 0f;
             if (billDto.getAEPeakHours() != null) {
-                Float aePeak = billDto.getAEPeakHours().getTotalTariffCost();
-                Float rdPeak = billDto.getRDPeakHours().getTotalTariffCost();
-                peakValues.add(ReportUtil.roundDecimal(aePeak + rdPeak));
+                aePeak = billDto.getAEPeakHours().getTotalTariffCost();
             }
+            if (billDto.getRDPeakHours() != null) {
+                rdPeak = billDto.getRDPeakHours().getTotalTariffCost();
+            }
+            peakValues.add(ReportUtil.roundDecimal(aePeak + rdPeak));
+
+
             if (billDto.getRDPeakHours() != null) {
                 powerInPeakValues.add(ReportUtil.roundDecimal(billDto.getRDPeakHours().getTotalTariffCost()));
             }
+
+            Float aeNormal = 0f;
+            Float rdNormal = 0f;
             if (billDto.getAENormalHours() != null) {
-                Float aeNormal = billDto.getAENormalHours().getTotalTariffCost();
-                Float rdNormal = billDto.getRDNormalHours().getTotalTariffCost();
-                normalValues.add(ReportUtil.roundDecimal(aeNormal + rdNormal));
+                aeNormal = billDto.getAENormalHours().getTotalTariffCost();
             }
+            if (billDto.getRDNormalHours() != null) {
+                rdNormal = billDto.getRDNormalHours().getTotalTariffCost();
+            }
+            normalValues.add(ReportUtil.roundDecimal(aeNormal + rdNormal));
+
+
             if (billDto.getRDReactivePower() != null) {
                 reactivePowerValues.add(ReportUtil.roundDecimal(billDto.getRDReactivePower().getTotalTariffCost()));
             }
