@@ -26,33 +26,42 @@
       <mat-card-title id="title-color-card">Current Month Summary</mat-card-title>
       <mat-card-subtitle></mat-card-subtitle>
     </mat-card-header>
-   
+
     <mat-card-content>
       <div class="container">
         <div class="row">
-          <div class="col"><mat-icon >attach_money</mat-icon> Cost</div>
-          
-          <div class="col3">{{saving.cost}} </div>
+          <div class="col">
+            <mat-icon>attach_money</mat-icon>
+            Cost
+          </div>
+
+          <div class="col3">{{currentMonthSummary.cost}} </div>
         </div>
         <hr>
         <div class="row">
-          <div class="col"><mat-icon >timeline</mat-icon> Consumption</div>
-          
-          <div class="col3">{{saving.consumption}}</div>
+          <div class="col">
+            <mat-icon>timeline</mat-icon>
+            Consumption
+          </div>
+
+          <div class="col3">{{currentMonthSummary.consumption}}</div>
         </div>
         <hr>
         <div class="row">
-          <div class="col"><mat-icon >eco</mat-icon>Environmental(kg CO2)</div>
-      
-          <div class="col3">{{saving.environmental}}</div>
+          <div class="col">
+            <mat-icon>eco</mat-icon>
+            Environmental(kg CO2)
+          </div>
+
+          <div class="col3">{{currentMonthSummary.environmental}}</div>
         </div>
-  
+
       </div>
       <div>
        <!--  <app-be-score></app-be-score> -->
       </div>
     </mat-card-content>
-  
+
   </mat-card>
   <hr>
   <mat-card class="example-card2 ">
@@ -61,20 +70,19 @@
       <mat-card-title id="title-color-card"></mat-card-title>
       <mat-card-subtitle></mat-card-subtitle>
     </mat-card-header>
-   
+
     <mat-card-content>
-     
-      
-         <app-be-score></app-be-score> 
-      
+
+
+      <app-be-score></app-be-score>
+
     </mat-card-content>
-  
+
   </mat-card>
 </div>
 
- 
- 
- <div class="col-md-6">
+
+  <div class="col-md-6">
   <app-predictions></app-predictions>
  </div>
  <div>
@@ -92,29 +100,29 @@
 
 
 <div class="container justify-content-md-center">
-  <div class="row" style="height: 500px;" *ngIf="saving">
- <!--    <div class="col my-auto">
-      <app-predictions></app-predictions>
-    </div> -->
-<!--     <div class="col my-auto">
-      <div class="border border-info">
-        <div class="h5 text-center">
-          Savings This Month
-        </div>
-      </div>
-      <div class="border border-info">
-        <div class="text-center">
-          Consumption (kWh): {{saving.consumption}}
-        </div>
-        <div class="text-center">
-          <br>Cost (€): {{saving.cost}}
-        </div>
-        <div class="text-center">
-          <br>Environmental (kg CO2): {{saving.environmental}}
-          <br>
-        </div>
-      </div>
-    </div> -->
+  <div class="row" style="height: 500px;" *ngIf="currentMonthSummary">
+    <!--    <div class="col my-auto">
+         <app-predictions></app-predictions>
+       </div> -->
+    <!--     <div class="col my-auto">
+          <div class="border border-info">
+            <div class="h5 text-center">
+              Savings This Month
+            </div>
+          </div>
+          <div class="border border-info">
+            <div class="text-center">
+              Consumption (kWh): {{saving.consumption}}
+            </div>
+            <div class="text-center">
+              <br>Cost (€): {{saving.cost}}
+            </div>
+            <div class="text-center">
+              <br>Environmental (kg CO2): {{saving.environmental}}
+              <br>
+            </div>
+          </div>
+        </div> -->
     <div class="col my-auto">
       <app-be-score></app-be-score>
     </div>

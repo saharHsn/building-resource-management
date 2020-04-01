@@ -1,61 +1,102 @@
-<form>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputEmail4">Name</label>
-      <input type="text" class="form-control" id="inputEmail4" value="Frankli Lamas">
+<form #buildingForm="ngForm" name="buildingForm" class="form-horizontal">
+
+  <div class="row">
+    <div class="form-group col-md-5">
+      <label class="control-lable" for="name">Building Name</label>
+      <input type="text" [(ngModel)]="building.name" id="name" name="name"
+             class=" form-control input-sm" placeholder="Enter your building name" ng-minlength="3"/>
     </div>
-    <div class="form-group col-md-6">
-      <label for="inputPassword4">Number of users</label>
-      <input type="text" class="form-control" id="inputPassword4" value=''>
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="inputAddress">Area(m2)</label>
-    <input type="text" class="form-control" id="inputAddress" placeholder="">
-  </div>
-  <div class="form-group">
-    <label for="inputAddress2">Number of floors</label>
-    <input type="text" class="form-control" id="inputAddress2" placeholder="">
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-6">
-      <label for="inputCity">Address</label>
-      <input type="text" class="form-control" id="inputCity">
-    </div>
-    <div class="form-group col-md-4">
-      <label for="inputState">Choose your building age</label>
-      <select id="inputState" class="form-control">
-        <option selected>Choose...</option>
-        <option>...</option>
-      </select>
-    </div>
-    <div class="form-group col-md-4">
-      <label for="inputState">Choose your building efficiency level</label>
-      <select id="inputState" class="form-control">
-        <option selected>Choose...</option>
-        <option>...</option>
-      </select>
-    </div>
-    <div class="form-group col-md-2">
-      <label for="inputZip">Power demand</label>
-      <input type="text" class="form-control" id="inputZip" value=''>
+
+    <div class="form-group col-md-5">
+      <label class="control-lable" for="area">Building Area</label>
+      <input type="text" [(ngModel)]="building.area" id="area" name="area"
+             class="form-control input-sm" placeholder="Enter your Building Area." required
+             tooltip="The average area of your building in m2."
+             theme="light"
+             placement="top"
+             #buildingArea="ngModel"/>
+      <div [hidden]="buildingArea.valid || buildingArea.pristine"
+           class="text-danger">
+        Building area is required
+      </div>
     </div>
   </div>
-  <div class="form-group">
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="gridCheck">
-      <label class="form-check-label" for="gridCheck">
-        Central HVAC
-      </label>
+
+  <div class="row">
+    <div class="form-group col-md-5">
+      <label class="control-lable" for="postalAddress">Full Address</label>
+      <input type="text" [(ngModel)]="building.postalAddress" id="postalAddress" name="postalAddress"
+             class=" form-control input-sm" placeholder="Enter your full address" required ng-minlength="3"
+             #fullAddress="ngModel"/>
+      <div [hidden]="fullAddress.valid || fullAddress.pristine"
+           class="text-danger">
+        Full address is required
+      </div>
+    </div>
+    <div class="form-group col-md-5">
+      <label class="control-lable" for="postalCode">Postal Code</label>
+      <input type="text" [(ngModel)]="building.postalCode" id="postalCode" name="postalCode"
+             pattern="^[0-9]{4}-[0-9]{3}$"
+             class="form-control input-sm" placeholder="Enter your postal code" required tooltip="The zip code must have 4 digits with a - and 3
+              more digits (XXXX-XXX)."
+             theme="light"
+             placement="top"
+             #postalCode="ngModel"/>
+
+      <div *ngIf="postalCode.invalid && (postalCode.dirty || postalCode.touched)"
+           class="alert alert-danger">
+
+        <div *ngIf="postalCode.errors.required">
+          Postal Code is required.
+        </div>
+        <div *ngIf="postalCode.errors.pattern">
+          Postal Code is invalid.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="form-group col-md-5">
+      <label class="control-lable" for="numberOfPeople">Number Of People</label>
+      <input [(ngModel)]="building.numberOfPeople"
+             tooltip="The average number of daily staffs/clients/guests in your building."
+             theme="light"
+             placement="top"
+             class="form-control input-sm" id="numberOfPeople"
+             name="numberOfPeople" placeholder="Enter number Of People." type="text">
+    </div>
+    <div class="form-group col-md-5">
+      <label class="control-lable" for="usage">Building Usage</label>
+      <app-building-usage-component [(inputSliderValue)]="building.usage" id="usage"
+                                    name="usage"></app-building-usage-component>
+
     </div>
   </div>
-  <div class="form-group">
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="gridCheck">
-      <label class="form-check-label" for="gridCheck">
-        On-site renewables
-      </label>
+
+  <div class="row">
+    <div class="form-group col-md-5">
+      <label class="control-lable" for="age">Building Age</label>
+
+      <app-building-age-component [(inputSliderValue)]="building.age" id="age"
+                                  name="age"></app-building-age-component>
+
+    </div>
+    <div class="form-group col-md-5">
+      <label class="control-lable" for="energyCertificate">Energy Certificate</label>
+      <app-energy-certificate-component [(inputSliderValue)]="building.energyCertificate" id="energyCertificate"
+                                        name="energyCertificate"
+                                        tooltip="You can ask your building manager for your building energy certificate."
+                                        theme="light"
+                                        placement="right"></app-energy-certificate-component>
     </div>
   </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
+
+  <span class="btn-group">
+      <button class="btn btn-primary" type="submit" (click)="finishFunction()" [disabled]="!buildingForm.form.valid">Submit
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        <i class="fa fa-arrow-right"></i></button>
+    </span>
 </form>
+

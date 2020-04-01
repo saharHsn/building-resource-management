@@ -17,6 +17,7 @@ export class ChartService {
   private readonly predictUrl;
   private readonly savingUrl;
   private readonly beScoreUrl;
+  private readonly currentMonthSummaryUrl;
   private readonly costStackUrl;
   private readonly costPieUrl;
   private readonly consumptionUrl;
@@ -39,6 +40,7 @@ export class ChartService {
     this.baseUrl = this.environmentUrl + '/reports';
     this.predictUrl = this.baseUrl + '/prediction';
     this.savingUrl = this.baseUrl + '/saving';
+    this.currentMonthSummaryUrl = this.baseUrl + '/currentMonthSummary';
     this.beScoreUrl = this.baseUrl + '/beScore';
     this.costStackUrl = this.baseUrl + '/costStack';
     this.costPieUrl = this.baseUrl + '/costPie';
@@ -81,6 +83,19 @@ export class ChartService {
         .set('Content-Type', 'application/json');
     }
     return this.http.get(`${this.savingUrl}`, {headers});
+  }
+
+  currentMonthSummary(): Observable<any> {
+    let headers;
+    // @ts-ignore
+    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
+    if (user && user.token) {
+      headers = new HttpHeaders()
+        .set('X-Session', user.token)
+        .set('Accept', '*/*')
+        .set('Content-Type', 'application/json');
+    }
+    return this.http.get(`${this.currentMonthSummaryUrl}`, {headers});
   }
 
   getBEScore(): Observable<any> {

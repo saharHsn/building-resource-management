@@ -31,11 +31,22 @@ export class AuthenticationService {
   }
 
   public get currentUserValue(): User {
-    if (this.currentUserSubject.value) {
+    const value = this.currentUserSubject.value;
+    if (value) {
       // @ts-ignore
-      return this.currentUserSubject.value.content.user;
+      if (value.content) {
+        // @ts-ignore
+        return value.content.user;
+      } else {
+        return value;
+      }
     }
     return null;
+  }
+
+  public updateCurrentUser(user: User) {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.currentUserSubject.next(user);
   }
 
   login(emailAddress, password) {

@@ -54,4 +54,6 @@ public abstract class GenericCrudServiceBase<TModel extends EntityBase<TModel>, 
 		model.setActive(active);
 		return model;
 	}
+
+	public abstract void delete(String id) throws NotFoundException;
 }

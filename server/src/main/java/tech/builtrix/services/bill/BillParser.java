@@ -3,9 +3,11 @@ package tech.builtrix.services.bill;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import tech.builtrix.exceptions.BillParseException;
 import tech.builtrix.models.bill.ParameterType;
+import tech.builtrix.models.building.ElectricityBillType;
 import tech.builtrix.parseEngine.PdfParser;
 import tech.builtrix.utils.DateUtil;
 import tech.builtrix.utils.MyTable;
@@ -14,9 +16,9 @@ import tech.builtrix.web.dtos.bill.BillDto;
 import tech.builtrix.web.dtos.bill.BillParameterDto;
 
 import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created By sahar at 12/2/19
@@ -25,20 +27,37 @@ import java.util.Map;
 @Component
 @Slf4j
 public class BillParser {
+    // private static final float CO2_PRODUCTION_RATE = 0.251f;
+    //kg/kWh;
+    private static Dictionary<String, String> PARAMS_DICTIONARY;
     private static String SUPER_VAZIO = "Super Vazio (SV) ";
+    private static String REDES_SUPER_VAZIO = "Redes Super Vazio (SV) ";
     private static String SUPER_VAZIO2 = "Vazio (SV) ";
     private static String CONSUMO_ESTIMADO = "Simples - Consumo estimado ";
     private static String VAZIO_NORMAL = "Vazio Normal (VN) ";
+    private static String VAZIO_CONSUMO_ESTIMADO = "Vazio – Consumo Estimado ";
+    private static String REDES_VAZIO_CONSUMO_ESTIMADO = "Redes Vazio – Consumo Estimado ";
+    private static String REDES_VAZIO_NORMAL = "Redes Vazio Normal (VN) ";
     private static String VAZIO_NORMAL1 = "Vazio Norma (VN) ";
     private static String VAZIO_NORMAL2 = "Norma (VN) ";
+    private static String SIMPLES_CONSUMO_JA_FACTURADO = "Simples Consumo ja facturado ";
+    private static String SIMPLES_CONSUMO_MEDIDO = "Simples Consumo medido ";
+    private static String SIMPLES_CONSUMO_ESTIMADO = "Simples - Consumo estimado ";
+    private static String SIMPLES_CONSUMO_ESTIMADO2 = "Simples Consumo estimado ";
     private static String CHEIA = "Cheia (C) ";
+    private static String REDES_CHEIA = "Redes Cheia (C) ";
+    private static String CHEIA_CONSUMO_ESTIMADO = "Cheia - Consumo estimado ";
+    private static String REDES_CHEIA_CONSUMO_ESTIMADO = "Redes Cheia - Consumo estimado ";
     private static String CHEIA1 = "(C) ";
     private static String PONTA = "Ponta (P) ";
-    private static String PONTA2 = "(P) ";
-    private static String POTENCIA_HORAS_DE_PONTA_ = "Potencia Horas de Ponta ";
+    private static String REDES_PONTA = "Redes Ponta (P) ";
+    private static String PONTA_CONSUMO_ESTIMADO = "Ponta – Consumo Estimado ";
+    private static String REDES_PONTA_CONSUMO_ESTIMADO = "Redes Ponta - Consumo estimado ";
+    private static String POTENCIA_HORAS_DE_PONTA = "Potência Horas de Ponta";
     private static String POTENCIA_HORAS_DE_PONTA_2 = "Horas de Ponta ";
-    private static String POTENCIA_CONTRATADA_ = "Potencia Contratada ";
-    private static String POTENCIA_CONTRATADA_2 = "Contratada ";
+    // private static String POTENCIA_CONTRATADA_ = "Potencia Contratada ";
+    private static String CONTRACTED_POWER_0 = "Contratada ";
+    private String CONTRACTED_POWER = "Potência Contratada";
     private static String REATIVA_FORNECIDA_NO_VAZIO = "Reativa Fornecida no vazio (Vz) ";
     private static String REATIVA_FORNECIDA_NO_VAZIO2 = "Fornecida no vazio (Vz) ";
     private final PdfParser pdfParser;
@@ -46,7 +65,8 @@ public class BillParser {
     private String TOTAL_A_PAGAR = "Total a pagar: (ELETRICIDADE) ";
     private String ENERGIA_ATIVA_ = "Energia Ativa ";
     private String REDES_ = "Redes ";
-    // private final BillService billService;
+    private String ELECTRICITY_COUNTER_CODE = "CÓDIGO PONTO ENTREGA ELETRICIDADE";
+    private String COMPANY_TAX_NUMBER = "Numero ID. Fiscal: ";
 
     @Autowired
     public BillParser(PdfParser pdfParser) {
@@ -55,10 +75,13 @@ public class BillParser {
     }
 
     public static void main(String[] args) {
-        String period = " 18/04/2018 a 17/05/2018";
-        String[] as = period.trim().split("a");
-        for (String a : as) {
-            System.out.println(a);
+        String str = "Redes Super Vazio (SV) ";
+        String pattern = str + "-row(.*)";
+        Pattern r = Pattern.compile(pattern);
+        String input = "Redes Super Vazio (SV) -row10";
+        Matcher m = r.matcher(input);
+        if (m.find()) {
+            System.out.println("find");
         }
     }
 
@@ -73,27 +96,28 @@ public class BillParser {
         }
         Map<String, String> keyValueResult = tExtractDto.getKeyValueResult();
         List<MyTable> tablesResult = tExtractDto.getTablesResult();
-        // MyTable table = tablesResult.get(3);
+
+        String electricityCounterCode = keyValueResult.get(ELECTRICITY_COUNTER_CODE);
 
         String billPeriod = keyValueResult.get(PERIODO_DE_FATURACAO_);
         String[] periods = billPeriod.trim().split("a");
         Date fromDate = DateUtil.getDateFromStr(periods[0], "dd/MM/yyyy");// 18/04/2018 a 17/05/2018
         Date toDate = DateUtil.getDateFromStr(periods[1], "dd/MM/yyyy");
+        //TODO check if totalPayable is negative value or not in order to notify user about it
+        MyTable firstTable = findTableWithRowHeaders(tablesResult, ENERGIA_ATIVA_, REDES_);
+        List<String> energyAtiviaValues = firstTable.getColumn_value().get(ENERGIA_ATIVA_);
+        List<String> redesValues = firstTable.getColumn_value().get(REDES_);
+        //String totalPayableStr = keyValueResult.get(ENERGIA_ATIVA_) + keyValueResult.get(REDES_);
+        Float totalPayable = getAmount(energyAtiviaValues.get(0)) + getAmount(redesValues.get(0));
 
-        String totalPayableStr = keyValueResult.get(TOTAL_A_PAGAR);// 4.231,10 E
-        Float totalPayable = getAmount(totalPayableStr);
-        // TODO ?
+        String companyTaxNumberStr = keyValueResult.get(COMPANY_TAX_NUMBER);
+
+
         String address = "";
-        // TODO ?
-        // Emissão de CO2 associada aos consumos de energia desta Fatura: 8.183,95 Kg
-        Float producedCo2 = null;
-        // TODO ?
-        // Consumo médio dos últimos 12 meses: 767,90 kWh
         Float averageDailyConsumption = null;
 
-        float totalMonthlyConsumption;
-        MyTable table = findMainTable(tablesResult);
-        // assert table != null;
+        float totalMonthlyConsumption = 0;
+        MyTable table = findTableWithRowHeaders(tablesResult, SUPER_VAZIO, SUPER_VAZIO2, CONSUMO_ESTIMADO);
         Map<String, List<String>> column_value = table != null ? table.getColumn_value() : null;
         String energia_ativa_ = "0";
         List<String> energyActive = column_value != null ? column_value.get(this.ENERGIA_ATIVA_) : null;
@@ -104,7 +128,6 @@ public class BillParser {
                 energia_ativa_ = energyActive.get(0);
             }
         } else {
-            // Energia Ativa 3.426,42 E
             energia_ativa_ = "3.426,42 E";
         }
         Float activeEnergyCost = getAmount(energia_ativa_);
@@ -117,95 +140,122 @@ public class BillParser {
         }
         Float powerDemandCost = getAmount(redes_);
 
-        if ((column_value != null ? column_value.get(SUPER_VAZIO) : null) == null) {
-            SUPER_VAZIO = SUPER_VAZIO2;
-        }
 
-        BillParameterDto estimatedConsumption = null;
-        if (column_value != null) {
-            estimatedConsumption = getBillParameter(column_value, CONSUMO_ESTIMADO, ParameterType.AE_OFF_HOURS);
-        }
-       /* if (column_value.get(VAZIO_NORMAL) == null) {
-            VAZIO_NORMAL = VAZIO_NORMAL1;
-            if (column_value.get(VAZIO_NORMAL) == null) {
-                VAZIO_NORMAL = VAZIO_NORMAL2;
-            }
-        }*/
+        ElectricityBillType electricityBillType;
+        electricityBillType = detectBillType(table);
 
+        BillParameterDto aEFreeHours = null;
+        BillParameterDto rDOffHours = null;
+        BillParameterDto rDFreeHours = null;
+        BillParameterDto aENormalHours = null;
+        BillParameterDto rDNormalHours = null;
+        BillParameterDto aEPeakHours = null;
+        BillParameterDto rDPeakHours = null;
+        BillParameterDto rDContractedPower = null;
+        BillParameterDto rDReactivePower = null;
         BillParameterDto aEOffHours = null;
         if (column_value != null) {
             aEOffHours = getBillParameter(column_value, SUPER_VAZIO, ParameterType.AE_OFF_HOURS);
-        }
-        if (column_value != null && column_value.get(VAZIO_NORMAL) == null) {
-            VAZIO_NORMAL = VAZIO_NORMAL1;
-            if (column_value.get(VAZIO_NORMAL) == null) {
-                VAZIO_NORMAL = VAZIO_NORMAL2;
-            }
-        }
-        BillParameterDto aEFreeHours = null;
-        if (column_value != null) {
+            rDOffHours = getBillParameter(column_value, REDES_SUPER_VAZIO, ParameterType.RD_OFF_HOURS);
             aEFreeHours = getBillParameter(column_value, VAZIO_NORMAL, ParameterType.AE_FREE_HOURS);
-        }
-        if (column_value != null && column_value.get(CHEIA) == null) {
-            CHEIA = CHEIA1;
-        }
-        BillParameterDto aENormalHours = null;
-        if (column_value != null) {
+            if (aEFreeHours == null) {
+                aEFreeHours = getBillParameter(column_value, VAZIO_CONSUMO_ESTIMADO, ParameterType.AE_FREE_HOURS);
+            }
+
+            rDFreeHours = getBillParameter(column_value, REDES_VAZIO_NORMAL, ParameterType.RD_FREE_HOURS);
+            if (rDFreeHours == null) {
+                rDFreeHours = getBillParameter(column_value, REDES_VAZIO_CONSUMO_ESTIMADO, ParameterType.RD_FREE_HOURS);
+            }
+
             aENormalHours = getBillParameter(column_value, CHEIA, ParameterType.AE_NORMAL_HOURS);
-        }
-        if (column_value != null && column_value.get(PONTA) == null) {
-            PONTA = PONTA2;
-        }
-        BillParameterDto aEPeakHours = null;
-        if (column_value != null) {
+            if (aENormalHours == null) {
+                aENormalHours = getBillParameter(column_value, CHEIA_CONSUMO_ESTIMADO, ParameterType.AE_NORMAL_HOURS);
+            }
+
+            rDNormalHours = getBillParameter(column_value, REDES_CHEIA, ParameterType.RD_NORMAL_HOURS);
+            if (rDNormalHours == null) {
+                rDNormalHours = getBillParameter(column_value, REDES_CHEIA_CONSUMO_ESTIMADO, ParameterType.RD_NORMAL_HOURS);
+            }
+
             aEPeakHours = getBillParameter(column_value, PONTA, ParameterType.AE_PEAK_HOURS);
-        }
-        if (column_value != null && column_value.get(POTENCIA_HORAS_DE_PONTA_) == null) {
-            POTENCIA_HORAS_DE_PONTA_ = POTENCIA_HORAS_DE_PONTA_2;
-        }
-        BillParameterDto rDPeakHours = null;
-        if (column_value != null) {
-            rDPeakHours = getBillParameter(column_value, POTENCIA_HORAS_DE_PONTA_,
-                    ParameterType.RD_PEAK_HOURS);
-        }
-        if (column_value != null && column_value.get(POTENCIA_CONTRATADA_) == null) {
-            POTENCIA_CONTRATADA_ = POTENCIA_CONTRATADA_2;
-        }
-        BillParameterDto rDContractedPower = null;
-        if (column_value != null) {
-            rDContractedPower = getBillParameter(column_value, POTENCIA_CONTRATADA_,
-                    ParameterType.RD_CONTRACTED_POWER);
-        }
+            if (aEPeakHours == null) {
+                aEPeakHours = getBillParameter(column_value, PONTA_CONSUMO_ESTIMADO, ParameterType.AE_PEAK_HOURS);
+            }
 
-        if (column_value != null && column_value.get(REATIVA_FORNECIDA_NO_VAZIO) == null) {
-            REATIVA_FORNECIDA_NO_VAZIO = REATIVA_FORNECIDA_NO_VAZIO2;
-        }
-        BillParameterDto rDReactivePower = null;
-        if (column_value != null && column_value.get(REATIVA_FORNECIDA_NO_VAZIO) != null) {
-            rDContractedPower = getBillParameter(column_value, REATIVA_FORNECIDA_NO_VAZIO,
-                    ParameterType.RD_REACTIVE_POWER);
-        }
+            rDPeakHours = getBillParameter(column_value, REDES_PONTA, ParameterType.RD_PEAK_HOURS);
+            if (rDPeakHours == null) {
+                rDPeakHours = getBillParameter(column_value, REDES_PONTA_CONSUMO_ESTIMADO, ParameterType.RD_PEAK_HOURS);
+            }
 
-        if ((estimatedConsumption != null ? estimatedConsumption.getConsumption() : null) != null) {
-            totalMonthlyConsumption = estimatedConsumption.getConsumption();
-        } else {
-            totalMonthlyConsumption = (aEOffHours != null ? aEOffHours.getConsumption() : 0) + (aEFreeHours != null ? aEFreeHours.getConsumption() : 0)
-                    + (aENormalHours != null ? aENormalHours.getConsumption() : 0) + +(aEPeakHours != null ? aEPeakHours.getConsumption() : 0);
+            rDContractedPower = getBillParameter(column_value, REATIVA_FORNECIDA_NO_VAZIO, ParameterType.RD_REACTIVE_POWER);
+
+            totalMonthlyConsumption = getTotalConsumptionValue(column_value);
+
         }
-        BillDto bill = new BillDto(buildingId, address, fromDate, DateUtil.getYear(fromDate),
-                DateUtil.getMonth(fromDate), toDate, totalPayable, activeEnergyCost, producedCo2, powerDemandCost,
-                averageDailyConsumption, totalMonthlyConsumption, aEOffHours, aEFreeHours, aENormalHours, aEPeakHours,
-                rDPeakHours, rDContractedPower, rDReactivePower);
+        int year = DateUtil.getYear(fromDate);
+        int month = DateUtil.getMonth(fromDate);
+        float CO2_PRODUCTION_RATE = getCO2ProductionRate(year);
+        Float producedCo2 = totalMonthlyConsumption * CO2_PRODUCTION_RATE;
+
+        BillDto bill = new BillDto(buildingId,
+                electricityCounterCode,
+                companyTaxNumberStr,
+                address,
+                fromDate,
+                toDate,
+                year,
+                month,
+                totalPayable,
+                activeEnergyCost,
+                producedCo2,
+                powerDemandCost,
+                averageDailyConsumption,
+                totalMonthlyConsumption,
+                aEFreeHours,
+                rDFreeHours,
+                rDOffHours,
+                aEOffHours,
+                aENormalHours,
+                rDNormalHours,
+                aEPeakHours,
+                rDPeakHours,
+                rDContractedPower,
+                rDReactivePower
+        );
         return bill;
     }
 
-    private MyTable findMainTable(List<MyTable> tablesResult) {
+    private Float getCO2ProductionRate(int year) {
+        /* 2020: 0.251 kg/kWh
+           2019: 0.330 kg/kWh
+           2018: 0.400 kg/kWh
+         */
+        if (year == 2018) {
+            return 0.400f;
+        } else if (year == 2019) {
+            return 0.330f;
+        } else if (year == 2020) {
+            return 0.251f;
+        }
+        return 0.25f;
+    }
+
+    private ElectricityBillType detectBillType(MyTable table) {
+        return ElectricityBillType.FOUR_TARIFF;
+    }
+
+    private MyTable findTableWithRowHeaders(List<MyTable> tablesResult, String... rowHeaders) {
         for (MyTable myTable : tablesResult) {
             Map<String, List<String>> column_value = myTable.getColumn_value();
             for (String s : column_value.keySet()) {
-                if (s.equalsIgnoreCase(SUPER_VAZIO) || s.equalsIgnoreCase(SUPER_VAZIO2) || s.equalsIgnoreCase(CONSUMO_ESTIMADO)) {
-                    return myTable;
+                for (String rowHeader : rowHeaders) {
+                    if (s.equalsIgnoreCase(rowHeader)) {
+                        return myTable;
+                    }
                 }
+              /*  if (s.equalsIgnoreCase(SUPER_VAZIO) || s.equalsIgnoreCase(SUPER_VAZIO2) || s.equalsIgnoreCase(CONSUMO_ESTIMADO)) {
+                    return myTable;
+                }*/
             }
         }
         return null;
@@ -217,39 +267,105 @@ public class BillParser {
                 .replaceAll(" ", "").replaceAll(":", "").replaceAll("%", ""));
     }
 
-    private BillParameterDto getBillParameter(Map<String, List<String>> column_value, String paramName,
-                                              ParameterType parameterType) throws ParseException {
-        List<String> paramValues = column_value.get(paramName);
-        if (paramValues != null) {
-            String initialDateStr = paramValues.get(0);// 18/04/2018
-            String endDateStr = paramValues.get(1);// 17/05/2018
-            // String costStr = column_value.get(paramName).get(2);//2.354,0000
-            String consumptionStr = paramValues.get(2);// 0,089700 E
-            String tariffPriceStr = paramValues.get(3);
-            String totalTariffCostStr = paramValues.get(6);
-            BillParameterDto parameterDto = new BillParameterDto();
-            if (!StringUtils.isEmpty(consumptionStr)) {
-                parameterDto.setConsumption(getAmount(consumptionStr));
+    private Float getTotalConsumptionValue(Map<String, List<String>> column_value) {
+        List<String> superVazioParams = column_value.get(SUPER_VAZIO);
+        List<String> vazioNormalParams = column_value.get(VAZIO_NORMAL);
+        List<String> pontaParams = column_value.get(PONTA);
+        List<String> cheiaParams = column_value.get(CHEIA);
+        if (!CollectionUtils.isEmpty(superVazioParams) && !CollectionUtils.isEmpty(vazioNormalParams)
+                && !CollectionUtils.isEmpty(pontaParams) && !CollectionUtils.isEmpty(cheiaParams)) {
+            String superVazioStr = superVazioParams.get(2);
+            String vazioNormalStr = vazioNormalParams.get(2);
+            String pontaStr = pontaParams.get(2);
+            String cheiaStr = cheiaParams.get(2);
+            return getAmount(superVazioStr) + getAmount(vazioNormalStr) + getAmount(pontaStr) + getAmount(cheiaStr);
+        } else {
+            List<String> simpleConsumeEstimateParams = column_value.get(SIMPLES_CONSUMO_ESTIMADO);
+            List<String> simpleConsumeFactorParams = column_value.get(SIMPLES_CONSUMO_JA_FACTURADO);
+            List<String> simpleConsumeMedidoParams = column_value.get(SIMPLES_CONSUMO_MEDIDO);
+            String estimadoStr = "0";
+            if (!CollectionUtils.isEmpty(simpleConsumeEstimateParams)) {
+                estimadoStr = simpleConsumeEstimateParams.get(2);
             }
-            /*
-             * if (!StringUtils.isEmpty(costStr)) {
-             * parameterDto.setCost(getAmount(costStr)); }
-             */
-            if (!StringUtils.isEmpty(initialDateStr)) {
-                parameterDto.setInitialDate(DateUtil.getDateFromStr(initialDateStr, "dd/MM/yyyy"));
+            String factorStr = "0";
+            if (!CollectionUtils.isEmpty(simpleConsumeFactorParams)) {
+                factorStr = simpleConsumeFactorParams.get(2);
             }
-            if (!StringUtils.isEmpty(endDateStr)) {
-                parameterDto.setEndDate(DateUtil.getDateFromStr(endDateStr, "dd/MM/yyyy"));
+            String medidoStr = "0";
+            if (!CollectionUtils.isEmpty(simpleConsumeMedidoParams)) {
+                medidoStr = simpleConsumeMedidoParams.get(2);
             }
-            if (!StringUtils.isEmpty(tariffPriceStr)) {
-                parameterDto.setTariffPrice(getAmount(tariffPriceStr));
-            }
-            if (!StringUtils.isEmpty(totalTariffCostStr)) {
-                parameterDto.setTotalTariffCost(getAmount(totalTariffCostStr));
-            }
-            parameterDto.setParamType(parameterType);
-            return parameterDto;
+            return getAmount(estimadoStr) + getAmount(factorStr) + getAmount(medidoStr);
         }
-        return null;
     }
+
+    private Long getTotalConsumptionValueBillType3(Map<String, List<String>> column_value) {
+        //TODo TEST for Multiple values
+        List<String> simpleConsumeEstimateParams = column_value.get(SIMPLES_CONSUMO_ESTIMADO);
+        List<String> simpleConsumeFactorParams = column_value.get(SIMPLES_CONSUMO_JA_FACTURADO);
+        List<String> simpleConsumeMedidoParams = column_value.get(SIMPLES_CONSUMO_MEDIDO);
+        String estimadoStr = simpleConsumeEstimateParams.get(2);
+        String factorStr = simpleConsumeFactorParams.get(2);
+        String medidoStr = simpleConsumeMedidoParams.get(2);
+        return Long.valueOf((estimadoStr + factorStr + medidoStr));
+    }
+
+    private BillParameterDto getBillParameter(Map<String, List<String>> column_value,
+                                              String paramName,
+                                              ParameterType parameterType) throws ParseException {
+        List<List<String>> similarRows = findAllSimilarRows(column_value, paramName);
+        BillParameterDto billParameterDto = mergeSimilarRowInfo(similarRows);
+        if (billParameterDto != null) {
+            billParameterDto.setParamType(parameterType);
+        }
+        return billParameterDto;
+    }
+
+    private BillParameterDto mergeSimilarRowInfo(List<List<String>> similarRows) throws ParseException {
+        BillParameterDto billParameterDto = null;
+        for (List<String> similarRow : similarRows) {
+            if (!CollectionUtils.isEmpty(similarRow)) {
+                if (billParameterDto == null) {
+                    billParameterDto = new BillParameterDto();
+                }
+                String initialDateStr = similarRow.get(0);// 18/04/2018
+                String endDateStr = similarRow.get(1);// 17/05/2018
+                String consumptionStr = similarRow.get(2);// 0,089700 E
+                String tariffPriceStr = similarRow.get(3);
+                String totalTariffCostStr = similarRow.get(6);
+                // BillParameterDto parameterDto = new BillParameterDto();
+                if (!StringUtils.isEmpty(consumptionStr)) {
+                    billParameterDto.setConsumption(billParameterDto.getConsumption() + getAmount(consumptionStr));
+                }
+                if (!StringUtils.isEmpty(initialDateStr)) {
+                    billParameterDto.setInitialDate(DateUtil.getDateFromStr(initialDateStr, "dd/MM/yyyy"));
+                }
+                if (!StringUtils.isEmpty(endDateStr)) {
+                    billParameterDto.setEndDate(DateUtil.getDateFromStr(endDateStr, "dd/MM/yyyy"));
+                }
+                if (!StringUtils.isEmpty(tariffPriceStr)) {
+                    billParameterDto.setTariffPrice(billParameterDto.getTariffPrice() + getAmount(tariffPriceStr));
+                }
+                if (!StringUtils.isEmpty(totalTariffCostStr)) {
+                    billParameterDto.setTotalTariffCost(billParameterDto.getTotalTariffCost() + getAmount(totalTariffCostStr));
+                }
+            }
+        }
+        return billParameterDto;
+    }
+
+    private List<List<String>> findAllSimilarRows(Map<String, List<String>> column_value, String paramName) {
+        List<List<String>> similarRows = new ArrayList<>();
+        List<String> collection = column_value.get(paramName);
+        if (!CollectionUtils.isEmpty(collection)) {
+            similarRows.add(collection);
+        }
+        for (String key : column_value.keySet()) {
+            if (key.startsWith(paramName + "-row")) {
+                similarRows.add(column_value.get(key));
+            }
+        }
+        return similarRows;
+    }
+
 }

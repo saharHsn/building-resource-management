@@ -16,23 +16,28 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BillDto {
-	private String buildingId;
-	private String address;
-	private Date fromDate;
-	private Integer year;
-	private Integer fromMonth;
-	private Date toDate;
-	private Float totalPayable;
-	private Float activeEnergyCost;
-	private Float producedCO2;
-	private Float powerDemandCost;
-	private Float averageDailyConsumption;
-	private Float totalMonthlyConsumption;
-	private BillParameterDto aEOffHours;
-	private BillParameterDto aEFreeHours;
-	private BillParameterDto aENormalHours;
-	private BillParameterDto aEPeakHours;
-	private BillParameterDto rDPeakHours;
-	private BillParameterDto rDContractedPower;
-	private BillParameterDto rDReactivePower;
+    private String buildingId;
+    private String electricityCounterCode;
+    private String companyTaxNumber;
+    private String address;
+    private Date fromDate;
+    private Date toDate;
+    private Integer year;
+    private Integer fromMonth;
+    private Float totalPayable;
+    private Float activeEnergyCost;
+    private Float producedCO2;
+    private Float powerDemandCost;
+    private Float averageDailyConsumption;
+    private Float totalMonthlyConsumption;
+    private BillParameterDto aEFreeHours;
+    private BillParameterDto rDFreeHours;
+    private BillParameterDto rDOffHours;
+    private BillParameterDto aEOffHours;
+    private BillParameterDto aENormalHours;
+    private BillParameterDto rDNormalHours;
+    private BillParameterDto aEPeakHours;
+    private BillParameterDto rDPeakHours;
+    private BillParameterDto rDContractedPower;
+    private BillParameterDto rDReactivePower;
 }
