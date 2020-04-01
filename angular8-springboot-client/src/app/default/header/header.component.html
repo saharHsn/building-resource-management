@@ -1,9 +1,9 @@
 <mat-toolbar color="secundary">
   <mat-toolbar-row>
     <div>
-      <button class="menu" mat-icon-button >
+      <!-- <button class="menu" mat-icon-button (click)="sidenav.toggle()" >
         <mat-icon>menu</mat-icon>
-      </button>
+      </button> -->
       <span><img class="logo" src="../../../assets/images/bafa157a-cb70-4b75-9b84-670ea85efb19.png" alt="logo"></span>
     </div>
 
@@ -21,9 +21,9 @@
        <!--  link to notifications -->
         <a mat-menu-item class="nav-link" href="#" routerLink="/notifications" style="color: #3A9AFC;"><mat-icon >more_horiz</mat-icon>Show all notifications</a>               
       </mat-menu>
-      <button mat-icon-button>
+      <!-- <button mat-icon-button>
         <mat-icon >settings</mat-icon>
-      </button>
+      </button> -->
       <span id="saludo">Hi {{currentUser.firstName}}!</span>
       <span class="profile-card">
         <img id="profile" src="../../../assets/images/profile.jpg" alt="Soufiane FADIL">
@@ -34,29 +34,3 @@
 </mat-toolbar>
 
 
-<!-- <ul class="justify-content-end" >
-  <li>
-    <button mat-icon-button>
-      <mat-icon>settings</mat-icon>
-    </button>
-  </li>
-  <li>
-    <button mat-icon-button>
-      <mat-icon>notifications</mat-icon>
-    </button>
-  </li>
-  <li>
-
-        <span id="saludo">Hi Joao!</span>
-
-  </li>
-  <li>
-    <div class="profile-card">
-
-      <img id="profile"     src="assets/img/profile.jpg" alt="Soufiane FADIL">
-
-    </div>
-
-  </li>
-
-</ul> -->

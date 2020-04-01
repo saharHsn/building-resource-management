@@ -15,7 +15,10 @@ export class ColorEnergyComponent implements OnInit {
     this.chartOptions = {
       chart: {
         inverted: true,
-        polar: false
+        polar: false,
+        plotBorderWidth: null,
+        plotShadow: false,
+        backgroundColor: null,
       },
       title: {
         text: ''

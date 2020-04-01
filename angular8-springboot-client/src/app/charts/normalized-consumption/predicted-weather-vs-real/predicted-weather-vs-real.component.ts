@@ -33,7 +33,7 @@ export class PredictedWeatherVsRealComponent implements OnInit {
               height: 500 */
             },
             title: {
-              text: 'Predicted Baseline by Weather vs Real Consumption'
+              text: 'Predicted Consumption'
             },
             xAxis: {
               categories: data.content.xvalues,

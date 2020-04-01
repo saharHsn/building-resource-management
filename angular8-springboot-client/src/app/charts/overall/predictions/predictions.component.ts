@@ -45,7 +45,7 @@ export class PredictionsComponent implements OnInit {
               grid: true
             },
             title: {
-              text: 'Predictions'
+              text: 'Predicted cost'
             },
             xAxis: {
               // categories: ['Oct-2019', 'Nov-2019', 'Dec-2019'],

@@ -5,3 +5,19 @@
 .example-card2{
     height: 350px;
 }
+
+/* bill buttons */
+
+
+.example-button-row button,
+.example-button-row a {
+  margin-left:25px;
+}
+#bill{
+background-color:#FFAB00; 
+color: white;
+}
+#done{
+    background-color:#3A9AFC ;
+    color: white;
+}

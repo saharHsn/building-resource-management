@@ -95,6 +95,7 @@ import { NotificationsComponent } from './default/notifications/notifications.co
 import {MatMenuModule} from '@angular/material/menu';;
 import { PanelComponent } from './notification_panel/panel/panel.component';;
 import { DownloadComponent } from './building/download/download.component'
+//flex layout
 
 // import { AngularWeatherWidgetModule, WeatherApiName } from 'angular-weather-widget';
 // import {HighchartsChartComponent} from 'highcharts-angular';
@@ -115,6 +116,7 @@ import { DownloadComponent } from './building/download/download.component'
     TooltipModule,
     HighchartsChartModule,
     ModalModule.forRoot(),
+
     BrowserAnimationsModule,
     MatToolbarModule,
     MatButtonModule,
