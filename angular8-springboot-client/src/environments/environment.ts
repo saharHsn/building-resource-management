@@ -5,8 +5,8 @@
 export const environment = {
   production: true,
   environmentName: 'DEVELOP',
-  apiUrl: 'http://localhost:8080/builtrix/v1'
-  // apiUrl: 'https://dashboard.builtrix.tech/builtrix/v1'
+  //apiUrl: 'http://localhost:8080/builtrix/v1'
+  apiUrl: 'https://dashboard.builtrix.tech/builtrix/v1'
 };
 
 /*

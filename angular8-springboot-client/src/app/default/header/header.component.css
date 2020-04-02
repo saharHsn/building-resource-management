@@ -33,15 +33,20 @@
   }
 /* this is style to menu */
 .notifications-menu{
-  width: 400px !important;
+  width: 100px !important;
 }
 /* ::ng-deep .mat-menu-panel {
   padding: 0 10px!important;
   width: 400px!important;
   
 } */
-::ng-deep .mat-menu-panel {
+::ng-deep .mat-menu-panel{
   max-width: none!important;
   min-width: 400px!important;
+  outline: none;
+}
+::ng-deep .mat-menu-panel.testing{
+  max-width: none!important;
+  min-width: 50px!important;
   outline: none;
 }

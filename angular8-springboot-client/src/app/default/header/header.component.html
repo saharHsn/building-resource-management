@@ -12,12 +12,12 @@
       
 
       <!-- notification btn -->
-      <button mat-icon-button [matMenuTriggerFor]="menu" >
+      <button  mat-icon-button [matMenuTriggerFor]="menu" (click)="read()" >
         <mat-icon  matBadge="{{listNotifications.length}}" matBadgeColor="warn">notifications</mat-icon>
       </button>
       <mat-menu #menu="matMenu" xPosition="before"  class="notifications-menu">
      <span>Notifications</span>
-        <button mat-menu-item *ngFor="let item of listNotifications">{{item}}</button>
+        <button mat-menu-item *ngFor="let item of listNotifications">{{item.title}}</button>
        <!--  link to notifications -->
         <a mat-menu-item class="nav-link" href="#" routerLink="/notifications" style="color: #3A9AFC;"><mat-icon >more_horiz</mat-icon>Show all notifications</a>               
       </mat-menu>
@@ -25,10 +25,16 @@
         <mat-icon >settings</mat-icon>
       </button> -->
       <span id="saludo">Hi {{currentUser.firstName}}!</span>
-      <span class="profile-card">
+
+     <!--  menu to log out -->
+      <span class="profile-card" mat-icon-button [matMenuTriggerFor]="menu2">
         <img id="profile" src="../../../assets/images/profile.jpg" alt="Soufiane FADIL">
       </span>
-
+      <mat-menu class="testing" #menu2="matMenu" xPosition="before"  >
+        <span></span>
+           <button mat-menu-item >View profile</button>
+           <button mat-menu-item  (click)="logout()"><mat-icon>exit_to_app</mat-icon>Logout</button>
+         </mat-menu>
     </div>
   </mat-toolbar-row>
 </mat-toolbar>

@@ -5,6 +5,7 @@ import {UserService} from '../../user/user.service';
 import {Router} from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { NotificationsComponent } from '../notifications/notifications.component';
+import { AppService } from 'src/app/_services/app.service';
 
 @Component({
   selector: 'app-header',
@@ -18,14 +19,22 @@ export class HeaderComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private userService: UserService,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private appService: AppService
+    
   ) {
     this.currentUser = this.authenticationService.currentUserValue;
     // this.router.navigate(['/overall']);
   }
-listNotifications=[];
+listNotifications=[{
+  title:'The notification service will be activated soon',
+  read:false
+
+}];
+
+listProfile=['View profile','Log out']
   ngOnInit() {
-    this.listNotifications=this.notificationsList();
+  
   }
 
   //dialog component
@@ -41,8 +50,15 @@ listNotifications=[];
     }); */
   }
 // notifications
-  notificationsList(){
-    const list=["Gravida molestie ut fringilla est. Praesent sed cras enim, eleifend aliquam","Gravida molestie ut fringilla est. Praesent sed cras enim, eleifend aliquam","Gravida molestie ut fringilla est. Praesent sed cras enim, eleifend aliquam","Gravida molestie ut fringilla est. Praesent sed cras enim, eleifend aliquam"];
-    return list;
-  }
+  read(){
+    
+     }
+     // log out button profile
+     logout() {
+     
+      this.appService.setUserLoggedIn(false);
+      // this.router.navigate(['/']);
+      this.authenticationService.logout();
+      this.router.navigate(['/login']);
+    }
 }
