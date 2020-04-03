@@ -59,4 +59,9 @@ export class BuildingDetailsComponent implements OnInit {
       return 'before ' + (currentYear - 15);
     }
   }
+
+  getCurrentDate(): string {
+    const currentDate = new Date();
+    return currentDate.toDateString();
+  }
 }

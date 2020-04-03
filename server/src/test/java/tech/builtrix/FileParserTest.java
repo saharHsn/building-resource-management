@@ -52,8 +52,8 @@ public class FileParserTest {
             // String document = "2017-DEC-2018-JAN.pdf";
 
             // String buildingId = "8a199ea5-7c6a-4e80-8658-7ad2c53e69bf";
-            String buildingId = "4f9e5bc1-471d-4b37-87ca-82f803898bb6"; // Parede
-            // String buildingId = "9d94dd4d-b789-4717-bdee-517a8de8ca6e"; // Franklin
+            // String buildingId = "4f9e5bc1-471d-4b37-87ca-82f803898bb6"; // Parede
+            String buildingId = "9d94dd4d-b789-4717-bdee-517a8de8ca6e"; // Franklin
             deleteAllBuildingsBills(buildingId);
             parseFiles(buildingId);
 
@@ -65,8 +65,8 @@ public class FileParserTest {
 
     private void parseFiles(String buildingId) {
         // String bucket = "metrics-bills-test";
-        String bucket = "parede-building";
-        //String bucket = "franklin-building";
+        // String bucket = "parede-building";
+        String bucket = "franklin-building";
         //metrics-bills-test
         /*List<String> documents = Arrays.asList(
                 "11190000169528.pdf",
@@ -82,7 +82,7 @@ public class FileParserTest {
                 "11200000032961.pdf",
                 "11200000103798.pdf");*/
         //parede-building
-        List<String> documents = Arrays.asList(
+      /*  List<String> documents = Arrays.asList(
                 "11190000227592.pdf",
                 "11190000431112.pdf",
                 "11200000004975.pdf",
@@ -96,9 +96,9 @@ public class FileParserTest {
                 "11190000574221.pdf",
                 "11190000379214.pdf",
                 "11200000004974.pdf");
-
+*/
         //franklin-building
-        /*List<String> documents = Arrays.asList(
+        List<String> documents = Arrays.asList(
                 "11190000173939.pdf",
                 "11190000431226.pdf",
                 "11200000056552.pdf",
@@ -111,7 +111,7 @@ public class FileParserTest {
                 "11190000573173.pdf",
                 "11190000379175.pdf",
                 "11200000001443.pdf"
-        );*/
+        );
         for (String document : documents) {
             BillDto billDto;
             try {
