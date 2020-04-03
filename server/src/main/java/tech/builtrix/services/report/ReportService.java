@@ -386,7 +386,7 @@ public class ReportService {
         return ReportUtil.roundDecimal(beScore + 0.05f * beScore);
     }
 
-    public Float getNationalMedian(String buildingId) throws NotFoundException {
+    public Float getNationalMedian(String buildingId) {
         Float nationalMedianBEScore = ((5 / 50f) * 100);
         float nationalMedian = BillService.getReference(buildingId) * 100;
         return ReportUtil.roundDecimal(nationalMedianBEScore);
