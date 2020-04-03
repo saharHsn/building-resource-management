@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit,Output,EventEmitter} from '@angular/core';
 import {User} from '../../user/user';
 import {AuthenticationService} from '../../_services';
 import {UserService} from '../../user/user.service';
@@ -14,7 +14,7 @@ import { AppService } from 'src/app/_services/app.service';
 })
 export class HeaderComponent implements OnInit {
   currentUser: User;
-
+  @Output() toggleSideBarForMe: EventEmitter<any> = new EventEmitter();
   constructor(
     private authenticationService: AuthenticationService,
     private userService: UserService,
@@ -60,5 +60,16 @@ listProfile=['View profile','Log out']
       // this.router.navigate(['/']);
       this.authenticationService.logout();
       this.router.navigate(['/login']);
+    }
+
+    //open and close sidebar
+
+    toggleSideBar() {
+      this.toggleSideBarForMe.emit();
+      setTimeout(() => {
+        window.dispatchEvent(
+          new Event('resize')
+        );
+      }, 300);
     }
 }

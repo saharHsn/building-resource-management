@@ -112,7 +112,7 @@ export class BeScoreComponent implements OnInit, OnDestroy {
         tickColor: '#666', */
 
         min: 0,
-        max: 55,
+        max: 100,
 
         minorTickInterval: 'auto',
         minorTickWidth: 1,

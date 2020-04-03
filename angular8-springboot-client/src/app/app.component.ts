@@ -28,6 +28,8 @@ export class AppComponent {
      this.authenticationService.logout();
      this.router.navigate(['/login']);
    }*/
+   //boolean to sidebar status
+  sideBarOpen = true;
   idleState = 'Not started.';
   timedOut = false;
   lastPing?: Date = null;
@@ -128,5 +130,10 @@ export class AppComponent {
     // this.router.navigate(['/']);
     this.authenticationService.logout();
     this.router.navigate(['/login']);
+  }
+
+  //open and close sidebar
+  sideBarToggler() {
+    this.sideBarOpen = !this.sideBarOpen;
   }
 }
