@@ -42,7 +42,21 @@ export class BuildingDetailsComponent implements OnInit {
   openDialog() {
     this.dialog.open(DownloadComponent);
   }
+
   /* list() {
      this.router.navigate(['buildings']);
    }*/
+  getBuiltIn(): string {
+    const buildingAge = this.building.age;
+    const currentYear = (new Date()).getFullYear();
+    if (BuildingAge[buildingAge] === BuildingAge.LESS_THAN_5_YEARS) {
+      return String((currentYear - 5));
+    } else if (BuildingAge[buildingAge] === BuildingAge.BETWEEN_5_TO_10_YEARS) {
+      return String((currentYear - 10));
+    } else if (BuildingAge[buildingAge] === BuildingAge.BETWEEN_10_TO_15_YEARS) {
+      return String((currentYear - 15));
+    } else if (BuildingAge[buildingAge] === BuildingAge.MORE_THAN_15) {
+      return 'before ' + (currentYear - 15);
+    }
+  }
 }

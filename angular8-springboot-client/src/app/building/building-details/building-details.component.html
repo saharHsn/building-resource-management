@@ -50,11 +50,10 @@
       <button mat-button color="Disabled" >
         <mat-icon>share</mat-icon> Share report
       </button>
-     
+
     </div>
-    
-  
-   
+
+
   </div>
 </div>
 
@@ -80,10 +79,10 @@
           <h5>Property Address:</h5>
         </div>
         <div class="col-6 fixed">
-          <h5>Office</h5>
+          <h5>{{building.usage}}</h5>
           <h5>{{building.area}} </h5>
-          <h5>11</h5>
-          <h5>Mar-11-2020</h5>
+          <h5>{{getBuiltIn()}}</h5>
+          <h5>2020</h5>
           <h5>{{building.postalAddress}}</h5>
         </div>
       </div>
