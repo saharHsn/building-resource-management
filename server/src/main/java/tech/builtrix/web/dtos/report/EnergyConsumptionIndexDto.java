@@ -3,7 +3,7 @@ package tech.builtrix.web.dtos.report;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import tech.builtrix.web.dtos.bill.EnergyConsumptionIndex;
+import tech.builtrix.web.dtos.bill.ReportIndex;
 
 /**
  * Created By sahar at 12/11/19
@@ -12,8 +12,8 @@ import tech.builtrix.web.dtos.bill.EnergyConsumptionIndex;
 @Data
 @AllArgsConstructor
 public class EnergyConsumptionIndexDto {
-	private EnergyConsumptionIndex consumptionArea;
-	private EnergyConsumptionIndex consumptionCap;
-	private EnergyConsumptionIndex cost;
-	private EnergyConsumptionIndex energyEfficiencyLevel;
+    private ReportIndex consumptionArea;
+    private ReportIndex consumptionCap;
+    private ReportIndex cost;
+    private ReportIndex energyEfficiencyLevel;
 }

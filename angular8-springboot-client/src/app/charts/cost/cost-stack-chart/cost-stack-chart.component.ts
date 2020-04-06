@@ -28,12 +28,12 @@ export class CostStackChartComponent implements OnInit {
           this.chartOptions = {
             chart: {
               type: 'column',
-          /*     backgroundColor: null, */
+              /*     backgroundColor: null, */
               /* grid: true, */
-           /*    gridLineColor: '#0066cc', */
+              /*    gridLineColor: '#0066cc', */
               /* plotBackgroundColor: '#F7F7F7', */
-           /*    width: 800,
-              height: 400 */
+              /*    width: 800,
+                 height: 400 */
             },
             title: {
               text: 'Cost of Electricity Over Time'
@@ -76,37 +76,37 @@ export class CostStackChartComponent implements OnInit {
               {
                 name: 'Contracted Power' +
                   'Power',
-                data: [50.94, 50.94, null, null, null, null, null, null, null, null, null], /*  data.content.contractedPowerValues, */
+                data: data.content.contractedPowerValues,
                 color: '#3A9AFC'
               },
               {
                 name: 'Power in Peak Hours',
-                data: [64.48, 64.48, null, null, null, null, null, null, null, null, null], /*  data.content.powerInPeakValues, */
+                data: data.content.powerInPeakValues,
                 color: '#6554C0'
               },
               {
                 name: 'Reactive\nPower',
-                data: [64.48, 64.48, null, null, null, null, null, null, null, null, null], /* data.content.reactivePowerValues, */
+                data: data.content.reactivePowerValues,
                 color: '#FF5630'
               },
               {
                 name: 'Normal-hours',
-                data: [160.2, 160.2, null, null, null, null, null, null, null, null, null], /* data.content.normalValues, */
+                data: data.content.normalValues,
                 color: '#FFAB00'
               },
               {
                 name: 'Peak-hours',
-                data: [160.2, 160.2, null, null, null, null, null, null, null, null, null], /*  data.content.peakValues, */
+                data: data.content.peakValues,
                 color: '#36B37E'
               },
               {
                 name: 'Free hours',
-                data: [33.37, 33.37, null, null, null, null, null, null, null, null, null], /*  data.content.freeValues, */
+                data: data.content.freeValues,
                 color: '#00B8D9'
               },
               {
                 name: 'Off hours',
-                data: [25.89, 25.89, null, null, null, null, null, null, null, null, null],
+                data: data.content.offValues,
                 color: '#0065FF'
               }
             ]

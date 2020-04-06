@@ -59,7 +59,10 @@ export class ChartService {
   }
 
   predict(): Observable<any> {
-    const buildId = '0023499e-0bd1-44bb-b3d5-15da81f0ef12';
+    return this.callService(`${this.predictUrl}`);
+  }
+
+  private callService(restUrl: string) {
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -69,85 +72,32 @@ export class ChartService {
         .set('Accept', '*/*')
         .set('Content-Type', 'application/json');
     }
-    return this.http.get(`${this.predictUrl}`, {headers});
+    const objectObservable = this.http.get(restUrl, {headers});
+    return objectObservable;
   }
 
   savingThisMonth(): Observable<any> {
-    let headers;
-    // @ts-ignore
-    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-    if (user && user.token) {
-      headers = new HttpHeaders()
-        .set('X-Session', user.token)
-        .set('Accept', '*/*')
-        .set('Content-Type', 'application/json');
-    }
-    return this.http.get(`${this.savingUrl}`, {headers});
+    return this.callService(`${this.savingUrl}`);
   }
 
   currentMonthSummary(): Observable<any> {
-    let headers;
-    // @ts-ignore
-    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-    if (user && user.token) {
-      headers = new HttpHeaders()
-        .set('X-Session', user.token)
-        .set('Accept', '*/*')
-        .set('Content-Type', 'application/json');
-    }
-    return this.http.get(`${this.currentMonthSummaryUrl}`, {headers});
+    return this.callService(`${this.currentMonthSummaryUrl}`);
   }
 
   getBEScore(): Observable<any> {
-    let headers;
-    // @ts-ignore
-    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-    if (user && user.token) {
-      headers = new HttpHeaders()
-        .set('X-Session', user.token)
-        .set('Accept', '*/*')
-        .set('Content-Type', 'application/json');
-    }
-    return this.http.get(`${this.beScoreUrl}`, {headers});
+    return this.callService(`${this.beScoreUrl}`);
   }
 
   costStackData(): Observable<any> {
-    let headers;
-    // @ts-ignore
-    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-    if (user && user.token) {
-      headers = new HttpHeaders()
-        .set('X-Session', user.token)
-        .set('Accept', '*/*')
-        .set('Content-Type', 'application/json');
-    }
-    return this.http.get(`${this.costStackUrl}`, {headers});
+    return this.callService(`${this.costStackUrl}`);
   }
 
   costPieData(): Observable<any> {
-    let headers;
-    // @ts-ignore
-    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-    if (user && user.token) {
-      headers = new HttpHeaders()
-        .set('X-Session', user.token)
-        .set('Accept', '*/*')
-        .set('Content-Type', 'application/json');
-    }
-    return this.http.get(`${this.costPieUrl}`, {headers});
+    return this.callService(`${this.costPieUrl}`);
   }
 
   consumptionStackData(): Observable<any> {
-    let headers;
-    // @ts-ignore
-    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-    if (user && user.token) {
-      headers = new HttpHeaders()
-        .set('X-Session', user.token)
-        .set('Accept', '*/*')
-        .set('Content-Type', 'application/json');
-    }
-    return this.http.get(`${this.consumptionUrl}`, {headers});
+    return this.callService(`${this.consumptionUrl}`);
   }
 
   consumptionDynamicData(year: YearFilterType,
@@ -172,119 +122,38 @@ export class ChartService {
   }
 
   normalizedConsumptionWeatherData(): Observable<any> {
-    let headers;
-    // @ts-ignore
-    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-    if (user && user.token) {
-      headers = new HttpHeaders()
-        .set('X-Session', user.token)
-        .set('Accept', '*/*')
-        .set('Content-Type', 'application/json');
-    }
-    return this.http.get(`${this.normalizedConsumptionWeatherUrl}`, {headers});
+    return this.callService(`${this.normalizedConsumptionWeatherUrl}`);
   }
 
   normalizedPerCapitaData(): Observable<any> {
-    let headers;
-    // @ts-ignore
-    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-    if (user && user.token) {
-      headers = new HttpHeaders()
-        .set('X-Session', user.token)
-        .set('Accept', '*/*')
-        .set('Content-Type', 'application/json');
-    }
-    return this.http.get(`${this.normalizedPerCapitaUrl}`, {headers});
+    return this.callService(`${this.normalizedPerCapitaUrl}`);
   }
 
   normalizedVsEnergyEfficiency(): Observable<any> {
-    let headers;
-    // @ts-ignore
-    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-    if (user && user.token) {
-      headers = new HttpHeaders()
-        .set('X-Session', user.token)
-        .set('Accept', '*/*')
-        .set('Content-Type', 'application/json');
-    }
-    return this.http.get(`${this.normalizedVsEEUrl}`, {headers});
+    return this.callService(`${this.normalizedVsEEUrl}`);
   }
 
   predictedWeatherVSReal(): Observable<any> {
-    let headers;
-    // @ts-ignore
-    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-    if (user && user.token) {
-      headers = new HttpHeaders()
-        .set('X-Session', user.token)
-        .set('Accept', '*/*')
-        .set('Content-Type', 'application/json');
-    }
-    return this.http.get(`${this.predictedWeatherVSRealUrl}`, {headers});
+    return this.callService(`${this.predictedWeatherVSRealUrl}`);
   }
 
   carbonPieData(): Observable<any> {
-    let headers;
-    // @ts-ignore
-    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-    if (user && user.token) {
-      headers = new HttpHeaders()
-        .set('X-Session', user.token)
-        .set('Accept', '*/*')
-        .set('Content-Type', 'application/json');
-    }
-    return this.http.get(`${this.carbonPieDataUrl}`, {headers});
+    return this.callService(`${this.carbonPieDataUrl}`);
   }
 
   carbonSPLineData(): Observable<any> {
-    let headers;
-    // @ts-ignore
-    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-    if (user && user.token) {
-      headers = new HttpHeaders()
-        .set('X-Session', user.token)
-        .set('Accept', '*/*')
-        .set('Content-Type', 'application/json');
-    }
-    return this.http.get(`${this.carbonSPLineUrl}`, {headers});
+    return this.callService(`${this.carbonSPLineUrl}`);
   }
 
   getAllEnergyConsumptionIndexes(): Observable<any> {
-    let headers;
-    // @ts-ignore
-    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-    if (user && user.token) {
-      headers = new HttpHeaders()
-        .set('X-Session', user.token)
-        .set('Accept', '*/*')
-        .set('Content-Type', 'application/json');
-    }
-    return this.http.get(`${this.energyConsumptionIndexUrl}`, {headers});
+    return this.callService(`${this.energyConsumptionIndexUrl}`);
   }
 
   getNationalMedian(): Observable<any> {
-    let headers;
-    // @ts-ignore
-    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-    if (user && user.token) {
-      headers = new HttpHeaders()
-        .set('X-Session', user.token)
-        .set('Accept', '*/*')
-        .set('Content-Type', 'application/json');
-    }
-    return this.http.get(`${this.nationalMedianUrl}`, {headers});
+    return this.callService(`${this.nationalMedianUrl}`);
   }
 
   getPropertyTarget(): Observable<any> {
-    let headers;
-    // @ts-ignore
-    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-    if (user && user.token) {
-      headers = new HttpHeaders()
-        .set('X-Session', user.token)
-        .set('Accept', '*/*')
-        .set('Content-Type', 'application/json');
-    }
-    return this.http.get(`${this.propertyTargetUrl}`, {headers});
+    return this.callService(`${this.propertyTargetUrl}`);
   }
 }

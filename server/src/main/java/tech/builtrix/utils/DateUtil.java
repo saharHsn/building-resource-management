@@ -202,7 +202,7 @@ public class DateUtil {
         return daysInMonth;
     }
 
-    public static int geCurrentMonth() {
+    public static int getCurrentMonth() {
         int month;
         GregorianCalendar date = new GregorianCalendar();
         month = date.get(Calendar.MONTH);

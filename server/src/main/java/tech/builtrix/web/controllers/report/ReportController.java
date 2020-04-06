@@ -2,6 +2,7 @@ package tech.builtrix.web.controllers.report;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,10 +14,12 @@ import tech.builtrix.enums.DatePartType;
 import tech.builtrix.enums.TimePeriodType;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.user.User;
+import tech.builtrix.services.bill.BillService;
 import tech.builtrix.services.building.BuildingService;
 import tech.builtrix.services.report.ReportService;
+import tech.builtrix.web.dtos.bill.BillDto;
 import tech.builtrix.web.dtos.bill.BuildingDto;
-import tech.builtrix.web.dtos.bill.EnergyConsumptionIndex;
+import tech.builtrix.web.dtos.bill.ReportIndex;
 import tech.builtrix.web.dtos.report.*;
 
 import java.util.List;
@@ -28,16 +31,19 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/reports")
 @Api(value = "Report Controller", tags = {"Report Controller"})
+@Slf4j
 //TODO check if building id is null
 public class ReportController extends ControllerBase {
 
     private final ReportService reportService;
     private final BuildingService buildingService;
+    private final BillService billService;
 
     @Autowired
-    public ReportController(ReportService reportService, BuildingService buildingService) {
+    public ReportController(ReportService reportService, BuildingService buildingService, BillService billService) {
         this.reportService = reportService;
         this.buildingService = buildingService;
+        this.billService = billService;
     }
 
     @ApiOperation(value = "Request for getting prediction data")
@@ -69,13 +75,17 @@ public class ReportController extends ControllerBase {
     @GetMapping(value = "/beScore")
     public Response<Float> getBEScore() throws NotFoundException {
         Float beScore;
-        beScore = this.reportService.getBEScore(getBuildingId());
+        String buildingId = getBuildingId();
+        long l = System.currentTimeMillis();
+        List<BillDto> billDtos = this.billService.getBillsOfLast12Months(buildingId);
+        logger.info("After filling missed bills : " + (System.currentTimeMillis() - l) / 1000);
+        beScore = this.reportService.getBEScore(buildingId, billDtos);
         return Response.ok(beScore);
     }
 
     @ApiOperation(value = "Request for getting be score")
     @GetMapping(value = "/nationalMedian")
-    public Response<Float> getNationalMedian() throws NotFoundException {
+    public Response<Float> getNationalMedian() {
         Float nationalMedian;
         nationalMedian = this.reportService.getNationalMedian(getBuildingId());
         return Response.ok(nationalMedian);
@@ -174,9 +184,11 @@ public class ReportController extends ControllerBase {
     @ApiOperation(value = "Request for ")
     @GetMapping(value = "/energyConsumptionIndex")
     public Response<EnergyConsumptionIndexDto> getEnergyConsumptionIndex() throws NotFoundException {
-        List<EnergyConsumptionIndex> indexes;
+        List<ReportIndex> indexes;
         EnergyConsumptionIndexDto dto;
+        long l = System.currentTimeMillis();
         indexes = this.reportService.getAllEnergyConsumptionIndexes(getBuildingId());
+        logger.info("After getAllEnergyConsumptionIndexes : " + (System.currentTimeMillis() - l) / 1000);
         dto = new EnergyConsumptionIndexDto(indexes.get(0), indexes.get(1), indexes.get(2), indexes.get(3));
         return Response.ok(dto);
     }

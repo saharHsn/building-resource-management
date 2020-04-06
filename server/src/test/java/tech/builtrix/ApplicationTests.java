@@ -11,7 +11,8 @@ import tech.builtrix.enums.TimePeriodType;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.services.bill.BillService;
 import tech.builtrix.services.report.ReportService;
-import tech.builtrix.web.dtos.bill.EnergyConsumptionIndex;
+import tech.builtrix.web.dtos.bill.BillDto;
+import tech.builtrix.web.dtos.bill.ReportIndex;
 import tech.builtrix.web.dtos.report.*;
 
 import java.util.List;
@@ -37,29 +38,30 @@ public class ApplicationTests {
 	}
 
 	private void savings() throws NotFoundException {
-		SavingDto savingDto = null;
-		savingDto = this.reportService.savingThisMonth(BUILDING_ID);
-	}
+        SavingDto savingDto = null;
+        savingDto = this.reportService.savingThisMonth(BUILDING_ID);
+    }
 
-	private void prediction() {
-		// prediction
-		PredictionDto predictionDto = null;
-		predictionDto = this.reportService.predict(BUILDING_ID);
-	}
+    private void prediction() {
+        // prediction
+        PredictionDto predictionDto = null;
+        predictionDto = this.reportService.predict(BUILDING_ID);
+    }
 
-	public Float getBEScore() throws NotFoundException {
-		Float beScore = null;
-		beScore = this.reportService.getBEScore(BUILDING_ID);
-		return beScore;
-	}
+    public Float getBEScore(String buildingId) throws NotFoundException {
+        Float beScore;
+        List<BillDto> billDtos = this.billService.getBillsOfLast12Months(buildingId);
+        beScore = this.reportService.getBEScore(BUILDING_ID, billDtos);
+        return beScore;
+    }
 
-	public Float getNationalMedian() throws NotFoundException {
-		Float nationalMedian = null;
-		nationalMedian = this.reportService.getNationalMedian(BUILDING_ID);
-		return nationalMedian;
-	}
+    public Float getNationalMedian() throws NotFoundException {
+        Float nationalMedian = null;
+        nationalMedian = this.reportService.getNationalMedian(BUILDING_ID);
+        return nationalMedian;
+    }
 
-	public Float getPropertyTarget() throws NotFoundException {
+    public Float getPropertyTarget() throws NotFoundException {
 		Float propertyTarget = null;
 		propertyTarget = this.reportService.getDefaultPropertyTarget(BUILDING_ID, null);
 		return propertyTarget;
@@ -130,10 +132,10 @@ public class ApplicationTests {
 	}
 
 	public EnergyConsumptionIndexDto getEnergyConsumptionIndex() throws NotFoundException {
-		List<EnergyConsumptionIndex> indexes;
-		EnergyConsumptionIndexDto dto = null;
-		indexes = this.reportService.getAllEnergyConsumptionIndexes(BUILDING_ID);
-		dto = new EnergyConsumptionIndexDto(indexes.get(0), indexes.get(1), indexes.get(2), indexes.get(3));
-		return dto;
-	}
+        List<ReportIndex> indexes;
+        EnergyConsumptionIndexDto dto = null;
+        indexes = this.reportService.getAllEnergyConsumptionIndexes(BUILDING_ID);
+        dto = new EnergyConsumptionIndexDto(indexes.get(0), indexes.get(1), indexes.get(2), indexes.get(3));
+        return dto;
+    }
 }

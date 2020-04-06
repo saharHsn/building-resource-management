@@ -100,8 +100,8 @@ public class ReportUtil {
             if (billDto.getRDContractedPower() != null) {
                 contractedPowerValues.add(ReportUtil.roundDecimal(billDto.getRDContractedPower().getTotalTariffCost()));
             }
-            Float aeFree = 0f;
-            Float rdFree = 0f;
+            float aeFree = 0f;
+            float rdFree = 0f;
             if (billDto.getAEFreeHours() != null) {
                 aeFree = billDto.getAEFreeHours().getTotalTariffCost();
             }
@@ -110,8 +110,8 @@ public class ReportUtil {
             }
             freeValues.add(ReportUtil.roundDecimal(aeFree + rdFree));
 
-            Float aeOff = 0f;
-            Float rdOff = 0f;
+            float aeOff = 0f;
+            float rdOff = 0f;
             if (billDto.getAEOffHours() != null) {
                 aeOff = billDto.getAEOffHours().getTotalTariffCost();
             }
@@ -120,8 +120,8 @@ public class ReportUtil {
             }
             offValues.add(ReportUtil.roundDecimal(aeOff + rdOff));
 
-            Float aePeak = 0f;
-            Float rdPeak = 0f;
+            float aePeak = 0f;
+            float rdPeak = 0f;
             if (billDto.getAEPeakHours() != null) {
                 aePeak = billDto.getAEPeakHours().getTotalTariffCost();
             }
@@ -135,8 +135,8 @@ public class ReportUtil {
                 powerInPeakValues.add(ReportUtil.roundDecimal(billDto.getRDPeakHours().getTotalTariffCost()));
             }
 
-            Float aeNormal = 0f;
-            Float rdNormal = 0f;
+            float aeNormal = 0f;
+            float rdNormal = 0f;
             if (billDto.getAENormalHours() != null) {
                 aeNormal = billDto.getAENormalHours().getTotalTariffCost();
             }
@@ -246,7 +246,29 @@ public class ReportUtil {
         return dto;
     }
 
-    public static EnergyCertificate getEnergyEfficiency(Float efficiencyLevel) {
+    public static EnergyCertificate increaseEnergyCertificate(EnergyCertificate energyCertificate) {
+        if (energyCertificate.equals(EnergyCertificate.Others)) {
+            return EnergyCertificate.F;
+        } else if (energyCertificate.equals(EnergyCertificate.F)) {
+            return EnergyCertificate.E;
+        } else if (energyCertificate.equals(EnergyCertificate.E)) {
+            return EnergyCertificate.D;
+        } else if (energyCertificate.equals(EnergyCertificate.D)) {
+            return EnergyCertificate.C;
+        } else if (energyCertificate.equals(EnergyCertificate.C)) {
+            return EnergyCertificate.BMinus;
+        } else if (energyCertificate.equals(EnergyCertificate.BMinus)) {
+            return EnergyCertificate.B;
+        } else if (energyCertificate.equals(EnergyCertificate.B)) {
+            return EnergyCertificate.A;
+        }
+        if (energyCertificate.equals(EnergyCertificate.A)) {
+            return EnergyCertificate.APlus;
+        }
+        return EnergyCertificate.Others;
+    }
+
+    public static EnergyCertificate getEnergyEfficiency(Float efficiencyLevel, List<BillDto> billsOfYear) {
         EnergyCertificate energyEfficiency = EnergyCertificate.Others;
         if (efficiencyLevel >= 0 && efficiencyLevel < 25) {
             energyEfficiency = EnergyCertificate.APlus;
@@ -288,7 +310,7 @@ public class ReportUtil {
             standardDVals.add(month, efficiencyLevel);
         }
     }
-
+/*
     public static EnergyCertificate getNationalMedianCert() {
         // TODO read this values from national database
         float eeAPlus = 7021f;
@@ -299,10 +321,10 @@ public class ReportUtil {
         float eeD = 249806f;
         float eeE = 152569f;
         float eeF = 83306f;
-        return getEnergyEfficiency((eeAPlus + eeA + eeB + eeBMinus + eeC + eeD + eeE + eeF) / 8);
-    }
+        return getEnergyEfficiency((eeAPlus + eeA + eeB + eeBMinus + eeC + eeD + eeE + eeF) / 8, billsOfYear);
+    }*/
 
-    public static EnergyCertificate getPropertyTargetCert(EnergyCertificate baseLineEE) {
+   /* public static EnergyCertificate getPropertyTargetCert(EnergyCertificate baseLineEE) {
         switch (baseLineEE) {
             case A:
                 return EnergyCertificate.APlus;
@@ -320,7 +342,7 @@ public class ReportUtil {
                 return EnergyCertificate.E;
         }
         return EnergyCertificate.Others;
-    }
+    }*/
 
     @AllArgsConstructor
     @Getter

@@ -14,13 +14,13 @@ import tech.builtrix.models.building.EnergyCertificate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EnergyConsumptionIndex {
-	Float baseline;
-	Float thisMonth;
-	Float propertiesTarget;
-	Float nationalMedian;
-	EnergyCertificate baseLineCert;
-	EnergyCertificate thisMonthCert;
-	EnergyCertificate propertyTargetCert;
-	EnergyCertificate nationalMedianCert;
+public class ReportIndex {
+    Float baseline;
+    Float thisMonth;
+    Float propertiesTarget;
+    Float nationalMedian;
+    EnergyCertificate baseLineCert;
+    EnergyCertificate thisMonthCert;
+    EnergyCertificate propertyTargetCert;
+    EnergyCertificate nationalMedianCert;
 }
