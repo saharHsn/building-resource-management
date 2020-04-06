@@ -27,7 +27,7 @@ export class HeaderComponent implements OnInit {
     // this.router.navigate(['/overall']);
   }
 listNotifications=[{
-  title:'The notification service will be activated soon',
+  title:'View notifications and insights about your consumption',
   read:false
 
 }];
