@@ -101,14 +101,14 @@ public class ReportService {
     }
 
     public CostStackDto getCostStackData(String buildingId) throws NotFoundException {
-        Integer year = DateUtil.getCurrentYear();
-        List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, year);
+        Integer currentYear = DateUtil.getCurrentYear();
+        List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, currentYear, false);
         return ReportUtil.getCostStackDto(dtoList);
     }
 
     public CostPieDto getCostPieData(String buildingId) throws NotFoundException {
         Date currentDate = ReportUtil.getCurrentDate();
-        int year = DateUtil.getYear(currentDate);
+        int currentYear = DateUtil.getYear(currentDate);
         float contractedPower = 0f;
         float freeHours = 0f;
         float normalHours = 0f;
@@ -116,7 +116,7 @@ public class ReportService {
         float powerInPeakHours = 0f;
         float reactivePower = 0f;
         float peakHours = 0f;
-        List<BillDto> billsOfYear = billService.getBillsOfYear(buildingId, year);
+        List<BillDto> billsOfYear = billService.getBillsOfYear(buildingId, currentYear, false);
 
         for (BillDto billDto : billsOfYear) {
             if (billDto.getRDContractedPower() != null) {
@@ -154,7 +154,7 @@ public class ReportService {
 
     public ConsumptionDto getConsumption(String buildingId) throws NotFoundException {
         int currentYear = DateUtil.getCurrentYear();
-        List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, currentYear);
+        List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, currentYear, false);
         ConsumptionDto dto = ReportUtil.getConsumptionDto(dtoList, currentYear, true);
         List<Float> monthConsVals = calculateBaseLine(buildingId);
         dto.setBaseLineValues(monthConsVals);
@@ -163,8 +163,12 @@ public class ReportService {
 
     public ConsumptionDynamicDto getConsumptionDynamicData(String buildingId, Integer year, TimePeriodType periodType,
                                                            DatePartType datePartType) throws NotFoundException {
-        List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, year);
-        ConsumptionDto monthlyConsDto = ReportUtil.getConsumptionDto(dtoList, year, false);
+        boolean fillMissingBills = true;
+        if (year.equals(DateUtil.getCurrentYear())) {
+            fillMissingBills = false;
+        }
+        List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, year, fillMissingBills);
+        ConsumptionDto monthlyConsDto = ReportUtil.getConsumptionDto(dtoList, year, fillMissingBills);
         // TODO calculate quarter later
         boolean isQuarter = periodType.equals(TimePeriodType.QUARTERS);
         String PEAK_HOURS = "Peak Hours";
@@ -254,7 +258,7 @@ public class ReportService {
         List<Float> standardBVals = new ArrayList<>(Collections.nCopies(12, 0f));
         List<Float> standardCVals = new ArrayList<>(Collections.nCopies(12, 0f));
         List<Float> standardDVals = new ArrayList<>(Collections.nCopies(12, 0f));
-        List<BillDto> billsOfYear = billService.getBillsOfYear(buildingId, currentYear);
+        List<BillDto> billsOfYear = billService.getBillsOfYear(buildingId, currentYear, false);
         for (int i = 0; i < 12; i++) {
             Integer numOfDaysOfMonth = DateUtil.getNumOfDaysOfMonth(currentYear, i + 1);
             // If the result is 0, we must put 1
@@ -291,7 +295,7 @@ public class ReportService {
     public NormalPerCapitaDto getNormalizedPerCapita(String buildingId) throws NotFoundException {
         NormalPerCapitaDto dto = new NormalPerCapitaDto();
         Integer currentYear = DateUtil.getCurrentYear();
-        List<BillDto> bills = this.billService.getBillsOfYear(buildingId, currentYear);
+        List<BillDto> bills = this.billService.getBillsOfYear(buildingId, currentYear, false);
         List<Float> consumptionPerMonth = new ArrayList<>(12);
         BuildingDto building = this.buildingService.findById(buildingId);
         int numOfPeople = building.getNumberOfPeople();
@@ -326,7 +330,7 @@ public class ReportService {
 
     public CarbonSPLineDto getCarbonSPLineData(String buildingId) throws NotFoundException {
         int currentYear = DateUtil.getCurrentYear();
-        List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, currentYear);
+        List<BillDto> dtoList = this.billService.getBillsOfYear(buildingId, currentYear, false);
         BuildingDto building = buildingService.findById(buildingId);
         List<Float> totalValues = new ArrayList<>();
         for (BillDto billDto : dtoList) {
@@ -405,12 +409,12 @@ public class ReportService {
     public List<ReportIndex> getAllEnergyConsumptionIndexes(String buildingId) throws NotFoundException {
         BuildingDto buildingDto = this.buildingService.findById(buildingId);
         int currentYear = DateUtil.getCurrentYear();
-        List<BillDto> lastYearBills = this.billService.getBillsOfYear(buildingId, currentYear - 1);
+        List<BillDto> lastYearBills = this.billService.getBillsOfYear(buildingId, currentYear - 1, true);
         List<BillDto> last12MonthBills = this.billService.getBillsOfLast12Months(buildingId);
         BillDto lastBillDto = this.billService.getLastBillDto(buildingId);
         ReportIndex consumptionArea = getAreaIndexConsumptionData(buildingDto, last12MonthBills, lastBillDto);
-        ReportIndex consumptionCap = getCapIndexConsumptionData(buildingDto, lastYearBills, lastBillDto);
-        ReportIndex cost = getIndexCostData(buildingDto, lastYearBills, lastBillDto);
+        ReportIndex consumptionCap = getCapIndexConsumptionData(buildingDto, last12MonthBills, lastBillDto);
+        ReportIndex cost = getIndexCostData(buildingDto, last12MonthBills, lastBillDto);
         ReportIndex energyEfficiencyLevel = new ReportIndex();
         //2019 :
         EnergyCertificate lastYearEnergyEfficiency = getEnergyEfficiency(buildingDto, lastYearBills);
@@ -425,7 +429,7 @@ public class ReportService {
 
     private EnergyCertificate getEnergyEfficiency(BuildingDto buildingDto, List<BillDto> billDtos) {
         //(index/ref)*100
-        float index = calculateConsumptionAreaIndex(buildingDto, billDtos);
+        float index = calculateConsumptionAreaIndex(buildingDto, billDtos) * 12;
         float lastYearEE = (index / REFERENCE) * 100;
         return ReportUtil.getEnergyEfficiency(lastYearEE, billDtos);
     }
@@ -477,28 +481,9 @@ public class ReportService {
         for (BillDto dto : dtoList) {
             sumOffConsumption += dto.getTotalMonthlyConsumption();
         }
-        // float averageConsumption = sumOffConsumption / 12;
-        return sumOffConsumption / building.getArea();
+        float averageConsumption = sumOffConsumption / 12;
+        return averageConsumption / building.getArea();
     }
-
-    /*private Float getCnsCapNationalMedian(Float divideParam,
-                                          BuildingDto buildingDto,
-                                          Float beScore,
-                                          Float target,
-                                          ReportIndex consumptionIndex,
-                                          Float cnsCapBase,
-                                          Float totalMonthlyConsumption2) {
-        cnsCapBase = (cnsCapBase / 12) / buildingDto.getArea();
-        consumptionIndex.setBaseline(cnsCapBase);
-        String buildingId = buildingDto.getId();
-        Float cnsAreaLastMonth = (totalMonthlyConsumption2 != null ? totalMonthlyConsumption2 : 0) / divideParam;
-        consumptionIndex.setThisMonth(cnsAreaLastMonth);
-        // TODO ask if propTarget is calculated correctly
-        float cnsCapPropsTarget = (cnsCapBase * beScore) / target;
-        consumptionIndex.setPropertiesTarget(ReportUtil.roundDecimal(cnsCapPropsTarget));
-        Float nationalMedian = getNationalMedian(buildingId);
-        return cnsCapBase * (beScore / nationalMedian);
-    }*/
 
     private ReportIndex getIndexCostData(BuildingDto buildingDto,
                                          List<BillDto> billDtos,
@@ -509,16 +494,16 @@ public class ReportService {
             float totalPayable = billDto.getTotalPayable();
             cnsCapBase += totalPayable;
         }
-        float index = (cnsCapBase / billDtos.size()) / buildingDto.getArea();
+        float index = ((cnsCapBase / 12) / buildingDto.getArea());
         costIndex.setBaseline(ReportUtil.roundDecimal(index));
-        costIndex.setThisMonth(ReportUtil.roundDecimal(((lastBillDto.getTotalPayable() / billDtos.size()) / buildingDto.getArea())));
+        costIndex.setThisMonth(ReportUtil.roundDecimal((lastBillDto.getTotalPayable() / buildingDto.getArea())));
         costIndex.setPropertiesTarget(ReportUtil.roundDecimal(index * PROPERTY_TARGET_COEFFICIENT));
         costIndex.setNationalMedian(1.1f);
         return costIndex;
     }
 
     private List<Float> calculateBaseLine(String buildingId) throws NotFoundException {
-        List<BillDto> lastYearBills = this.billService.getBillsOfYear(buildingId, DateUtil.getCurrentYear() - 1);
+        List<BillDto> lastYearBills = this.billService.getBillsOfYear(buildingId, DateUtil.getCurrentYear() - 1, true);
         List<Float> monthConsVals = new ArrayList<>(Collections.nCopies(12, 0f));
         for (BillDto lastYearBill : lastYearBills) {
             int index = lastYearBill.getFromMonth() - 1;
