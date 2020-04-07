@@ -37,7 +37,7 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
     private static AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
     static DynamoDBMapper mapper = new DynamoDBMapper(client);
     private static String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-    private static Float reference = 50f;
+
     private final BillParameterService billParameterService;
     // private final BuildingService buildingService;
 
@@ -47,9 +47,6 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         this.billParameterService = billParameterService;
     }
 
-    public static Float getReference(String buildingId) {
-        return reference;
-    }
 
     public static void main(String[] args) throws ParseException {
         BillService billService = new BillService(null, null);
@@ -178,7 +175,7 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
     }
 
     public BillDto filterByMonthAndYear(String buildingId, int month, int year) throws NotFoundException {
-        BillDto allBillInfo = new BillDto();
+        BillDto allBillInfo = null;
         Map<String, AttributeValue> exprAtrVals = new HashMap<>();
         exprAtrVals.put(":buildingId", new AttributeValue().withS(buildingId));
         exprAtrVals.put(":fromMonth", new AttributeValue().withN(String.valueOf(month)));
@@ -194,26 +191,180 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         return allBillInfo;
     }
 
-    public Float getBEScore(BuildingDto building, List<BillDto> dtoList) throws NotFoundException {
-        // TODO add reference field to building entity
-        /* user enters reference if not we consider 50 */
-        float GOD = 0.1f * reference; // 5 kWh/m2/year
-        Float x = geXValue(building, dtoList);
-        Float beScore = (GOD / (x > 0 ? x : 0.5f)) * 100;
-        return beScore;
+    public List<BillDto> getBillsOfLast12Months(String buildingId) throws NotFoundException {
+        //Get last 12 months bills
+        int month;
+        int currentYear;
+        List<BillDto> billDtos = new ArrayList<>();
+        month = DateUtil.getCurrentMonth() - 1;
+        currentYear = DateUtil.getCurrentYear();
+        if (month == 12) {
+            billDtos = getBillsOfYear(buildingId, currentYear, false);
+        } else {
+            List<BillDto> currentYearBills = getBillsOfYear(buildingId, currentYear, false);
+            List<BillDto> lastYearBills = getBillsOfYear(buildingId, currentYear - 1, true);
+            do {
+                billDtos.add(currentYearBills.get(month - 1));
+                month -= 1;
+            } while (month >= 1);
+            if (billDtos.size() < 12) {
+                month = 12;
+                do {
+                    billDtos.add(lastYearBills.get(month - 1));
+                    month -= 1;
+                } while (billDtos.size() < 12);
+            }
+        }
+        return billDtos;
     }
+
 
     // ----------------------------------------- Private Methods
     // ---------------------------------------------
 
-    public List<BillDto> getBillsOfYear(String buildingId, Integer year) throws NotFoundException {
+    public List<BillDto> getBillsOfYear(String buildingId, Integer year, boolean fillMissedBills) throws NotFoundException {
         List<Bill> bills;
-        List<BillDto> billDtos = new ArrayList<>();
+        List<BillDto> billDots = new ArrayList<>(Collections.nCopies(12, new BillDto()));
         bills = filterByYear(buildingId, year);
         for (Bill bill : bills) {
-            billDtos.add(convertBillToDto(bill));
+            billDots.set(bill.getFromMonth() - 1, convertBillToDto(bill));
         }
-        return billDtos;
+        //Try to fill bills that are null from average of not null bills
+        if (fillMissedBills) {
+            fillMissingBills(buildingId, billDots, bills);
+        }
+        return billDots;
+    }
+
+    private void fillMissingBills(String buildingId, List<BillDto> billDtos, List<Bill> bills) {
+        int billsSize = bills.size();
+        if (billsSize >= 1 && billsSize < 12) {
+            List<BillDto> notNullBills = new ArrayList<>();
+            List<Integer> notNullMonths = new ArrayList<>();
+            for (Bill bill : bills) {
+                notNullMonths.add(bill.getFromMonth());
+                notNullBills.add(billDtos.get(bill.getFromMonth() - 1));
+            }
+            BillDto averageBill = makeAverageBill(buildingId, billsSize, notNullBills);
+            addAverageBill(billDtos, notNullMonths, averageBill);
+        }
+    }
+
+    private void addAverageBill(List<BillDto> billDots, List<Integer> notNullMonths, BillDto averageBill) {
+        for (int i = 1; i <= 12; i++) {
+            if (!notNullMonths.contains(i)) {
+                BillDto dto;
+                try {
+                    dto = (BillDto) averageBill.clone();
+                } catch (CloneNotSupportedException e) {
+                    billDots.add(averageBill.setFromMonth(i));
+                    continue;
+                }
+                dto.setFromMonth(i);
+                billDots.set(i - 1, dto);
+            }
+        }
+    }
+
+    private BillDto makeAverageBill(String buildingId, int billSize, List<BillDto> notNullBills) {
+        BillDto averageBill = new BillDto();
+        BillParameterDto rdNormalHours = new BillParameterDto();
+        BillParameterDto rdPeakHours = new BillParameterDto();
+        BillParameterDto rdOffHours = new BillParameterDto();
+        BillParameterDto rdFreeHours = new BillParameterDto();
+        BillParameterDto rdContractedPower = new BillParameterDto();
+        BillParameterDto rdReactivePower = new BillParameterDto();
+        BillParameterDto aeNormalHours = new BillParameterDto();
+        BillParameterDto aePeakHours = new BillParameterDto();
+        BillParameterDto aeOffHours = new BillParameterDto();
+        BillParameterDto aeFreeHours = new BillParameterDto();
+
+        float totalMonthlyConsumption = 0f;
+        float totalPayable = 0f;
+        float activeEnergyCost = 0f;
+        float averageDailyConsumption = 0f;
+        float producedCO2 = 0f;
+        float powerDemandCost = 0f;
+        for (BillDto billMonth : notNullBills) {
+            if (averageBill.getToDate() == null) {
+                averageBill.setToDate(billMonth.getToDate());
+            }
+            if (averageBill.getFromDate() == null) {
+                averageBill.setFromDate(billMonth.getFromDate());
+            }
+            if (averageBill.getAddress() == null) {
+                averageBill.setAddress(billMonth.getAddress());
+            }
+            if (averageBill.getElectricityCounterCode() == null) {
+                averageBill.setElectricityCounterCode(billMonth.getElectricityCounterCode());
+            }
+            if (averageBill.getBuildingId() == null) {
+                averageBill.setBuildingId(buildingId);
+            }
+            if (averageBill.getCompanyTaxNumber() == null) {
+                averageBill.setCompanyTaxNumber(billMonth.getCompanyTaxNumber());
+            }
+            if (averageBill.getYear() == null) {
+                averageBill.setYear(billMonth.getYear());
+            }
+            totalMonthlyConsumption += billMonth.getTotalMonthlyConsumption();
+            totalPayable += billMonth.getTotalPayable();
+            activeEnergyCost += billMonth.getActiveEnergyCost();
+            averageDailyConsumption += billMonth.getAverageDailyConsumption();
+            producedCO2 += billMonth.getProducedCO2();
+            powerDemandCost += billMonth.getPowerDemandCost();
+
+            rdNormalHours = mergeBillParam(rdNormalHours, billMonth.getRDNormalHours());
+            rdPeakHours = mergeBillParam(rdPeakHours, billMonth.getRDPeakHours());
+            rdOffHours = mergeBillParam(rdOffHours, billMonth.getRDOffHours());
+            rdFreeHours = mergeBillParam(rdFreeHours, billMonth.getRDFreeHours());
+            rdContractedPower = mergeBillParam(rdContractedPower, billMonth.getRDContractedPower());
+            rdReactivePower = mergeBillParam(rdReactivePower, billMonth.getRDReactivePower());
+            aeNormalHours = mergeBillParam(aeNormalHours, billMonth.getAENormalHours());
+            aePeakHours = mergeBillParam(aePeakHours, billMonth.getAEPeakHours());
+            aeOffHours = mergeBillParam(aeOffHours, billMonth.getAEOffHours());
+            aeFreeHours = mergeBillParam(aeFreeHours, billMonth.getAEFreeHours());
+
+        }
+
+        averageBill.setTotalMonthlyConsumption(totalMonthlyConsumption / billSize);
+        averageBill.setTotalPayable(totalPayable / billSize);
+        averageBill.setActiveEnergyCost(activeEnergyCost / billSize);
+        averageBill.setAverageDailyConsumption(averageDailyConsumption / billSize);
+        averageBill.setProducedCO2(producedCO2 / billSize);
+        averageBill.setPowerDemandCost(powerDemandCost / billSize);
+
+        averageBill.setRDNormalHours(averageBillParameter(rdNormalHours, billSize));
+        averageBill.setRDPeakHours(averageBillParameter(rdPeakHours, billSize));
+        averageBill.setRDOffHours(averageBillParameter(rdOffHours, billSize));
+        averageBill.setRDFreeHours(averageBillParameter(rdFreeHours, billSize));
+        averageBill.setRDContractedPower(averageBillParameter(rdContractedPower, billSize));
+        averageBill.setRDReactivePower(averageBillParameter(rdReactivePower, billSize));
+        averageBill.setAENormalHours(averageBillParameter(aeNormalHours, billSize));
+        averageBill.setAEPeakHours(averageBillParameter(aePeakHours, billSize));
+        averageBill.setAEOffHours(averageBillParameter(aeOffHours, billSize));
+        averageBill.setAEFreeHours(averageBillParameter(aeFreeHours, billSize));
+
+        return averageBill;
+    }
+
+    private BillParameterDto averageBillParameter(BillParameterDto parameterDto, int billSize) {
+        parameterDto.setTotalTariffCost(parameterDto.getTotalTariffCost() / billSize);
+        parameterDto.setTariffPrice(parameterDto.getTariffPrice() / billSize);
+        parameterDto.setCost(parameterDto.getCost() / billSize);
+        parameterDto.setConsumption(parameterDto.getConsumption() / billSize);
+        return parameterDto;
+    }
+
+    private BillParameterDto mergeBillParam(BillParameterDto src, BillParameterDto dest) {
+        if (dest != null) {
+            src.setConsumption((dest.getConsumption()) + src.getConsumption());
+            src.setParamType(dest.getParamType());
+            src.setTariffPrice((dest.getTariffPrice()) + src.getTariffPrice());
+            src.setCost((dest.getCost()) + src.getCost());
+            src.setTotalTariffCost((dest.getTotalTariffCost()) + src.getTotalTariffCost());
+        }
+        return src;
     }
 
     private List<Bill> filterByYear(String buildingId, Integer year) {
@@ -316,16 +467,16 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         return billDto;
     }
 
-    private Float geXValue(BuildingDto building, List<BillDto> dtoList) throws NotFoundException {
+    private Float geXValue(BuildingDto building, List<BillDto> dtoList) {
         // BuildingDto building = this.buildingService.findById(buildingId);
         // List<BillDto> dtoList = getBillsOfYear(buildingId);
         float x = 0f;
         for (int i = 0; i < 12; i++) {
             // TODO is normalized equals with averageConsumption?
             if (dtoList.size() > i) {
-                if (dtoList.get(i).getTotalMonthlyConsumption() != null) {
-                    x += ((dtoList.get(i).getTotalMonthlyConsumption()) / building.getArea());
-                }
+                // if (dtoList.get(i).getTotalMonthlyConsumption() != null) {
+                x += ((dtoList.get(i).getTotalMonthlyConsumption()) / building.getArea());
+                //}
             }
         }
         // return (x) / 12f;
