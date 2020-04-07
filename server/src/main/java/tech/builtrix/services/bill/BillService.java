@@ -199,10 +199,10 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         month = DateUtil.getCurrentMonth() - 1;
         currentYear = DateUtil.getCurrentYear();
         if (month == 12) {
-            billDtos = getBillsOfYear(buildingId, currentYear);
+            billDtos = getBillsOfYear(buildingId, currentYear, false);
         } else {
-            List<BillDto> currentYearBills = getBillsOfYear(buildingId, currentYear);
-            List<BillDto> lastYearBills = getBillsOfYear(buildingId, currentYear - 1);
+            List<BillDto> currentYearBills = getBillsOfYear(buildingId, currentYear, false);
+            List<BillDto> lastYearBills = getBillsOfYear(buildingId, currentYear - 1, true);
             do {
                 billDtos.add(currentYearBills.get(month - 1));
                 month -= 1;
@@ -222,7 +222,7 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
     // ----------------------------------------- Private Methods
     // ---------------------------------------------
 
-    public List<BillDto> getBillsOfYear(String buildingId, Integer year) throws NotFoundException {
+    public List<BillDto> getBillsOfYear(String buildingId, Integer year, boolean fillMissedBills) throws NotFoundException {
         List<Bill> bills;
         List<BillDto> billDots = new ArrayList<>(Collections.nCopies(12, new BillDto()));
         bills = filterByYear(buildingId, year);
@@ -230,11 +230,13 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
             billDots.set(bill.getFromMonth() - 1, convertBillToDto(bill));
         }
         //Try to fill bills that are null from average of not null bills
-        fillMissingBills(buildingId, billDots, bills);
+        if (fillMissedBills) {
+            fillMissingBills(buildingId, billDots, bills);
+        }
         return billDots;
     }
 
-    private void fillMissingBills(String buildingId, List<BillDto> billDtos, List<Bill> bills) throws NotFoundException {
+    private void fillMissingBills(String buildingId, List<BillDto> billDtos, List<Bill> bills) {
         int billsSize = bills.size();
         if (billsSize >= 1 && billsSize < 12) {
             List<BillDto> notNullBills = new ArrayList<>();

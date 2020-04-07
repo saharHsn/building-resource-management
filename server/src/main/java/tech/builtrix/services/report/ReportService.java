@@ -80,7 +80,7 @@ public class ReportService {
     public Float getBEScore(String buildingId, List<BillDto> billDtos) throws NotFoundException {
         //=('Reference Consumption'!C3/AF7)*100
         BuildingDto building = this.buildingService.findById(buildingId);
-        float index = calculateConsumptionAreaIndex(building, billDtos);
+        float index = calculateConsumptionAreaIndex(building, billDtos) * 12;
         float beScore = (A_PLUS_CONSUMPTION / index) * 100;
         return ReportUtil.roundDecimal(beScore);
     }

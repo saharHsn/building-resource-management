@@ -182,50 +182,56 @@ public class ReportUtil {
                                                  List<Float> powerInPeakValues, List<Float> reactivePowerValues, List<Float> normalValues,
                                                  List<Float> peakValues, List<Float> freeValues, List<Float> offValues, boolean isConsumption) {
         for (BillDto billDto : dtoList) {
-            int index = billDto.getFromMonth() - 1;
-            if (billDto.getRDContractedPower() != null) {
-                Float consumption = isConsumption ? billDto.getRDContractedPower().getConsumption()
-                        : billDto.getRDContractedPower().getTotalTariffCost();
-                float e = ReportUtil.roundDecimal(consumption);
-                contractedPowerValues.set(index, e);
-            }
-            if (billDto.getAEFreeHours() != null) {
-                Float consumption = isConsumption ? billDto.getAEFreeHours().getConsumption()
-                        : billDto.getAEFreeHours().getTotalTariffCost();
-                float e = ReportUtil.roundDecimal(consumption);
-                freeValues.set(index, e);
-            }
-            if (billDto.getAEOffHours() != null) {
-                Float consumption = isConsumption ? billDto.getAEOffHours().getConsumption()
-                        : billDto.getAEOffHours().getTotalTariffCost();
-                float e = ReportUtil.roundDecimal(consumption);
-                offValues.set(index, e);
-            }
-            if (billDto.getAEPeakHours() != null) {
-                Float consumption = isConsumption ? billDto.getAEPeakHours().getConsumption()
-                        : billDto.getAEPeakHours().getTotalTariffCost();
-                float e = ReportUtil.roundDecimal(consumption);
-                peakValues.set(index, e);
-            }
-            if (billDto.getRDPeakHours() != null) {
-                Float consumption = isConsumption ? billDto.getRDPeakHours().getConsumption()
-                        : billDto.getRDPeakHours().getTotalTariffCost();
-                float e = ReportUtil.roundDecimal(consumption);
-                powerInPeakValues.set(index, e);
-            }
-            if (billDto.getAENormalHours() != null) {
-                Float consumption = isConsumption ? billDto.getAENormalHours().getConsumption()
-                        : billDto.getAENormalHours().getTotalTariffCost();
-                float e = ReportUtil.roundDecimal(consumption);
-                normalValues.set(index, e);
-            }
-            if (billDto.getRDReactivePower() != null) {
-                Float consumption = isConsumption ? billDto.getRDReactivePower().getConsumption()
-                        : billDto.getRDReactivePower().getTotalTariffCost();
-                float e = ReportUtil.roundDecimal(consumption);
-                reactivePowerValues.set(index, e);
+            if (!billDtoIsNull(billDto)) {
+                int index = billDto.getFromMonth() - 1;
+                if (billDto.getRDContractedPower() != null) {
+                    float consumption = isConsumption ? billDto.getRDContractedPower().getConsumption()
+                            : billDto.getRDContractedPower().getTotalTariffCost();
+                    float e = ReportUtil.roundDecimal(consumption);
+                    contractedPowerValues.set(index, e);
+                }
+                if (billDto.getAEFreeHours() != null) {
+                    float consumption = isConsumption ? billDto.getAEFreeHours().getConsumption()
+                            : billDto.getAEFreeHours().getTotalTariffCost();
+                    float e = ReportUtil.roundDecimal(consumption);
+                    freeValues.set(index, e);
+                }
+                if (billDto.getAEOffHours() != null) {
+                    float consumption = isConsumption ? billDto.getAEOffHours().getConsumption()
+                            : billDto.getAEOffHours().getTotalTariffCost();
+                    float e = ReportUtil.roundDecimal(consumption);
+                    offValues.set(index, e);
+                }
+                if (billDto.getAEPeakHours() != null) {
+                    float consumption = isConsumption ? billDto.getAEPeakHours().getConsumption()
+                            : billDto.getAEPeakHours().getTotalTariffCost();
+                    float e = ReportUtil.roundDecimal(consumption);
+                    peakValues.set(index, e);
+                }
+                if (billDto.getRDPeakHours() != null) {
+                    float consumption = isConsumption ? billDto.getRDPeakHours().getConsumption()
+                            : billDto.getRDPeakHours().getTotalTariffCost();
+                    float e = ReportUtil.roundDecimal(consumption);
+                    powerInPeakValues.set(index, e);
+                }
+                if (billDto.getAENormalHours() != null) {
+                    float consumption = isConsumption ? billDto.getAENormalHours().getConsumption()
+                            : billDto.getAENormalHours().getTotalTariffCost();
+                    float e = ReportUtil.roundDecimal(consumption);
+                    normalValues.set(index, e);
+                }
+                if (billDto.getRDReactivePower() != null) {
+                    float consumption = isConsumption ? billDto.getRDReactivePower().getConsumption()
+                            : billDto.getRDReactivePower().getTotalTariffCost();
+                    float e = ReportUtil.roundDecimal(consumption);
+                    reactivePowerValues.set(index, e);
+                }
             }
         }
+    }
+
+    private static boolean billDtoIsNull(BillDto billDto) {
+        return (billDto.getBuildingId() == null && billDto.getFromDate() == null && billDto.getToDate() == null);
     }
 
     // TODO reimplement later
