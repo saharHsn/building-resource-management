@@ -32,7 +32,9 @@
       </span>
       <mat-menu class="testing" #menu2="matMenu" xPosition="before"  >
         <span></span>
-           <button mat-menu-item >View profile</button>
+     <!--   link to profile  -->
+           <button mat-menu-item  [routerLink]="['/profile']" routerLinkActive="router-link-active" >View profile</button>
+     <!--       log out method -->
            <button mat-menu-item  (click)="logout()"><mat-icon>exit_to_app</mat-icon>Logout</button>
          </mat-menu>
     </div>
