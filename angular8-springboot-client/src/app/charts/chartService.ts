@@ -31,6 +31,7 @@ export class ChartService {
   private readonly energyConsumptionIndexUrl;
   private readonly nationalMedianUrl;
   private readonly propertyTargetUrl;
+  private readonly downloadUrl;
   headers: HttpHeaders;
 
   constructor(private http: HttpClient,
@@ -55,6 +56,7 @@ export class ChartService {
     this.energyConsumptionIndexUrl = this.baseUrl + '/energyConsumptionIndex';
     this.nationalMedianUrl = this.baseUrl + '/nationalMedian';
     this.propertyTargetUrl = this.baseUrl + '/propertyTarget';
+    this.downloadUrl = this.baseUrl + '/download';
     this.headers = this.authService.getHeaders();
   }
 
@@ -78,6 +80,10 @@ export class ChartService {
 
   savingThisMonth(): Observable<any> {
     return this.callService(`${this.savingUrl}`);
+  }
+
+  download(): Observable<any> {
+    return this.callService(`${this.downloadUrl}`);
   }
 
   currentMonthSummary(): Observable<any> {
