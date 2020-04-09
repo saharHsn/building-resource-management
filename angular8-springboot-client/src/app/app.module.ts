@@ -95,6 +95,8 @@ import { NotificationsComponent } from './default/notifications/notifications.co
 import {MatMenuModule} from '@angular/material/menu';;
 import { PanelComponent } from './notification_panel/panel/panel.component';;
 import { DownloadComponent } from './building/download/download.component'
+;
+import { DailyConsumptionComponent } from './charts/cost/daily-consumption/daily-consumption.component'
 //flex layout
 
 // import { AngularWeatherWidgetModule, WeatherApiName } from 'angular-weather-widget';
@@ -192,6 +194,7 @@ import { DownloadComponent } from './building/download/download.component'
     EnergyEfficiencySymbolsComponent,
     ColorEnergyComponent ,
     DownloadComponent,
+    DailyConsumptionComponent
   
    
      ],
