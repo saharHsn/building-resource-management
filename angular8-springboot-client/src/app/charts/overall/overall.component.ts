@@ -31,4 +31,18 @@ export class OverallComponent implements OnInit {
   list() {
     this.router.navigate(['users']);
   }
+
+  download() {
+    this.chartService.download()
+      .subscribe(response => this.downLoadFile(response, 'application/ms-excel'));
+  }
+
+  downLoadFile(data: any, type: string) {
+    const blob = new Blob([data], {type});
+    const url = window.URL.createObjectURL(blob);
+    const pwa = window.open(url);
+    if (!pwa || pwa.closed || typeof pwa.closed === 'undefined') {
+      alert('Please disable your Pop-up blocker and try again.');
+    }
+  }
 }

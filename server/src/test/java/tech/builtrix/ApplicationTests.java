@@ -142,7 +142,6 @@ public class ApplicationTests {
 
 	@Test
 	public void downloadDashboard() throws NotFoundException, IOException {
-		String dashboardReportUrl = this.reportService.getDashboardReportUrl(BUILDING_ID);
-		System.out.println(dashboardReportUrl);
+		this.reportService.getDashboardReportUrl(BUILDING_ID);
 	}
 }

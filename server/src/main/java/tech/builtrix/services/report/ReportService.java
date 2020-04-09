@@ -25,8 +25,9 @@ import tech.builtrix.web.dtos.bill.BuildingDto;
 import tech.builtrix.web.dtos.bill.ReportIndex;
 import tech.builtrix.web.dtos.report.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -457,7 +458,7 @@ public class ReportService {
     }
 
 
-    public String getDashboardReportUrl(String buildingId) throws NotFoundException, IOException {
+    public ByteArrayInputStream getDashboardReportUrl(String buildingId) throws NotFoundException, IOException {
         BuildingDto buildingDto = this.buildingService.findById(buildingId);
         int currentYear = DateUtil.getCurrentYear();
         List<BillDto> billsOfLastYear = this.billService.getBillsOfYear(buildingId, currentYear - 1, true);
@@ -474,10 +475,11 @@ public class ReportService {
         File currDir = new File(".");
         String path = currDir.getAbsolutePath();
         String fileLocation = path.substring(0, path.length() - 1) + buildingDto.getName() + ".xlsx";
-        FileOutputStream outputStream = new FileOutputStream(fileLocation);
-        workbook.write(outputStream);
+        //FileOutputStream outputStream = new FileOutputStream(fileLocation);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        workbook.write(out);
         workbook.close();
-        return fileLocation;
+        return new ByteArrayInputStream(out.toByteArray());
     }
 
 

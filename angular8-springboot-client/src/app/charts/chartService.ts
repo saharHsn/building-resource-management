@@ -83,8 +83,19 @@ export class ChartService {
   }
 
   download(): Observable<any> {
-    return this.callService(`${this.downloadUrl}`);
+    /*.subscribe(response => this.downLoadFile(response, "application/ms-excel"))*/
+    // return this.callService(`${this.downloadUrl}`);
+    let headers;
+    // @ts-ignore
+    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
+    if (user && user.token) {
+      headers = new HttpHeaders()
+        .set('X-Session', user.token)
+        .set('Accept', '*/*');
+    }
+    return this.http.get(`${this.downloadUrl}`, {responseType: 'arraybuffer', headers});
   }
+
 
   currentMonthSummary(): Observable<any> {
     return this.callService(`${this.currentMonthSummaryUrl}`);
