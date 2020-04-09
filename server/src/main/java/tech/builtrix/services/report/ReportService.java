@@ -2,6 +2,9 @@ package tech.builtrix.services.report;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tech.builtrix.enums.DatePartType;
@@ -13,6 +16,7 @@ import tech.builtrix.models.building.EnergyCertificate;
 import tech.builtrix.services.bill.BillService;
 import tech.builtrix.services.building.BuildingService;
 import tech.builtrix.utils.DateUtil;
+import tech.builtrix.utils.ExcelUtil;
 import tech.builtrix.utils.ReportUtil;
 import tech.builtrix.utils.WeatherUtil;
 import tech.builtrix.web.dtos.bill.BillDto;
@@ -21,6 +25,9 @@ import tech.builtrix.web.dtos.bill.BuildingDto;
 import tech.builtrix.web.dtos.bill.ReportIndex;
 import tech.builtrix.web.dtos.report.*;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -229,7 +236,7 @@ public class ReportService {
     }
 
     // not needed now
-    public NormalVsEEDto getNormalizedVsEnergyEfficiency(String buildingId) {
+    public NormalVsEEDto getNormalizedVsEnergyEfficiency() {
         int currentYear = DateUtil.getCurrentYear();
         NormalVsEEDto dto = new NormalVsEEDto();
         dto.setXValues(
@@ -253,7 +260,7 @@ public class ReportService {
         Integer currentYear = DateUtil.getCurrentYear();
         // TODO replace postal address with city name of address so get address of
         // building in more details
-        Float averageMonthlyTemperature = WeatherUtil.getAverageTemp(currentYear, building.getPostalAddress());
+        float averageMonthlyTemperature = WeatherUtil.getAverageTemp(currentYear, building.getPostalAddress());
         List<Float> standardAVals = new ArrayList<>(Collections.nCopies(12, 0f));
         List<Float> standardBVals = new ArrayList<>(Collections.nCopies(12, 0f));
         List<Float> standardCVals = new ArrayList<>(Collections.nCopies(12, 0f));
@@ -334,9 +341,9 @@ public class ReportService {
         BuildingDto building = buildingService.findById(buildingId);
         List<Float> totalValues = new ArrayList<>();
         for (BillDto billDto : dtoList) {
-            Float totalMonthlyConsumption = billDto.getTotalMonthlyConsumption();
+            float totalMonthlyConsumption = billDto.getTotalMonthlyConsumption();
             float total = ReportUtil.roundDecimal(
-                    (totalMonthlyConsumption != null ? totalMonthlyConsumption : 1) * CO2_CONS) / building.getArea();
+                    totalMonthlyConsumption * CO2_CONS) / building.getArea();
             totalValues.add(total);
         }
         CarbonSPLineDto dto = new CarbonSPLineDto();
@@ -386,10 +393,22 @@ public class ReportService {
         return ReportUtil.roundDecimal(PROPERTY_TARGET_CONST * beScore);
     }
 
-    public Float getNationalMedian(String buildingId) {
+    public Float getNationalMedian() {
         // =('Reference Consumption'!C3/'Reference Consumption'!C10)*100
         float nationalMedianBEScore = (A_PLUS_CONSUMPTION / F_CONSUMPTION) * 100;
         return ReportUtil.roundDecimal(nationalMedianBEScore);
+    }
+
+    public CurrentMonthSummaryDto currentMonthSummary(String buildingId) throws NotFoundException {
+        Bill lastBill = billService.getLastBill(buildingId);
+        CurrentMonthSummaryDto dto = new CurrentMonthSummaryDto();
+        float consumption = lastBill.getTotalMonthlyConsumption();
+        dto.setConsumption(ReportUtil.roundDecimal(consumption));
+        float cost = lastBill.getTotalPayable();
+        dto.setCost(ReportUtil.roundDecimal(cost));
+        float environmental = lastBill.getProducedCO2();
+        dto.setEnvironmental(ReportUtil.roundDecimal(environmental));
+        return dto;
     }
 
     // TODO next phase
@@ -426,6 +445,43 @@ public class ReportService {
         return Arrays.asList(consumptionArea, consumptionCap, cost, energyEfficiencyLevel);
     }
 
+    public float calculateConsumptionAreaIndex(BuildingDto building, List<BillDto> dtoList) {
+        // baseLine(MonthlyAverage)=average('Consumptions and Indexes'!E7:P7)/'Meta Data'!B3
+        // baseLine(MonthlyAverage)=average('Consumptions and Indexes'last12Month)/BuildingArea
+        float sumOffConsumption = 0;
+        for (BillDto dto : dtoList) {
+            sumOffConsumption += dto.getTotalMonthlyConsumption();
+        }
+        float averageConsumption = sumOffConsumption / 12;
+        return averageConsumption / building.getArea();
+    }
+
+
+    public String getDashboardReportUrl(String buildingId) throws NotFoundException, IOException {
+        BuildingDto buildingDto = this.buildingService.findById(buildingId);
+        int currentYear = DateUtil.getCurrentYear();
+        List<BillDto> billsOfLastYear = this.billService.getBillsOfYear(buildingId, currentYear - 1, true);
+        List<BillDto> billsOfCurrentYear = this.billService.getBillsOfYear(buildingId, DateUtil.getCurrentYear(), false);
+        List<BillDto> billsOfLast12Month = this.billService.getBillsOfLast12Months(buildingId);
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFFont xssfFont = ExcelUtil.getXssfFont(workbook);
+        CellStyle cellStyle = ExcelUtil.getCellStyle(workbook, xssfFont);
+        ReportUtil.createMetaDataSheet(buildingDto, workbook, "Building Meta Data", cellStyle, xssfFont);
+        ReportUtil.createReferenceSheet(workbook, xssfFont, "References");
+        ReportUtil.createDataSheet(workbook, cellStyle, xssfFont, billsOfLastYear, billsOfCurrentYear, billsOfLast12Month, DataType.CONSUMPTION, "Consumptions and Indexes");
+        ReportUtil.createDataSheet(workbook, cellStyle, xssfFont, billsOfLastYear, billsOfCurrentYear, billsOfLast12Month, DataType.COST, "Costs and Indexes");
+        File currDir = new File(".");
+        String path = currDir.getAbsolutePath();
+        String fileLocation = path.substring(0, path.length() - 1) + buildingDto.getName() + ".xlsx";
+        FileOutputStream outputStream = new FileOutputStream(fileLocation);
+        workbook.write(outputStream);
+        workbook.close();
+        return fileLocation;
+    }
+
+
+    //--------------------------------- Private part ---------------------------------------------
 
     private EnergyCertificate getEnergyEfficiency(BuildingDto buildingDto, List<BillDto> billDtos) {
         //(index/ref)*100
@@ -473,18 +529,6 @@ public class ReportService {
         return averageConsumption / building.getNumberOfPeople();
     }
 
-
-    public float calculateConsumptionAreaIndex(BuildingDto building, List<BillDto> dtoList) {
-        // baseLine(MonthlyAverage)=average('Consumptions and Indexes'!E7:P7)/'Meta Data'!B3
-        // baseLine(MonthlyAverage)=average('Consumptions and Indexes'last12Month)/BuildingArea
-        float sumOffConsumption = 0;
-        for (BillDto dto : dtoList) {
-            sumOffConsumption += dto.getTotalMonthlyConsumption();
-        }
-        float averageConsumption = sumOffConsumption / 12;
-        return averageConsumption / building.getArea();
-    }
-
     private ReportIndex getIndexCostData(BuildingDto buildingDto,
                                          List<BillDto> billDtos,
                                          BillDto lastBillDto) {
@@ -516,17 +560,6 @@ public class ReportService {
         return parameterDto != null ? (parameterDto.getConsumption() != 0 ? parameterDto.getConsumption() : 1f) : 1f;
     }
 
-    public CurrentMonthSummaryDto currentMonthSummary(String buildingId) throws NotFoundException {
-        Bill lastBill = billService.getLastBill(buildingId);
-        CurrentMonthSummaryDto dto = new CurrentMonthSummaryDto();
-        float consumption = lastBill.getTotalMonthlyConsumption();
-        dto.setConsumption(ReportUtil.roundDecimal(consumption));
-        float cost = lastBill.getTotalPayable();
-        dto.setCost(ReportUtil.roundDecimal(cost));
-        float environmental = lastBill.getProducedCO2();
-        dto.setEnvironmental(ReportUtil.roundDecimal(environmental));
-        return dto;
-    }
 
     // ---------------------------------------------------Inner Classes
     // --------------------------------------------------------------

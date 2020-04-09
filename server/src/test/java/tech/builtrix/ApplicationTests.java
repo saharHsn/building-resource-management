@@ -15,6 +15,7 @@ import tech.builtrix.web.dtos.bill.BillDto;
 import tech.builtrix.web.dtos.bill.ReportIndex;
 import tech.builtrix.web.dtos.report.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -25,7 +26,7 @@ public class ApplicationTests {
 	private BillService billService;
 	@Autowired
 	private ReportService reportService;
-	private static String BUILDING_ID = "f50b0504-ee37-4a82-89a8-01588fce5d66";
+	private static String BUILDING_ID = "9d94dd4d-b789-4717-bdee-517a8de8ca6e";
 	private Integer year = 2020;
 	private TimePeriodType periodType = TimePeriodType.MONTHLY;
 	private DatePartType datePartType = DatePartType.FREE_HOURS;
@@ -57,7 +58,7 @@ public class ApplicationTests {
 
     public Float getNationalMedian() throws NotFoundException {
         Float nationalMedian = null;
-        nationalMedian = this.reportService.getNationalMedian(BUILDING_ID);
+		nationalMedian = this.reportService.getNationalMedian();
         return nationalMedian;
     }
 
@@ -109,7 +110,7 @@ public class ApplicationTests {
 
 	public NormalVsEEDto getNormalizedVsEnergyEfficiency() {
 		NormalVsEEDto dto = null;
-		dto = this.reportService.getNormalizedVsEnergyEfficiency(BUILDING_ID);
+		dto = this.reportService.getNormalizedVsEnergyEfficiency();
 		return dto;
 	}
 
@@ -132,10 +133,16 @@ public class ApplicationTests {
 	}
 
 	public EnergyConsumptionIndexDto getEnergyConsumptionIndex() throws NotFoundException {
-        List<ReportIndex> indexes;
-        EnergyConsumptionIndexDto dto = null;
-        indexes = this.reportService.getAllEnergyConsumptionIndexes(BUILDING_ID);
-        dto = new EnergyConsumptionIndexDto(indexes.get(0), indexes.get(1), indexes.get(2), indexes.get(3));
-        return dto;
-    }
+		List<ReportIndex> indexes;
+		EnergyConsumptionIndexDto dto = null;
+		indexes = this.reportService.getAllEnergyConsumptionIndexes(BUILDING_ID);
+		dto = new EnergyConsumptionIndexDto(indexes.get(0), indexes.get(1), indexes.get(2), indexes.get(3));
+		return dto;
+	}
+
+	@Test
+	public void downloadDashboard() throws NotFoundException, IOException {
+		String dashboardReportUrl = this.reportService.getDashboardReportUrl(BUILDING_ID);
+		System.out.println(dashboardReportUrl);
+	}
 }

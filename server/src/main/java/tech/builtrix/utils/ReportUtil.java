@@ -2,8 +2,18 @@ package tech.builtrix.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.*;
 import tech.builtrix.models.building.EnergyCertificate;
+import tech.builtrix.services.report.BillParamInfo;
+import tech.builtrix.services.report.DataType;
+import tech.builtrix.services.report.ReportData;
+import tech.builtrix.services.report.WeekDayInfo;
 import tech.builtrix.web.dtos.bill.BillDto;
+import tech.builtrix.web.dtos.bill.BuildingDto;
 import tech.builtrix.web.dtos.report.ConsumptionDto;
 import tech.builtrix.web.dtos.report.ConsumptionDynamicDto;
 import tech.builtrix.web.dtos.report.CostStackDto;
@@ -316,6 +326,376 @@ public class ReportUtil {
             standardDVals.add(month, efficiencyLevel);
         }
     }
+
+
+    //--------------------------------- Excel methods ---------------------------------------
+
+    public static void createMetaDataSheet(BuildingDto buildingDto, XSSFWorkbook workbook, String sheetTitle, CellStyle cellStyle, XSSFFont font) {
+        XSSFSheet metaDataSheet = workbook.createSheet(sheetTitle);
+        fillMetaDataSheet(buildingDto, metaDataSheet, cellStyle);
+    }
+
+    public static void createDataSheet(XSSFWorkbook workbook,
+                                       CellStyle style,
+                                       XSSFFont font,
+                                       List<BillDto> billsOfLastYear,
+                                       List<BillDto> billsOfCurrentYear,
+                                       List<BillDto> billsOfLast12Month,
+                                       DataType dataType,
+                                       String sheetTitle) {
+        XSSFSheet sheet = workbook.createSheet(sheetTitle);
+        Row row = sheet.createRow(0);
+        ExcelUtil.createMergedRow(sheet, font, "2019", 0, 0, 0, 12, row);
+        ExcelUtil.createMergedRow(sheet, font, "2020", 0, 0, 13, 24, row);
+        ExcelUtil.createMergedRow(sheet, font, "Average Monthly", 0, 0, 25, 26, row);
+        ExcelUtil.createMergedRow(sheet, font, "Total Annual", 0, 0, 27, 28, row);
+
+        List<String> secondHeader = Arrays.asList("Trf",
+                "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+                "AVE-19", "AVE-20", "2019", "Last 12 Month");
+        writeHeader(secondHeader, sheet, font, style);
+        ReportData data = fillReportData(billsOfLastYear, billsOfCurrentYear, billsOfLast12Month, dataType);
+        makeParamTable(sheet, data, 2, style, font);
+
+    }
+
+    private static void writeHeader(List<String> secondHeader, XSSFSheet sheet, XSSFFont font, CellStyle style) {
+        XSSFRow row = sheet.createRow(1);
+        int columnNumber = 0;
+        for (String header : secondHeader) {
+            XSSFCell cell = row.createCell(columnNumber);
+            style.setAlignment(HorizontalAlignment.CENTER);
+            font.setBold(true);
+            style.setFont(font);
+            cell.setCellValue(header);
+            sheet.autoSizeColumn(columnNumber);
+            columnNumber++;
+        }
+    }
+
+    public static void createReferenceSheet(XSSFWorkbook workbook, XSSFFont font, String sheetTitle) {
+        XSSFSheet sheet = workbook.createSheet(sheetTitle);
+        List<String> headers = Arrays.asList("Tariffs", "Winter", "Summer", "2019", "2020", "Currency", "Iva");
+        ExcelUtil.createHeaderRow(sheet, headers);
+        Row row1 = sheet.createRow(1);
+        ExcelUtil.createMergedRow(sheet, font, "Monday-Friday", 1, 1, 0, 6, row1);
+        createWeekDayTable(sheet, 3);
+        Row row2 = sheet.createRow(6);
+        ExcelUtil.createMergedRow(sheet, font, "Saturday", 6, 6, 0, 6, row2);
+        createWeekDayTable(sheet, 7);
+        Row row3 = sheet.createRow(11);
+        ExcelUtil.createMergedRow(sheet, font, "Saturday", 11, 11, 0, 6, row3);
+        createWeekDayTable(sheet, 12);
+    }
+
+    //TODO optimize this method
+    public static ReportData fillReportData(List<BillDto> billsOfLastYear,
+                                            List<BillDto> billsOfCurrentYear,
+                                            List<BillDto> billsOfLast12Month,
+                                            DataType dataType) {
+        ReportData reportData = new ReportData();
+        List<Object> svList = new ArrayList<>();
+        List<Object> vnList = new ArrayList<>();
+        List<Object> pList = new ArrayList<>();
+        List<Object> cList = new ArrayList<>();
+        List<Object> totList = new ArrayList<>();
+        svList.add("SV");
+        vnList.add("VN");
+        pList.add("P");
+        cList.add("C");
+        totList.add("Tot");
+
+        float lastYearSvTot = 0f;
+        float lastYearVnTot = 0f;
+        float lastYearPTot = 0f;
+        float lastYearCTot = 0f;
+        for (BillDto billDto : billsOfLastYear) {
+            float svCons;
+            if (dataType.equals(DataType.CONSUMPTION)) {
+                svCons = billDto.getAEOffHours().getConsumption();
+            } else {
+                svCons = billDto.getAEOffHours().getTotalTariffCost();
+            }
+            lastYearSvTot += svCons;
+            svList.add(ReportUtil.roundDecimal(svCons));
+
+            float vnCons;
+            if (dataType.equals(DataType.CONSUMPTION)) {
+                vnCons = billDto.getAEFreeHours().getConsumption();
+            } else {
+                vnCons = billDto.getAEFreeHours().getTotalTariffCost();
+            }
+            lastYearVnTot += vnCons;
+            vnList.add(ReportUtil.roundDecimal(vnCons));
+
+            float pCons;
+            if (dataType.equals(DataType.CONSUMPTION)) {
+                pCons = billDto.getAEPeakHours().getConsumption();
+            } else {
+                pCons = billDto.getAEPeakHours().getTotalTariffCost();
+            }
+            lastYearPTot += pCons;
+            pList.add(ReportUtil.roundDecimal(pCons));
+
+            float cCons;
+            if (dataType.equals(DataType.CONSUMPTION)) {
+                cCons = billDto.getAENormalHours().getConsumption();
+            } else {
+                cCons = billDto.getAENormalHours().getTotalTariffCost();
+            }
+            lastYearCTot += cCons;
+            cList.add(ReportUtil.roundDecimal(cCons));
+        }
+
+        float currentSvTot = 0f;
+        float currentVnTot = 0f;
+        float currentPTot = 0f;
+        float currentCTot = 0f;
+        for (BillDto billDto : billsOfCurrentYear) {
+            float svValue = 0f;
+            if (dataType.equals(DataType.CONSUMPTION)) {
+                if (billDto.getAEOffHours() != null) {
+                    svValue = billDto.getAEOffHours().getConsumption();
+                }
+            } else {
+                if (billDto.getAEOffHours() != null) {
+                    svValue = billDto.getAEOffHours().getTotalTariffCost();
+                }
+            }
+            currentSvTot += svValue;
+            svList.add(ReportUtil.roundDecimal(svValue));
+
+            float vnValue = 0f;
+            if (billDto.getAEFreeHours() != null) {
+                if (dataType.equals(DataType.CONSUMPTION)) {
+                    vnValue = billDto.getAEFreeHours().getConsumption();
+                } else {
+                    vnValue = billDto.getAEFreeHours().getTotalTariffCost();
+                }
+            }
+            currentVnTot += vnValue;
+            vnList.add(ReportUtil.roundDecimal(vnValue));
+
+            float pValue = 0f;
+            if (billDto.getAEPeakHours() != null) {
+                if (dataType.equals(DataType.CONSUMPTION)) {
+                    pValue = billDto.getAEPeakHours().getConsumption();
+                } else {
+                    pValue = billDto.getAEPeakHours().getTotalTariffCost();
+                }
+            }
+
+            currentPTot += pValue;
+            pList.add(ReportUtil.roundDecimal(pValue));
+
+            float cValue = 0f;
+            if (billDto.getAENormalHours() != null) {
+                if (dataType.equals(DataType.CONSUMPTION)) {
+                    cValue = billDto.getAENormalHours().getConsumption();
+                } else {
+                    cValue = billDto.getAENormalHours().getTotalTariffCost();
+                }
+            }
+            currentCTot += cValue;
+            cList.add(ReportUtil.roundDecimal(cValue));
+        }
+
+        float last12SvTot = 0f;
+        float last12VnTot = 0f;
+        float last12PTot = 0f;
+        float last12CTot = 0f;
+        for (BillDto billDto : billsOfLast12Month) {
+            float svValue = 0f;
+            if (billDto.getAEOffHours() != null) {
+                if (dataType.equals(DataType.CONSUMPTION)) {
+                    svValue = billDto.getAEOffHours().getConsumption();
+                } else {
+                    svValue = billDto.getAEOffHours().getTotalTariffCost();
+                }
+            }
+            last12SvTot += svValue;
+            // svList.add(String.valueOf(svValue));
+
+            float vnValue = 0f;
+            if (billDto.getAEFreeHours() != null) {
+                if (dataType.equals(DataType.CONSUMPTION)) {
+                    vnValue = billDto.getAEFreeHours().getConsumption();
+                } else {
+                    vnValue = billDto.getAEFreeHours().getTotalTariffCost();
+                }
+            }
+            last12VnTot += vnValue;
+            // vnList.add(String.valueOf(vnValue));
+
+            float pValue = 0f;
+            if (billDto.getAEPeakHours() != null) {
+                if (dataType.equals(DataType.CONSUMPTION)) {
+                    pValue = billDto.getAEPeakHours().getConsumption();
+                } else {
+                    pValue = billDto.getAEPeakHours().getTotalTariffCost();
+                }
+            }
+            last12PTot += pValue;
+            // pList.add(String.valueOf(pValue));
+
+            float cValue = 0f;
+            if (billDto.getAENormalHours() != null) {
+                if (dataType.equals(DataType.CONSUMPTION)) {
+                    cValue = billDto.getAENormalHours().getConsumption();
+                } else {
+                    cValue = billDto.getAENormalHours().getTotalTariffCost();
+                }
+            }
+            last12CTot += cValue;
+            // cList.add(String.valueOf(cValue));
+        }
+
+        svList.add(ReportUtil.roundDecimal((lastYearSvTot / 12)));
+        svList.add(ReportUtil.roundDecimal((currentSvTot / 12)));
+        svList.add((ReportUtil.roundDecimal(lastYearSvTot)));
+        svList.add(ReportUtil.roundDecimal(last12SvTot));
+
+        vnList.add(ReportUtil.roundDecimal((lastYearVnTot / 12)));
+        vnList.add(ReportUtil.roundDecimal((currentVnTot / 12)));
+        vnList.add((ReportUtil.roundDecimal(lastYearVnTot)));
+        vnList.add((ReportUtil.roundDecimal(last12VnTot)));
+
+        pList.add(ReportUtil.roundDecimal((lastYearPTot / 12)));
+        pList.add(ReportUtil.roundDecimal((currentPTot / 12)));
+        pList.add((ReportUtil.roundDecimal(lastYearPTot)));
+        pList.add((ReportUtil.roundDecimal(last12PTot)));
+
+        cList.add(ReportUtil.roundDecimal((lastYearCTot / 12)));
+        cList.add(ReportUtil.roundDecimal((currentCTot / 12)));
+        cList.add((ReportUtil.roundDecimal(lastYearCTot)));
+        cList.add((ReportUtil.roundDecimal(last12CTot)));
+        for (int i = 1; i <= 28; i++) {
+            float add = ((Float) svList.get(i)) + ((Float) vnList.get(i)) + ((Float) pList.get(i)) + ((Float) cList.get(i));
+            totList.add(ReportUtil.roundDecimal(add));
+        }
+        reportData.setSVList(svList);
+        reportData.setVNList(vnList);
+        reportData.setPList(pList);
+        reportData.setCList(cList);
+        reportData.setTotList(totList);
+        return reportData;
+    }
+
+    public static void makeParamTable(XSSFSheet sheet, ReportData data, int rowNum, CellStyle style, XSSFFont font) {
+        int cellNum = 0;
+        // int rowNum = 1;
+
+        createParamCell(sheet, cellNum, rowNum, data.getSVList(), style, font);
+        rowNum++;
+        cellNum = 0;
+        createParamCell(sheet, cellNum, rowNum, data.getVNList(), style, font);
+        rowNum++;
+        cellNum = 0;
+        createParamCell(sheet, cellNum, rowNum, data.getPList(), style, font);
+        rowNum++;
+        cellNum = 0;
+        createParamCell(sheet, cellNum, rowNum, data.getCList(), style, font);
+        rowNum++;
+        cellNum = 0;
+        createParamCell(sheet, cellNum, rowNum, data.getTotList(), style, font);
+    }
+
+    public static void createParamCell(XSSFSheet sheet, int cellNum, int rowNum, List<Object> dataList, CellStyle style, XSSFFont font) {
+        Row row = sheet.createRow(rowNum);
+        for (Object sv : dataList) {
+            sheet.autoSizeColumn(cellNum);
+            Cell cell = row.createCell(cellNum);
+            String strCellValue;
+            float floatCellValue;
+            if (sv instanceof String) {
+                strCellValue = String.valueOf(sv);
+                cell.setCellValue(strCellValue);
+            } else if (sv instanceof Float) {
+                floatCellValue = (Float) sv;
+                cell.setCellValue(floatCellValue);
+            }
+            font.setBold(false);
+            style.setFont(font);
+            cell.setCellStyle(style);
+            sheet.autoSizeColumn(cellNum);
+            cellNum++;
+        }
+    }
+
+    public static void createWeekDayTable(XSSFSheet sheet, int rowNumber) {
+        BillParamInfo superVazio = new BillParamInfo("Super Vazio (SV)", "2:00/6:00", "2:00/6:00", "0.070750", "0.070750", "€", "23%");
+        BillParamInfo vazioNormal = new BillParamInfo("Vazio Normal (VN)", "0:00/2:00", "6:00/7:00", "0:00/2:00", "6:00/7:00", "€", "23%");
+        BillParamInfo ponta = new BillParamInfo("Ponta (P)", "9:30/12:00 , 18:30/21", "9:15/12:15", "0.089990", "0.089990", "€", "23%");
+        BillParamInfo cheia = new BillParamInfo("Cheia (C)", "7:00/9:30 , 12:00/18:30 , 21:00/24:00", "7:00/9:15 , 12:15/24:00", "7:00/9:15 , 12:15/24:00\t0.089700", "0.089700", "€", "23%");
+        WeekDayInfo weekDayInfo = new WeekDayInfo();
+        weekDayInfo.setSuperVazio(superVazio);
+        weekDayInfo.setVazioNormal(vazioNormal);
+        weekDayInfo.setPonta(ponta);
+        weekDayInfo.setCheia(cheia);
+        Row superVazioRow = sheet.createRow(rowNumber);
+        creatBillParamTable(weekDayInfo.getSuperVazio(), superVazioRow, sheet);
+        Row vazioNormalRow = sheet.createRow(++rowNumber);
+        creatBillParamTable(weekDayInfo.getVazioNormal(), vazioNormalRow, sheet);
+        Row pontaRow = sheet.createRow(++rowNumber);
+        creatBillParamTable(weekDayInfo.getPonta(), pontaRow, sheet);
+        Row cheiaRow = sheet.createRow(++rowNumber);
+        creatBillParamTable(weekDayInfo.getCheia(), cheiaRow, sheet);
+    }
+
+    public static void creatBillParamTable(BillParamInfo paramInfo, Row row, XSSFSheet sheet) {
+        int cellNum = 0;
+        Cell cell0 = row.createCell(cellNum);
+        cell0.setCellValue(paramInfo.getName());
+        sheet.autoSizeColumn(cellNum);
+
+        Cell cell1 = row.createCell(++cellNum);
+        cell1.setCellValue(paramInfo.getFromToHour1());
+        sheet.autoSizeColumn(cellNum);
+
+        Cell cell2 = row.createCell(++cellNum);
+        cell2.setCellValue(paramInfo.getFromToHour2());
+        sheet.autoSizeColumn(cellNum);
+
+        Cell cell3 = row.createCell(++cellNum);
+        cell3.setCellValue(paramInfo.getCost1());
+        sheet.autoSizeColumn(cellNum);
+
+        Cell cell4 = row.createCell(++cellNum);
+        cell4.setCellValue(paramInfo.getCost2());
+        sheet.autoSizeColumn(cellNum);
+
+        Cell cell5 = row.createCell(++cellNum);
+        cell5.setCellValue(paramInfo.getCurrency());
+        sheet.autoSizeColumn(cellNum);
+
+        Cell cell6 = row.createCell(++cellNum);
+        cell6.setCellValue(paramInfo.getPercentage());
+        sheet.autoSizeColumn(cellNum);
+    }
+
+    public static void fillMetaDataSheet(BuildingDto metaData, XSSFSheet metaDataSheet, CellStyle style) {
+        createRowAndCell(metaDataSheet, 0, "Name of the Building", metaData.getName(), style);
+        createRowAndCell(metaDataSheet, 1, "Type of the Building", metaData.getUsage(), style);
+        createRowAndCell(metaDataSheet, 2, "Area", metaData.getArea(), style);
+        createRowAndCell(metaDataSheet, 3, "Average Number of People", metaData.getNumberOfPeople(), style);
+        createRowAndCell(metaDataSheet, 4, "Location", metaData.getPostalAddress(), style);
+        createRowAndCell(metaDataSheet, 5, "Contracted Power", 0f, style);
+    }
+
+    public static void createRowAndCell(XSSFSheet metaDataSheet, int rowNumber, String subject, Object value, CellStyle style) {
+        Row row = metaDataSheet.createRow(rowNumber);
+        Cell cell1 = row.createCell(0);
+        cell1.setCellValue(subject);
+        cell1.setCellStyle(style);
+        metaDataSheet.autoSizeColumn(0);
+        Cell cell2 = row.createCell(1);
+        cell2.setCellValue(String.valueOf(value));
+        metaDataSheet.autoSizeColumn(1);
+        cell2.setCellStyle(style);
+    }
+
+    //--------------------------------- Excel methods ---------------------------------------
+
 /*
     public static EnergyCertificate getNationalMedianCert() {
         // TODO read this values from national database

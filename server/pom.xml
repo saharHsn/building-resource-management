@@ -6,7 +6,7 @@
 
     <groupId>tech.builtrix</groupId>
     <artifactId>metrics</artifactId>
-    <version>2.0.2</version>
+    <version>2.2.0</version>
     <packaging>jar</packaging>
 
     <name>metrics</name>
@@ -134,6 +134,11 @@
             <artifactId>lombok</artifactId>
             <version>1.18.4</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.17</version>
         </dependency>
         <!-- <dependency>
              <groupId>org.apache.poi</groupId>
