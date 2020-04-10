@@ -6,6 +6,7 @@ import {BuildingAge} from '../enums/buildingAge';
 /* services of dialog */
 import {MatDialog} from '@angular/material';
 import {DownloadComponent} from '../download/download.component';
+import { ChartService } from 'src/app/charts/chartService';
 
 @Component({
   selector: 'app-building-details',
@@ -20,7 +21,8 @@ export class BuildingDetailsComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private buildingService: BuildingService,
-              public dialog: MatDialog) {
+              public dialog: MatDialog,
+              private chartService:ChartService) {
   }
 
   ngOnInit() {
@@ -63,5 +65,18 @@ export class BuildingDetailsComponent implements OnInit {
   getCurrentDate(): string {
     const currentDate = new Date();
     return currentDate.toDateString();
+  }
+  download() {
+    this.chartService.download()
+      .subscribe(response => this.downLoadFile(response, 'application/ms-excel'));
+  }
+ 
+  downLoadFile(data: any, type: string) {
+    const blob = new Blob([data], {type});
+    const url = window.URL.createObjectURL(blob);
+    const pwa = window.open(url);
+    if (!pwa || pwa.closed || typeof pwa.closed === 'undefined') {
+      alert('Please disable your Pop-up blocker and try again.');
+    }
   }
 }
