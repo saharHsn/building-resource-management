@@ -6,7 +6,7 @@ import {BuildingAge} from '../enums/buildingAge';
 /* services of dialog */
 import {MatDialog} from '@angular/material';
 import {DownloadComponent} from '../download/download.component';
-import { ChartService } from 'src/app/charts/chartService';
+import {ChartService} from 'src/app/charts/chartService';
 
 @Component({
   selector: 'app-building-details',
@@ -22,7 +22,7 @@ export class BuildingDetailsComponent implements OnInit {
               private router: Router,
               private buildingService: BuildingService,
               public dialog: MatDialog,
-              private chartService:ChartService) {
+              private chartService: ChartService) {
   }
 
   ngOnInit() {
@@ -66,15 +66,19 @@ export class BuildingDetailsComponent implements OnInit {
     const currentDate = new Date();
     return currentDate.toDateString();
   }
+
   download() {
     this.chartService.download()
-      .subscribe(response => this.downLoadFile(response, 'application/ms-excel'));
+      .subscribe(response => {
+        this.downLoadFile(response, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;');
+      });
   }
- 
+
   downLoadFile(data: any, type: string) {
     const blob = new Blob([data], {type});
+    // window.open(this.restUrl, "_blank");
     const url = window.URL.createObjectURL(blob);
-    const pwa = window.open(url);
+    const pwa = window.open(url, '_blank');
     if (!pwa || pwa.closed || typeof pwa.closed === 'undefined') {
       alert('Please disable your Pop-up blocker and try again.');
     }
