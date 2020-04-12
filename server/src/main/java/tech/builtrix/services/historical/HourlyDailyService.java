@@ -36,8 +36,11 @@ public class HourlyDailyService {
     private static final String DATE_PATTERN = "dd-MM-yyyy HH:mm";
     private static final String TIME_PATTERN = "HH:mm";
 
-    public HourlyDailyService(S3FileService s3FileService) {
+    private final HistoricalConsumptionService consumptionService;
+
+    public HourlyDailyService(S3FileService s3FileService, HistoricalConsumptionService consumptionService) {
         this.s3FileService = s3FileService;
+        this.consumptionService = consumptionService;
     }
 
     public void parseExcelData(String buildingId) throws IOException {
@@ -49,7 +52,9 @@ public class HourlyDailyService {
             FileInputStream file = new FileInputStream(new File(fileName));
             XSSFWorkbook workbook = new XSSFWorkbook(file);
             XSSFSheet sheet = workbook.getSheetAt(0);
+            int rowNum = 0;
             for (Row row : sheet) {
+                out.println("Row Number : " + ++rowNum);
                 Iterator<Cell> cellIterator = row.cellIterator();
                 HistoricalConsumption consumption = null;
                 while (cellIterator.hasNext()) {
@@ -71,9 +76,10 @@ public class HourlyDailyService {
                                 if (consumption == null) {
                                     consumption = new HistoricalConsumption(buildingId);
                                 }
-                                consumption.setHour(getFloatValueOfHour(hourStr));
-                                consumption.setDate(date);
-                                out.println(hourStr);
+                                float floatValueOfHour = getFloatValueOfHour(hourStr);
+                                consumption.setHour(floatValueOfHour);
+                                consumption.setReportDate(date);
+                                // out.println("hourStr : " + hourStr + "   floatHour: " + floatValueOfHour);
                             } catch (ParseException e) {
                                 continue;
                             }
@@ -81,9 +87,9 @@ public class HourlyDailyService {
                     }
 
                 }
-                if (consumption != null) {
+                if (consumption != null && consumption.getReportDate() != null) {
                     categorizeConsumption(consumption);
-                    //TODO save consumption
+                    this.consumptionService.save(consumption);
                 }
             }
             file.close();
@@ -92,6 +98,13 @@ public class HourlyDailyService {
         }
     }
 
+   /* public void copyDateData(){
+        List<HistoricalConsumption> consumptions = consumptionService.findAll();
+        for (HistoricalConsumption consumption : consumptions) {
+            consumption.setReportDate(consumption.getDate());
+            this.consumptionService.update(consumption);
+        }
+    }*/
         /*Super Vazio (SV) -->              	  Winter                                                Summer
                                 Monday-Friday     2:00/6:00                                             2:00/6:00
                                 Saturday		  2:00/6:00                                             2:00/6:00
@@ -112,8 +125,8 @@ public class HourlyDailyService {
         */
 
     private void categorizeConsumption(HistoricalConsumption consumption) {
-        Season season = extractSeason(consumption.getDate());
-        WeekDayRange weekDayRange = extractWeekDayRange(consumption.getDate());
+        Season season = extractSeason(consumption.getReportDate());
+        WeekDayRange weekDayRange = extractWeekDayRange(consumption.getReportDate());
         float hour = consumption.getHour();
         HourPeriod hourPeriod = HourPeriod.UNKNOWN;
         //2:00/6:00
@@ -162,7 +175,7 @@ public class HourlyDailyService {
                                 hourPeriod = HourPeriod.Vazio_Normal;
                             }
                             //9:15/12:15
-                            if (hour <= 9.25 && hour < 12.25) {
+                            if (hour >= 9.25 && hour < 12.25) {
                                 hourPeriod = HourPeriod.Ponta;
                             }
                             //7:00/9:15 , 12:15/24:00
@@ -172,7 +185,7 @@ public class HourlyDailyService {
 
                         } else if (weekDayRange.equals(WeekDayRange.SATURDAY)) {
                             //0:00/2:00 , 6:00/9:00 , 14:00/20:00 , 22:00/24:00
-                            if ((hour <= 0 && hour > 2) || (hour >= 6 && hour < 9) || (hour >= 14 && hour < 20) || (hour >= 22 && hour < 24)) {
+                            if ((hour >= 0 && hour < 2) || (hour >= 6 && hour < 9) || (hour >= 14 && hour < 20) || (hour >= 22 && hour < 24)) {
                                 hourPeriod = HourPeriod.Vazio_Normal;
                             }
                             //9:00/14:00 , 20:00/22:00
@@ -255,7 +268,6 @@ public class HourlyDailyService {
     public static void main(String[] args) throws ParseException {
         // out.println(getFloatValueOfHourStatic("18:15"));
         DateUtil.getWeekDay(new Date());
-        out.println();
 
     }
 }

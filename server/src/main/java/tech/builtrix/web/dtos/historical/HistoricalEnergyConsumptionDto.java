@@ -17,7 +17,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class HistoricalConsumptionDto {
+public class HistoricalEnergyConsumptionDto {
     private String buildingId;
     private Date date;
     //24 h format 00 to 24
@@ -25,9 +25,9 @@ public class HistoricalConsumptionDto {
     private float consumption;
     private HourPeriod hourPeriod = HourPeriod.UNKNOWN;
 
-    public HistoricalConsumptionDto(HistoricalConsumption historicalConsumption) {
+    public HistoricalEnergyConsumptionDto(HistoricalConsumption historicalConsumption) {
         this.buildingId = historicalConsumption.getBuildingId();
-        this.date = historicalConsumption.getDate();
+        this.date = historicalConsumption.getReportDate();
         this.hour = historicalConsumption.getHour();
         this.consumption = historicalConsumption.getConsumption();
         this.hourPeriod = historicalConsumption.getHourPeriod();

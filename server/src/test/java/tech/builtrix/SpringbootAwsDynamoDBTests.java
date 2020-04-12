@@ -60,7 +60,7 @@ public class SpringbootAwsDynamoDBTests {
 		 * AttributeDefinition("id", ScalarAttributeType.S)), new
 		 * ProvisionedThroughput(10L, 10L)); table.waitForActive();
 		 */
-		createTable("User");
+		/*createTable("User");
 		createTable("Building");
 		createTable("Address");
 		createTable("User_Token");
@@ -68,7 +68,8 @@ public class SpringbootAwsDynamoDBTests {
 		createTable("Bill_Parameter_Info");
 		createTable("Verification_Token");
 		createTable("Session");
-		createTable("Internal_Messages");
+		createTable("Internal_Messages");*/
+		createTable("Historical_Energy_Consumption");
 	}
 
 	private void createTable(String tableName) {
@@ -122,8 +123,8 @@ public class SpringbootAwsDynamoDBTests {
 	@Test
 	public void dynamoDBTestCase() {
 		// buildingTest();
-		List<User> users = userRepository.findByEmailAddress("test@test.com");
-		System.out.println(users);
+		// List<User> users = userRepository.findByEmailAddress("test@test.com");
+		// System.out.println(users);
 	}
 
 	private User userTest() {

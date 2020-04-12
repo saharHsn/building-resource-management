@@ -161,5 +161,6 @@ public class ApplicationTests {
         // this.codeService.generateRandomNumber(33);
         // System.out.println();
         this.hourlyDailyService.parseExcelData(BUILDING_ID);
+        // this.hourlyDailyService.copyDateData();
     }
 }
