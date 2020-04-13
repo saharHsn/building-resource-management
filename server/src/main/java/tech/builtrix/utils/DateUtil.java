@@ -41,6 +41,14 @@ public class DateUtil {
         return month;
     }
 
+    public static int getWeekDay(Date date) {
+        int weekDay;
+        GregorianCalendar gregorianCalendar = new GregorianCalendar();
+        gregorianCalendar.setTime(date);
+        weekDay = gregorianCalendar.get(Calendar.DAY_OF_WEEK);
+        return weekDay;
+    }
+
     public static int getNextNMonth(Date date, int n) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);

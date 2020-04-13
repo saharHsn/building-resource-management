@@ -19,7 +19,9 @@ import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.user.User;
 import tech.builtrix.services.bill.BillService;
 import tech.builtrix.services.building.BuildingService;
+import tech.builtrix.services.historical.HistoricalConsumptionService;
 import tech.builtrix.services.report.ReportService;
+import tech.builtrix.utils.DateUtil;
 import tech.builtrix.web.dtos.bill.BillDto;
 import tech.builtrix.web.dtos.bill.BuildingDto;
 import tech.builtrix.web.dtos.bill.ReportIndex;
@@ -27,6 +29,7 @@ import tech.builtrix.web.dtos.report.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,12 +46,16 @@ public class ReportController extends ControllerBase {
     private final ReportService reportService;
     private final BuildingService buildingService;
     private final BillService billService;
+    private final HistoricalConsumptionService historicalConsumptionService;
 
     @Autowired
-    public ReportController(ReportService reportService, BuildingService buildingService, BillService billService) {
+    public ReportController(ReportService reportService, BuildingService buildingService,
+                            BillService billService,
+                            HistoricalConsumptionService historicalConsumptionService) {
         this.reportService = reportService;
         this.buildingService = buildingService;
         this.billService = billService;
+        this.historicalConsumptionService = historicalConsumptionService;
     }
 
     @ApiOperation(value = "Request for getting prediction data")
@@ -208,6 +215,17 @@ public class ReportController extends ControllerBase {
                 .ok()
                 .headers(headers)
                 .body(new InputStreamResource(in));
+    }
+
+    @ApiOperation(value = "Request for ")
+    @GetMapping(value = "/historicalConsumption")
+    public Response<HistoricalConsumptionDto> getHistoricalConsumption(@RequestParam(value = "year") int year,
+                                                                       @RequestParam(value = "month") int month) throws NotFoundException {
+        //make date from first day of month and another for last day of month
+        Date from = DateUtil.getDateFromPattern(year + "/" + month + "/" + "1", "yyyy/MM/dd");
+        Date to = DateUtil.getDateFromPattern(year + "/" + month + "/" + "30", "yyyy/MM/dd");
+        HistoricalConsumptionDto dto = this.historicalConsumptionService.getHistoricalConsumption(from, to);
+        return Response.ok(dto);
     }
 
     private String getBuildingId() {
