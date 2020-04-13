@@ -96,7 +96,8 @@ import {MatMenuModule} from '@angular/material/menu';;
 import { PanelComponent } from './notification_panel/panel/panel.component';;
 import { DownloadComponent } from './building/download/download.component'
 ;
-import { DailyConsumptionComponent } from './charts/cost/daily-consumption/daily-consumption.component'
+import { DailyConsumptionComponent } from './charts/cost/daily-consumption/daily-consumption.component';
+import { ResetPasswordComponent } from './login/reset-password/reset-password.component'
 //flex layout
 
 // import { AngularWeatherWidgetModule, WeatherApiName } from 'angular-weather-widget';
@@ -194,7 +195,8 @@ import { DailyConsumptionComponent } from './charts/cost/daily-consumption/daily
     EnergyEfficiencySymbolsComponent,
     ColorEnergyComponent ,
     DownloadComponent,
-    DailyConsumptionComponent
+    DailyConsumptionComponent,
+    ResetPasswordComponent
   
    
      ],

@@ -19,11 +19,13 @@ import {BuildingDetailsComponent} from './building/building-details/building-det
 import {ReportComponent} from './charts/report/report.component';
 import {ProfileViewComponent} from './charts/profile/profile-view/profile-view.component';
 import { PanelComponent } from './notification_panel/panel/panel.component';
+import { ResetPasswordComponent } from './login/reset-password/reset-password.component';
 
 
 const routes: Routes = [
   {path: '', component: HomeComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent},
+  {path: 'reset', component: ResetPasswordComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'wizard', component: WizardFormComponent},
   {path: 'building-detail', component: BuildingDetailsComponent},
