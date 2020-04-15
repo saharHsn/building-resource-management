@@ -1,4 +1,4 @@
-package tech.builtrix.models.bill;
+package tech.builtrix.models.bill.enums;
 
 public enum ParameterType {
     AE_FREE_HOURS,

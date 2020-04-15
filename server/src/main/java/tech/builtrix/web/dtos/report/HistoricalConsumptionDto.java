@@ -12,9 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 public class HistoricalConsumptionDto {
     List<String> xValues;
-    List<Float> contractedPowerValues;
-    List<Float> powerInPeakValues;
-    List<Float> reactivePowerValues;
     List<Float> normalValues;
     List<Float> peakValues;
     List<Float> freeValues;

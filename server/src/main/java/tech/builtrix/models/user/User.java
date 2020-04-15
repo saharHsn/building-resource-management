@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 import tech.builtrix.base.EntityBase;
 import tech.builtrix.models.EnumConverter;
+import tech.builtrix.models.user.enums.Education;
+import tech.builtrix.models.user.enums.Gender;
+import tech.builtrix.models.user.enums.Role;
 import tech.builtrix.web.dtos.user.UserDto;
 
 import java.util.Date;

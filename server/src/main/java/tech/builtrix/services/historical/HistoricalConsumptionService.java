@@ -4,6 +4,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedScanList;
 import com.amazonaws.services.dynamodbv2.datamodeling.marshallers.DateToStringMarshaller;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import lombok.extern.slf4j.Slf4j;
@@ -12,14 +13,12 @@ import tech.builtrix.base.GenericCrudServiceBase;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.historical.HistoricalConsumption;
 import tech.builtrix.repositories.bill.HistoricalConsumptionRepository;
+import tech.builtrix.services.report.DataType;
 import tech.builtrix.utils.ReportUtil;
 import tech.builtrix.web.dtos.historical.HistoricalEnergyConsumptionDto;
 import tech.builtrix.web.dtos.report.HistoricalConsumptionDto;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -46,31 +45,23 @@ public class HistoricalConsumptionService extends GenericCrudServiceBase<Histori
         return historicalConsumption;
     }
 
-    public List<HistoricalEnergyConsumptionDto> filterByDate(Date startDate, Date endDate) {
+    public List<HistoricalEnergyConsumptionDto> filterByDate(String buildingId, Date startDate, Date endDate) {
         AttributeValue start = DateToStringMarshaller.instance().marshall(startDate);
         AttributeValue end = DateToStringMarshaller.instance().marshall(endDate);
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
-                .withFilterExpression("reportDate >= :start and reportDate < :end")
+                .withFilterExpression("buildingId = :buildingId and reportDate >= :start and reportDate < :end")
+                .addExpressionAttributeValuesEntry(":buildingId", new AttributeValue(buildingId))
                 .addExpressionAttributeValuesEntry(":start", start)
                 .addExpressionAttributeValuesEntry(":end", end)
                 .withConsistentRead(true);
-        List<HistoricalConsumption> consumptions = mapper.scan(HistoricalConsumption.class, scanExpression);
-
-
-       /* Map<String, String> attributeNames = new HashMap<>();
-        attributeNames.put("#date", "date");
-
-        Map<String, AttributeValue> attributeValues = new HashMap<>();
-        attributeValues.put(":from", new AttributeValue().withN(startDate.toString()));
-        attributeValues.put(":to", new AttributeValue().withN(endDate.toString()));
-
-        DynamoDBScanExpression dynamoDBScanExpression = new DynamoDBScanExpression()
-                .withFilterExpression("#date >= :from and #date <= :to")
-                .withExpressionAttributeNames(attributeNames)
-                .withExpressionAttributeValues(attributeValues);*/
-
+        PaginatedScanList<HistoricalConsumption> scanResult = mapper.scan(HistoricalConsumption.class, scanExpression);
+        scanResult.loadAllResults();
+        List<HistoricalConsumption> historicalConsumptions = new ArrayList<>(scanResult.size());
+        // scanResult.sort(HistoricalConsumption::compareTo);
+        historicalConsumptions.addAll(scanResult);
+        Collections.sort(historicalConsumptions);
         List<HistoricalEnergyConsumptionDto> historicalConsumptionDtos = new ArrayList<>();
-        for (HistoricalConsumption historicalConsumption : consumptions) {
+        for (HistoricalConsumption historicalConsumption : historicalConsumptions) {
             historicalConsumptionDtos.add(new HistoricalEnergyConsumptionDto(historicalConsumption));
         }
         return historicalConsumptionDtos;
@@ -81,9 +72,9 @@ public class HistoricalConsumptionService extends GenericCrudServiceBase<Histori
 
     }
 
-    public HistoricalConsumptionDto getHistoricalConsumption(Date from, Date to) {
-        List<HistoricalEnergyConsumptionDto> historicalEnergyConsumptionDtos = filterByDate(from, to);
-        return ReportUtil.getHistoricalConsumption(historicalEnergyConsumptionDtos);
+    public HistoricalConsumptionDto getHistoricalConsumption(String buildingId, Date from, Date to, DataType dataType) {
+        List<HistoricalEnergyConsumptionDto> historicalEnergyConsumptionDtos = filterByDate(buildingId, from, to);
+        return ReportUtil.getHistoricalConsumption(historicalEnergyConsumptionDtos, dataType);
     }
 
     public List<HistoricalConsumption> findAll() {
@@ -94,4 +85,5 @@ public class HistoricalConsumptionService extends GenericCrudServiceBase<Histori
     public void update(HistoricalConsumption consumption) {
         this.repository.save(consumption);
     }
+
 }

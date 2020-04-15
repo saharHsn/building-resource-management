@@ -165,7 +165,7 @@ public class ReportUtil {
     }
 
     private static void extractHistoricalConsumptionValues(List<HistoricalEnergyConsumptionDto> dtoList,
-                                                           List<Float> contractedPowerValues,
+                                                           DataType dataType, List<Float> contractedPowerValues,
                                                            List<Float> powerInPeakValues,
                                                            List<Float> reactivePowerValues,
                                                            List<Float> normalValues,
@@ -173,18 +173,48 @@ public class ReportUtil {
                                                            List<Float> freeValues,
                                                            List<Float> offValues) {
         for (HistoricalEnergyConsumptionDto consumptionDto : dtoList) {
+            float consumption = consumptionDto.getConsumption();
+            float cost = roundDecimal(consumptionDto.getCost());
             switch (consumptionDto.getHourPeriod()) {
                 case Vazio_Normal:
-                    freeValues.add(consumptionDto.getConsumption());
+                    switch (dataType) {
+                        case CONSUMPTION:
+                            freeValues.add(consumption);
+                            break;
+                        case COST:
+                            freeValues.add(cost);
+                            break;
+                    }
                     break;
                 case Super_Vazio:
-                    offValues.add(consumptionDto.getConsumption());
+                    switch (dataType) {
+                        case CONSUMPTION:
+                            offValues.add(consumption);
+                            break;
+                        case COST:
+                            offValues.add(cost);
+                            break;
+                    }
                     break;
                 case Cheia:
-                    normalValues.add(consumptionDto.getConsumption());
+                    switch (dataType) {
+                        case CONSUMPTION:
+                            normalValues.add(consumption);
+                            break;
+                        case COST:
+                            normalValues.add(cost);
+                            break;
+                    }
                     break;
                 case Ponta:
-                    peakValues.add(consumptionDto.getConsumption());
+                    switch (dataType) {
+                        case CONSUMPTION:
+                            peakValues.add(consumption);
+                            break;
+                        case COST:
+                            peakValues.add(cost);
+                            break;
+                    }
                     break;
             }
         }
@@ -356,7 +386,8 @@ public class ReportUtil {
         }
     }
 
-    public static HistoricalConsumptionDto getHistoricalConsumption(List<HistoricalEnergyConsumptionDto> dtoList) {
+    public static HistoricalConsumptionDto getHistoricalConsumption(List<HistoricalEnergyConsumptionDto> dtoList,
+                                                                    DataType dataType) {
         HistoricalConsumptionDto dto = new HistoricalConsumptionDto();
         List<Float> contractedPowerValues = new ArrayList<>();
         List<Float> powerInPeakValues = new ArrayList<>();
@@ -365,20 +396,28 @@ public class ReportUtil {
         List<Float> peakValues = new ArrayList<>();
         List<Float> freeValues = new ArrayList<>();
         List<Float> offValues = new ArrayList<>();
-        extractHistoricalConsumptionValues(dtoList, contractedPowerValues, powerInPeakValues, reactivePowerValues, normalValues,
-                peakValues, freeValues, offValues);
-        dto.setContractedPowerValues(contractedPowerValues);
+        extractHistoricalConsumptionValues(dtoList,
+                dataType,
+                contractedPowerValues,
+                powerInPeakValues,
+                reactivePowerValues,
+                normalValues,
+                peakValues,
+                freeValues,
+                offValues);
         dto.setFreeValues(freeValues);
         dto.setOffValues(offValues);
         dto.setPeakValues(peakValues);
-        dto.setPowerInPeakValues(powerInPeakValues);
         dto.setNormalValues(normalValues);
-        dto.setReactivePowerValues(reactivePowerValues);
         // TODO refine later
-        dto.setXValues(
-                Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-                        "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "23",
-                        "24", "25", "26", "27", "28", "29", "30"));
+        List<String> xValues = new ArrayList<>();
+        for (HistoricalEnergyConsumptionDto consumptionDto : dtoList) {
+            Integer dayOfMonth = DateUtil.getDayOfMonth(consumptionDto.getDate());
+            if (!xValues.contains(dayOfMonth.toString())) {
+                xValues.add(String.valueOf(dayOfMonth));
+            }
+        }
+        dto.setXValues(xValues);
         return dto;
     }
 
@@ -748,6 +787,7 @@ public class ReportUtil {
         metaDataSheet.autoSizeColumn(1);
         cell2.setCellStyle(style);
     }
+
 
     //--------------------------------- Excel methods ---------------------------------------
 

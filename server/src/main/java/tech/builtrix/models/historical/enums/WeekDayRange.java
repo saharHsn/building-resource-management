@@ -1,4 +1,4 @@
-package tech.builtrix.models.historical;
+package tech.builtrix.models.historical.enums;
 
 public enum WeekDayRange {
     MONDAY_TO_FRIDAY,

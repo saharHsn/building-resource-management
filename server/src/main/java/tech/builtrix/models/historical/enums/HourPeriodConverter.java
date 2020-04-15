@@ -1,4 +1,4 @@
-package tech.builtrix.models.historical;
+package tech.builtrix.models.historical.enums;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverter;
 

@@ -215,6 +215,12 @@ public class DateUtil {
         return month;
     }
 
+    public static int getDayOfMonth(Date date) {
+        Calendar timeCalendar = Calendar.getInstance();
+        timeCalendar.setTime(date);
+        return timeCalendar.get(Calendar.DAY_OF_MONTH);
+    }
+
     public enum DateType {
         MILLI_SECOND, SECOND, MINUTE, HOUR, DAY, MONTH, YEAR
     }

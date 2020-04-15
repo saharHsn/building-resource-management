@@ -23,6 +23,7 @@ public class HistoricalEnergyConsumptionDto {
     //24 h format 00 to 24
     private float hour;
     private float consumption;
+    private float cost;
     private HourPeriod hourPeriod = HourPeriod.UNKNOWN;
 
     public HistoricalEnergyConsumptionDto(HistoricalConsumption historicalConsumption) {
@@ -30,6 +31,7 @@ public class HistoricalEnergyConsumptionDto {
         this.date = historicalConsumption.getReportDate();
         this.hour = historicalConsumption.getHour();
         this.consumption = historicalConsumption.getConsumption();
+        this.cost = historicalConsumption.getCost();
         this.hourPeriod = historicalConsumption.getHourPeriod();
     }
 }

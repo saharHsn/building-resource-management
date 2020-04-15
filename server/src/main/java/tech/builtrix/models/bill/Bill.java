@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import tech.builtrix.base.EntityBase;
 import tech.builtrix.models.EnumConverter;
-import tech.builtrix.models.building.ElectricityBillType;
+import tech.builtrix.models.building.enums.ElectricityBillType;
 import tech.builtrix.web.dtos.bill.BillDto;
 
 import java.util.Date;

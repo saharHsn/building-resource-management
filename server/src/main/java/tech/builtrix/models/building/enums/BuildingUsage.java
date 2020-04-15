@@ -1,4 +1,4 @@
-package tech.builtrix.models.building;
+package tech.builtrix.models.building.enums;
 
 public enum BuildingUsage {
 	OFFICE_BUILDING_OR_CO_WORK_SPACE,

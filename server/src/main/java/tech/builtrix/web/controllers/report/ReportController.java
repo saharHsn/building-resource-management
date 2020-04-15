@@ -20,6 +20,7 @@ import tech.builtrix.services.bill.BillService;
 import tech.builtrix.services.building.BuildingService;
 import tech.builtrix.services.historical.HistoricalConsumptionService;
 import tech.builtrix.services.historical.HourlyDailyService;
+import tech.builtrix.services.report.DataType;
 import tech.builtrix.services.report.ReportService;
 import tech.builtrix.utils.DateUtil;
 import tech.builtrix.web.dtos.bill.BillDto;
@@ -228,7 +229,18 @@ public class ReportController extends ControllerBase {
         //make date from first day of month and another for last day of month
         Date from = DateUtil.getDateFromPattern(year + "/" + month + "/" + "1", "yyyy/MM/dd");
         Date to = DateUtil.getDateFromPattern(year + "/" + month + "/" + "30", "yyyy/MM/dd");
-        HistoricalConsumptionDto dto = this.historicalConsumptionService.getHistoricalConsumption(from, to);
+        HistoricalConsumptionDto dto = this.historicalConsumptionService.getHistoricalConsumption(getBuildingId(), from, to, DataType.CONSUMPTION);
+        return Response.ok(dto);
+    }
+
+    @ApiOperation(value = "Request for ")
+    @GetMapping(value = "/historicalCost")
+    public Response<HistoricalConsumptionDto> getHistoricalCost(@RequestParam(value = "year") int year,
+                                                                @RequestParam(value = "month") int month) throws NotFoundException {
+        //make date from first day of month and another for last day of month
+        Date from = DateUtil.getDateFromPattern(year + "/" + month + "/" + "1", "yyyy/MM/dd");
+        Date to = DateUtil.getDateFromPattern(year + "/" + month + "/" + "30", "yyyy/MM/dd");
+        HistoricalConsumptionDto dto = this.historicalConsumptionService.getHistoricalConsumption(getBuildingId(), from, to, DataType.COST);
         return Response.ok(dto);
     }
 
