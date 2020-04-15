@@ -14,6 +14,7 @@ import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.historical.HistoricalConsumption;
 import tech.builtrix.repositories.bill.HistoricalConsumptionRepository;
 import tech.builtrix.services.report.DataType;
+import tech.builtrix.utils.DateUtil;
 import tech.builtrix.utils.ReportUtil;
 import tech.builtrix.web.dtos.historical.HistoricalEnergyConsumptionDto;
 import tech.builtrix.web.dtos.report.HistoricalConsumptionDto;
@@ -72,7 +73,15 @@ public class HistoricalConsumptionService extends GenericCrudServiceBase<Histori
 
     }
 
-    public HistoricalConsumptionDto getHistoricalConsumption(String buildingId, Date from, Date to, DataType dataType) {
+    public HistoricalConsumptionDto getHistoricalConsumption(String buildingId, Integer year, Integer month, DataType dataType) {
+        //make date from first day of month and another for last day of month
+        String monthStr = month.toString().length() == 1 ? "0" + month : month.toString();
+        String dateStr = year + "-" + monthStr + "-" + "01T" + "00:00:00";
+        String pattern = "yyyy-MM-dd'T'HH:mm:ss";
+        //"2010-05-23T09:01:02"
+        Date from = DateUtil.getDateFromPattern(dateStr, pattern);
+        String dateStr1 = year + "-" + monthStr + "-" + DateUtil.getNumOfDaysOfMonth(year, month) + "T23:59:59";
+        Date to = DateUtil.getDateFromPattern(dateStr1, pattern);
         List<HistoricalEnergyConsumptionDto> historicalEnergyConsumptionDtos = filterByDate(buildingId, from, to);
         return ReportUtil.getHistoricalConsumption(historicalEnergyConsumptionDtos, dataType);
     }
@@ -80,6 +89,22 @@ public class HistoricalConsumptionService extends GenericCrudServiceBase<Histori
     public List<HistoricalConsumption> findAll() {
         Iterable<HistoricalConsumption> all = this.repository.findAll();
         return (List<HistoricalConsumption>) all;
+    }
+
+    public static void main(String[] args) {
+        TimeZone timeZone = TimeZone.getTimeZone("Europe/Copenhagen");
+        Integer year = 2020;
+        Integer month = 3;
+        String monthStr = month.toString().length() == 1 ? "0" + month : month.toString();
+        String dateStr = year + "-" + monthStr + "-" + "01T" + "00:00:00";
+        String pattern = "yyyy-MM-dd'T'HH:mm:ss";
+        //"2010-05-23T09:01:02"
+        Date from = DateUtil.getDateFromPattern(dateStr, pattern);
+        String dateStr1 = year + "-" + monthStr + "-" + DateUtil.getNumOfDaysOfMonth(year, month) + "T23:59:59";
+        Date to = DateUtil.getDateFromPattern(dateStr1, pattern);
+        AttributeValue start = DateToStringMarshaller.instance().marshall(from);
+        AttributeValue end = DateToStringMarshaller.instance().marshall(to);
+        System.out.println();
     }
 
     public void update(HistoricalConsumption consumption) {

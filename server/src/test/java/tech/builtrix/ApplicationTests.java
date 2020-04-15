@@ -37,8 +37,8 @@ public class ApplicationTests {
     private CodeService codeService;
 
 
-    // private static String BUILDING_ID = "9d94dd4d-b789-4717-bdee-517a8de8ca6e";
-    private static String BUILDING_ID = "4f9e5bc1-471d-4b37-87ca-82f803898bb6";
+    private static String BUILDING_ID = "9d94dd4d-b789-4717-bdee-517a8de8ca6e";
+    // private static String BUILDING_ID = "4f9e5bc1-471d-4b37-87ca-82f803898bb6";
     private Integer year = 2020;
     private TimePeriodType periodType = TimePeriodType.MONTHLY;
     private DatePartType datePartType = DatePartType.FREE_HOURS;

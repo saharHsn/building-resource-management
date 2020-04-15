@@ -22,7 +22,6 @@ import tech.builtrix.services.historical.HistoricalConsumptionService;
 import tech.builtrix.services.historical.HourlyDailyService;
 import tech.builtrix.services.report.DataType;
 import tech.builtrix.services.report.ReportService;
-import tech.builtrix.utils.DateUtil;
 import tech.builtrix.web.dtos.bill.BillDto;
 import tech.builtrix.web.dtos.bill.BuildingDto;
 import tech.builtrix.web.dtos.bill.ReportIndex;
@@ -32,7 +31,6 @@ import tech.builtrix.web.dtos.report.enums.TimePeriodType;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -224,23 +222,17 @@ public class ReportController extends ControllerBase {
 
     @ApiOperation(value = "Request for ")
     @GetMapping(value = "/historicalConsumption")
-    public Response<HistoricalConsumptionDto> getHistoricalConsumption(@RequestParam(value = "year") int year,
-                                                                       @RequestParam(value = "month") int month) throws NotFoundException {
-        //make date from first day of month and another for last day of month
-        Date from = DateUtil.getDateFromPattern(year + "/" + month + "/" + "1", "yyyy/MM/dd");
-        Date to = DateUtil.getDateFromPattern(year + "/" + month + "/" + "30", "yyyy/MM/dd");
-        HistoricalConsumptionDto dto = this.historicalConsumptionService.getHistoricalConsumption(getBuildingId(), from, to, DataType.CONSUMPTION);
+    public Response<HistoricalConsumptionDto> getHistoricalConsumption(@RequestParam(value = "year") Integer year,
+                                                                       @RequestParam(value = "month") Integer month) {
+        HistoricalConsumptionDto dto = this.historicalConsumptionService.getHistoricalConsumption(getBuildingId(), year, month, DataType.CONSUMPTION);
         return Response.ok(dto);
     }
 
     @ApiOperation(value = "Request for ")
     @GetMapping(value = "/historicalCost")
-    public Response<HistoricalConsumptionDto> getHistoricalCost(@RequestParam(value = "year") int year,
-                                                                @RequestParam(value = "month") int month) throws NotFoundException {
-        //make date from first day of month and another for last day of month
-        Date from = DateUtil.getDateFromPattern(year + "/" + month + "/" + "1", "yyyy/MM/dd");
-        Date to = DateUtil.getDateFromPattern(year + "/" + month + "/" + "30", "yyyy/MM/dd");
-        HistoricalConsumptionDto dto = this.historicalConsumptionService.getHistoricalConsumption(getBuildingId(), from, to, DataType.COST);
+    public Response<HistoricalConsumptionDto> getHistoricalCost(@RequestParam(value = "year") Integer year,
+                                                                @RequestParam(value = "month") Integer month) throws NotFoundException {
+        HistoricalConsumptionDto dto = this.historicalConsumptionService.getHistoricalConsumption(getBuildingId(), year, month, DataType.COST);
         return Response.ok(dto);
     }
 

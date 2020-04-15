@@ -72,7 +72,7 @@ public class HourlyDailyService {
                 while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
                     if (cell.getCellTypeEnum() == CellType.STRING) {
-                        String dateStr = cell.toString();
+                        String dateStr = cell.getStringCellValue();
                         Date date;
                         String hourStr;
                         try {
@@ -106,9 +106,6 @@ public class HourlyDailyService {
                 long l = System.currentTimeMillis();
                 logger.info("Trying to persist historical " + ++row);
                 categorizeConsumption(consumption);
-                if (consumption.getHourPeriod().equals(HourPeriod.UNKNOWN)) {
-                    out.println("UNKNOWN HOUR PERIOD!!!");
-                }
                 switch (consumption.getHourPeriod()) {
                     case Super_Vazio:
                         consumption.setCost(consumption.getConsumption() * SUPER_VAZIO_COST_COEFFICIENT);
@@ -123,7 +120,7 @@ public class HourlyDailyService {
                         consumption.setCost(consumption.getConsumption() * CHEIA_COST_COEFFICIENT);
                         break;
                 }
-                this.consumptionService.save(consumption);
+                // this.consumptionService.save(consumption);
                 logger.info("row " + row + " was saved successfully in : " + (System.currentTimeMillis() - l) + "milliSeconds");
             }
 
