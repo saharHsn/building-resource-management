@@ -1,7 +1,7 @@
 package tech.builtrix.web.dtos.building;
 
 import org.springframework.web.multipart.MultipartFile;
-import tech.builtrix.models.building.BillType;
+import tech.builtrix.models.building.enums.BillType;
 
 public class UploadFileDto {
 	private MultipartFile file;

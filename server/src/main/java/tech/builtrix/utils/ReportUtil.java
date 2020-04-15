@@ -7,7 +7,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.*;
-import tech.builtrix.models.building.EnergyCertificate;
+import tech.builtrix.models.building.enums.EnergyCertificate;
 import tech.builtrix.services.report.BillParamInfo;
 import tech.builtrix.services.report.DataType;
 import tech.builtrix.services.report.ReportData;

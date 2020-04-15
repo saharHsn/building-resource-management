@@ -3,8 +3,8 @@ package tech.builtrix.web.dtos.report;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import tech.builtrix.enums.DatePartType;
-import tech.builtrix.enums.TimePeriodType;
+import tech.builtrix.web.dtos.report.enums.DatePartType;
+import tech.builtrix.web.dtos.report.enums.TimePeriodType;
 
 import java.util.List;
 

@@ -8,10 +8,10 @@ import org.springframework.util.CollectionUtils;
 import tech.builtrix.base.GenericCrudServiceBase;
 import tech.builtrix.commons.EmailSender;
 import tech.builtrix.exceptions.*;
-import tech.builtrix.models.user.Role;
-import tech.builtrix.models.user.TokenPurpose;
 import tech.builtrix.models.user.User;
 import tech.builtrix.models.user.VerificationToken;
+import tech.builtrix.models.user.enums.Role;
+import tech.builtrix.models.user.enums.TokenPurpose;
 import tech.builtrix.repositories.user.UserRepository;
 import tech.builtrix.repositories.user.VerificationTokenRepository;
 import tech.builtrix.services.authenticate.CodeService;
@@ -133,11 +133,13 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
 		user.setEmailAddress(invitationDto.getInviteeEmail());
 		user.setParent(parent.getId());
 		user.setRole(Role.Junior);
-		// TODO
 		/*
-		 * user.setUsing2FA(registerUserDto.isUsing2FA());
-		 * user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
-		 */
+		 TODO
+
+		* user.setUsing2FA(registerUserDto.isUsing2FA());
+		* user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
+
+		*/
 		user = repository.save(user);
 		user.setRawPassword(randomPassword);
 		return user;

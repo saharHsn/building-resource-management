@@ -3,14 +3,15 @@ package tech.builtrix.services.historical;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
 import tech.builtrix.models.historical.HistoricalConsumption;
-import tech.builtrix.models.historical.HourPeriod;
-import tech.builtrix.models.historical.Season;
-import tech.builtrix.models.historical.WeekDayRange;
+import tech.builtrix.models.historical.enums.HourPeriod;
+import tech.builtrix.models.historical.enums.Season;
+import tech.builtrix.models.historical.enums.WeekDayRange;
 import tech.builtrix.services.S3FileService;
 import tech.builtrix.utils.DateUtil;
 
@@ -22,8 +23,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import static java.lang.System.out;
 
@@ -34,7 +37,14 @@ public class HourlyDailyService {
     private static final String HISTORICAL_ENERGY_CONSUMPTION_BUCKET = "historical-energy-consumption";
     //28-03-2020 18:00
     private static final String DATE_PATTERN = "dd-MM-yyyy HH:mm";
+    //2/12/2020  10:00:00 AM
+    private static final String DATE_PATTERN2 = "MM/dd/yy HH:mm";
     private static final String TIME_PATTERN = "HH:mm";
+    private static final String TIME_PATTERN2 = "HH:mm:ss";
+    private static float SUPER_VAZIO_COST_COEFFICIENT = 0.070750f;
+    private static float VAZIO_NORMAL_COST_COEFFICIENT = 0.077610f;
+    private static float PONTA_COST_COEFFICIENT = 0.089990f;
+    private static float CHEIA_COST_COEFFICIENT = 0.089700f;
 
     private final HistoricalConsumptionService consumptionService;
 
@@ -53,46 +63,70 @@ public class HourlyDailyService {
             XSSFWorkbook workbook = new XSSFWorkbook(file);
             XSSFSheet sheet = workbook.getSheetAt(0);
             int rowNum = 0;
+            int dateNum = 0, consNum = 0;
+            List<HistoricalConsumption> consumptionList = new ArrayList<>();
             for (Row row : sheet) {
+                HistoricalConsumption consumption = new HistoricalConsumption(buildingId);
                 out.println("Row Number : " + ++rowNum);
                 Iterator<Cell> cellIterator = row.cellIterator();
-                HistoricalConsumption consumption = null;
                 while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
-                    switch (cell.getCellTypeEnum()) {
-                        case NUMERIC:
+                    if (cell.getCellTypeEnum() == CellType.STRING) {
+                        String dateStr = cell.toString();
+                        Date date;
+                        String hourStr;
+                        try {
+                            date = new SimpleDateFormat(DATE_PATTERN).parse(String.valueOf(dateStr));
+                            hourStr = new SimpleDateFormat(TIME_PATTERN).format(date);
+                            float floatValueOfHour = getFloatValueOfHour(hourStr);
+                            consumption.setHour(floatValueOfHour);
+                            consumption.setReportDate(date);
+                            // out.println("Date Number : " + ++dateNum);
+                            continue;
+                        } catch (ParseException e) {
+                            // continue;
+                        }
+                        try {
                             /*Number1.5*/
-                            float numericCellValue = (float) cell.getNumericCellValue();
-                            if (consumption == null) {
-                                consumption = new HistoricalConsumption(buildingId);
-                            }
+                            float numericCellValue = Float.parseFloat(cell.getStringCellValue().replaceAll(",", "."));
                             consumption.setConsumption(numericCellValue);
-                            break;
-                        case STRING:
-                            String dateStr = cell.getStringCellValue();
-                            try {
-                                Date date = new SimpleDateFormat(DATE_PATTERN).parse(dateStr);
-                                String hourStr = new SimpleDateFormat(TIME_PATTERN).format(date);
-                                if (consumption == null) {
-                                    consumption = new HistoricalConsumption(buildingId);
-                                }
-                                float floatValueOfHour = getFloatValueOfHour(hourStr);
-                                consumption.setHour(floatValueOfHour);
-                                consumption.setReportDate(date);
-                                // out.println("hourStr : " + hourStr + "   floatHour: " + floatValueOfHour);
-                            } catch (ParseException e) {
-                                continue;
-                            }
-                            break;
+                            // out.println("Cons Number : " + ++consNum);
+                        } catch (Exception ignored) {
+                        }
                     }
-
                 }
-                if (consumption != null && consumption.getReportDate() != null) {
-                    categorizeConsumption(consumption);
-                    this.consumptionService.save(consumption);
+                if (consumption.getReportDate() != null) {
+                    consumptionList.add(consumption);
                 }
             }
             file.close();
+            int row = 0;
+            for (HistoricalConsumption consumption : consumptionList) {
+                //TODO check uniqueness of date field
+                long l = System.currentTimeMillis();
+                logger.info("Trying to persist historical " + ++row);
+                categorizeConsumption(consumption);
+                if (consumption.getHourPeriod().equals(HourPeriod.UNKNOWN)) {
+                    out.println("UNKNOWN HOUR PERIOD!!!");
+                }
+                switch (consumption.getHourPeriod()) {
+                    case Super_Vazio:
+                        consumption.setCost(consumption.getConsumption() * SUPER_VAZIO_COST_COEFFICIENT);
+                        break;
+                    case Vazio_Normal:
+                        consumption.setCost(consumption.getConsumption() * VAZIO_NORMAL_COST_COEFFICIENT);
+                        break;
+                    case Ponta:
+                        consumption.setCost(consumption.getConsumption() * PONTA_COST_COEFFICIENT);
+                        break;
+                    case Cheia:
+                        consumption.setCost(consumption.getConsumption() * CHEIA_COST_COEFFICIENT);
+                        break;
+                }
+                this.consumptionService.save(consumption);
+                logger.info("row " + row + " was saved successfully in : " + (System.currentTimeMillis() - l) + "milliSeconds");
+            }
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -267,7 +301,35 @@ public class HourlyDailyService {
 
     public static void main(String[] args) throws ParseException {
         // out.println(getFloatValueOfHourStatic("18:15"));
-        DateUtil.getWeekDay(new Date());
+        // DateUtil.getWeekDay(new Date());
+        try {
+            FileInputStream file = new FileInputStream(new File("/Users/sahar/IdeaProjects/builtrix-metrics-new/server/Hourly Mat _ FL _ General.xlsx"));
+
+            XSSFWorkbook workbook = new XSSFWorkbook(file);
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            int rowNum = 0;
+            for (Row row : sheet) {
+                Iterator<Cell> cellIterator = row.cellIterator();
+                HistoricalConsumption consumption = null;
+                while (cellIterator.hasNext()) {
+                    Cell cell = cellIterator.next();
+                    // 7/3/2020  1:00:00 PM
+                    out.println(cell.toString());
+                    out.println(cell.getCellTypeEnum());
+                   /* if (cell.getCellTypeEnum() == CellType.STRING) {//12/3/2020  11:00:00 PM
+                        try {
+                            Date date = new SimpleDateFormat("dd/MM/yyyy hh:MM:ss a").parse(cell.getStringCellValue());
+                            out.println(date);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }*/
+                }
+            }
+            file.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }

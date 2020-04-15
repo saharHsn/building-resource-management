@@ -12,20 +12,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tech.builtrix.Response;
+import tech.builtrix.annotations.NoSession;
 import tech.builtrix.base.ControllerBase;
-import tech.builtrix.enums.DatePartType;
-import tech.builtrix.enums.TimePeriodType;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.user.User;
 import tech.builtrix.services.bill.BillService;
 import tech.builtrix.services.building.BuildingService;
 import tech.builtrix.services.historical.HistoricalConsumptionService;
+import tech.builtrix.services.historical.HourlyDailyService;
 import tech.builtrix.services.report.ReportService;
 import tech.builtrix.utils.DateUtil;
 import tech.builtrix.web.dtos.bill.BillDto;
 import tech.builtrix.web.dtos.bill.BuildingDto;
 import tech.builtrix.web.dtos.bill.ReportIndex;
 import tech.builtrix.web.dtos.report.*;
+import tech.builtrix.web.dtos.report.enums.DatePartType;
+import tech.builtrix.web.dtos.report.enums.TimePeriodType;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -47,15 +49,17 @@ public class ReportController extends ControllerBase {
     private final BuildingService buildingService;
     private final BillService billService;
     private final HistoricalConsumptionService historicalConsumptionService;
+    private final HourlyDailyService hourlyDailyService;
 
     @Autowired
     public ReportController(ReportService reportService, BuildingService buildingService,
                             BillService billService,
-                            HistoricalConsumptionService historicalConsumptionService) {
+                            HistoricalConsumptionService historicalConsumptionService, HourlyDailyService hourlyDailyService) {
         this.reportService = reportService;
         this.buildingService = buildingService;
         this.billService = billService;
         this.historicalConsumptionService = historicalConsumptionService;
+        this.hourlyDailyService = hourlyDailyService;
     }
 
     @ApiOperation(value = "Request for getting prediction data")
@@ -103,7 +107,7 @@ public class ReportController extends ControllerBase {
         return Response.ok(nationalMedian);
     }
 
-    @ApiOperation(value = "Request for getting be score")
+    @ApiOperation(value = "Request for getting property Target")
     @GetMapping(value = "/propertyTarget")
     public Response<Float> getPropertyTarget() throws NotFoundException {
         Float propertyTarget;
@@ -226,6 +230,15 @@ public class ReportController extends ControllerBase {
         Date to = DateUtil.getDateFromPattern(year + "/" + month + "/" + "30", "yyyy/MM/dd");
         HistoricalConsumptionDto dto = this.historicalConsumptionService.getHistoricalConsumption(from, to);
         return Response.ok(dto);
+    }
+
+    @ApiOperation(value = "Request for ")
+    @GetMapping(value = "/persistHistorical")
+    @NoSession
+    public Response<Void> persistHistoricalData(@RequestParam(value = "buildingId") String buildingId) throws IOException {
+        //make date from first day of month and another for last day of month
+        this.hourlyDailyService.parseExcelData(buildingId);
+        return Response.ok();
     }
 
     private String getBuildingId() {

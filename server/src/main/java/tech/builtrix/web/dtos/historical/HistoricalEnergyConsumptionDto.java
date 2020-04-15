@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import tech.builtrix.models.historical.HistoricalConsumption;
-import tech.builtrix.models.historical.HourPeriod;
+import tech.builtrix.models.historical.enums.HourPeriod;
 
 import java.util.Date;
 

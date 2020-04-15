@@ -21,31 +21,31 @@ import java.util.UUID;
  */
 public class FileUtil {
 	public static void unzipMultipartFile(MultipartFile file, String destination) throws IOException {
-		/**
-		 * save file to temp
+		/*
+		  save file to temp
 		 */
-		File zip = File.createTempFile(UUID.randomUUID().toString(), "temp");
-		FileOutputStream o = new FileOutputStream(zip);
-		IOUtils.copy(file.getInputStream(), o);
-		o.close();
+        File zip = File.createTempFile(UUID.randomUUID().toString(), "temp");
+        FileOutputStream o = new FileOutputStream(zip);
+        IOUtils.copy(file.getInputStream(), o);
+        o.close();
 
-		/**
-		 * unizp file from temp by zip4j
+		/*
+		  unizp file from temp by zip4j
 		 */
-		// String destination =
-		// "/Users/sahar/IdeaProjects/builtrix-metrics/server/src/main/resources/bills";
-		try {
-			ZipFile zipFile = new ZipFile(zip);
+        // String destination =
+        // "/Users/sahar/IdeaProjects/builtrix-metrics/server/src/main/resources/bills";
+        try {
+            ZipFile zipFile = new ZipFile(zip);
 
-			zipFile.extractAll(destination);
-		} catch (ZipException e) {
-			e.printStackTrace();
-		} finally {
-			/**
-			 * delete temp file
+            zipFile.extractAll(destination);
+        } catch (ZipException e) {
+            e.printStackTrace();
+        } finally {
+			/*
+			  delete temp file
 			 */
-			zip.delete();
-		}
+            zip.delete();
+        }
 	}
 
 	public static List<File> getDirectoryFiles(File file) {
