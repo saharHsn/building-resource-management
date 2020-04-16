@@ -32,6 +32,7 @@ export class ChartService {
   private readonly nationalMedianUrl;
   private readonly propertyTargetUrl;
   private readonly downloadUrl;
+  private readonly HistoricalConsumptionUrl;
   headers: HttpHeaders;
 
   constructor(private http: HttpClient,
@@ -57,8 +58,39 @@ export class ChartService {
     this.nationalMedianUrl = this.baseUrl + '/nationalMedian';
     this.propertyTargetUrl = this.baseUrl + '/propertyTarget';
     this.downloadUrl = this.baseUrl + '/download';
+    this.HistoricalConsumptionUrl=this.baseUrl +'/historicalConsumption'
+
     this.headers = this.authService.getHeaders();
   }
+
+
+
+
+
+
+  /* month:any,year:any */
+historicalConsumption(): Observable<any>{
+let year ='2020';
+let month='1';
+
+  let headers;
+ // @ts-ignore
+  const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
+  if (user && user.token) {
+  headers = new HttpHeaders()
+  .set('X-Session', user.token)
+  .set('Accept', '*/*')
+  .set('Content-Type', 'application/json');
+  }
+  const params = new HttpParams()
+  .set('year',year )
+  .set('month',month);
+  return this.http.get(`${this.HistoricalConsumptionUrl}`,
+  {headers, params}
+  );
+}
+
+
 
   predict(): Observable<any> {
     return this.callService(`${this.predictUrl}`);

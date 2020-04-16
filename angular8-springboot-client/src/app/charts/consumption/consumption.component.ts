@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import { ChartService } from '../chartService';
 
 @Component({
   selector: 'app-consumption',
@@ -7,10 +8,17 @@ import {Component, OnInit} from '@angular/core';
 })
 export class ConsumptionComponent implements OnInit {
   chartOptions;
-  constructor() {
+  constructor(private _chartService:ChartService) {
   }
 
   ngOnInit() {
+    this._chartService.historicalConsumption().subscribe(res=>{
+     
+      console.log(res);
+   
+
+
+    })
   }
 
   /*getChangedSeries($event) {

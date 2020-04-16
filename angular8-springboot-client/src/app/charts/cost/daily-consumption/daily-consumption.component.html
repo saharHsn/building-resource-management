@@ -1,28 +1,27 @@
 <!-- 
 butttons -->
-<div class="row">
-    <div class="col text-right">
+<div class="">
+    <div class=" text-right">
         <button mat-button [matMenuTriggerFor]="menu">Month<mat-icon >keyboard_arrow_down</mat-icon></button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item>January</button>
-          <button mat-menu-item>Febrary</button>
-          <button mat-menu-item>March</button>
-          <button mat-menu-item>April</button>
-          <button mat-menu-item>May</button>
-          <button mat-menu-item>June</button>
-          <button mat-menu-item>July</button>
-          <button mat-menu-item>August</button>
-          <button mat-menu-item>September</button>
-          <button mat-menu-item>October</button>
-          <button mat-menu-item>November</button>
-          <button mat-menu-item>December</button>
-        
+          <button mat-menu-item (click)="create($event)" value="1">January</button>
+          <button mat-menu-item (click)="create($event)" value="2">Febrary</button>
+          <button mat-menu-item (click)="create($event)" value="3">March</button>
+          <button mat-menu-item (click)="create($event)" value="4">April</button>
+          <button mat-menu-item (click)="create($event)" value="5">May</button>
+          <button mat-menu-item (click)="create($event)" value="6">June</button>
+          <button mat-menu-item (click)="create($event)" value="7">July</button>
+          <button mat-menu-item (click)="create($event)" value="8">August</button>
+          <button mat-menu-item (click)="create($event)" value="9">September</button>
+          <button mat-menu-item (click)="create($event)" value="10">October</button>
+          <button mat-menu-item (click)="create($event)" value="11">November</button>
+          <button mat-menu-item (click)="create($event)" value="12">December</button>
         </mat-menu>
         
         <button mat-button [matMenuTriggerFor]="menu2">Year<mat-icon >keyboard_arrow_down</mat-icon></button>
         <mat-menu #menu2="matMenu">
-          <button mat-menu-item>2019</button>
-          <button mat-menu-item>2020</button>
+          <button mat-menu-item (click)="create($event)" value="2019">2019</button>
+          <button mat-menu-item (click)="create($event)" value="2020">2020</button>
         </mat-menu>
     </div>
 </div>
