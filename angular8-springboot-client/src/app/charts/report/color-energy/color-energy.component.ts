@@ -25,7 +25,9 @@ export class ColorEnergyComponent implements OnInit {
       },
       plotOptions: {
         series: {
-          groupPadding: 0
+          groupPadding: 0,
+          stacking: 'normal',
+          pointWidth: 40
         }
       },
 
@@ -34,7 +36,7 @@ export class ColorEnergyComponent implements OnInit {
       },
 
       xAxis: {
-        categories: ['A', 'B', 'C', 'D', 'E', 'F']
+        categories: ['A+',' A' ,' B','B-', ' C', ' D', ' E', ' F']
       }, yAxis: {
         min: 0,
         gridLineWidth: 0,
@@ -51,11 +53,11 @@ export class ColorEnergyComponent implements OnInit {
             },
 
       series: [{
-        colors: ['#55E27C', '#E8FC6B', '#FFF500', '#FFC700', '#FFC700',
+        colors: ['#059321','#55E27C','#E8FC6B','#EFFF1E', '#FADB00', '#FF8300', '#FF4800',
           '#F90000'],
         type: 'column',
         colorByPoint: true,
-        data: [1, 2, 3, 4, 5, 6],
+        data: [1, 2, 3, 4, 5, 6,7,8],
         showInLegend: false
       }]
     };

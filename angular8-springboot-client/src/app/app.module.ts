@@ -66,6 +66,7 @@ import {BuildingListComponent} from './building/building-list/building-list.comp
 import {CreateBuildingComponent} from './building/create-building/create-building.component';
 import {CreateUserComponent} from './user/create-user/create-user.component';
 import {HighchartsChartModule} from 'highcharts-angular';
+
 import {GoogleAnalyticsService} from './_analytics/google-analytics.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HeaderComponent} from './default/header/header.component';
@@ -96,9 +97,13 @@ import {MatMenuModule} from '@angular/material/menu';;
 import { PanelComponent } from './notification_panel/panel/panel.component';;
 import { DownloadComponent } from './building/download/download.component'
 ;
-import { DailyConsumptionComponent } from './charts/cost/daily-consumption/daily-consumption.component';
+import { DailyConsumptionComponent } from './charts/cost/daily-consumption/daily-consumption.component'
+;
 import { ResetPasswordComponent } from './login/reset-password/reset-password.component'
-//flex layout
+;
+import { BulletChartComponent } from './charts/report/bullet-chart/bullet-chart.component'//flex layout
+
+
 
 // import { AngularWeatherWidgetModule, WeatherApiName } from 'angular-weather-widget';
 // import {HighchartsChartComponent} from 'highcharts-angular';
@@ -135,7 +140,8 @@ import { ResetPasswordComponent } from './login/reset-password/reset-password.co
     MatMenuModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatInputModule
+    MatInputModule,
+   
   ],
   declarations: [
     AppComponent,
@@ -195,9 +201,11 @@ import { ResetPasswordComponent } from './login/reset-password/reset-password.co
     EnergyEfficiencySymbolsComponent,
     ColorEnergyComponent ,
     DownloadComponent,
-    DailyConsumptionComponent,
+    DailyConsumptionComponent
+,
     ResetPasswordComponent
-  
+,
+    BulletChartComponent  
    
      ],
   
