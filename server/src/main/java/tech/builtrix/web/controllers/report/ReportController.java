@@ -61,7 +61,7 @@ public class ReportController extends ControllerBase {
         this.hourlyDailyService = hourlyDailyService;
     }
 
-    @ApiOperation(value = "Request for getting prediction data")
+    @ApiOperation(value = "Request for getting current Month Summary")
     @GetMapping(value = "/currentMonthSummary")
     public Response<CurrentMonthSummaryDto> currentMonthSummary() throws NotFoundException {
         CurrentMonthSummaryDto currentMonthSummaryDto;
@@ -72,7 +72,7 @@ public class ReportController extends ControllerBase {
 
     @ApiOperation(value = "Request for getting prediction data")
     @GetMapping(value = "/prediction")
-    public Response<PredictionDto> prediction() {
+    public Response<PredictionDto> prediction() throws NotFoundException {
         PredictionDto predictionDto;
         predictionDto = this.reportService.predict(getBuildingId());
         return Response.ok(predictionDto);
