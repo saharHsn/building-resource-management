@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import tech.builtrix.base.EntityBase;
+import tech.builtrix.models.bill.enums.ParameterType;
+import tech.builtrix.models.bill.enums.ParameterTypeConverter;
 import tech.builtrix.web.dtos.bill.BillParameterDto;
 
 import java.util.Date;

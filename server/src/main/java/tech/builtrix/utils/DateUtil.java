@@ -1,12 +1,13 @@
 package tech.builtrix.utils;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.marshallers.DateToStringMarshaller;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.YearMonth;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 /**
  * Created By sahar at 12/3/19
@@ -96,18 +97,25 @@ public class DateUtil {
 
     public static Date getDateFromPattern(String dateStr, String pattern) {
         try {
-            return new SimpleDateFormat(pattern).parse(dateStr);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, Locale.ENGLISH);
+            TimeZone tz = TimeZone.getTimeZone("UTC");
+            simpleDateFormat.setTimeZone(tz);
+            return simpleDateFormat.parse(dateStr);
         } catch (ParseException e) {
             return null;
         }
     }
 
-    public static Date removeTime(Date date) {
+    public static Date getDate(int year, int month, int day) {
+        Calendar calendar = new GregorianCalendar(year, month - 1, day);
+        return calendar.getTime();
+    }
+
+    public static void removeTime(Date date) {
         date = removeTime(date, DateType.HOUR);
         date = removeTime(date, DateType.MINUTE);
         date = removeTime(date, DateType.SECOND);
         date = removeTime(date, DateType.MILLI_SECOND);
-        return date;
     }
 
     public static Date removeTime(Date date, DateType dateType) {
@@ -127,7 +135,7 @@ public class DateUtil {
         return cal.getTime();
     }
 
-    public static Date setDateField(Date date, Integer field, DateType dateType) {
+    public static void setDateField(Date date, Integer field, DateType dateType) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         switch (dateType) {
@@ -153,7 +161,7 @@ public class DateUtil {
                 cal.set(Calendar.MILLISECOND, 0);
                 break;
         }
-        return cal.getTime();
+        cal.getTime();
     }
 
     public static Date increaseDate(Date date, int num, DateType dateType) {
@@ -206,8 +214,7 @@ public class DateUtil {
 
     public static Integer getNumOfDaysOfMonth(Integer year, int month) {
         YearMonth yearMonthObject = YearMonth.of(year, month);
-        int daysInMonth = yearMonthObject.lengthOfMonth();
-        return daysInMonth;
+        return yearMonthObject.lengthOfMonth();
     }
 
     public static int getCurrentMonth() {
@@ -215,6 +222,23 @@ public class DateUtil {
         GregorianCalendar date = new GregorianCalendar();
         month = date.get(Calendar.MONTH);
         return month;
+    }
+
+    public static int getDayOfMonth(Date date) {
+        Calendar timeCalendar = Calendar.getInstance();
+        timeCalendar.setTime(date);
+        return timeCalendar.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public static int getNumOfDaysOfMonth(int month) {
+        if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
+            return 31;
+        } else if (month == 4 || month == 6 || month == 9 || month == 11) {
+            return 30;
+        } else if (month == 2) {
+            return 29;
+        } else
+            return 30;
     }
 
     public enum DateType {
@@ -262,12 +286,11 @@ public class DateUtil {
         }
     }
 
-    public static void main(String[] args) {
-        Date currentDate = new Date();
-        Date previousYear = DateUtil.increaseDate(currentDate, -1, DateUtil.DateType.YEAR);
-        int nextNMonth = DateUtil.getNextNMonth(previousYear, 1);
-        int nextNMonth1 = DateUtil.getNextNMonth(previousYear, 2);
-        int nextNMonth2 = DateUtil.getNextNMonth(previousYear, 3);
+    public static void main(String[] args) throws ParseException {
+        SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date date = isoFormat.parse("2010-05-23T09:01:02");
+        AttributeValue start = DateToStringMarshaller.instance().marshall(date);
         System.out.println();
     }
 

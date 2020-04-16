@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import tech.builtrix.configurations.DynamoDBConfig;
-import tech.builtrix.enums.DatePartType;
-import tech.builtrix.enums.TimePeriodType;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.services.authenticate.CodeService;
 import tech.builtrix.services.bill.BillService;
@@ -17,6 +15,8 @@ import tech.builtrix.services.report.ReportService;
 import tech.builtrix.web.dtos.bill.BillDto;
 import tech.builtrix.web.dtos.bill.ReportIndex;
 import tech.builtrix.web.dtos.report.*;
+import tech.builtrix.web.dtos.report.enums.DatePartType;
+import tech.builtrix.web.dtos.report.enums.TimePeriodType;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,6 +38,7 @@ public class ApplicationTests {
 
 
     private static String BUILDING_ID = "9d94dd4d-b789-4717-bdee-517a8de8ca6e";
+    // private static String BUILDING_ID = "4f9e5bc1-471d-4b37-87ca-82f803898bb6";
     private Integer year = 2020;
     private TimePeriodType periodType = TimePeriodType.MONTHLY;
     private DatePartType datePartType = DatePartType.FREE_HOURS;

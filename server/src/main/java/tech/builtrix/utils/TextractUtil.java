@@ -131,23 +131,23 @@ public class TextractUtil {
     }
 
     private static String get_text(Block value_block, Map<String, Block> block_map) {
-        String text = "";
+        StringBuilder text = new StringBuilder();
         if (!CollectionUtils.isEmpty(value_block.getRelationships())) {
             for (Relationship relationship : value_block.getRelationships()) {
                 for (String id : relationship.getIds()) {
                     Block word = block_map.get(id);
                     if (word.getBlockType().equals("WORD")) {
-                        text += word.getText() + ' ';
+                        text.append(word.getText()).append(' ');
                     }
                     if (word.getBlockType().equals("SELECTION_ELEMENT")) {
                         if (word.getSelectionStatus().equals("SELECTED")) {
-                            text += "X ";
+                            text.append("X ");
                         }
                     }
                 }
             }
         }
-        return text;
+        return text.toString();
     }
 
     private static Block find_value_block(Block key_block, Map<String, Block> value_map) {
@@ -174,11 +174,11 @@ public class TextractUtil {
     }
 
     private static String print_kvs(Map<String, String> kvs) {
-        String x = "";
+        StringBuilder x = new StringBuilder();
         for (String s : kvs.keySet()) {
-            x += s + ":" + kvs.get(s) + "\n";
+            x.append(s).append(":").append(kvs.get(s)).append("\n");
         }
-        return x;
+        return x.toString();
     }
 
     public static TExtractDto extractData(List<Block> blocks) {
@@ -199,8 +199,8 @@ public class TextractUtil {
                 }
             }
         }
-        Map<String, String> keyValues = TextractUtil.extractKeyValues(blocksMap, keysMap, valuesMap);
-        List<MyTable> tableResult = TextractUtil.extractTables(blocksMap, tableBlocks);
+        Map<String, String> keyValues = extractKeyValues(blocksMap, keysMap, valuesMap);
+        List<MyTable> tableResult = extractTables(blocksMap, tableBlocks);
         return new TExtractDto(tableResult, keyValues);
     }
 

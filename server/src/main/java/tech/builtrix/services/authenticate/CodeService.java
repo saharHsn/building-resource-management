@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 import tech.builtrix.exceptions.TokenExpiredException;
 import tech.builtrix.exceptions.TokenNotExistException;
 import tech.builtrix.exceptions.TokenUsedException;
-import tech.builtrix.models.user.TokenPurpose;
 import tech.builtrix.models.user.User;
 import tech.builtrix.models.user.VerificationToken;
+import tech.builtrix.models.user.enums.TokenPurpose;
 import tech.builtrix.repositories.user.VerificationTokenRepository;
 
 import java.security.SecureRandom;

@@ -1,4 +1,4 @@
-package tech.builtrix.models.historical;
+package tech.builtrix.models.historical.enums;
 
 public enum Season {
     WINTER,

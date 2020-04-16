@@ -1,4 +1,4 @@
-package tech.builtrix.models.bill;
+package tech.builtrix.models.bill.enums;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverter;
 

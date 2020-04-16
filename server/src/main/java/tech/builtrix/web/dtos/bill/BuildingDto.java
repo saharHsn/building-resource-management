@@ -5,9 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 import tech.builtrix.models.building.Building;
-import tech.builtrix.models.building.BuildingAge;
-import tech.builtrix.models.building.BuildingUsage;
-import tech.builtrix.models.building.EnergyCertificate;
+import tech.builtrix.models.building.enums.BuildingAge;
+import tech.builtrix.models.building.enums.BuildingUsage;
+import tech.builtrix.models.building.enums.EnergyCertificate;
 import tech.builtrix.web.dtos.EntityDtoBase;
 import tech.builtrix.web.dtos.user.UserDto;
 

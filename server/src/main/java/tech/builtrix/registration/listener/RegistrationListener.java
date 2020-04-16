@@ -9,9 +9,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Component;
 import tech.builtrix.commons.EmailSender;
 import tech.builtrix.exceptions.session.InternalServerException;
-import tech.builtrix.models.user.TokenPurpose;
 import tech.builtrix.models.user.User;
 import tech.builtrix.models.user.VerificationToken;
+import tech.builtrix.models.user.enums.TokenPurpose;
 import tech.builtrix.registration.OnRegistrationCompleteEvent;
 import tech.builtrix.services.authenticate.CodeService;
 

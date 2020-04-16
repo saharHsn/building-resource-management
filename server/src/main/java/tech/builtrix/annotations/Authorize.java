@@ -1,6 +1,6 @@
 package tech.builtrix.annotations;
 
-import tech.builtrix.models.user.Role;
+import tech.builtrix.models.user.enums.Role;
 
 import java.lang.annotation.*;
 

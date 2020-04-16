@@ -1,10 +1,14 @@
 package tech.builtrix.configurations;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.validation.Validator;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -16,6 +20,8 @@ import tech.builtrix.context.ContextHandlerInterceptor;
 import tech.builtrix.context.RequestLimitInterceptor;
 import tech.builtrix.context.SecurityInterceptor;
 
+import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -38,6 +44,16 @@ public class WebConfig implements WebMvcConfigurer {
 	/*
 	 * @Autowired private RequestLogger requestLogger;
 	 */
+
+	@Override
+	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+		converters.add(new MappingJackson2HttpMessageConverter(
+				new Jackson2ObjectMapperBuilder()
+						.propertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+						.dateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
+						.build()));
+	}
+
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {

@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import tech.builtrix.base.EntityBase;
+import tech.builtrix.models.historical.enums.HourPeriod;
+import tech.builtrix.models.historical.enums.HourPeriodConverter;
 import tech.builtrix.web.dtos.historical.HistoricalEnergyConsumptionDto;
 
 import java.util.Date;
@@ -17,7 +19,7 @@ import java.util.Date;
 @NoArgsConstructor
 //@AllArgsConstructor
 @DynamoDBTable(tableName = "Historical_Energy_Consumption")
-public class HistoricalConsumption extends EntityBase<HistoricalConsumption> {
+public class HistoricalConsumption extends EntityBase<HistoricalConsumption> implements Comparable {
     @DynamoDBAttribute
     private String buildingId;
     @DynamoDBAttribute(attributeName = "reportDate", mappedBy = "N")
@@ -28,6 +30,8 @@ public class HistoricalConsumption extends EntityBase<HistoricalConsumption> {
     private float hour;
     @DynamoDBAttribute
     private float consumption;
+    @DynamoDBAttribute
+    private float cost;
     @DynamoDBTypeConverted(converter = HourPeriodConverter.class)
     @DynamoDBAttribute(attributeName = "HourPeriod")
     private HourPeriod hourPeriod = HourPeriod.UNKNOWN;
@@ -41,6 +45,16 @@ public class HistoricalConsumption extends EntityBase<HistoricalConsumption> {
         this.reportDate = consumptionDto.getDate();
         this.hour = consumptionDto.getHour();
         this.consumption = consumptionDto.getConsumption();
+        this.cost = consumptionDto.getCost();
         this.hourPeriod = consumptionDto.getHourPeriod();
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Date reportDate = ((HistoricalConsumption) o).getReportDate();
+        if (this.reportDate == null || reportDate == null) {
+            return 0;
+        }
+        return this.reportDate.compareTo(reportDate);
     }
 }

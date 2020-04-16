@@ -21,7 +21,7 @@ public class SwaggerConfig {
 	@Bean
 	public Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2).select()
-				.apis(RequestHandlerSelectors.basePackage("tech.builtrix.controller")).paths(PathSelectors.regex("/.*"))
+				.apis(RequestHandlerSelectors.basePackage("tech.builtrix.web.controller")).paths(PathSelectors.regex("/.*"))
 				.build().apiInfo(apiEndPointsInfo());
 	}
 

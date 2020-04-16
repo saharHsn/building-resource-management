@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import tech.builtrix.models.building.EnergyCertificate;
+import tech.builtrix.models.building.enums.EnergyCertificate;
 
 /**
  * Created By sahar at 12/9/19

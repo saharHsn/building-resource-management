@@ -8,7 +8,7 @@ import tech.builtrix.annotations.Authorize;
 import tech.builtrix.annotations.NoSession;
 import tech.builtrix.exceptions.session.PermissionDeniedException;
 import tech.builtrix.exceptions.session.SessionNotLoggedInException;
-import tech.builtrix.models.user.Role;
+import tech.builtrix.models.user.enums.Role;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

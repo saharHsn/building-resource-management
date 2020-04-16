@@ -4,6 +4,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedScanList;
 import com.amazonaws.services.dynamodbv2.datamodeling.marshallers.DateToStringMarshaller;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import lombok.extern.slf4j.Slf4j;
@@ -12,14 +13,13 @@ import tech.builtrix.base.GenericCrudServiceBase;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.historical.HistoricalConsumption;
 import tech.builtrix.repositories.bill.HistoricalConsumptionRepository;
+import tech.builtrix.services.report.DataType;
+import tech.builtrix.utils.DateUtil;
 import tech.builtrix.utils.ReportUtil;
 import tech.builtrix.web.dtos.historical.HistoricalEnergyConsumptionDto;
 import tech.builtrix.web.dtos.report.HistoricalConsumptionDto;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -46,31 +46,23 @@ public class HistoricalConsumptionService extends GenericCrudServiceBase<Histori
         return historicalConsumption;
     }
 
-    public List<HistoricalEnergyConsumptionDto> filterByDate(Date startDate, Date endDate) {
+    public List<HistoricalEnergyConsumptionDto> filterByDate(String buildingId, Date startDate, Date endDate) {
         AttributeValue start = DateToStringMarshaller.instance().marshall(startDate);
         AttributeValue end = DateToStringMarshaller.instance().marshall(endDate);
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
-                .withFilterExpression("reportDate >= :start and reportDate < :end")
+                .withFilterExpression("buildingId = :buildingId and reportDate >= :start and reportDate < :end")
+                .addExpressionAttributeValuesEntry(":buildingId", new AttributeValue(buildingId))
                 .addExpressionAttributeValuesEntry(":start", start)
                 .addExpressionAttributeValuesEntry(":end", end)
                 .withConsistentRead(true);
-        List<HistoricalConsumption> consumptions = mapper.scan(HistoricalConsumption.class, scanExpression);
-
-
-       /* Map<String, String> attributeNames = new HashMap<>();
-        attributeNames.put("#date", "date");
-
-        Map<String, AttributeValue> attributeValues = new HashMap<>();
-        attributeValues.put(":from", new AttributeValue().withN(startDate.toString()));
-        attributeValues.put(":to", new AttributeValue().withN(endDate.toString()));
-
-        DynamoDBScanExpression dynamoDBScanExpression = new DynamoDBScanExpression()
-                .withFilterExpression("#date >= :from and #date <= :to")
-                .withExpressionAttributeNames(attributeNames)
-                .withExpressionAttributeValues(attributeValues);*/
-
+        PaginatedScanList<HistoricalConsumption> scanResult = mapper.scan(HistoricalConsumption.class, scanExpression);
+        scanResult.loadAllResults();
+        List<HistoricalConsumption> historicalConsumptions = new ArrayList<>(scanResult.size());
+        // scanResult.sort(HistoricalConsumption::compareTo);
+        historicalConsumptions.addAll(scanResult);
+        Collections.sort(historicalConsumptions);
         List<HistoricalEnergyConsumptionDto> historicalConsumptionDtos = new ArrayList<>();
-        for (HistoricalConsumption historicalConsumption : consumptions) {
+        for (HistoricalConsumption historicalConsumption : historicalConsumptions) {
             historicalConsumptionDtos.add(new HistoricalEnergyConsumptionDto(historicalConsumption));
         }
         return historicalConsumptionDtos;
@@ -81,9 +73,17 @@ public class HistoricalConsumptionService extends GenericCrudServiceBase<Histori
 
     }
 
-    public HistoricalConsumptionDto getHistoricalConsumption(Date from, Date to) {
-        List<HistoricalEnergyConsumptionDto> historicalEnergyConsumptionDtos = filterByDate(from, to);
-        return ReportUtil.getHistoricalConsumption(historicalEnergyConsumptionDtos);
+    public HistoricalConsumptionDto getHistoricalConsumption(String buildingId, Integer year, Integer month, DataType dataType) {
+        //make date from first day of month and another for last day of month
+        String monthStr = month.toString().length() == 1 ? "0" + month : month.toString();
+        String dateStr = year + "-" + monthStr + "-" + "01T" + "00:00:00";
+        String pattern = "yyyy-MM-dd'T'HH:mm:ss";
+        //"2010-05-23T09:01:02"
+        Date from = DateUtil.getDateFromPattern(dateStr, pattern);
+        String dateStr1 = year + "-" + monthStr + "-" + DateUtil.getNumOfDaysOfMonth(year, month) + "T23:59:59";
+        Date to = DateUtil.getDateFromPattern(dateStr1, pattern);
+        List<HistoricalEnergyConsumptionDto> historicalEnergyConsumptionDtos = filterByDate(buildingId, from, to);
+        return ReportUtil.getHistoricalConsumption(historicalEnergyConsumptionDtos, dataType);
     }
 
     public List<HistoricalConsumption> findAll() {
@@ -91,7 +91,24 @@ public class HistoricalConsumptionService extends GenericCrudServiceBase<Histori
         return (List<HistoricalConsumption>) all;
     }
 
+    public static void main(String[] args) {
+        TimeZone timeZone = TimeZone.getTimeZone("Europe/Copenhagen");
+        Integer year = 2020;
+        Integer month = 3;
+        String monthStr = month.toString().length() == 1 ? "0" + month : month.toString();
+        String dateStr = year + "-" + monthStr + "-" + "01T" + "00:00:00";
+        String pattern = "yyyy-MM-dd'T'HH:mm:ss";
+        //"2010-05-23T09:01:02"
+        Date from = DateUtil.getDateFromPattern(dateStr, pattern);
+        String dateStr1 = year + "-" + monthStr + "-" + DateUtil.getNumOfDaysOfMonth(year, month) + "T23:59:59";
+        Date to = DateUtil.getDateFromPattern(dateStr1, pattern);
+        AttributeValue start = DateToStringMarshaller.instance().marshall(from);
+        AttributeValue end = DateToStringMarshaller.instance().marshall(to);
+        System.out.println();
+    }
+
     public void update(HistoricalConsumption consumption) {
         this.repository.save(consumption);
     }
+
 }

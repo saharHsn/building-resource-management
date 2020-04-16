@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import org.springframework.http.HttpStatus;
 import tech.builtrix.base.ErrorMessage;
 import tech.builtrix.exceptions.ExceptionBase;
-import tech.builtrix.models.user.Role;
+import tech.builtrix.models.user.enums.Role;
 
 import java.util.List;
 import java.util.stream.Collectors;

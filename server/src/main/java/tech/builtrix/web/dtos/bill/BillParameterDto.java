@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import tech.builtrix.models.bill.BillParameterInfo;
-import tech.builtrix.models.bill.ParameterType;
+import tech.builtrix.models.bill.enums.ParameterType;
 
 import java.util.Date;
 

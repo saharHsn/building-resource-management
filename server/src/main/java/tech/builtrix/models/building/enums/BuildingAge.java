@@ -1,4 +1,4 @@
-package tech.builtrix.models.building;
+package tech.builtrix.models.building.enums;
 
 /**
  * Created By sahar-hoseini at 20. Jun 2019 4:08 PM

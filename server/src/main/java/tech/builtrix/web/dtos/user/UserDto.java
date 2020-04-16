@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import tech.builtrix.models.user.Gender;
-import tech.builtrix.models.user.Role;
 import tech.builtrix.models.user.User;
+import tech.builtrix.models.user.enums.Gender;
+import tech.builtrix.models.user.enums.Role;
 import tech.builtrix.web.dtos.EntityDtoBase;
 
 import java.util.Date;

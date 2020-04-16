@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import tech.builtrix.base.EntityBase;
+import tech.builtrix.models.building.enums.*;
 import tech.builtrix.web.dtos.bill.BuildingDto;
 
 /**

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import tech.builtrix.base.EntityBase;
 import tech.builtrix.models.EnumConverter;
+import tech.builtrix.models.user.enums.TokenPurpose;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
