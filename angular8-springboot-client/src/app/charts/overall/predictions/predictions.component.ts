@@ -41,8 +41,10 @@ export class PredictionsComponent implements OnInit {
               type: 'spline',
              /*  backgroundColor: null,
               width: 330,
-              height: 300, */
-              grid: true
+              , */
+             
+              grid: false,
+              backgroundColor: null
             },
             title: {
               text: 'Predicted cost'
@@ -62,18 +64,18 @@ export class PredictionsComponent implements OnInit {
             ,
             yAxis: {
               title: {
-                text: '€'
+                text: ' €/m2'
               },
               labels: {
                 style: {
                   fontSize: '15px'
                 }
               },
-              categories: [0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500],
-              tickInterval: 500
+             /*  categories: [0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500],
+              tickInterval: 500 */
             },
             tooltip: {
-              valueSuffix: ' €'
+              valueSuffix: ' €/m2'
             },
             series: [{
               name: 'Saving',

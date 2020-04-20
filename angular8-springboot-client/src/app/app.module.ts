@@ -72,7 +72,9 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HeaderComponent} from './default/header/header.component';
 import {SidebarComponent} from './default/sidebar/sidebar.component';
 // tslint:disable-next-line:max-line-length
+
 import {
+  MatSelectModule,
   MatBadgeModule,
   MatButtonModule,
   MatIconModule,
@@ -97,11 +99,12 @@ import {MatMenuModule} from '@angular/material/menu';;
 import { PanelComponent } from './notification_panel/panel/panel.component';;
 import { DownloadComponent } from './building/download/download.component'
 ;
-import { DailyConsumptionComponent } from './charts/cost/daily-consumption/daily-consumption.component'
+import { DailyConsumptionComponent } from './charts/consumption/daily-consumption/daily-consumption.component'
 ;
 import { ResetPasswordComponent } from './login/reset-password/reset-password.component'
 ;
-import { BulletChartComponent } from './charts/report/bullet-chart/bullet-chart.component'//flex layout
+import { BulletChartComponent } from './charts/report/bullet-chart/bullet-chart.component';
+import { DailyElectricityComponent } from './charts/cost/daily-electricity/daily-electricity.component';
 
 
 
@@ -141,6 +144,7 @@ import { BulletChartComponent } from './charts/report/bullet-chart/bullet-chart.
     MatDatepickerModule,
     MatNativeDateModule,
     MatInputModule,
+    MatSelectModule
    
   ],
   declarations: [
@@ -201,11 +205,13 @@ import { BulletChartComponent } from './charts/report/bullet-chart/bullet-chart.
     EnergyEfficiencySymbolsComponent,
     ColorEnergyComponent ,
     DownloadComponent,
-    DailyConsumptionComponent
+    DailyConsumptionComponent,
+    DailyElectricityComponent
 ,
     ResetPasswordComponent
 ,
-    BulletChartComponent  
+    BulletChartComponent ,
+    DailyElectricityComponent 
    
      ],
   

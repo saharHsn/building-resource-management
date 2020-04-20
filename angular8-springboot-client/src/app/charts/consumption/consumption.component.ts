@@ -12,13 +12,7 @@ export class ConsumptionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._chartService.historicalConsumption().subscribe(res=>{
-     
-      console.log(res);
    
-
-
-    })
   }
 
   /*getChangedSeries($event) {

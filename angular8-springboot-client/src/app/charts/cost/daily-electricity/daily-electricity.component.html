@@ -1,0 +1,30 @@
+<div class="">
+  <div class=" text-right">
+ 
+    <mat-form-field class="mr-1">
+      <mat-label>Month</mat-label>
+      <mat-select [(ngModel)]="monthChart">
+        <mat-option *ngFor="let month of months" [value]="month.value">
+          {{month.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+      
+    <mat-form-field class="mr-2">
+      <mat-label>Year</mat-label>
+      <mat-select [(ngModel)]="yearChart">
+        <mat-option *ngFor="let year of years" [value]="year.value">
+          {{year.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button (click)="create()" aria-label="Example icon button with a home icon"color="primary"><mat-icon>search</mat-icon>Search</button>
+  </div>
+</div>
+
+<highcharts-chart
+[Highcharts]="highcharts"
+[options]="chartOptions"
+style="width: 100%; height: 300px; display: block;">
+</highcharts-chart>

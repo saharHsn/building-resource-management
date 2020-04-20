@@ -25,6 +25,8 @@ export class ElectricityConsumptionOverTimeComponent implements OnInit {
       .subscribe(
         data => {
           this.highcharts = Highcharts;
+
+          
           this.chartOptions = {
             chart: {
               type: 'column',
