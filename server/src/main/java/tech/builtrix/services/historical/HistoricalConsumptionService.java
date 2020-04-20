@@ -3,10 +3,10 @@ package tech.builtrix.services.historical;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
-import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedScanList;
 import com.amazonaws.services.dynamodbv2.datamodeling.marshallers.DateToStringMarshaller;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.ScanRequest;
+import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import tech.builtrix.base.GenericCrudServiceBase;
@@ -26,6 +26,7 @@ import java.util.*;
 public class HistoricalConsumptionService extends GenericCrudServiceBase<HistoricalConsumption, HistoricalConsumptionRepository> {
     private static AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
     static DynamoDBMapper mapper = new DynamoDBMapper(client);
+    AmazonDynamoDB amazonDynamoDB = AmazonDynamoDBClientBuilder.standard().build();
 
     protected HistoricalConsumptionService(HistoricalConsumptionRepository repository) {
         super(repository);
@@ -49,22 +50,33 @@ public class HistoricalConsumptionService extends GenericCrudServiceBase<Histori
     public List<HistoricalEnergyConsumptionDto> filterByDate(String buildingId, Date startDate, Date endDate) {
         AttributeValue start = DateToStringMarshaller.instance().marshall(startDate);
         AttributeValue end = DateToStringMarshaller.instance().marshall(endDate);
-        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression()
+
+        Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
+        expressionAttributeValues.put(":buildingId", new AttributeValue(buildingId));
+        expressionAttributeValues.put(":start", start);
+        expressionAttributeValues.put(":end", end);
+
+        ScanRequest scanRequest = new ScanRequest().withTableName("Historical_Energy_Consumption")
                 .withFilterExpression("buildingId = :buildingId and reportDate >= :start and reportDate < :end")
-                .addExpressionAttributeValuesEntry(":buildingId", new AttributeValue(buildingId))
-                .addExpressionAttributeValuesEntry(":start", start)
-                .addExpressionAttributeValuesEntry(":end", end)
-                .withConsistentRead(true);
-        PaginatedScanList<HistoricalConsumption> scanResult = mapper.scan(HistoricalConsumption.class, scanExpression);
-        scanResult.loadAllResults();
-        List<HistoricalConsumption> historicalConsumptions = new ArrayList<>(scanResult.size());
-        // scanResult.sort(HistoricalConsumption::compareTo);
-        historicalConsumptions.addAll(scanResult);
-        Collections.sort(historicalConsumptions);
+                .withExpressionAttributeValues(expressionAttributeValues);
+        Map<String, AttributeValue> lastKey;
+        List<Map<String, AttributeValue>> resultList = new ArrayList<>();
+        int row = 0;
+        long l = System.currentTimeMillis();
+        do {
+            ScanResult scanResult = amazonDynamoDB.scan(scanRequest);
+            List<Map<String, AttributeValue>> results = scanResult.getItems();
+            resultList.addAll(results);
+            lastKey = scanResult.getLastEvaluatedKey();
+            scanRequest.setExclusiveStartKey(lastKey);
+        } while (lastKey != null);
+        System.out.println("finished in : " + (System.currentTimeMillis() - l));
+
         List<HistoricalEnergyConsumptionDto> historicalConsumptionDtos = new ArrayList<>();
-        for (HistoricalConsumption historicalConsumption : historicalConsumptions) {
-            historicalConsumptionDtos.add(new HistoricalEnergyConsumptionDto(historicalConsumption));
+        for (Map<String, AttributeValue> stringAttributeValueMap : resultList) {
+            historicalConsumptionDtos.add(new HistoricalEnergyConsumptionDto(stringAttributeValueMap, buildingId));
         }
+        Collections.sort(historicalConsumptionDtos);
         return historicalConsumptionDtos;
     }
 

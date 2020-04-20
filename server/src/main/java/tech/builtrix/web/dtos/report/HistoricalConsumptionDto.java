@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class HistoricalConsumptionDto {
-    List<String> xValues;
+    List<Integer> xValues;
     List<Float> normalValues;
     List<Float> peakValues;
     List<Float> freeValues;
