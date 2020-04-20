@@ -50,6 +50,18 @@ public class HistoricalConsumption extends EntityBase<HistoricalConsumption> imp
     }
 
     @Override
+    public String toString() {
+        return "HistoricalConsumption{" +
+                "buildingId='" + buildingId + '\'' +
+                ", reportDate=" + reportDate +
+                ", hour=" + hour +
+                ", consumption=" + consumption +
+                ", cost=" + cost +
+                ", hourPeriod=" + hourPeriod +
+                '}';
+    }
+
+    @Override
     public int compareTo(Object o) {
         Date reportDate = ((HistoricalConsumption) o).getReportDate();
         if (this.reportDate == null || reportDate == null) {

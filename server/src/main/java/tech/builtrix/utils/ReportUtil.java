@@ -166,26 +166,28 @@ public class ReportUtil {
     }
 
     private static void extractHistoricalConsumptionValues(List<HistoricalEnergyConsumptionDto> dtoList,
-                                                           List<String> xValues,
+                                                           List<Integer> xValues,
                                                            DataType dataType,
                                                            List<Float> normalValues,
                                                            List<Float> peakValues,
                                                            List<Float> freeValues,
                                                            List<Float> offValues) {
         for (HistoricalEnergyConsumptionDto consumptionDto : dtoList) {
-            int dayOfMonth = DateUtil.getDayOfMonth(consumptionDto.getDate()) - 1;
+            int dayOfMonth = DateUtil.getDayOfMonth(consumptionDto.getDate());
+            // String dayOfMonthStr = String.valueOf(dayOfMonth);
+            int index = xValues.indexOf(dayOfMonth);
             float consumption = consumptionDto.getConsumption();
             float cost = consumptionDto.getCost();
             HourPeriod hourPeriod = consumptionDto.getHourPeriod();
             float value = dataType.equals(DataType.CONSUMPTION) ? consumption : cost;
             if (hourPeriod.equals(HourPeriod.Super_Vazio)) {
-                offValues.set(dayOfMonth, offValues.get(dayOfMonth) + value);
+                offValues.set(index, offValues.get(index) + value);
             } else if (hourPeriod.equals(HourPeriod.Vazio_Normal)) {
-                freeValues.set(dayOfMonth, freeValues.get(dayOfMonth) + value);
+                freeValues.set(index, freeValues.get(index) + value);
             } else if (hourPeriod.equals(HourPeriod.Ponta)) {
-                peakValues.set(dayOfMonth, peakValues.get(dayOfMonth) + value);
+                peakValues.set(index, peakValues.get(index) + value);
             } else if (hourPeriod.equals(HourPeriod.Cheia)) {
-                normalValues.set(dayOfMonth, normalValues.get(dayOfMonth) + value);
+                normalValues.set(index, normalValues.get(index) + value);
             }
         }
     }
@@ -357,15 +359,16 @@ public class ReportUtil {
 
     public static HistoricalConsumptionDto getHistoricalConsumption(List<HistoricalEnergyConsumptionDto> dtoList,
                                                                     DataType dataType) {
-        List<String> xValues = new ArrayList<>();
+        List<Integer> xValues = new ArrayList<>();
         HistoricalConsumptionDto dto = new HistoricalConsumptionDto();
 
         for (HistoricalEnergyConsumptionDto consumptionDto : dtoList) {
             Integer dayOfMonth = DateUtil.getDayOfMonth(consumptionDto.getDate());
-            if (!xValues.contains(dayOfMonth.toString())) {
-                xValues.add(String.valueOf(dayOfMonth));
+            if (!xValues.contains(dayOfMonth)) {
+                xValues.add(dayOfMonth);
             }
         }
+        Collections.sort(xValues);
         int numOfDaysOMonth = xValues.size();
         dto.setXValues(xValues);
         List<Float> normalValues = new ArrayList<>(Collections.nCopies(numOfDaysOMonth, 0f));

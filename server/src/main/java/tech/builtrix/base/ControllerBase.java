@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import tech.builtrix.commons.LocalizationService;
 import tech.builtrix.context.ContextHandlerInterceptor;
 import tech.builtrix.context.RequestContext;
@@ -12,9 +13,11 @@ import tech.builtrix.context.RequestContext;
 /**
  * Created By sahar-hoseini at 12. Jul 2019 5:53 PM
  **/
+
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @ApiImplicitParams({
 		@ApiImplicitParam(name = ContextHandlerInterceptor.HEADER_X_PLATFORM, paramType = "header", value = "Client Platform", allowableValues = "Ios, Android, Web"),
-		@ApiImplicitParam(name = ContextHandlerInterceptor.HEADER_X_VERSION, paramType = "header", value = "Client Application Version") })
+		@ApiImplicitParam(name = ContextHandlerInterceptor.HEADER_X_VERSION, paramType = "header", value = "Client Application Version")})
 public abstract class ControllerBase {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 

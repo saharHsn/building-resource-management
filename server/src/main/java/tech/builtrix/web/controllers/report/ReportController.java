@@ -7,12 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tech.builtrix.Response;
-import tech.builtrix.annotations.NoSession;
 import tech.builtrix.base.ControllerBase;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.user.User;
@@ -98,7 +94,7 @@ public class ReportController extends ControllerBase {
         return Response.ok(beScore);
     }
 
-    @ApiOperation(value = "Request for getting be score")
+    @ApiOperation(value = "Request for getting nationalMedian")
     @GetMapping(value = "/nationalMedian")
     public Response<Float> getNationalMedian() {
         Float nationalMedian;
@@ -114,7 +110,7 @@ public class ReportController extends ControllerBase {
         return Response.ok(propertyTarget);
     }
 
-    @ApiOperation(value = "Request for ")
+    @ApiOperation(value = "Request for costStack")
     @GetMapping(value = "/costStack")
     public Response<CostStackDto> getCostStackData() throws NotFoundException {
         CostStackDto costStackData;
@@ -130,7 +126,7 @@ public class ReportController extends ControllerBase {
         return Response.ok(costPieDto);
     }
 
-    @ApiOperation(value = "Request for ")
+    @ApiOperation(value = "Request for getConsumption")
     @GetMapping(value = "/consumption")
     public Response<ConsumptionDto> getConsumption() throws NotFoundException {
         ConsumptionDto consumption;
@@ -138,7 +134,7 @@ public class ReportController extends ControllerBase {
         return Response.ok(consumption);
     }
 
-    @ApiOperation(value = "Request for ")
+    @ApiOperation(value = "Request for consumptionDynamic")
     @GetMapping(value = "/consumptionDynamic")
     public Response<ConsumptionDynamicDto> getConsumptionDynamicData(@RequestParam(value = "year") int year,
                                                                      @RequestParam(value = "periodType") TimePeriodType periodType,
@@ -148,7 +144,7 @@ public class ReportController extends ControllerBase {
         return Response.ok(consumption);
     }
 
-    @ApiOperation(value = "Request for ")
+    @ApiOperation(value = "Request for normConsumptionWeather")
     @GetMapping(value = "/normConsumptionWeather")
     public Response<ConsumptionNormalWeatherDto> getConsumptionNormalWeather() throws NotFoundException {
         ConsumptionNormalWeatherDto consumption;
@@ -156,7 +152,7 @@ public class ReportController extends ControllerBase {
         return Response.ok(consumption);
     }
 
-    @ApiOperation(value = "Request for ")
+    @ApiOperation(value = "Request for normPerCapita")
     @GetMapping(value = "/normPerCapita")
     public Response<NormalPerCapitaDto> getNormalizedPerCapita() throws NotFoundException {
         NormalPerCapitaDto normalizedPerCapita;
@@ -164,7 +160,7 @@ public class ReportController extends ControllerBase {
         return Response.ok(normalizedPerCapita);
     }
 
-    @ApiOperation(value = "Request for ")
+    @ApiOperation(value = "Request for normVSEE")
     @GetMapping(value = "/normVSEE")
     public Response<NormalVsEEDto> getNormalizedVsEnergyEfficiency() {
         NormalVsEEDto dto;
@@ -172,7 +168,7 @@ public class ReportController extends ControllerBase {
         return Response.ok(dto);
     }
 
-    @ApiOperation(value = "Request for ")
+    @ApiOperation(value = "Request for predictedWeatherVSReal")
     @GetMapping(value = "/predictedWeatherVSReal")
     public Response<PredictedWeatherVsRealDto> getPredictedWeatherVSReal() throws NotFoundException {
         PredictedWeatherVsRealDto dto;
@@ -180,7 +176,7 @@ public class ReportController extends ControllerBase {
         return Response.ok(dto);
     }
 
-    @ApiOperation(value = "Request for ")
+    @ApiOperation(value = "Request for carbonPie")
     @GetMapping(value = "/carbonPie")
     public Response<CarbonPieDto> getCarbonPieData() throws NotFoundException {
         CarbonPieDto dto;
@@ -188,7 +184,7 @@ public class ReportController extends ControllerBase {
         return Response.ok(dto);
     }
 
-    @ApiOperation(value = "Request for ")
+    @ApiOperation(value = "Request for getCarbonSPLineData")
     @GetMapping(value = "/carbonSPLine")
     public Response<CarbonSPLineDto> getCarbonSPLineData() throws NotFoundException {
         CarbonSPLineDto dto;
@@ -196,7 +192,7 @@ public class ReportController extends ControllerBase {
         return Response.ok(dto);
     }
 
-    @ApiOperation(value = "Request for ")
+    @ApiOperation(value = "Request for energyConsumptionIndex")
     @GetMapping(value = "/energyConsumptionIndex")
     public Response<EnergyConsumptionIndexDto> getEnergyConsumptionIndex() throws NotFoundException {
         List<ReportIndex> indexes;
@@ -208,6 +204,7 @@ public class ReportController extends ControllerBase {
         return Response.ok(dto);
     }
 
+    @ApiOperation(value = "Request for excelCustomersReport")
     @GetMapping(value = "/download")
     public ResponseEntity<InputStreamResource> excelCustomersReport() throws IOException, NotFoundException {
 
@@ -220,31 +217,35 @@ public class ReportController extends ControllerBase {
                 .body(new InputStreamResource(in));
     }
 
-    @ApiOperation(value = "Request for ")
+    @CrossOrigin(origins = "*")
+    @ApiOperation(value = "Request for getHistoricalConsumption")
     @GetMapping(value = "/historicalConsumption")
-    public Response<HistoricalConsumptionDto> getHistoricalConsumption(@RequestParam(value = "year") Integer year,
-                                                                       @RequestParam(value = "month") Integer month) {
+    public Response<HistoricalConsumptionDto> getHistoricalConsumption(@RequestParam(value = "year") int year,
+                                                                       @RequestParam(value = "month") int month) {
+        logger.info("starting HistoricalConsumption");
+        long l = System.currentTimeMillis();
         HistoricalConsumptionDto dto = this.historicalConsumptionService.getHistoricalConsumption(getBuildingId(), year, month, DataType.CONSUMPTION);
+        logger.info("HistoricalConsumption finished in :" + (System.currentTimeMillis() - l));
         return Response.ok(dto);
     }
 
-    @ApiOperation(value = "Request for ")
+    @ApiOperation(value = "Request for getHistoricalCost")
     @GetMapping(value = "/historicalCost")
-    public Response<HistoricalConsumptionDto> getHistoricalCost(@RequestParam(value = "year") Integer year,
-                                                                @RequestParam(value = "month") Integer month) throws NotFoundException {
+    public Response<HistoricalConsumptionDto> getHistoricalCost(@RequestParam(value = "year") int year,
+                                                                @RequestParam(value = "month") int month) {
         HistoricalConsumptionDto dto = this.historicalConsumptionService.getHistoricalConsumption(getBuildingId(), year, month, DataType.COST);
         return Response.ok(dto);
     }
 
-    @ApiOperation(value = "Request for ")
-    @GetMapping(value = "/persistHistorical")
-    @NoSession
-    public Response<Void> persistHistoricalData(@RequestParam(value = "buildingId") String buildingId) throws IOException {
-        //make date from first day of month and another for last day of month
-        this.hourlyDailyService.parseExcelData(buildingId);
-        return Response.ok();
-    }
-
+    /*  @ApiOperation(value = "Request for ")
+      @GetMapping(value = "/persistHistorical")
+      @NoSession
+      public Response<Void> persistHistoricalData(@RequestParam(value = "buildingId") String buildingId) throws IOException {
+          //make date from first day of month and another for last day of month
+          this.hourlyDailyService.parseExcelData(buildingId);
+          return Response.ok();
+      }
+  */
     private String getBuildingId() {
         User user = this.requestContext.getUser();
         BuildingDto building = this.buildingService.findByOwner(user.getId());
