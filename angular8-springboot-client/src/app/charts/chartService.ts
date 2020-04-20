@@ -65,12 +65,8 @@ export class ChartService {
   }
 
 
-
-
-
-
   /* month:any,year:any */
-historicalConsumption(month:string,year:string): Observable<any>{
+  historicalConsumption(month:string,year:string): Observable<any>{
 
 
   let headers;
@@ -90,7 +86,26 @@ historicalConsumption(month:string,year:string): Observable<any>{
   );
 }
 
+  /*historicalConsumption(): Observable<any> {
+    const year = 2020;
+    const month = 3;
 
+    let headers;
+    // @ts-ignore
+    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
+    if (user && user.token) {
+      headers = new HttpHeaders()
+        .set('X-Session', user.token)
+        .set('Accept', '*!/!*')
+        .set('Content-Type', 'application/json');
+    }
+    const params = new HttpParams()
+      .set('year', String(year))
+      .set('month', String(month));
+    return this.http.get(`${this.HistoricalConsumptionUrl}`,
+      {headers, params}
+    );
+  }*/
 
 
 historicalCost(month:string,year:string): Observable<any>{
@@ -226,4 +241,7 @@ historicalCost(month:string,year:string): Observable<any>{
   getPropertyTarget(): Observable<any> {
     return this.callService(`${this.propertyTargetUrl}`);
   }
+
+
+
 }

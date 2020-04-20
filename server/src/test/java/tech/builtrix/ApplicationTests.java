@@ -55,7 +55,7 @@ public class ApplicationTests {
         savingDto = this.reportService.savingThisMonth(BUILDING_ID);
     }
 
-    private void prediction() {
+    private void prediction() throws NotFoundException {
         // prediction
         PredictionDto predictionDto = null;
         predictionDto = this.reportService.predict(BUILDING_ID);

@@ -114,7 +114,7 @@ public class BillParser {
 
 
         String address = "";
-        Float averageDailyConsumption = null;
+        float averageDailyConsumption = 0f;
 
         float totalMonthlyConsumption = 0;
         MyTable table = findTableWithRowHeaders(tablesResult, SUPER_VAZIO, SUPER_VAZIO2, CONSUMO_ESTIMADO);
@@ -195,7 +195,7 @@ public class BillParser {
         int year = DateUtil.getYear(fromDate);
         int month = DateUtil.getMonth(fromDate);
         float CO2_PRODUCTION_RATE = getCO2ProductionRate(year);
-        Float producedCo2 = totalMonthlyConsumption * CO2_PRODUCTION_RATE;
+        float producedCo2 = totalMonthlyConsumption * CO2_PRODUCTION_RATE;
 
         BillDto bill = new BillDto(buildingId,
                 electricityCounterCode,
@@ -263,8 +263,15 @@ public class BillParser {
 
     private Float getAmount(String e) {
         e = e.trim();
-        return Float.valueOf(e.replaceAll("\\.", "").replaceAll(",", ".").replaceAll("E", "").replaceAll("e", "")
-                .replaceAll(" ", "").replaceAll(":", "").replaceAll("%", ""));
+        return Float.valueOf(e.replaceAll("\\.", "")
+                .replaceAll(",", ".")
+                .replaceAll("E", "")
+                .replaceAll("e", "")
+                .replaceAll(" ", "")
+                .replaceAll(":", "")
+                .replaceAll("\\{", "")
+                .replaceAll("}", "")
+                .replaceAll("%", ""));
     }
 
     private Float getTotalConsumptionValue(Map<String, List<String>> column_value) {
@@ -272,13 +279,34 @@ public class BillParser {
         List<String> vazioNormalParams = column_value.get(VAZIO_NORMAL);
         List<String> pontaParams = column_value.get(PONTA);
         List<String> cheiaParams = column_value.get(CHEIA);
-        if (!CollectionUtils.isEmpty(superVazioParams) && !CollectionUtils.isEmpty(vazioNormalParams)
-                && !CollectionUtils.isEmpty(pontaParams) && !CollectionUtils.isEmpty(cheiaParams)) {
-            String superVazioStr = superVazioParams.get(2);
+        List<List<String>> similarSVRows = findAllSimilarRows(column_value, SUPER_VAZIO);
+        List<List<String>> similarVNRows = findAllSimilarRows(column_value, VAZIO_NORMAL);
+        List<List<String>> similarPRows = findAllSimilarRows(column_value, PONTA);
+        List<List<String>> similarCRows = findAllSimilarRows(column_value, CHEIA);
+        if (!CollectionUtils.isEmpty(similarSVRows) && !CollectionUtils.isEmpty(similarVNRows)
+                && !CollectionUtils.isEmpty(similarPRows) && !CollectionUtils.isEmpty(similarCRows)) {
+            float superVazio = 0f;
+            float vazioNormal = 0f;
+            float ponta = 0f;
+            float cheia = 0f;
+            for (List<String> similarRow : similarSVRows) {
+                superVazio += getAmount(similarRow.get(2));
+            }
+            for (List<String> similarRow : similarVNRows) {
+                vazioNormal += getAmount(similarRow.get(2));
+            }
+            for (List<String> similarRow : similarPRows) {
+                ponta += getAmount(similarRow.get(2));
+            }
+            for (List<String> similarRow : similarCRows) {
+                cheia += getAmount(similarRow.get(2));
+            }
+            return superVazio + vazioNormal + ponta + cheia;
+            /*String superVazioStr = superVazioParams.get(2);
             String vazioNormalStr = vazioNormalParams.get(2);
             String pontaStr = pontaParams.get(2);
             String cheiaStr = cheiaParams.get(2);
-            return getAmount(superVazioStr) + getAmount(vazioNormalStr) + getAmount(pontaStr) + getAmount(cheiaStr);
+            return getAmount(superVazioStr) + getAmount(vazioNormalStr) + getAmount(pontaStr) + getAmount(cheiaStr);*/
         } else {
             List<String> simpleConsumeEstimateParams = column_value.get(SIMPLES_CONSUMO_ESTIMADO);
             List<String> simpleConsumeFactorParams = column_value.get(SIMPLES_CONSUMO_JA_FACTURADO);

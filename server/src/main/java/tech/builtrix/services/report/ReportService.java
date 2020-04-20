@@ -58,11 +58,12 @@ public class ReportService {
         this.buildingService = buildingService;
     }
 
-    public PredictionDto predict(String buildingId) {
+    public PredictionDto predict(String buildingId) throws NotFoundException {
         // 1. find next three months
         // 2. find next three months data for previous years
         // 3. average n previous year data
         // 4. return each month data
+        BuildingDto building = this.buildingService.findById(buildingId);
         PredictionDto dto = new PredictionDto();
         PredictionData predictionData = new PredictionData(buildingId).invoke();
         Integer month1 = predictionData.getMonth1();
@@ -72,16 +73,21 @@ public class ReportService {
         Float month2Cost = predictionData.getMonth2Cost();
         Float month3Cost = predictionData.getMonth3Cost();
         List<Bill> bills = predictionData.getBills();
-        int billsSize = bills.size();
-        float m1Str = ReportUtil.roundDecimal(month1Cost);
-        float m2Str = ReportUtil.roundDecimal(month2Cost);
-        float m3Str = ReportUtil.roundDecimal(month3Cost);
-        dto.setCostYValues(Arrays.asList(m1Str, m2Str, m3Str));
-        dto.setSavingYValues(ReportUtil.getSavings(month1Cost, month2Cost, month3Cost, billsSize));
+        Float area = building.getArea();
+        float m1ca = month1Cost / area;
+        float m2ca = month2Cost / area;
+        float m3ca = month3Cost / area;
+
+        dto.setCostYValues(Arrays.asList(ReportUtil.roundDecimal(m1ca), ReportUtil.roundDecimal(m2ca), ReportUtil.roundDecimal(m3ca)));
+
+        dto.setSavingYValues(ReportUtil.getSavings(m1ca, m2ca, m3ca));
 
         int currentYear = DateUtil.getCurrentYear();
-        dto.setXValues(Arrays.asList(ReportUtil.getDateTitle(month1, currentYear),
-                ReportUtil.getDateTitle(month2, currentYear), ReportUtil.getDateTitle(month3, currentYear)));
+
+        dto.setXValues(Arrays.asList(
+                ReportUtil.getDateTitle(month1, currentYear),
+                ReportUtil.getDateTitle(month2, currentYear),
+                ReportUtil.getDateTitle(month3, currentYear)));
         return dto;
     }
 
@@ -214,6 +220,14 @@ public class ReportService {
     }
 
     public PredictedWeatherVsRealDto getPredictedWeatherVSReal(String buildingId) throws NotFoundException {
+        /*نه اونی که مشکی هست باید consumption باشه
+اونی که سبزه باید سیوینگ باشه*/
+        /*توی هر دوتا نمودار
+مشکی ها مصرف و هزینه پارسال هستن
+سبزها 5% مشکی ها*/
+        /*اگه یادتون باشه این پیشبینی ها مفهومش اینه که چه اتفاقی قراره بیفته برای مصرف و هزینه
+ما الان فرمول نداریم برای محاسبش
+عددهای پارسال این ماه ها رو میایم تقسیم بر مساحت ساختمان میکنیم و اینجا نشون میدیم*/
         BuildingDto building = this.buildingService.findById(buildingId);
         PredictedWeatherVsRealDto dto = new PredictedWeatherVsRealDto();
         PredictionData predictionData = new PredictionData(buildingId).invoke();
@@ -225,14 +239,17 @@ public class ReportService {
         Float month3Consumption = predictionData.getMonth3Consumption();
         List<Bill> bills = predictionData.getBills();
         int billsSize = bills.size();
-        dto.setConsumptionValues(Arrays.asList((month1Consumption / billsSize) / building.getArea(),
-                (month2Consumption / billsSize) / building.getArea(),
-                (month3Consumption / billsSize) / building.getArea()));
-
+        Float area = building.getArea();
+        float m1ca = month1Consumption / area;
+        float m2ca = month2Consumption / area;
+        float m3ca = month3Consumption / area;
+        dto.setConsumptionValues(Arrays.asList(m1ca, m2ca, m3ca));
         int currentYear = DateUtil.getCurrentYear();
         dto.setXValues(Arrays.asList(ReportUtil.getDateTitle(month1, currentYear),
                 ReportUtil.getDateTitle(month2, currentYear), ReportUtil.getDateTitle(month3, currentYear)));
-        dto.setBaseLineValues(Arrays.asList(10.62f, 9.85f, 9.38f));
+        dto.setBaseLineValues(Arrays.asList(ReportUtil.roundDecimal(m1ca * 0.05f),
+                ReportUtil.roundDecimal(m2ca * 0.05f),
+                ReportUtil.roundDecimal(m3ca * 0.05f)));
         return dto;
     }
 

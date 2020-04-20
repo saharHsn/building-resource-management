@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { ChartService } from '../chartService';
+import {ChartService} from '../chartService';
 
 @Component({
   selector: 'app-consumption',
@@ -8,7 +8,8 @@ import { ChartService } from '../chartService';
 })
 export class ConsumptionComponent implements OnInit {
   chartOptions;
-  constructor(private _chartService:ChartService) {
+
+  constructor(private _chartService: ChartService) {
   }
 
   ngOnInit() {

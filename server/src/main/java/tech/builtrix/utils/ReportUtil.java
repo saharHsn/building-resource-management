@@ -62,7 +62,7 @@ public class ReportUtil {
         return DateUtil.getMonth(month) + "-" + year;
     }
 
-    public static List<Float> getSavings(Float month1Cost, Float month2Cost, Float month3Cost, int billsSize) {
+    public static List<Float> getSavings(Float month1Cost, Float month2Cost, Float month3Cost) {
         Float savings1 = ReportUtil.roundDecimal(0.05f * (month1Cost));
         Float savings2 = ReportUtil.roundDecimal(0.05f * (month2Cost));
         Float savings3 = ReportUtil.roundDecimal(0.05f * (month3Cost));
