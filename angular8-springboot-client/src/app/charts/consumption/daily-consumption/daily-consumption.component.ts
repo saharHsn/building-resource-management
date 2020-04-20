@@ -76,7 +76,7 @@ export class DailyConsumptionComponent implements OnInit {
     }
     initChart(month,year){
         
-        this._chartService.historicalConsumption(month,year).pipe(first()).subscribe(
+        this._chartService.gethistoricalConsumption(month,year).pipe(first()).subscribe(
             data => {
                 this.highcharts = Highcharts;
                 this.chartOptions = {

@@ -33,7 +33,7 @@ export class ChartService {
   private readonly propertyTargetUrl;
   private readonly downloadUrl;
   private readonly HistoricalConsumptionUrl;
-  private readonly HistoricalConstUrl;
+  private readonly HistoricalCostUrl;
   headers: HttpHeaders;
 
   constructor(private http: HttpClient,
@@ -60,13 +60,13 @@ export class ChartService {
     this.propertyTargetUrl = this.baseUrl + '/propertyTarget';
     this.downloadUrl = this.baseUrl + '/download';
     this.HistoricalConsumptionUrl=this.baseUrl +'/historicalConsumption';
-    this.HistoricalConstUrl=this.baseUrl +'/historicalCost'
+    this.HistoricalCostUrl=this.baseUrl +'/historicalCost'
     this.headers = this.authService.getHeaders();
   }
 
 
   /* month:any,year:any */
-  historicalConsumption(month:string,year:string): Observable<any>{
+  gethistoricalConsumption(month:string,year:string): Observable<any>{
 
 
   let headers;
@@ -108,7 +108,7 @@ export class ChartService {
   }*/
 
 
-historicalCost(month:string,year:string): Observable<any>{
+gethistoricalCost(month:string,year:string): Observable<any>{
 
   let headers;
  // @ts-ignore
@@ -122,7 +122,7 @@ historicalCost(month:string,year:string): Observable<any>{
   const params = new HttpParams()
   .set('year',year )
   .set('month',month);
-  return this.http.get(`${this.historicalCost}`,
+  return this.http.get(`${this.HistoricalCostUrl}`,
   {headers, params}
   );
 }
