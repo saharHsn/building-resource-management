@@ -35,7 +35,7 @@ export class BeScoreComponent implements OnInit, OnDestroy {
     this.chartService.getBEScore()
       .subscribe(data => {
         console.log(data);
-        this.beScore = data.content;
+        this.beScore = Math.trunc(data.content);
         this.initChart(this.buildGauge());
       }, error => console.log(error));
   }
@@ -151,7 +151,15 @@ export class BeScoreComponent implements OnInit, OnDestroy {
     series: [{
       name: 'Speed',
       data: [this.beScore],
-     
+      dataLabels: {
+        format:
+            '<div style="text-align:center">' +
+            '<span style="font-size:30px">{y}</span><br/>' +
+            '<span style="font-size:12px;opacity:0.4">' +
+
+            '</span>' +
+            '</div>'
+    }
      
      
   }]
