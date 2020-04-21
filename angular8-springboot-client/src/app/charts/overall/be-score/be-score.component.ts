@@ -97,19 +97,7 @@ export class BeScoreComponent implements OnInit, OnDestroy {
         enabled: false
       },
       yAxis: {
-        /* min: 0,
-        max: 55,
-        minorTickInterval: 'auto',
-        minorTickWidth: 1,
-        minorTickLength: 10,
-        minorTickPosition: 'inside',
-        minorTickColor: '#666',
-
-        tickPixelInterval: 30,
-        tickWidth: 2,
-        tickPosition: 'inside',
-        tickLength: 10,
-        tickColor: '#666', */
+  
 
         min: 0,
         max: 100,
@@ -149,44 +137,30 @@ export class BeScoreComponent implements OnInit, OnDestroy {
           to: 200,
           color: 'rgba(58, 154, 252, 0.2)' // red
       }]
-      },
-      series: [{
-        name: 'Speed',
-        data: [this.beScore],
-        tooltip: {
-          valueSuffix: ' km/h'
+      },  
+        plotOptions: {
+        gauge: {
+            dataLabels: {
+                y: 10,
+                borderWidth: 0,
+                useHTML: true
+            }
         }
-      }]
+    },
+
+    series: [{
+      name: 'Speed',
+      data: [this.beScore],
+     
+     
+     
+  }]
+
+
     };
   }
 
-  private initChart(gaugeOptions: any) {
-    this.chart = Highcharts.chart('gauge-container',
-      Highcharts.merge(gaugeOptions, {},
-        // Add some life
-        // tslint:disable-next-line:only-arrow-functions
-        function (chart) {
-          if (!chart.renderer.forExport) {
-            // tslint:disable-next-line:only-arrow-functions
-            setInterval(function () {
-              // tslint:disable-next-line:one-variable-per-declaration prefer-const
-              let point = chart.series[0].points[0],
-                newVal,
-                // tslint:disable-next-line:prefer-const
-                inc = Math.round((Math.random() - 0.5) * 20);
-
-              newVal = point.y + inc;
-              if (newVal < 0 || newVal > 200) {
-                newVal = point.y - inc;
-              }
-
-              point.update(newVal);
-
-            }, 3000);
-          }
-        }
-        /**/
-      ))
-    ;
+   private initChart(gaugeOptions: any) {
+    this.chart = Highcharts.chart('gauge-container',gaugeOptions); 
   }
 }

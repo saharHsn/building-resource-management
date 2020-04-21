@@ -47,7 +47,7 @@ export class CostStackChartComponent implements OnInit {
               min: 0,
               // max: 5000,
               title: {
-                text: 'Euros',
+                text: 'Euro',
               },
               labels: {
                 overflow: 'justify'

@@ -64,7 +64,7 @@ export class PredictionsComponent implements OnInit {
             ,
             yAxis: {
               title: {
-                text: ' €/m2'
+                text: '€/m2'
               },
               labels: {
                 style: {

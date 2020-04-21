@@ -82,7 +82,7 @@ export class DailyElectricityComponent implements OnInit {
                 yAxis: {
                     min: 0,
                     title: {
-                        text: 'kWh'
+                        text: 'Euro'
                     },
                     stackLabels: {
                         enabled: false,
