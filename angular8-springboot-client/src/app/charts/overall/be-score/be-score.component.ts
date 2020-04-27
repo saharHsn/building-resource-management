@@ -60,34 +60,11 @@ export class BeScoreComponent implements OnInit, OnDestroy {
         size: '70%',
         startAngle: -150,
         endAngle: 150,
-        background: [{
-          backgroundColor: {
-            linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
-            stops: [
-              [0, '#FFF'],
-              [1, '#333']
-            ]
-          },
-          borderWidth: 0,
-          outerRadius: '109%'
-        }, {
-          backgroundColor: {
-            linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
-            stops: [
-              [0, '#333'],
-              [1, '#FFF']
-            ]
-          },
-          borderWidth: 1,
-          outerRadius: '107%'
-        }, {
-          // default background
-        }, {
-          backgroundColor: '#DDD',
-          borderWidth: 0,
-          outerRadius: '105%',
-          innerRadius: '103%'
-        }]
+        background: {
+          backgroundColor: 'rgba(0,0,0,0)',
+         
+         
+      }
       },
       credits: {
         enabled: false
@@ -124,19 +101,33 @@ export class BeScoreComponent implements OnInit, OnDestroy {
             bold: true
           }
         },
-        plotBands:  [{
+     /*    plotBands:  [{
           from: 0,
+          to: 40,
+          color: '#FF0000' // green
+      }, {
+          from: 40,
+          to: 80,
+          color: '#FFE600' // yellow
+      }, {
+          from: 80,
           to: 100,
-          color: 'rgba(58, 154, 252, 0.6)' // green
-      }, {
-          from: 100,
-          to: 160,
-          color: 'rgba(58, 154, 252, 0.4)' // yellow
-      }, {
-          from: 160,
-          to: 200,
-          color: 'rgba(58, 154, 252, 0.2)' // red
-      }]
+          color: '#55E27C' // red
+      }] */
+      plotBands: [{ // mark the weekend
+        color: {
+linearGradient: [0, 0, 300, 0],
+stops: [ 
+   [0.4, '#DF5353'],
+   [0.7, '#DDDF0D'],
+   [0.95, '#55BF3B'], // green
+  // yellow
+  // red
+]
+},
+      from: 0,
+      to: 100
+  }]
       },  
         plotOptions: {
         gauge: {
@@ -160,7 +151,7 @@ export class BeScoreComponent implements OnInit, OnDestroy {
             '</span>' +
             '</div>'
     }
-     
+   
      
   }]
 

@@ -64,7 +64,7 @@ export class PredictionsComponent implements OnInit {
             ,
             yAxis: {
               title: {
-                text: '€/m2'
+                text: '€'
               },
               labels: {
                 style: {
@@ -75,16 +75,16 @@ export class PredictionsComponent implements OnInit {
               tickInterval: 500 */
             },
             tooltip: {
-              valueSuffix: ' €/m2'
+              valueSuffix: ' €'
             },
-            series: [{
+            series: [/* {
               name: 'Saving',
               // data: [321, 420, 360]
               data: data.content.savingYValues,
               dashStyle: 'shortdot',
               color: ''
 
-            },
+            }, */
               {
                 name: 'Cost',
                 // data: [6135.5, 7130.4, 6234.3]

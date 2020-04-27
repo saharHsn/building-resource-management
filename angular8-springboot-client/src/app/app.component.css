@@ -1,5 +1,10 @@
-/* .cdk-global-scrollblock{
-    position: static !important;
-    width: initial !important;
-    overflow-y: inherit !important;
-  } */
+
+
+
+
+  @media screen and (min-width: 375px) {
+   
+    .side-bar{
+      display: none;
+    }
+  }

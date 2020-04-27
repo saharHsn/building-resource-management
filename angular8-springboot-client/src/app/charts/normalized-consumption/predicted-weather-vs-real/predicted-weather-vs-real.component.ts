@@ -56,7 +56,7 @@ export class PredictedWeatherVsRealComponent implements OnInit {
             ,
             yAxis: {
               title: {
-                text: 'kWh/m2'
+                text: 'kWh'
               },
               labels: {
                 style: {
@@ -65,15 +65,15 @@ export class PredictedWeatherVsRealComponent implements OnInit {
               },
             },
             tooltip: {
-              valueSuffix: 'kWh/m2'
+              valueSuffix: 'kWh'
             },
-            series: [{
+            series: [/* {
               name: 'Baseline',
               // data: [10.62, 9.85, 9.38],
               data: data.content.baseLineValues,
               color: '#4C5E81',
               dashStyle: 'shortdot',
-            },
+            }, */
               {
                 name: 'Consumption',
                 // data: [10.94, 11.21, 9.3],

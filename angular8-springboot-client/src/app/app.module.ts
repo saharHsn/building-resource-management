@@ -99,12 +99,14 @@ import {MatMenuModule} from '@angular/material/menu';;
 import { PanelComponent } from './notification_panel/panel/panel.component';;
 import { DownloadComponent } from './building/download/download.component'
 ;
+import {NgxPrintModule} from 'ngx-print';
 import { DailyConsumptionComponent } from './charts/consumption/daily-consumption/daily-consumption.component'
 ;
 import { ResetPasswordComponent } from './login/reset-password/reset-password.component'
 ;
 import { BulletChartComponent } from './charts/report/bullet-chart/bullet-chart.component';
-import { DailyElectricityComponent } from './charts/cost/daily-electricity/daily-electricity.component';
+import { DailyElectricityComponent } from './charts/cost/daily-electricity/daily-electricity.component';;
+import { RemoveUnderlinePipe } from './pipes/remove-underline.pipe'
 
 
 
@@ -144,7 +146,8 @@ import { DailyElectricityComponent } from './charts/cost/daily-electricity/daily
     MatDatepickerModule,
     MatNativeDateModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    NgxPrintModule
    
   ],
   declarations: [
@@ -211,7 +214,8 @@ import { DailyElectricityComponent } from './charts/cost/daily-electricity/daily
     ResetPasswordComponent
 ,
     BulletChartComponent ,
-    DailyElectricityComponent 
+    DailyElectricityComponent ,
+    RemoveUnderlinePipe
    
      ],
   

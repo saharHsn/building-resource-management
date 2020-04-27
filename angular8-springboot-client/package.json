@@ -42,6 +42,7 @@
     "ng2-file-upload": "latest",
     "ng2-tooltip-directive": "latest",
     "ngx-bootstrap": "latest",
+    "ngx-print": "^1.2.0-beta.4",
     "rxjs": "^6.4.0",
     "save": "^2.4.0",
     "tslib": "^1.9.0",
