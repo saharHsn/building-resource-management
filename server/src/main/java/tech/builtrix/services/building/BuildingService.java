@@ -13,6 +13,7 @@ import tech.builtrix.exceptions.BillParseException;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.building.Building;
 import tech.builtrix.models.building.enums.BillType;
+import tech.builtrix.models.user.User;
 import tech.builtrix.repositories.FileUploader;
 import tech.builtrix.repositories.building.BuildingRepository;
 import tech.builtrix.services.bill.BillParser;
@@ -207,5 +208,22 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
 		building.setUsage(buildingDto.getUsage());
 		building = this.repository.save(building);
 		return building;
+	}
+
+	public List<BuildingDto> getAllUserBuildings(User user) {
+		List<BuildingDto> buildingDtos = new ArrayList<>();
+		BuildingDto parentBuilding = findByOwner(user.getId());
+		if (parentBuilding != null) {
+			buildingDtos.add(parentBuilding);
+		}
+		List<User> childes = this.userService.findAllChildesOfUser(user);
+		for (User child : childes) {
+			// buildingDtos.addAll(getAllUserBuildings(child));
+			BuildingDto childBuilding = findByOwner(child.getId());
+			if (childBuilding != null) {
+				buildingDtos.add(childBuilding);
+			}
+		}
+		return buildingDtos;
 	}
 }

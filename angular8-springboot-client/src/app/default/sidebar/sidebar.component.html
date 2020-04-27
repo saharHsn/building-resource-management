@@ -1,16 +1,29 @@
 <mat-nav-list>
 
 
-   <h2 matSubheader>Menu</h2>
+  <h2 matSubheader>Menu</h2>
 
-   <a class="nav-link" href="#" routerLink="/overall"><mat-icon >home</mat-icon>Dashboard</a>
-   <a class="nav-link" href="#" routerLink="/cost"><mat-icon>description</mat-icon>Cost</a>
-   <a class="nav-link" href="#" routerLink="/consumption-component"><mat-icon>insert_chart</mat-icon>Consumption</a>
-   <a class="nav-link" routerLink="/normalized-consumption"><mat-icon>bar_chart</mat-icon>Prediction</a>
-   
+  <!--[routerLink]="['/login']"-->
+  <a class="nav-link" href="#" [routerLink]="['/overall']">
+    <mat-icon>home</mat-icon>
+    Dashboard</a>
+  <a class="nav-link" href="#" [routerLink]="['/cost']">
+    <mat-icon>description</mat-icon>
+    Cost</a>
+  <a class="nav-link" href="#" [routerLink]="['/consumption-component']">
+    <mat-icon>insert_chart</mat-icon>
+    Consumption</a>
+  <a class="nav-link" [routerLink]="['/normalized-consumption']">
+    <mat-icon>bar_chart</mat-icon>
+    Prediction</a>
+
   <!--  <a class="nav-link" routerLink="/carbon-footprint">Carbon Footprint</a> -->
-   <a class="nav-link" routerLink="/report"><mat-icon>pie_chart</mat-icon>Report</a>
- <!--   new route -->
-   <a class="nav-link" routerLink="/profile"><mat-icon>account_circle</mat-icon>Profile</a>
+  <a class="nav-link" [routerLink]="['/report']">
+    <mat-icon>pie_chart</mat-icon>
+    Report</a>
+  <!--   new route -->
+  <a class="nav-link" [routerLink]="['/profile']">
+    <mat-icon>account_circle</mat-icon>
+    Profile</a>
 
 </mat-nav-list>

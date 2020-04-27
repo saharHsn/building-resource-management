@@ -8,15 +8,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import tech.builtrix.configurations.DynamoDBConfig;
 import tech.builtrix.exceptions.NotFoundException;
+import tech.builtrix.models.user.enums.Role;
 import tech.builtrix.services.authenticate.CodeService;
 import tech.builtrix.services.bill.BillService;
 import tech.builtrix.services.historical.HourlyDailyService;
 import tech.builtrix.services.report.ReportService;
+import tech.builtrix.services.user.UserService;
 import tech.builtrix.web.dtos.bill.BillDto;
 import tech.builtrix.web.dtos.bill.ReportIndex;
 import tech.builtrix.web.dtos.report.*;
 import tech.builtrix.web.dtos.report.enums.DatePartType;
 import tech.builtrix.web.dtos.report.enums.TimePeriodType;
+import tech.builtrix.web.dtos.user.UserDto;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,6 +39,8 @@ public class ApplicationTests {
     @Autowired
     private CodeService codeService;
 
+    @Autowired
+    private UserService userService;
 
     private static String BUILDING_ID = "9d94dd4d-b789-4717-bdee-517a8de8ca6e";
     // private static String BUILDING_ID = "4f9e5bc1-471d-4b37-87ca-82f803898bb6";
@@ -48,6 +53,22 @@ public class ApplicationTests {
         prediction();
         savings();
 
+    }
+
+    @Test
+    public void createNewUser() throws NotFoundException {
+        UserDto user = new UserDto();
+        user.setEmailAddress("Super.User@cascaisambiente.pt");
+        user.setFirstName("Super User");
+        user.setLastName("Super User");
+        user.setPassword("e34a622d0ad5aa1ae104c0839d60f8955093bf31");
+        // user.setEnabled(true);
+        user.setRole(Role.Senior);
+        // user.setEmailConfirmed(true);
+        this.userService.save(user);
+
+
+        // return consumption;
     }
 
     private void savings() throws NotFoundException {
