@@ -8,5 +8,7 @@ import java.util.List;
 
 @EnableScan
 public interface UserRepository extends RepositoryBase<User> {
-	List<User> findByEmailAddress(String email);
+    List<User> findByEmailAddress(String email);
+
+    List<User> findUserByParent(String parentId);
 }

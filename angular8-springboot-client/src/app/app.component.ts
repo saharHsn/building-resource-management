@@ -11,6 +11,7 @@ import {Keepalive} from '@ng-idle/keepalive';
 import {AppService} from './_services/app.service';
 import {filter} from 'rxjs/operators';
 
+// tslint:disable-next-line:ban-types
 declare let gtag: Function;
 
 @Component({selector: 'app-root', templateUrl: 'app.component.html'})
@@ -28,7 +29,7 @@ export class AppComponent {
      this.authenticationService.logout();
      this.router.navigate(['/login']);
    }*/
-   //boolean to sidebar status
+  // boolean to sidebar status
   sideBarOpen = true;
   idleState = 'Not started.';
   timedOut = false;
@@ -60,7 +61,7 @@ export class AppComponent {
     idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
     idle.onIdleEnd.subscribe(() => {
       this.idleState = 'No longer idle.';
-      console.log(this.idleState);
+      // console.log(this.idleState);
       this.reset();
     });
 
@@ -68,20 +69,20 @@ export class AppComponent {
       this.childModal.hide();
       this.idleState = 'Timed out!';
       this.timedOut = true;
-      console.log(this.idleState);
+      // console.log(this.idleState);
       this.authenticationService.logout();
       this.router.navigate(['/login']);
     });
 
     idle.onIdleStart.subscribe(() => {
       this.idleState = 'You\'ve gone idle!';
-      console.log(this.idleState);
+      // console.log(this.idleState);
       this.childModal.show();
     });
 
     idle.onTimeoutWarning.subscribe((countdown) => {
       this.idleState = 'You will time out in ' + countdown + ' seconds!';
-      console.log(this.idleState);
+      // console.log(this.idleState);
     });
 
     // sets the ping interval to 15 seconds
@@ -125,14 +126,14 @@ export class AppComponent {
   }
 
   logout() {
-    this.childModal.hide();
+    // this.childModal.hide();
     this.appService.setUserLoggedIn(false);
     // this.router.navigate(['/']);
     this.authenticationService.logout();
     this.router.navigate(['/login']);
   }
 
-  //open and close sidebar
+  // open and close sidebar
   sideBarToggler() {
     this.sideBarOpen = !this.sideBarOpen;
   }

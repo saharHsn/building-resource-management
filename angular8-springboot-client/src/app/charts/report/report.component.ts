@@ -18,17 +18,14 @@ export class ReportComponent implements OnInit {
   ngOnInit() {
     this.chartService.getBEScore()
     .subscribe(data => {
-      console.log(data);
       this.beScore = data.content;
     }, error => console.log(error));
     this.chartService.getNationalMedian()
     .subscribe(data => {
-      console.log(data);
       this.nationalMedian = data.content;
     }, error => console.log(error));
     this.chartService.getPropertyTarget()
     .subscribe(data => {
-      console.log(data);
       this.propertyTarget = data.content;
     }, error => console.log(error));
   }

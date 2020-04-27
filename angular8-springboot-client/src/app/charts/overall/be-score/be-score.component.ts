@@ -34,7 +34,6 @@ export class BeScoreComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.chartService.getBEScore()
       .subscribe(data => {
-        console.log(data);
         this.beScore = Math.trunc(data.content);
         this.initChart(this.buildGauge());
       }, error => console.log(error));
@@ -74,7 +73,7 @@ export class BeScoreComponent implements OnInit, OnDestroy {
         enabled: false
       },
       yAxis: {
-  
+
 
         min: 0,
         max: 100,
@@ -131,13 +130,13 @@ stops: [
       },  
         plotOptions: {
         gauge: {
-            dataLabels: {
-                y: 10,
-                borderWidth: 0,
-                useHTML: true
-            }
+          dataLabels: {
+            y: 10,
+            borderWidth: 0,
+            useHTML: true
+          }
         }
-    },
+      },
 
     series: [{
       name: 'Speed',
@@ -160,6 +159,6 @@ stops: [
   }
 
    private initChart(gaugeOptions: any) {
-    this.chart = Highcharts.chart('gauge-container',gaugeOptions); 
+     this.chart = Highcharts.chart('gauge-container', gaugeOptions);
   }
 }

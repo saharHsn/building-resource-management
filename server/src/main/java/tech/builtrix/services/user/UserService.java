@@ -318,4 +318,7 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
 		return redirectUrl;
 	}
 
+	public List<User> findAllChildesOfUser(User user) {
+		return this.repository.findUserByParent(user.getId());
+	}
 }

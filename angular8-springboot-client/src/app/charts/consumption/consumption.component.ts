@@ -9,17 +9,16 @@ import {ChartService} from '../chartService';
 export class ConsumptionComponent implements OnInit {
   chartOptions;
 
+  // tslint:disable-next-line:variable-name
   constructor(private _chartService: ChartService) {
   }
 
   ngOnInit() {
-   
   }
 
   /*getChangedSeries($event) {
     this.dataSeries = $event;
     // this.dynamicChart.reloadChart(this.dataSeries, null);
-    console.log(this.dataSeries);
   }*/
 
   getChangedOptions($event) {
@@ -31,6 +30,5 @@ export class ConsumptionComponent implements OnInit {
   /* getChangedAxis($event) {
      this.xAxisCategories = $event;
      // this.dynamicChart.reloadChart(null, this.xAxisCategories);
-     console.log(this.xAxisCategories);
    }*/
 }

@@ -1,42 +1,45 @@
 <mat-toolbar color="secundary">
   <mat-toolbar-row>
     <div>
-       <button class="menu" mat-icon-button (click)="toggleSideBar()" >
+      <button class="menu" mat-icon-button (click)="toggleSideBar()">
         <mat-icon>menu</mat-icon>
-      </button> 
+      </button>
       <span><img class="logo" src="../../../assets/images/bafa157a-cb70-4b75-9b84-670ea85efb19.png" alt="logo"></span>
     </div>
 
     <span class="example-spacer"></span>
     <div>
-      
-
       <!-- notification btn -->
-      <button  mat-icon-button [matMenuTriggerFor]="menu" (click)="read()" >
-        <mat-icon  matBadge="{{listNotifications.length}}" matBadgeColor="warn">notifications</mat-icon>
+      <button mat-icon-button [matMenuTriggerFor]="menu" (click)="read()">
+        <mat-icon matBadge="{{listNotifications.length}}" matBadgeColor="warn">notifications</mat-icon>
       </button>
-      <mat-menu #menu="matMenu" xPosition="before"  class="notifications-menu">
-     <span>Notifications</span>
+      <mat-menu #menu="matMenu" xPosition="before" class="notifications-menu">
+        <span>Notifications</span>
         <button mat-menu-item *ngFor="let item of listNotifications">{{item.title}}</button>
-       <!--  link to notifications -->
-        <a mat-menu-item class="nav-link" href="#" routerLink="/notifications" style="color: #3A9AFC;"><mat-icon >more_horiz</mat-icon>Show all notifications</a>               
+        <!--  link to notifications -->
+        <a mat-menu-item class="nav-link" href="#" routerLink="/notifications" style="color: #3A9AFC;">
+          <mat-icon>more_horiz</mat-icon>
+          Show all notifications</a>
       </mat-menu>
       <!-- <button mat-icon-button>
         <mat-icon >settings</mat-icon>
       </button> -->
       <span id="saludo">Hi {{currentUser.firstName}}!</span>
 
-     <!--  menu to log out -->
+      <!--  menu to log out -->
       <span class="profile-card" mat-icon-button [matMenuTriggerFor]="menu2">
         <img id="profile" src="../../../assets/images/profile.jpg" alt="Soufiane FADIL">
       </span>
-      <mat-menu class="testing" #menu2="matMenu" xPosition="before"  >
+      <mat-menu class="testing" #menu2="matMenu" xPosition="before">
         <span></span>
-     <!--   link to profile  -->
-           <button mat-menu-item  [routerLink]="['/profile']" routerLinkActive="router-link-active" >View profile</button>
-     <!--       log out method -->
-           <button mat-menu-item  (click)="logout()"><mat-icon>exit_to_app</mat-icon>Logout</button>
-         </mat-menu>
+        <!--   link to profile  -->
+        <button mat-menu-item [routerLink]="['/profile']" routerLinkActive="router-link-active">View profile</button>
+        <!--       log out method -->
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          Logout
+        </button>
+      </mat-menu>
     </div>
   </mat-toolbar-row>
 </mat-toolbar>
