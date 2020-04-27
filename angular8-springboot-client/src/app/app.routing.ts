@@ -18,8 +18,8 @@ import {NormalizedConsumptionComponent} from './charts/normalized-consumption/no
 import {BuildingDetailsComponent} from './building/building-details/building-details.component';
 import {ReportComponent} from './charts/report/report.component';
 import {ProfileViewComponent} from './charts/profile/profile-view/profile-view.component';
-import { PanelComponent } from './notification_panel/panel/panel.component';
-import { ResetPasswordComponent } from './login/reset-password/reset-password.component';
+import {PanelComponent} from './notification_panel/panel/panel.component';
+import {ResetPasswordComponent} from './login/reset-password/reset-password.component';
 
 
 const routes: Routes = [
@@ -42,7 +42,7 @@ const routes: Routes = [
   {path: 'normalized-consumption', component: NormalizedConsumptionComponent},
   {path: 'report', component: ReportComponent},
   {path: 'profile', component: ProfileViewComponent},
- 
+
   // otherwise redirect to home
   {path: '**', redirectTo: ''}
 ];

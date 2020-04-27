@@ -1,16 +1,18 @@
-﻿<div *ngIf="currentUser">
-  <app-header (toggleSideBarForMe)="sideBarToggler($event)"></app-header>
-  <mat-sidenav-container class="example-container"  >
-    <mat-sidenav [opened]="sideBarOpen" mode="side" class="side" >
+﻿<div>
+  <div *ngIf="currentUser">
+    <app-header (toggleSideBarForMe)="sideBarToggler($event)"></app-header>
+  </div>
+
+  <mat-sidenav-container class="example-container">
+    <mat-sidenav [opened]="sideBarOpen" mode="side" class="side" *ngIf="currentUser">
       <app-sidebar></app-sidebar>
     </mat-sidenav>
     <router-outlet></router-outlet>
   </mat-sidenav-container>
 </div>
-<div *ngIf="!currentUser">
+<!--<div *ngIf="!currentUser">
   <router-outlet></router-outlet>
-</div>
-
+</div>-->
 
 <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1"
      role="dialog" aria-labelledby="dialog-child-name">
@@ -36,3 +38,36 @@
     </div>
   </div>
 </div>
+<!--
+<nav class="navbar navbar-expand-md navbar-light bg-info">
+  &lt;!&ndash;<a href="#" class="navbar-brand">Brand</a>&ndash;&gt;
+  <a class="navbar-brand" href="#">
+    <img src="../assets/images/bafa157a-cb70-4b75-9b84-670ea85efb19.png" style="width:170px;height: 100px">
+  </a>
+  <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarCollapse" *ngIf="currentUser">
+    <div class="navbar-nav">
+      <a class="nav-link" href="#" routerLink="/overall">Overall</a>
+      <a class="nav-link" href="#" routerLink="/cost">Cost</a>
+      <a class="nav-link" href="#" routerLink="/consumption-component">Consumption</a>
+      <a class="nav-link" routerLink="/normalized-consumption">Normalized Consumption</a>
+      <a class="nav-link" routerLink="/carbon-footprint">Carbon Footprint</a>
+      <a class="nav-link" routerLink="/report">Report</a>
+    </div>
+    <div class="navbar-nav ml-auto nav-flex-icons">
+      <a class="nav-item avatar dropdown nav-link" (click)="logout()">Logout</a>
+    </div>
+    &lt;!&ndash; <div class="navbar-nav ml-auto" *ngIf="!currentUser">
+       <a href="#" routerLink="/login" class="nav-item nav-link">Login</a>
+     </div>&ndash;&gt;
+  </div>
+</nav>
+-->
+
+
+
+
+

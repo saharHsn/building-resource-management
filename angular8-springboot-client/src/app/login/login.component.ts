@@ -13,7 +13,7 @@ export class LoginComponent implements OnInit {
   loading = false;
   submitted = false;
   returnUrl: string;
-  passwordPage=false;
+  passwordPage = false;
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,

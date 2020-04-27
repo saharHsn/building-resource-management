@@ -2,10 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ChartService} from '../chartService';
 import {CurrentMonthSummary} from './CurrentMonthSummary';
-import { User } from 'src/app/_models';
-import { Building } from 'src/app/building/model/building';
-import { BuildingService } from 'src/app/building/service/building.service';
-import { AuthenticationService } from 'src/app/_services';
+import {User} from 'src/app/_models';
+import {Building} from 'src/app/building/model/building';
+import {BuildingService} from 'src/app/building/service/building.service';
+import {AuthenticationService} from 'src/app/_services';
 
 @Component({
   templateUrl: './overall.component.html',
@@ -16,7 +16,7 @@ export class OverallComponent implements OnInit {
   currentMonthSummary: CurrentMonthSummary;
   currentUser: User;
   building: Building = new Building();
-//gauge variables
+// gauge variables
 beScore: number;
 nationalMedian: number;
 propertyTarget: number;
@@ -34,24 +34,21 @@ propertyTarget: number;
     this.reloadData();
     this.chartService.currentMonthSummary()
       .subscribe(data => {
-        console.log(data);
         this.currentMonthSummary.consumption = data.content.consumption;
         this.currentMonthSummary.cost = data.content.cost;
         this.currentMonthSummary.environmental = data.content.environmental;
-      
+
       }, error => console.log(error));
-      this.chartService.getNationalMedian()
+    this.chartService.getNationalMedian()
       .subscribe(data => {
-        console.log(data);
         this.nationalMedian = data.content;
       }, error => console.log(error));
-      this.chartService.getPropertyTarget()
+    this.chartService.getPropertyTarget()
       .subscribe(data => {
-        console.log(data);
         this.propertyTarget = data.content;
       }, error => console.log(error));
 
-      
+
   }
 
   list() {
