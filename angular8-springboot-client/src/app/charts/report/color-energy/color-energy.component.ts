@@ -9,7 +9,9 @@ import * as Highcharts from 'highcharts';
 export class ColorEnergyComponent implements OnInit {
   Highcharts = Highcharts;
   chartOptions = {};
-  constructor() { }
+
+  constructor() {
+  }
 
   ngOnInit() {
     this.chartOptions = {
@@ -36,7 +38,7 @@ export class ColorEnergyComponent implements OnInit {
       },
 
       xAxis: {
-        categories: ['A+',' A' ,' B','B-', ' C', ' D', ' E', ' F']
+        categories: ['A+', ' A', ' B', 'B-', ' C', ' D', ' E', ' F']
       }, yAxis: {
         min: 0,
         gridLineWidth: 0,
@@ -48,16 +50,16 @@ export class ColorEnergyComponent implements OnInit {
           enabled: false// default is true
         }
       },
-            credits: {
-    enabled: false
-            },
+      credits: {
+        enabled: false
+      },
 
       series: [{
-        colors: ['#059321','#55E27C','#E8FC6B','#EFFF1E', '#FADB00', '#FF8300', '#FF4800',
+        colors: ['#059321', '#55E27C', '#E8FC6B', '#EFFF1E', '#FADB00', '#FF8300', '#FF4800',
           '#F90000'],
         type: 'column',
         colorByPoint: true,
-        data: [1, 2, 3, 4, 5, 6,7,8],
+        data: [1, 2, 3, 4, 5, 6, 7, 8],
         showInLegend: false
       }]
     };

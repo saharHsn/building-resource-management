@@ -39,10 +39,9 @@ export class PredictionsComponent implements OnInit {
           this.chartOptions = {
             chart: {
               type: 'spline',
-             /*  backgroundColor: null,
-              width: 330,
-              , */
-             
+              /*  backgroundColor: null,
+               width: 330,
+               , */
               grid: false,
               backgroundColor: null
             },
@@ -71,8 +70,8 @@ export class PredictionsComponent implements OnInit {
                   fontSize: '15px'
                 }
               },
-             /*  categories: [0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500],
-              tickInterval: 500 */
+              /*  categories: [0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500],
+               tickInterval: 500 */
             },
             tooltip: {
               valueSuffix: ' €'

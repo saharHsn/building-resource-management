@@ -18,7 +18,7 @@ export class DailyElectricityComponent implements OnInit {
   highcharts = Highcharts;
   chartOptions: any;
   loading = true;
-  //select values
+  // select values
   months: Select[] = [
     {value: '1', viewValue: 'January'},
     {value: '2', viewValue: 'February'},
@@ -32,13 +32,13 @@ export class DailyElectricityComponent implements OnInit {
     {value: '10', viewValue: 'October'},
     {value: '11', viewValue: 'November'},
     {value: '12', viewValue: 'December'},
-  ]
+  ];
   years: Select[] = [
     {value: '2019', viewValue: '2019'},
     {value: '2020', viewValue: '2020'},
 
   ];
-  //data for chart
+  // data for chart
   yearChart: any;
   monthChart: any;
 
@@ -133,10 +133,7 @@ export class DailyElectricityComponent implements OnInit {
             color: '#36B37E'
           }
           ]
-
-
-        }
-
+        };
       },
       () => {
       });

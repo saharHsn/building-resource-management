@@ -38,7 +38,7 @@ export class AppComponent {
 
   public modalRef: BsModalRef;
 
-  @ViewChild('childModal', { static: false }) childModal: ModalDirective;
+  @ViewChild('childModal', {static: false}) childModal: ModalDirective;
 
   constructor(private idle: Idle, private keepalive: Keepalive,
               private router: Router, private modalService: BsModalService,
@@ -93,9 +93,9 @@ export class AppComponent {
     this.router.events
       .subscribe(event => {
         this.appService.setUserLoggedIn(!!this.authenticationService.currentUserValue);
-       /* if (!timeoutService.idleStarted) {
-          timeoutService.start();
-        }*/
+        /* if (!timeoutService.idleStarted) {
+           timeoutService.start();
+         }*/
       });
 
     this.appService.getUserLoggedIn().subscribe(userLoggedIn => {

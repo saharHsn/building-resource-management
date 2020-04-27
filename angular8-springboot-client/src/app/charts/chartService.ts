@@ -59,32 +59,32 @@ export class ChartService {
     this.nationalMedianUrl = this.baseUrl + '/nationalMedian';
     this.propertyTargetUrl = this.baseUrl + '/propertyTarget';
     this.downloadUrl = this.baseUrl + '/download';
-    this.HistoricalConsumptionUrl=this.baseUrl +'/historicalConsumption';
-    this.HistoricalCostUrl=this.baseUrl +'/historicalCost'
+    this.HistoricalConsumptionUrl = this.baseUrl + '/historicalConsumption';
+    this.HistoricalCostUrl = this.baseUrl + '/historicalCost';
     this.headers = this.authService.getHeaders();
   }
 
 
   /* month:any,year:any */
-  gethistoricalConsumption(month:string,year:string): Observable<any>{
+  gethistoricalConsumption(month: string, year: string): Observable<any> {
 
 
-  let headers;
- // @ts-ignore
-  const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-  if (user && user.token) {
-  headers = new HttpHeaders()
-  .set('X-Session', user.token)
-  .set('Accept', '*/*')
-  .set('Content-Type', 'application/json');
+    let headers;
+    // @ts-ignore
+    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
+    if (user && user.token) {
+      headers = new HttpHeaders()
+        .set('X-Session', user.token)
+        .set('Accept', '*/*')
+        .set('Content-Type', 'application/json');
+    }
+    const params = new HttpParams()
+      .set('year', year)
+      .set('month', month);
+    return this.http.get(`${this.HistoricalConsumptionUrl}`,
+      {headers, params}
+    );
   }
-  const params = new HttpParams()
-  .set('year',year )
-  .set('month',month);
-  return this.http.get(`${this.HistoricalConsumptionUrl}`,
-  {headers, params}
-  );
-}
 
   /*historicalConsumption(): Observable<any> {
     const year = 2020;
@@ -108,24 +108,24 @@ export class ChartService {
   }*/
 
 
-gethistoricalCost(month:string,year:string): Observable<any>{
+  gethistoricalCost(month: string, year: string): Observable<any> {
 
-  let headers;
- // @ts-ignore
-  const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-  if (user && user.token) {
-  headers = new HttpHeaders()
-  .set('X-Session', user.token)
-  .set('Accept', '*/*')
-  .set('Content-Type', 'application/json');
+    let headers;
+    // @ts-ignore
+    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
+    if (user && user.token) {
+      headers = new HttpHeaders()
+        .set('X-Session', user.token)
+        .set('Accept', '*/*')
+        .set('Content-Type', 'application/json');
+    }
+    const params = new HttpParams()
+      .set('year', year)
+      .set('month', month);
+    return this.http.get(`${this.HistoricalCostUrl}`,
+      {headers, params}
+    );
   }
-  const params = new HttpParams()
-  .set('year',year )
-  .set('month',month);
-  return this.http.get(`${this.HistoricalCostUrl}`,
-  {headers, params}
-  );
-}
 
 
   predict(): Observable<any> {
@@ -241,7 +241,4 @@ gethistoricalCost(month:string,year:string): Observable<any>{
   getPropertyTarget(): Observable<any> {
     return this.callService(`${this.propertyTargetUrl}`);
   }
-
-
-
 }

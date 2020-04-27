@@ -22,7 +22,7 @@ export class DailyConsumptionComponent implements OnInit {
   year: number;
   month: number;
 
-  //options of data
+  // options of data
   months: Select[] = [
     {value: '1', viewValue: 'January'},
     {value: '2', viewValue: 'February'},
@@ -36,30 +36,25 @@ export class DailyConsumptionComponent implements OnInit {
     {value: '10', viewValue: 'October'},
     {value: '11', viewValue: 'November'},
     {value: '12', viewValue: 'December'},
-  ]
+  ];
   years: Select[] = [
     {value: '2019', viewValue: '2019'},
     {value: '2020', viewValue: '2020'},
 
   ];
 
-  //data for chart
+  // data for chart
   yearChart: any;
   monthChart: any;
 
   constructor(private _chartService: ChartService) {
-
     this.yearChart = String(new Date().getFullYear().toString());  /* new Date().getFullYear().toString(); */
     this.monthChart = String(new Date().getMonth());
 
   }
 
   ngOnInit() {
-
-
     this.initChart(this.monthChart, this.yearChart);
-
-
   }
 
 
@@ -144,10 +139,7 @@ export class DailyConsumptionComponent implements OnInit {
             color: '#36B37E'
           }
           ]
-
-
-        }
-
+        };
       },
       () => {
       });
