@@ -74,9 +74,12 @@ public class ReportService {
         Float month3Cost = predictionData.getMonth3Cost();
         List<Bill> bills = predictionData.getBills();
         Float area = building.getArea();
-        float m1ca = month1Cost / area;
-        float m2ca = month2Cost / area;
-        float m3ca = month3Cost / area;
+        // float m1ca = month1Cost / area;
+        float m1ca = month1Cost;
+        // float m2ca = month2Cost / area;
+        float m2ca = month2Cost;
+        // float m3ca = month3Cost / area;
+        float m3ca = month3Cost;
 
         dto.setCostYValues(Arrays.asList(ReportUtil.roundDecimal(m1ca), ReportUtil.roundDecimal(m2ca), ReportUtil.roundDecimal(m3ca)));
 
