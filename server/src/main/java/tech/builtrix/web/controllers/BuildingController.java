@@ -73,14 +73,21 @@ public class BuildingController extends ControllerBase {
     @ApiOperation(value = "Request for updating a specific building")
     @PutMapping
     public Response<BuildingDto> update(@ModelAttribute BuildingDto building)
-            throws ParseException, BillParseException, NotFoundException {
-        return Response.ok(this.buildingService.update(building));
-    }
+			throws ParseException, BillParseException, NotFoundException {
+		return Response.ok(this.buildingService.update(building));
+	}
 
-    @ApiOperation(value = "Request for deleting a specific building")
-    @DeleteMapping(value = "{buildingId}")
+	@ApiOperation(value = "Request for deleting a specific building")
+	@DeleteMapping(value = "{buildingId}")
 	public Response<Void> deleteBuildingDetails(@PathVariable("buildingId") String buildingId) {
 		buildingService.delete(buildingId);
+		return Response.ok();
+	}
+
+	@ApiOperation(value = "Request for deleting a specific building")
+	@DeleteMapping(value = "/deleteAllBills/{buildingId}")
+	public Response<Void> deleteAllBills(@PathVariable("buildingId") String buildingId) throws NotFoundException {
+		buildingService.deleteAllBills(buildingId);
 		return Response.ok();
 	}
 

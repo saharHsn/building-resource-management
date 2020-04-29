@@ -18,8 +18,9 @@
         <td>{{building.age}}</td>
         <td>{{building.postalAddress}}</td>
         <td>{{building.usage}}</td>
-        <td><!--<button (click)="deleteBuilding(building.id)" class="btn btn-danger">Delete</button>
-              <button (click)="buildingDetails(building.id)" class="btn btn-info" style="margin-left: 10px">Details</button>
+        <td><!--
+        <button (click)="deleteBuilding(building.id)" class="btn btn-danger">Delete</button>
+        <button (click)="buildingDetails(building.id)" class="btn btn-info" style="margin-left: 10px">Details</button>
           -->
           <a [routerLink]="['/building-details-admin',building.id]">Details</a>
         </td>

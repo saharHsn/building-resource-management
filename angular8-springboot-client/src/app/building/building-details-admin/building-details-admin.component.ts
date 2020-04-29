@@ -3,9 +3,9 @@ import {ActivatedRoute} from '@angular/router';
 import {Building} from '../model/building';
 import {BuildingService} from '../service/building.service';
 import {BuildingAge} from '../enums/buildingAge';
-import {User} from "../../user/user";
-import {BehaviorSubject} from "rxjs";
-import {AlertService} from "../../_services";
+import {User} from '../../user/user';
+import {BehaviorSubject} from 'rxjs';
+import {AlertService} from '../../_services';
 
 @Component({
   selector: 'app-building-details-admin',
@@ -46,7 +46,7 @@ export class BuildingDetailsAdminComponent implements OnInit {
     }, error => console.log(error));
   }
 
-  save() {
+  /*save() {
     this.building.owner = this.user;
     this.building.electricityBill = this.electricityFile;
     this.loading = true;
@@ -105,6 +105,24 @@ export class BuildingDetailsAdminComponent implements OnInit {
 
   removeSelectedFile(file: HTMLInputElement) {
     file.value = '';
+  }*/
+
+  deleteBuildingBills() {
+    this.buildingService.deleteAllBills(this.building.id).subscribe(
+      data => {
+        this.alertService.success('All bills of this building were deleted  successfully.', true);
+      },
+      error => {
+        let errorMessage = 'Unknown Error (Internal server error!)';
+        if (error.status === 400 && error.error.errors) {
+          errorMessage = error.error.errors;
+        } else {
+          errorMessage = error.error.message;
+        }
+        this.alertService.error(errorMessage);
+        this.loading = false;
+      });
+    ;
   }
 }
 

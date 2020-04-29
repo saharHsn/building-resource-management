@@ -94,4 +94,11 @@ export class BuildingService {
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
     return this.getBuildingByOwner(user);
   }
+
+  deleteAllBills(buildingId: string) {
+    const headers = this.authService.getHeaders();
+    const params = new HttpParams()
+      .set('buildingId', buildingId);
+    return this.http.delete(`${this.baseUrl + '/deleteAllBills'}`, {headers, params});
+  }
 }
