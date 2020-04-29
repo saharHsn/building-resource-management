@@ -27,6 +27,7 @@ import java.util.*;
 /**
  * Created By sahar at 12/11/19
  */
+
 public class ReportUtil {
     public static Float getRankOfBuilding(EnergyCertificate energyCertificate) {
         // TODO read values from National DB
@@ -145,7 +146,7 @@ public class ReportUtil {
 
 
             if (billDto.getRDPeakHours() != null) {
-                powerInPeakValues.add(ReportUtil.roundDecimal(billDto.getRDPeakHours().getTotalTariffCost()));
+                powerInPeakValues.add(ReportUtil.roundDecimal(billDto.getRDPowerPeakHours().getTotalTariffCost()));
             }
 
             float aeNormal = 0f;
@@ -206,8 +207,9 @@ public class ReportUtil {
         List<Float> peakValues = new ArrayList<>(Collections.nCopies(12, 0f));
         List<Float> freeValues = new ArrayList<>(Collections.nCopies(12, 0f));
         List<Float> offValues = new ArrayList<>(Collections.nCopies(12, 0f));
-        extractConsumptionValues(dtoList, contractedPowerValues, powerInPeakValues, reactivePowerValues, normalValues,
-                peakValues, freeValues, offValues, isConsumption);
+        extractConsumptionValues(dtoList,
+                contractedPowerValues, powerInPeakValues, reactivePowerValues,
+                normalValues, peakValues, freeValues, offValues);
         dto.setContractedPowerValues(contractedPowerValues);
         dto.setFreeValues(freeValues);
         dto.setOffValues(offValues);
@@ -218,51 +220,44 @@ public class ReportUtil {
         return dto;
     }
 
-    private static void extractConsumptionValues(List<BillDto> dtoList, List<Float> contractedPowerValues,
-                                                 List<Float> powerInPeakValues, List<Float> reactivePowerValues, List<Float> normalValues,
-                                                 List<Float> peakValues, List<Float> freeValues, List<Float> offValues, boolean isConsumption) {
+    private static void extractConsumptionValues(List<BillDto> dtoList,
+                                                 List<Float> contractedPowerValues, List<Float> powerInPeakValues, List<Float> reactivePowerValues,
+                                                 List<Float> normalValues, List<Float> peakValues, List<Float> freeValues, List<Float> offValues) {
         for (BillDto billDto : dtoList) {
             if (!billDtoIsNull(billDto)) {
                 int index = billDto.getFromMonth() - 1;
                 if (billDto.getRDContractedPower() != null) {
-                    float consumption = isConsumption ? billDto.getRDContractedPower().getConsumption()
-                            : billDto.getRDContractedPower().getTotalTariffCost();
+                    float consumption = billDto.getRDContractedPower().getConsumption();
                     float e = ReportUtil.roundDecimal(consumption);
                     contractedPowerValues.set(index, e);
                 }
                 if (billDto.getAEFreeHours() != null) {
-                    float consumption = isConsumption ? billDto.getAEFreeHours().getConsumption()
-                            : billDto.getAEFreeHours().getTotalTariffCost();
+                    float consumption = billDto.getAEFreeHours().getConsumption();
                     float e = ReportUtil.roundDecimal(consumption);
                     freeValues.set(index, e);
                 }
                 if (billDto.getAEOffHours() != null) {
-                    float consumption = isConsumption ? billDto.getAEOffHours().getConsumption()
-                            : billDto.getAEOffHours().getTotalTariffCost();
+                    float consumption = billDto.getAEOffHours().getConsumption();
                     float e = ReportUtil.roundDecimal(consumption);
                     offValues.set(index, e);
                 }
                 if (billDto.getAEPeakHours() != null) {
-                    float consumption = isConsumption ? billDto.getAEPeakHours().getConsumption()
-                            : billDto.getAEPeakHours().getTotalTariffCost();
+                    float consumption = billDto.getAEPeakHours().getConsumption();
                     float e = ReportUtil.roundDecimal(consumption);
                     peakValues.set(index, e);
                 }
                 if (billDto.getRDPeakHours() != null) {
-                    float consumption = isConsumption ? billDto.getRDPeakHours().getConsumption()
-                            : billDto.getRDPeakHours().getTotalTariffCost();
+                    float consumption = billDto.getRDPeakHours().getConsumption();
                     float e = ReportUtil.roundDecimal(consumption);
                     powerInPeakValues.set(index, e);
                 }
                 if (billDto.getAENormalHours() != null) {
-                    float consumption = isConsumption ? billDto.getAENormalHours().getConsumption()
-                            : billDto.getAENormalHours().getTotalTariffCost();
+                    float consumption = billDto.getAENormalHours().getConsumption();
                     float e = ReportUtil.roundDecimal(consumption);
                     normalValues.set(index, e);
                 }
                 if (billDto.getRDReactivePower() != null) {
-                    float consumption = isConsumption ? billDto.getRDReactivePower().getConsumption()
-                            : billDto.getRDReactivePower().getTotalTariffCost();
+                    float consumption = billDto.getRDReactivePower().getConsumption();
                     float e = ReportUtil.roundDecimal(consumption);
                     reactivePowerValues.set(index, e);
                 }

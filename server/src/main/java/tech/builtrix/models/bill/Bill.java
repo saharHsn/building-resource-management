@@ -86,6 +86,8 @@ public class Bill extends EntityBase<Bill> {
     // Cost of Power demand in peak hour : Potência Horas de Ponta
     @DynamoDBAttribute(attributeName = "rDPeakHours")
     private String rDPeakHours;
+    @DynamoDBAttribute(attributeName = "rDPowerPeakHours")
+    private String rDPowerPeakHours;
     // cost of contracted power: Potencia Contratada
     @DynamoDBAttribute(attributeName = "rDContractedPower")
     private String rDContractedPower;

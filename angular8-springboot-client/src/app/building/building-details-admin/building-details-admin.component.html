@@ -1,0 +1,55 @@
+<mat-card class="card-1">
+  <mat-card-content>
+    <div class="container">
+      <div class="row">
+        <div class="col-6">
+          <h5>Property Function:</h5>
+          <h5>Gross Floor Area(m2):</h5>
+          <h5>Built in:</h5>
+          <h5>Date of Report Generation:</h5>
+          <h5>Property Address:</h5>
+        </div>
+        <div class="col-6 fixed">
+          <h5>{{building.usage | removeUnderline}}</h5>
+          <h5>{{building.area}} </h5>
+          <h5>{{building.postalAddress}}</h5>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12">
+          Please upload Electricity bill(s) in zip or pdf format
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label class="col-md-2 control-lable" for="electricityFile">Electricity Bill</label>
+          <div class="col-md-6">
+            <input #electricityFile type="file" id="electricityFile" name="electricityFile" accept=".zip, .pdf"
+                   placeholder="Upload Electricity Bills Here."
+                   (change)="selectFile($event, 'Electricity')">
+            <button [hidden]="!electricityFile.value" class="remove-button"
+                    (click)="removeSelectedFile(electricityFile)">X
+            </button>
+
+            <br/>
+            <span class="btn-group">
+
+      <button type="submit" [disabled]="loading || (!electricityFile )"
+              class="btn btn-success" (click)="finishFunction()">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Upload
+        <i class="fa fa-arrow-right"></i>
+      </button>
+    </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<!--<div class="container">
+
+</div>-->

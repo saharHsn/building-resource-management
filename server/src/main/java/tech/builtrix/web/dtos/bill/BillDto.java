@@ -38,6 +38,8 @@ public class BillDto {
     private BillParameterDto rDNormalHours;
     private BillParameterDto aEPeakHours;
     private BillParameterDto rDPeakHours;
+    // private BillParameterDto aEPowerPeakHours;
+    private BillParameterDto rDPowerPeakHours;
     private BillParameterDto rDContractedPower;
     private BillParameterDto rDReactivePower;
 

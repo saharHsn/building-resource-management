@@ -123,7 +123,7 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
 	// ------------------------------------ private methods
 	// ---------------------------------------
 
-	private void parseBillFiles(FileUploaded fileUploaded) throws BillParseException, ParseException {
+	public void parseBillFiles(FileUploaded fileUploaded) throws BillParseException, ParseException {
 		for (String fileName : fileUploaded.getFileNames()) {
 			if (fileName.endsWith(".pdf")) {
 				logger.info("Trying to parse file : " + fileName + " for building: " + fileUploaded.getBuildingId());
@@ -151,7 +151,7 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
 		}
 	}
 
-	private List<String> uploadFile(String bucketName, String pathName, MultipartFile file, BillType billType) {
+	public List<String> uploadFile(String bucketName, String pathName, MultipartFile file, BillType billType) {
 		if (file != null) {
 			Map<String, String> metaData = new HashMap<>();
 			metaData.put("BillType", billType.name());
@@ -225,5 +225,14 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
 			}
 		}
 		return buildingDtos;
+	}
+
+	public List<BuildingDto> getAll() {
+		List<BuildingDto> buildingDtoList = new ArrayList<>();
+		Iterable<Building> buildings = this.repository.findAll();
+		for (Building building : buildings) {
+			buildingDtoList.add(new BuildingDto(building));
+		}
+		return buildingDtoList;
 	}
 }

@@ -67,8 +67,6 @@ export class ChartService {
 
   /* month:any,year:any */
   gethistoricalConsumption(month: string, year: string): Observable<any> {
-
-
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;

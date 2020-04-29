@@ -71,44 +71,45 @@ import {GoogleAnalyticsService} from './_analytics/google-analytics.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HeaderComponent} from './default/header/header.component';
 import {SidebarComponent} from './default/sidebar/sidebar.component';
-// tslint:disable-next-line:max-line-length
-
 import {
-  MatSelectModule,
   MatBadgeModule,
   MatButtonModule,
+  MatDatepickerModule,
+  MatFormFieldModule,
   MatIconModule,
+  MatInputModule,
   MatListModule,
+  MatNativeDateModule,
+  MatSelectModule,
   MatSidenavModule,
   MatTabsModule,
-  MatToolbarModule,
-  MatFormFieldModule,
-  MatDatepickerModule,
-    MatNativeDateModule,
-    MatInputModule
+  MatToolbarModule
 } from '@angular/material';
 import {MatCardModule} from '@angular/material/card';
 import {ColorEnergyComponent} from './charts/report/color-energy/color-energy.component';
 import {GeneralComponent} from './charts/profile/general/general.component';
 import {BuildingComponent} from './charts/profile/building/building.component';
 import {ProfileViewComponent} from './charts/profile/profile-view/profile-view.component';
-import {MatBottomSheetModule} from '@angular/material/bottom-sheet'; 
-import {MatDialogModule} from '@angular/material/dialog';;
-import { NotificationsComponent } from './default/notifications/notifications.component'
-import {MatMenuModule} from '@angular/material/menu';;
-import { PanelComponent } from './notification_panel/panel/panel.component';;
-import { DownloadComponent } from './building/download/download.component'
-;
+import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
+import {MatDialogModule} from '@angular/material/dialog';
+import {NotificationsComponent} from './default/notifications/notifications.component'
+import {MatMenuModule} from '@angular/material/menu';
+import {PanelComponent} from './notification_panel/panel/panel.component';
+import {DownloadComponent} from './building/download/download.component';
 import {NgxPrintModule} from 'ngx-print';
-import { DailyConsumptionComponent } from './charts/consumption/daily-consumption/daily-consumption.component'
-;
-import { ResetPasswordComponent } from './login/reset-password/reset-password.component'
-;
-import { BulletChartComponent } from './charts/report/bullet-chart/bullet-chart.component';
-import { DailyElectricityComponent } from './charts/cost/daily-electricity/daily-electricity.component';;
-import { RemoveUnderlinePipe } from './pipes/remove-underline.pipe'
+import {DailyConsumptionComponent} from './charts/consumption/daily-consumption/daily-consumption.component';
+import {ResetPasswordComponent} from './login/reset-password/reset-password.component';
+import {BulletChartComponent} from './charts/report/bullet-chart/bullet-chart.component';
+import {DailyElectricityComponent} from './charts/cost/daily-electricity/daily-electricity.component';
+import {RemoveUnderlinePipe} from './pipes/remove-underline.pipe';
+import {AdminPanelComponent} from './admin/admin-panel/admin-panel.component';
+import {BuildingDetailsAdminComponent} from './building/building-details-admin/building-details-admin.component'
+// tslint:disable-next-line:max-line-length
+  ;
 
-
+;
+;
+;
 
 // import { AngularWeatherWidgetModule, WeatherApiName } from 'angular-weather-widget';
 // import {HighchartsChartComponent} from 'highcharts-angular';
@@ -148,7 +149,7 @@ import { RemoveUnderlinePipe } from './pipes/remove-underline.pipe'
     MatInputModule,
     MatSelectModule,
     NgxPrintModule
-   
+
   ],
   declarations: [
     AppComponent,
@@ -206,20 +207,22 @@ import { RemoveUnderlinePipe } from './pipes/remove-underline.pipe'
     EnergyEfficiencyComponent,
     CarbonComponent,
     EnergyEfficiencySymbolsComponent,
-    ColorEnergyComponent ,
+    ColorEnergyComponent,
     DownloadComponent,
     DailyConsumptionComponent,
     DailyElectricityComponent
-,
+    ,
     ResetPasswordComponent
-,
-    BulletChartComponent ,
-    DailyElectricityComponent ,
+    ,
+    BulletChartComponent,
+    DailyElectricityComponent,
     RemoveUnderlinePipe
-   
-     ],
-  
-entryComponents:[ NotificationsComponent,DownloadComponent]
+    ,
+    AdminPanelComponent,
+    BuildingDetailsAdminComponent
+  ],
+
+  entryComponents:[ NotificationsComponent,DownloadComponent]
 
 ,
 

@@ -23,26 +23,27 @@ import java.util.Map;
 @NoArgsConstructor
 public class BuildingDto extends EntityDtoBase {
 	private String name;
-	private String postalAddress;
-	protected String postalCode;
-	private BuildingUsage usage = BuildingUsage.UNKNOWN;
-	private EnergyCertificate energyCertificate = EnergyCertificate.Others;
-	private BuildingAge age = BuildingAge.UNKNOWN;
-	private Float area;
-	private Integer numberOfPeople;
-	private MultipartFile gasBill;
-	private MultipartFile waterBill;
-	private MultipartFile electricityBill;
-	private UserDto owner;
-	private Map<Date, Integer> numOfPeopleMap;
+    private String postalAddress;
+    protected String postalCode;
+    private BuildingUsage usage = BuildingUsage.UNKNOWN;
+    private EnergyCertificate energyCertificate = EnergyCertificate.Others;
+    private BuildingAge age = BuildingAge.UNKNOWN;
+    private Float area;
+    private Integer numberOfPeople;
+    private MultipartFile gasBill;
+    private MultipartFile waterBill;
+    private MultipartFile electricityBill;
+    private String hourlyFile;
+    private UserDto owner;
+    private Map<Date, Integer> numOfPeopleMap;
 
-	public BuildingDto(Building building) {
-		this.name = building.getName();
-		this.usage = building.getUsage();
-		this.id = building.getId();
-		this.postalAddress = building.getPostalAddress();
-		this.postalCode = building.getPostalCode();
-		this.energyCertificate = building.getEnergyCertificate();
+    public BuildingDto(Building building) {
+        this.name = building.getName();
+        this.usage = building.getUsage();
+        this.id = building.getId();
+        this.postalAddress = building.getPostalAddress();
+        this.postalCode = building.getPostalCode();
+        this.energyCertificate = building.getEnergyCertificate();
 		this.age = building.getAge();
 		this.area = building.getArea();
 		this.numberOfPeople = building.getNumberOfPeople();

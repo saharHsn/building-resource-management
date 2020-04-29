@@ -243,9 +243,9 @@ public class ReportService {
         List<Bill> bills = predictionData.getBills();
         int billsSize = bills.size();
         Float area = building.getArea();
-        float m1ca = month1Consumption / area;
-        float m2ca = month2Consumption / area;
-        float m3ca = month3Consumption / area;
+        float m1ca = month1Consumption;
+        float m2ca = month2Consumption;
+        float m3ca = month3Consumption;
         dto.setConsumptionValues(Arrays.asList(m1ca, m2ca, m3ca));
         int currentYear = DateUtil.getCurrentYear();
         dto.setXValues(Arrays.asList(ReportUtil.getDateTitle(month1, currentYear),

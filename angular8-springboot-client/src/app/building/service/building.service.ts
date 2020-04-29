@@ -72,14 +72,14 @@ export class BuildingService {
     return formData;
   }
 
-  deleteBuilding(id: number): Observable<any> {
+  deleteBuilding(id: string): Observable<any> {
     const headers = this.authService.getHeaders();
     return this.http.delete(`${this.baseUrl}/${id}`, {responseType: 'text', headers});
   }
 
   getBuildingsList(): Observable<any> {
     const headers = this.authService.getHeaders();
-    return this.http.get(`${this.baseUrl}`, {headers});
+    return this.http.get(`${this.baseUrl + '/allBuildings'}`, {headers});
   }
 
   getBuildingByOwner(user: User): Observable<any> {

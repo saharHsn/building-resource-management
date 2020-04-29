@@ -95,6 +95,11 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         if (rdPeakHoursDto != null) {
             rdPeakHours = this.billParameterService.save(rdPeakHoursDto);
         }
+        BillParameterDto rdPowerPeakHoursDto = billDto.getRDPowerPeakHours();
+        BillParameterInfo rdPowerPeakHours = null;
+        if (rdPowerPeakHoursDto != null) {
+            rdPowerPeakHours = this.billParameterService.save(rdPowerPeakHoursDto);
+        }
         BillParameterDto rdReactivePowerDto = billDto.getRDReactivePower();
         BillParameterInfo rdReactivePower = null;
         if (rdReactivePowerDto != null) {
@@ -417,6 +422,13 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
             BillParameterInfo rdPeak = this.billParameterService.findById(bill.getRDPeakHours());
             rdPeakDto = new BillParameterDto(rdPeak);
         }
+
+        BillParameterDto rdPowerPeakDto = null;
+        if (!StringUtils.isEmpty(bill.getRDPowerPeakHours())) {
+            BillParameterInfo rdPowerPeak = this.billParameterService.findById(bill.getRDPowerPeakHours());
+            rdPowerPeakDto = new BillParameterDto(rdPowerPeak);
+        }
+
         BillParameterDto rdFreeDto = null;
         if (!StringUtils.isEmpty(bill.getRDFreeHours())) {
             BillParameterInfo rdFree = this.billParameterService.findById(bill.getRDFreeHours());
@@ -461,6 +473,7 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
                 rdNormalDto,
                 aePeakDto,
                 rdPeakDto,
+                rdPowerPeakDto,
                 rdContractedDto,
                 rdReactiveDto
         );
