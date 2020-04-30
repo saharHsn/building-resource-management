@@ -53,7 +53,8 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
     public BuildingDto findById(String id) throws NotFoundException {
         Optional<Building> optionalBuilding = this.repository.findById(id);
         if (optionalBuilding.isPresent()) {
-            return new BuildingDto(optionalBuilding.get());
+            Building building = optionalBuilding.get();
+            return new BuildingDto(building, this.userService.findById(building.getOwner()));
         } else {
             throw new NotFoundException("building", "id", id);
         }
@@ -239,7 +240,10 @@ public class BuildingService extends GenericCrudServiceBase<Building, BuildingRe
 
     public void deleteAllBills(String buildingId) throws NotFoundException {
         List<Bill> buildingsBills = this.billService.findByBuilding(buildingId);
+        logger.info("number of building's bills : " + buildingsBills.size());
+        int i = 1;
         for (Bill bill : buildingsBills) {
+            logger.info("trying to delete bill number : " + i++);
             billService.delete(bill.getId());
         }
     }

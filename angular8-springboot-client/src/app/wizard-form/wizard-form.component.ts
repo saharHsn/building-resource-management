@@ -1,6 +1,6 @@
 import {BehaviorSubject} from 'rxjs';
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Building} from '../building/model/building';
 import {BuildingService} from '../building/service/building.service';
 import {UserService} from '../user/user.service';
@@ -17,12 +17,14 @@ import {AlertService, AuthenticationService} from '../_services';
 export class WizardFormComponent implements OnInit {
   currentUser: User;
 
-  constructor(private buildingService: BuildingService,
-              private userService: UserService,
-              private fileService: BuildingFileService,
-              private authService: AuthenticationService,
-              private alertService: AlertService,
-              private router: Router) {
+  constructor(
+    private route: ActivatedRoute,
+    private buildingService: BuildingService,
+    private userService: UserService,
+    private fileService: BuildingFileService,
+    private authService: AuthenticationService,
+    private alertService: AlertService,
+    private router: Router) {
     this.currentUser = this.authService.currentUserValue;
   }
 
@@ -63,13 +65,25 @@ export class WizardFormComponent implements OnInit {
   }
 
   reloadData() {
-    this.user = this.authService.currentUserValue;
-    this.buildingService.getBuildingByOwner(this.user).subscribe(
+    const buildingId = this.route.snapshot.params.buildingId;
+    this.buildingService.getBuilding(buildingId).subscribe(
       data => {
         this.building = data.content ? data.content : this.building;
+        this.user = this.building.owner;
       },
       error => console.log(error)
     );
+    /* this.userService.getUser(userId).subscribe(
+       data => {
+         this.user = data.content;
+         this.buildingService.getBuildingByOwner(this.user).subscribe(
+           data1 => {
+             this.building = data1.content ? data1.content : this.building;
+           },
+           error => console.log(error)
+         );
+       }
+     );*/
   }
 
   onSubmit() {

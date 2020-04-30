@@ -97,8 +97,6 @@ export class BuildingService {
 
   deleteAllBills(buildingId: string) {
     const headers = this.authService.getHeaders();
-    const params = new HttpParams()
-      .set('buildingId', buildingId);
-    return this.http.delete(`${this.baseUrl + '/deleteAllBills'}`, {headers, params});
+    return this.http.delete(`${this.baseUrl + '/deleteAllBills/' + buildingId}`, {headers});
   }
 }

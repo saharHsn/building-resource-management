@@ -8,6 +8,7 @@ import tech.builtrix.models.building.Building;
 import tech.builtrix.models.building.enums.BuildingAge;
 import tech.builtrix.models.building.enums.BuildingUsage;
 import tech.builtrix.models.building.enums.EnergyCertificate;
+import tech.builtrix.models.user.User;
 import tech.builtrix.web.dtos.EntityDtoBase;
 import tech.builtrix.web.dtos.user.UserDto;
 
@@ -37,6 +38,22 @@ public class BuildingDto extends EntityDtoBase {
     private UserDto owner;
     private Map<Date, Integer> numOfPeopleMap;
 
+    public BuildingDto(Building building, User user) {
+        this.name = building.getName();
+        this.usage = building.getUsage();
+        this.id = building.getId();
+        this.postalAddress = building.getPostalAddress();
+        this.postalCode = building.getPostalCode();
+        this.energyCertificate = building.getEnergyCertificate();
+        this.age = building.getAge();
+        this.area = building.getArea();
+        this.numberOfPeople = building.getNumberOfPeople();
+        this.owner = new UserDto(user);
+        // this.owner = building.();
+        // this.numOfPeopleMap = building.getNumOfPeopleMap();
+
+    }
+
     public BuildingDto(Building building) {
         this.name = building.getName();
         this.usage = building.getUsage();
@@ -44,12 +61,8 @@ public class BuildingDto extends EntityDtoBase {
         this.postalAddress = building.getPostalAddress();
         this.postalCode = building.getPostalCode();
         this.energyCertificate = building.getEnergyCertificate();
-		this.age = building.getAge();
-		this.area = building.getArea();
-		this.numberOfPeople = building.getNumberOfPeople();
-		// this.owner = new UserDto(building.getOwner());
-		// this.owner = building.();
-		// this.numOfPeopleMap = building.getNumOfPeopleMap();
-
-	}
+        this.age = building.getAge();
+        this.area = building.getArea();
+        this.numberOfPeople = building.getNumberOfPeople();
+    }
 }

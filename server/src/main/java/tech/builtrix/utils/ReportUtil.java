@@ -85,13 +85,13 @@ public class ReportUtil {
 
     public static CostStackDto getCostStackDto(List<BillDto> dtoList) {
         CostStackDto dto = new CostStackDto();
-        List<Float> contractedPowerValues = new ArrayList<>();
-        List<Float> powerInPeakValues = new ArrayList<>();
-        List<Float> reactivePowerValues = new ArrayList<>();
-        List<Float> normalValues = new ArrayList<>();
-        List<Float> peakValues = new ArrayList<>();
-        List<Float> freeValues = new ArrayList<>();
-        List<Float> offValues = new ArrayList<>();
+        List<Float> contractedPowerValues = new ArrayList<>(Collections.nCopies(12, 0f));
+        List<Float> powerInPeakValues = new ArrayList<>(Collections.nCopies(12, 0f));
+        List<Float> reactivePowerValues = new ArrayList<>(Collections.nCopies(12, 0f));
+        List<Float> normalValues = new ArrayList<>(Collections.nCopies(12, 0f));
+        List<Float> peakValues = new ArrayList<>(Collections.nCopies(12, 0f));
+        List<Float> freeValues = new ArrayList<>(Collections.nCopies(12, 0f));
+        List<Float> offValues = new ArrayList<>(Collections.nCopies(12, 0f));
         extractCostValues(dtoList, contractedPowerValues, powerInPeakValues, reactivePowerValues, normalValues,
                 peakValues, freeValues, offValues);
         dto.setContractedPowerValues(contractedPowerValues);
@@ -107,61 +107,63 @@ public class ReportUtil {
         return dto;
     }
 
-    private static void extractCostValues(List<BillDto> dtoList, List<Float> contractedPowerValues,
-                                          List<Float> powerInPeakValues, List<Float> reactivePowerValues, List<Float> normalValues,
-                                          List<Float> peakValues, List<Float> freeValues, List<Float> offValues) {
+    private static void extractCostValues(List<BillDto> dtoList,
+                                          List<Float> contractedPowerValues, List<Float> powerInPeakValues, List<Float> reactivePowerValues,
+                                          List<Float> normalValues, List<Float> peakValues, List<Float> freeValues, List<Float> offValues) {
         for (BillDto billDto : dtoList) {
-            if (billDto.getRDContractedPower() != null) {
-                contractedPowerValues.add(ReportUtil.roundDecimal(billDto.getRDContractedPower().getTotalTariffCost()));
-            }
-            float aeFree = 0f;
-            float rdFree = 0f;
-            if (billDto.getAEFreeHours() != null) {
-                aeFree = billDto.getAEFreeHours().getTotalTariffCost();
-            }
-            if (billDto.getRDFreeHours() != null) {
-                rdFree = billDto.getRDFreeHours().getTotalTariffCost();
-            }
-            freeValues.add(ReportUtil.roundDecimal(aeFree + rdFree));
+            if (!billDtoIsNull(billDto)) {
+                int index = billDto.getFromMonth() - 1;
+                if (billDto.getRDContractedPower() != null) {
+                    float e = ReportUtil.roundDecimal(billDto.getRDContractedPower().getTotalTariffCost());
+                    contractedPowerValues.set(index, e);
+                }
+                float aeFree = 0f;
+                float rdFree = 0f;
+                if (billDto.getAEFreeHours() != null) {
+                    aeFree = billDto.getAEFreeHours().getTotalTariffCost();
+                }
+                if (billDto.getRDFreeHours() != null) {
+                    rdFree = billDto.getRDFreeHours().getTotalTariffCost();
+                }
+                freeValues.set(index, ReportUtil.roundDecimal(aeFree + rdFree));
 
-            float aeOff = 0f;
-            float rdOff = 0f;
-            if (billDto.getAEOffHours() != null) {
-                aeOff = billDto.getAEOffHours().getTotalTariffCost();
-            }
-            if (billDto.getRDOffHours() != null) {
-                rdOff = billDto.getRDOffHours().getTotalTariffCost();
-            }
-            offValues.add(ReportUtil.roundDecimal(aeOff + rdOff));
+                float aeOff = 0f;
+                float rdOff = 0f;
+                if (billDto.getAEOffHours() != null) {
+                    aeOff = billDto.getAEOffHours().getTotalTariffCost();
+                }
+                if (billDto.getRDOffHours() != null) {
+                    rdOff = billDto.getRDOffHours().getTotalTariffCost();
+                }
+                offValues.set(index, ReportUtil.roundDecimal(aeOff + rdOff));
 
-            float aePeak = 0f;
-            float rdPeak = 0f;
-            if (billDto.getAEPeakHours() != null) {
-                aePeak = billDto.getAEPeakHours().getTotalTariffCost();
-            }
-            if (billDto.getRDPeakHours() != null) {
-                rdPeak = billDto.getRDPeakHours().getTotalTariffCost();
-            }
-            peakValues.add(ReportUtil.roundDecimal(aePeak + rdPeak));
+                float aePeak = 0f;
+                float rdPeak = 0f;
+                if (billDto.getAEPeakHours() != null) {
+                    aePeak = billDto.getAEPeakHours().getTotalTariffCost();
+                }
+                if (billDto.getRDPeakHours() != null) {
+                    rdPeak = billDto.getRDPeakHours().getTotalTariffCost();
+                }
+                peakValues.set(index, ReportUtil.roundDecimal(aePeak + rdPeak));
 
+                if (billDto.getRDPowerPeakHours() != null) {
+                    powerInPeakValues.set(index, ReportUtil.roundDecimal(billDto.getRDPowerPeakHours().getTotalTariffCost()));
+                }
 
-            if (billDto.getRDPeakHours() != null) {
-                powerInPeakValues.add(ReportUtil.roundDecimal(billDto.getRDPowerPeakHours().getTotalTariffCost()));
-            }
+                float aeNormal = 0f;
+                float rdNormal = 0f;
+                if (billDto.getAENormalHours() != null) {
+                    aeNormal = billDto.getAENormalHours().getTotalTariffCost();
+                }
+                if (billDto.getRDNormalHours() != null) {
+                    rdNormal = billDto.getRDNormalHours().getTotalTariffCost();
+                }
+                normalValues.set(index, ReportUtil.roundDecimal(aeNormal + rdNormal));
 
-            float aeNormal = 0f;
-            float rdNormal = 0f;
-            if (billDto.getAENormalHours() != null) {
-                aeNormal = billDto.getAENormalHours().getTotalTariffCost();
-            }
-            if (billDto.getRDNormalHours() != null) {
-                rdNormal = billDto.getRDNormalHours().getTotalTariffCost();
-            }
-            normalValues.add(ReportUtil.roundDecimal(aeNormal + rdNormal));
-
-
-            if (billDto.getRDReactivePower() != null) {
-                reactivePowerValues.add(ReportUtil.roundDecimal(billDto.getRDReactivePower().getTotalTariffCost()));
+                if (billDto.getRDReactivePower() != null) {
+                    reactivePowerValues.set(index, ReportUtil.roundDecimal(billDto.getRDReactivePower().getTotalTariffCost()));
+                }
             }
         }
     }

@@ -66,13 +66,15 @@ public class BillParser {
     private static final String PONTA_CONSUMO_ESTIMADO = "Ponta – Consumo Estimado ";
     private static final String REDES_PONTA_CONSUMO_ESTIMADO = "Redes Ponta - Consumo estimado ";
 
-    private static final String POTENCIA_HORAS_DE_PONTA = "Potência Horas de Ponta";
+    // private static final String POTENCIA_HORAS_DE_PONTA = "Potência Horas de Ponta";
+    private static final String POTENCIA_HORAS_DE_PONTA = "Potencia Horas de Ponta ";
 
     private static final String POTENCIA_HORAS_DE_PONTA_2 = "Horas de Ponta ";
     // private static String POTENCIA_CONTRATADA_ = "Potencia Contratada ";
     private static final String CONTRACTED_POWER_0 = "Contratada ";
 
-    private static final String CONTRACTED_POWER = "Potência Contratada";
+    // private static final String CONTRACTED_POWER = "Potência Contratada ";
+    private static final String CONTRACTED_POWER = "Potencia Contratada ";
     //Type 2 : Potência Contratada - 41,40
     //Type 3 : Potência Contratada - 20,7
 
@@ -178,7 +180,7 @@ public class BillParser {
         BillParameterDto aEOffHours = null;
         if (column_value != null) {
             //Contracted Power
-            rDContractedPower = getBillParameter(column_value, CONTRACTED_POWER, ParameterType.RD_REACTIVE_POWER);
+            rDContractedPower = getBillParameter(column_value, CONTRACTED_POWER, ParameterType.RD_CONTRACTED_POWER);
 
             //Power in Peak Hour
             rDPowerPeakHours = getBillParameter(column_value, POTENCIA_HORAS_DE_PONTA, ParameterType.RD_POWER_PEAK_HOURS);

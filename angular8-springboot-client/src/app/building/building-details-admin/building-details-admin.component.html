@@ -20,14 +20,14 @@
           <label><b>Property Address:</b></label> {{building.postalAddress}}
         </div>
         <div class="col">
-          <a routerLink="/wizard" class="btn btn-link">Update Form</a>
+          <a [routerLink]="['/wizard',building.id]" class="btn btn-link">Update Form</a>
         </div>
       </div>
       <div class="row">
         <div class="col">
           <label><b>Delete All Bills</b></label>
           <div class="col">
-            <button (click)="deleteBuildingBills()" class="btn btn-danger">Delete</button>
+            <button (click)="deleteBuildingBills()" [disabled]="loading" class="btn btn-danger">Delete</button>
             <br/>
           </div>
         </div>
