@@ -45,15 +45,15 @@ public abstract class GenericCrudServiceBase<TModel extends EntityBase<TModel>, 
 
 	public TModel safeDelete(String id) throws NotFoundException {
 		TModel model = this.getById(id);
-		model.setActive(false);
-		model = this.repository.save(model);
-		return model;
-	}
+        model.setActive(false);
+        model = this.repository.save(model);
+        return model;
+    }
 
-	public TModel setActive(TModel model, boolean active) {
-		model.setActive(active);
-		return model;
-	}
+    public TModel setActive(TModel model, boolean active) {
+        model.setActive(active);
+        return model;
+    }
 
-	public abstract void delete(String id) throws NotFoundException;
+    // public abstract void delete(String id) throws NotFoundException;
 }

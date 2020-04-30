@@ -20,7 +20,6 @@ public class BillParameterService extends GenericCrudServiceBase<BillParameterIn
         super(repository);
     }
 
-    @Override
     public void delete(String id) throws NotFoundException {
         repository.delete(findById(id));
     }

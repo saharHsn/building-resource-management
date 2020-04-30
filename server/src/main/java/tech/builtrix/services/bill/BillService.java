@@ -517,7 +517,6 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         return x;
     }
 
-    @Override
     public void delete(String id) throws NotFoundException {
         logger.info("trying to delete bill number : " + id);
         Bill bill = findById(id);
