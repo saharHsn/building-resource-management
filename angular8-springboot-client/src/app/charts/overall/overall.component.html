@@ -2,9 +2,20 @@
 <div class="container-fluid">
   <div class="row justify-content-between">
     <div class="col py-2 mx-2   col-auto">
-      <button mat-button >
-        {{building.name}}<mat-icon >keyboard_arrow_down</mat-icon>
-      </button>
+
+      <mat-form-field class="mr-1">
+        <mat-label>Building</mat-label>
+        <mat-select  (selectionChange)="select($event.value)">
+          <mat-option *ngFor="let building of buildings" [value]="building.id">
+          {{building.name}} 
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+     <!--  <button mat-button >
+    <!--     {{building.name}}<mat-icon >keyboard_arrow_down</mat-icon> -->
+   <!--  {{building.name}}<mat-icon >keyboard_arrow_down</mat-icon> -->
+     <!--  </button> --> 
     </div>
   
     <div class="mt-2  mr-5 col col-auto bill-button">
@@ -95,7 +106,7 @@
     </div>
     <div class="col-lg-6">
       <mat-card style="height: 600px; margin-bottom: 10px;">
-        <app-predictions></app-predictions>
+        <app-predictions ></app-predictions>
       </mat-card>
      
     </div>

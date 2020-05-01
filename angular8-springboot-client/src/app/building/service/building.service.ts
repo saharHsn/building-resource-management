@@ -94,4 +94,11 @@ export class BuildingService {
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
     return this.getBuildingByOwner(user);
   }
+//super user
+  getBuildingUsersTest(): Observable<any> {
+    const headers = this.authService.getHeaders();
+    return this.http.get(`${this.baseUrl}/getAllUserBuildings`, {headers});
+  }
+  
+
 }

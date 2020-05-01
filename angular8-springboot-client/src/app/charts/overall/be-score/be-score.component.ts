@@ -24,11 +24,13 @@ export class BeScoreComponent implements OnInit, OnDestroy {
   public messageCount: number;
   public chart: any;
   private beScore: number;
+  id:any=1;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
               private chartService: ChartService) {
     this.messageCount = 0;
+    //this.id=this.chartService.id;
   }
 
   ngOnInit(): void {
@@ -100,19 +102,7 @@ export class BeScoreComponent implements OnInit, OnDestroy {
             bold: true
           }
         },
-     /*    plotBands:  [{
-          from: 0,
-          to: 40,
-          color: '#FF0000' // green
-      }, {
-          from: 40,
-          to: 80,
-          color: '#FFE600' // yellow
-      }, {
-          from: 80,
-          to: 100,
-          color: '#55E27C' // red
-      }] */
+
       plotBands: [{ // mark the weekend
         color: {
 linearGradient: [0, 0, 300, 0],

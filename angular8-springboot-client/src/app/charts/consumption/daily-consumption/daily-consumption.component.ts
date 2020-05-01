@@ -120,15 +120,15 @@ export class DailyConsumptionComponent implements OnInit {
               }
             }
           },
-
+        
           series: [{
             name: 'Off hours',
             data: data.content.offValues,
-            color: '#3A9AFC'
+            color: '#219653' //dark green
           }, {
             name: 'Free hours',
             data: data.content.freeValues,
-            color: '#6554C0'
+            color: '#36B37E'
           }, {
             name: 'Normal-hours',
             data: data.content.normalValues,
@@ -136,7 +136,7 @@ export class DailyConsumptionComponent implements OnInit {
           }, {
             name: 'Peak-hours',
             data: data.content.peakValues,
-            color: '#36B37E'
+            color: ' #FF5630'
           }
           ]
         };
