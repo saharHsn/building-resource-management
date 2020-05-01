@@ -6,7 +6,7 @@ import {YearFilterType} from './consumption/consumption-average-tariff-cost/filt
 import {TimePeriodType} from './consumption/consumption-average-tariff-cost/filter-form/enum/TimePeriodType';
 import {DatePartType} from './consumption/consumption-average-tariff-cost/filter-form/enum/DatePartType';
 import {AuthenticationService} from '../_services';
-import {IdServiceService} from '../_services/id-service.service';
+import {BuildingUpdateService} from '../_services/building-update.service';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +42,7 @@ export class ChartService {
   headers: HttpHeaders;
 
   constructor(private http: HttpClient,
-              private authService: AuthenticationService, private idService: IdServiceService) {
+              private authService: AuthenticationService, private buildingUpdateService: BuildingUpdateService) {
 
     this.environmentName = environment.environmentName;
     this.environmentUrl = environment.apiUrl;
@@ -75,8 +75,7 @@ export class ChartService {
 
   /* month:any,year:any */
   gethistoricalConsumption(month: string, year: string): Observable<any> {
-
-    let idBuilding = this.idService.getIdbuilding();
+    const idBuilding = this.buildingUpdateService.getIdBuilding();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -95,8 +94,8 @@ export class ChartService {
   }
 
 
-  gethistoricalCost(month: string, year: string): Observable<any> {
-    let idBuilding = this.idService.getIdbuilding();
+  getHistoricalCost(month: string, year: string): Observable<any> {
+    const idBuilding = this.buildingUpdateService.getIdBuilding();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -116,7 +115,7 @@ export class ChartService {
 
 
   private callService(restUrl: string) {
-    const idcurrentBuilding = this.idService.getIdbuilding();
+    const idcurrentBuilding = this.buildingUpdateService.getIdBuilding();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -223,18 +222,13 @@ export class ChartService {
     return this.callService(`${this.propertyTargetUrl}`);
   }
 
-  //super user
   predict(): Observable<any> {
     return this.callService(`${this.predictUrl}`);
   }
 
 
-///testing
   getBEScore(): Observable<any> {
-
     return this.callService(`${this.beScoreUrl}`);
-
-
   }
 
 }

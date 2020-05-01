@@ -4,7 +4,6 @@ import {Router} from '@angular/router';
 
 import {ChartService} from '../../chartService';
 import {Building} from '../../../building/model/building';
-import {first} from 'rxjs/operators';
 
 @Component({
   selector: 'app-predictions',
@@ -28,7 +27,6 @@ export class PredictionsComponent implements OnInit {
 
   ngOnInit() {
     this.chartService.predict()
-      .pipe(first())
       .subscribe(
         data => {
           // this.chartOptions.series = [{

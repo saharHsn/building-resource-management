@@ -58,7 +58,7 @@ export class DailyElectricityComponent implements OnInit {
 
   initChart(month, year) {
 
-    this._chartService.gethistoricalCost(month, year).pipe(first()).subscribe(
+    this._chartService.getHistoricalCost(month, year).pipe(first()).subscribe(
       data => {
         this.highcharts = Highcharts;
         this.chartOptions = {
