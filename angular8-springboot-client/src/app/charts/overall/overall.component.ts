@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ChartService} from '../chartService';
 import {CurrentMonthSummary} from './CurrentMonthSummary';
@@ -6,13 +6,29 @@ import {User} from 'src/app/_models';
 import {Building} from 'src/app/building/model/building';
 import {BuildingService} from 'src/app/building/service/building.service';
 import {AuthenticationService} from 'src/app/_services';
-import {IdServiceService} from 'src/app/_services/id-service.service';
+import {BuildingUpdateService} from 'src/app/_services/building-update.service';
+import {PredictionsComponent} from './predictions/predictions.component';
+import {BeScoreComponent} from './be-score/be-score.component';
 
 @Component({
   templateUrl: './overall.component.html',
   styleUrls: ['./overall.component.css']
 })
 export class OverallComponent implements OnInit {
+  @ViewChild(PredictionsComponent, {static: false}) predictionsComponent: PredictionsComponent;
+  @ViewChild(PredictionsComponent, {static: false}) beScoreComponent: BeScoreComponent;
+
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private chartService: ChartService,
+              private buildingService: BuildingService,
+              private authService: AuthenticationService,
+              private buildingUpdateService: BuildingUpdateService,
+              // private prediction: PredictionsComponent
+  ) {
+    this.currentUser = this.authService.currentUserValue;
+  }
+
   id: number;
   currentMonthSummary: CurrentMonthSummary;
   currentUser: User;
@@ -24,17 +40,6 @@ export class OverallComponent implements OnInit {
   nationalMedian: number;
   propertyTarget: number;
   buildings: any;
-
-  constructor(private route: ActivatedRoute,
-              private router: Router,
-              private chartService: ChartService,
-              private buildingService: BuildingService,
-              private authService: AuthenticationService,
-              private idservice: IdServiceService,
-              // private prediction: PredictionsComponent
-  ) {
-    this.currentUser = this.authService.currentUserValue;
-  }
 
   ngOnInit() {
     this.getBuildingUsers();
@@ -60,23 +65,21 @@ export class OverallComponent implements OnInit {
     this.buildingService.getBuildingUsersTest().subscribe(
       data => {
         this.buildings = data.content;
-        if (this.idservice.getIdbuilding() !== null) {
+        if (this.buildingUpdateService.getIdBuilding() !== null) {
           return;
         } else {
           const id = data.content[0].id;
-          this.idservice.setIdbuilding(id);
+          this.buildingUpdateService.setIdBuilding(id);
         }
       },
       error => console.log(error)
     );
   }
-
-// item selected
   select(event) {
-    this.idservice.setIdbuilding(event);
+    this.buildingUpdateService.setIdBuilding(event);
     this.initCharts();
-    // call prediction ngOnInit
-    // call BeScoreComponent ngOnInit
+    this.predictionsComponent.ngOnInit();
+    this.beScoreComponent.ngOnInit();
   }
 
   initCharts() {
