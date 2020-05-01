@@ -140,11 +140,7 @@ export class BeScoreComponent implements OnInit, OnDestroy {
             '</span>' +
             '</div>'
         }
-
-
       }]
-
-
     };
   }
 

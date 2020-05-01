@@ -16,7 +16,7 @@ import {BeScoreComponent} from './be-score/be-score.component';
 })
 export class OverallComponent implements OnInit {
   @ViewChild(PredictionsComponent, {static: false}) predictionsComponent: PredictionsComponent;
-  @ViewChild(PredictionsComponent, {static: false}) beScoreComponent: BeScoreComponent;
+  @ViewChild(BeScoreComponent, {static: false}) beScoreComponent: BeScoreComponent;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -43,9 +43,7 @@ export class OverallComponent implements OnInit {
 
   ngOnInit() {
     this.getBuildingUsers();
-    // create charts
     this.initCharts();
-    // this.prediction.ngOnInit();
   }
 
   list() {

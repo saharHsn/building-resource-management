@@ -14,10 +14,6 @@ export class PredictionsComponent implements OnInit {
   loading = true;
   Highcharts: any;
   chartOptions: any;
-
-  /*  xValues: string[];
-   costYValues: number[];
-   savingYValues: number[]; */
   building: Building;
   highcharts = Highcharts;
 
