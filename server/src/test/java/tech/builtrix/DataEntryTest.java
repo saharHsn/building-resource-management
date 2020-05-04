@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import tech.builtrix.exceptions.NotFoundException;
+import tech.builtrix.models.message.Message;
 import tech.builtrix.models.user.User;
 import tech.builtrix.services.message.MessageService;
 import tech.builtrix.services.user.UserService;
@@ -42,6 +43,11 @@ public class DataEntryTest {
         User user = this.userService.findById("9289da95-0b63-40de-a01c-7f19fb241156");
         //this.messageService.updateReadStatus(user, "3f9241b5-5541-4359-940a-eee5f20d5c30", false);
         this.messageService.updateReadStatus(user, "3f9241b5-5541-4359-940a-eee5f20d5c30", true);
+        Message message = this.messageService.getById("3f9241b5-5541-4359-940a-eee5f20d5c30");
+        System.out.println(message.getUsersStatus());
+        this.messageService.updateReadStatus(user, "3f9241b5-5541-4359-940a-eee5f20d5c30", false);
+        Message message2 = this.messageService.getById("3f9241b5-5541-4359-940a-eee5f20d5c30");
+        System.out.println(message2.getUsersStatus());
         //this.messageService.updateReadStatus(user, "3f9241b5-5541-4359-940a-eee5f20d5c30", false);
     }
 

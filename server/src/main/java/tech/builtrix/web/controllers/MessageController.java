@@ -23,7 +23,7 @@ public class MessageController extends ControllerBase {
 
     @ApiOperation(value = "Request for creating new message")
     @PostMapping(value = "{buildingId}")
-    public Response<MessageDto> create(@PathVariable("buildingId") String buildingId, @RequestBody String message) {
+    public Response<MessageDto> create(@PathVariable("buildingId") String buildingId, @RequestParam String message) {
         MessageDto messageDto;
         messageDto = messageService.save(buildingId, message);
         return Response.ok(messageDto);
@@ -31,7 +31,7 @@ public class MessageController extends ControllerBase {
 
     @ApiOperation(value = "Request for updating a specific building")
     @PostMapping(value = "/updateReadStatus")
-    public Response<Void> updateReadStatus(@RequestBody String messageId, @RequestBody boolean readStatus) {
+    public Response<Void> updateReadStatus(@RequestParam String messageId, @RequestParam boolean readStatus) {
         User user = this.requestContext.getUser();
         this.messageService.updateReadStatus(user, messageId, readStatus);
         return Response.ok();
