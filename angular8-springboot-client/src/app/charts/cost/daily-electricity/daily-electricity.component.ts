@@ -118,11 +118,11 @@ export class DailyElectricityComponent implements OnInit {
           series: [{
             name: 'Off hours',
             data: data.content.offValues,
-            color: '#3A9AFC'
+            color: '#219653'
           }, {
             name: 'Free hours',
             data: data.content.freeValues,
-            color: '#6554C0'
+            color: '#55E27C'
           }, {
             name: 'Normal-hours',
             data: data.content.normalValues,
@@ -130,7 +130,7 @@ export class DailyElectricityComponent implements OnInit {
           }, {
             name: 'Peak-hours',
             data: data.content.peakValues,
-            color: '#36B37E'
+            color: '#FF5630'
           }
           ]
         };

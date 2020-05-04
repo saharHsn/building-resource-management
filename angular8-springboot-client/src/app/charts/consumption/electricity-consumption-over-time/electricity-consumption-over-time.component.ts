@@ -116,7 +116,7 @@ export class ElectricityConsumptionOverTimeComponent implements OnInit {
                 name: 'Free\nHours',
                 // data: [437.62, 402.36, 467.34, 460.2, 369.59, 414.66, 368.28, 406.59, 453.63, 397.01, 427.34, 556.36],
                 data: data.content.freeValues,
-                color: ' #36B37E'//green
+                color: ' #55E27C'//green
               },
               {
                 name: 'Off\nHours',

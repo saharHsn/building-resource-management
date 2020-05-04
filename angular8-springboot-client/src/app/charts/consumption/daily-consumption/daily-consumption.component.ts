@@ -128,7 +128,7 @@ export class DailyConsumptionComponent implements OnInit {
           }, {
             name: 'Free hours',
             data: data.content.freeValues,
-            color: '#36B37E'
+            color: '#55E27C'
           }, {
             name: 'Normal-hours',
             data: data.content.normalValues,

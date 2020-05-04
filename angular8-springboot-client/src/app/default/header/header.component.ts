@@ -34,7 +34,9 @@ export class HeaderComponent implements OnInit {
   listProfile = ['View profile', 'Log out'];
 
   ngOnInit() {
+    //getting messages
     this.getMessages();
+
   }
 
   // dialog component
@@ -47,12 +49,14 @@ export class HeaderComponent implements OnInit {
 
     } */
 
-  // notifications
+  // reading message change the status
   read(idmessage) {
     this.messages.readMessages(idmessage).subscribe(data => {
       console.log(data);
-
+       console.log('dentro de read method')
+       this.getMessages();
     });
+    
     this.router.navigateByUrl('/notifications');
 
   }
@@ -65,7 +69,13 @@ export class HeaderComponent implements OnInit {
       });
 
       /*this.listNotifications = data.content;*/
-      this.matBadge = this.listNotifications.length;
+      if( this.listNotifications.length===0){
+        this.matBadge=null;
+      }
+      else{
+        this.matBadge = this.listNotifications.length;
+      }
+     
       console.log(this.listNotifications);
       console.log(this.listNotifications.length);
     });

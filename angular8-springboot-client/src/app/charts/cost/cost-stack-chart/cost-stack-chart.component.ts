@@ -82,12 +82,12 @@ export class CostStackChartComponent implements OnInit {
               {
                 name: 'Power in Peak Hours',
                 data: data.content.powerInPeakValues,
-                color: '#6554C0'
+                color: '#0B2161'
               },
               {
                 name: 'Reactive\nPower',
                 data: data.content.reactivePowerValues,
-                color: '#FF5630'
+                color: '#6554C0'
               },
               {
                 name: 'Normal-hours',
@@ -97,17 +97,17 @@ export class CostStackChartComponent implements OnInit {
               {
                 name: 'Peak-hours',
                 data: data.content.peakValues,
-                color: '#36B37E'
+                color: '#FF5630'
               },
               {
                 name: 'Free hours',
                 data: data.content.freeValues,
-                color: '#00B8D9'
+                color: '#55E27C'
               },
               {
                 name: 'Off hours',
                 data: data.content.offValues,
-                color: '#0065FF'
+                color: '#219653'
               }
             ]
             ,
