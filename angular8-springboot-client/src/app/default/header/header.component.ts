@@ -1,12 +1,12 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { User } from '../../user/user';
-import { AuthenticationService } from '../../_services';
-import { UserService } from '../../user/user.service';
-import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {User} from '../../user/user';
+import {AuthenticationService} from '../../_services';
+import {UserService} from '../../user/user.service';
+import {Router} from '@angular/router';
+import {MatDialog} from '@angular/material';
 
-import { AppService } from 'src/app/_services/app.service';
-import { MessageService } from 'src/app/_services/message.service';
+import {AppService} from 'src/app/_services/app.service';
+import {MessageService} from 'src/app/_services/message.service';
 
 @Component({
   selector: 'app-header',
@@ -26,7 +26,7 @@ export class HeaderComponent implements OnInit {
     private messages: MessageService
   ) {
     this.currentUser = this.authenticationService.currentUserValue;
-    
+
   }
 
   listNotifications: any;
@@ -38,14 +38,14 @@ export class HeaderComponent implements OnInit {
   }
 
   // dialog component
-/*   openDialog(): void {
-    const dialogRef = this.dialog.open(NotificationsComponent, {
-      width: '400px',
+  /*   openDialog(): void {
+      const dialogRef = this.dialog.open(NotificationsComponent, {
+        width: '400px',
 
-    });
+      });
 
 
-  } */
+    } */
 
   // notifications
   read(idmessage) {
@@ -56,18 +56,19 @@ export class HeaderComponent implements OnInit {
     this.router.navigateByUrl('/notifications');
 
   }
+
   getMessages() {
     this.messages.getMessages().subscribe(data => {
-      //taking unread messages
-       this.listNotifications= data.content.filter(read=>{
-         return read.read===false;
-       })
-     
-     /*this.listNotifications = data.content;*/
-      this.matBadge = this.listNotifications.length
+      // taking unread messages
+      this.listNotifications = data.content.filter(read => {
+        return read.read === false;
+      });
+
+      /*this.listNotifications = data.content;*/
+      this.matBadge = this.listNotifications.length;
       console.log(this.listNotifications);
       console.log(this.listNotifications.length);
-    })
+    });
   }
 
   // log out button profile
