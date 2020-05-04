@@ -9,6 +9,7 @@ import {AuthenticationService} from 'src/app/_services';
 import {BuildingUpdateService} from 'src/app/_services/building-update.service';
 import {PredictionsComponent} from './predictions/predictions.component';
 import {BeScoreComponent} from './be-score/be-score.component';
+import { MessageService } from 'src/app/_services/message.service';
 
 @Component({
   templateUrl: './overall.component.html',
@@ -24,9 +25,11 @@ export class OverallComponent implements OnInit {
               private buildingService: BuildingService,
               private authService: AuthenticationService,
               private buildingUpdateService: BuildingUpdateService,
+              private messages:MessageService
               // private prediction: PredictionsComponent
   ) {
     this.currentUser = this.authService.currentUserValue;
+  
   }
 
   id: number;

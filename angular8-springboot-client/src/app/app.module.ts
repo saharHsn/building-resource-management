@@ -94,7 +94,7 @@ import {BuildingComponent} from './charts/profile/building/building.component';
 import {ProfileViewComponent} from './charts/profile/profile-view/profile-view.component';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet'; 
 import {MatDialogModule} from '@angular/material/dialog';;
-import { NotificationsComponent } from './default/notifications/notifications.component'
+
 import {MatMenuModule} from '@angular/material/menu';;
 import { PanelComponent } from './notification_panel/panel/panel.component';;
 import { DownloadComponent } from './building/download/download.component'
@@ -178,7 +178,7 @@ import { RemoveUnderlinePipe } from './pipes/remove-underline.pipe'
     ProfileViewComponent,
     BuildingComponent,
     GeneralComponent,
-    NotificationsComponent,
+  
     // HighchartsChartComponent,
     ReportBeScoreComponent,
     CostPieChartComponent,
@@ -219,7 +219,7 @@ import { RemoveUnderlinePipe } from './pipes/remove-underline.pipe'
    
      ],
   
-entryComponents:[ NotificationsComponent,DownloadComponent]
+entryComponents:[ DownloadComponent]
 
 ,
 

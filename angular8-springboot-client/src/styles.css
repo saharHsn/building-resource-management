@@ -1,10 +1,19 @@
 /* You can add global styles to this file; and also import other style files */
 @import '~bootstrap/dist/css/bootstrap.min.css';
 
+:root{
+  
+    --main-color:#3A9AFC;
+  
+}
 
-
-
-
+*:focus {
+  outline: none !important;
+  border: 0 !important;
+}
+.mat-button-focus-overlay {
+  background-color: transparent!important;
+}
 
 .footer {
   position: absolute;

@@ -1,5 +1,9 @@
 <div class="container mt-3 panel-notification">
   <h2>Your notifications</h2>
- <div>Here you will get notifications and insights about your consumption. We are still collecting data from your consumption.</div>
+<hr>
+
+ <div *ngFor="let item of listMessages">
+   <div [ngStyle]="item.read?{ 'border-bottom': '1px solid  #919EAA'} : {'border-bottom': '1px solid #3A9AFC'}" class="notification-panel">{{item.message}}</div>
+ </div>
  
 </div>

@@ -1,11 +1,12 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {User} from '../../user/user';
-import {AuthenticationService} from '../../_services';
-import {UserService} from '../../user/user.service';
-import {Router} from '@angular/router';
-import {MatDialog} from '@angular/material';
-import {NotificationsComponent} from '../notifications/notifications.component';
-import {AppService} from 'src/app/_services/app.service';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { User } from '../../user/user';
+import { AuthenticationService } from '../../_services';
+import { UserService } from '../../user/user.service';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material';
+
+import { AppService } from 'src/app/_services/app.service';
+import { MessageService } from 'src/app/_services/message.service';
 
 @Component({
   selector: 'app-header',
@@ -21,39 +22,52 @@ export class HeaderComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     public dialog: MatDialog,
-    private appService: AppService
+    private appService: AppService,
+    private messages: MessageService
   ) {
     this.currentUser = this.authenticationService.currentUserValue;
-    // this.router.navigate(['/overall']);
+    
   }
 
-  listNotifications = [{
-    title: 'View notifications and insights about your consumption',
-    read: false
-
-  }];
-
+  listNotifications: any;
+  matBadge: number;
   listProfile = ['View profile', 'Log out'];
 
   ngOnInit() {
-
+    this.getMessages();
   }
 
   // dialog component
-  openDialog(): void {
+/*   openDialog(): void {
     const dialogRef = this.dialog.open(NotificationsComponent, {
       width: '400px',
-      /*  data: {name: this.name, animal: this.animal} */
+
     });
 
-    /*    dialogRef.afterClosed().subscribe(result => {
-         this.animal = result;
-       }); */
+
+  } */
+
+  // notifications
+  read(idmessage) {
+    this.messages.readMessages(idmessage).subscribe(data => {
+      console.log(data);
+
+    });
+    this.router.navigateByUrl('/notifications');
+
   }
-
-// notifications
-  read() {
-
+  getMessages() {
+    this.messages.getMessages().subscribe(data => {
+      //taking unread messages
+       this.listNotifications= data.content.filter(read=>{
+         return read.read===false;
+       })
+     
+     /*this.listNotifications = data.content;*/
+      this.matBadge = this.listNotifications.length
+      console.log(this.listNotifications);
+      console.log(this.listNotifications.length);
+    })
   }
 
   // log out button profile

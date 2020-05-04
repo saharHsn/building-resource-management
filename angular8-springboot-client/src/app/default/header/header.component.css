@@ -50,3 +50,10 @@
   min-width: 50px!important;
   outline: none;
 }
+
+.header__notification-button{
+ border-bottom: 1px solid var(--main-color);
+  
+}
+
+
