@@ -158,7 +158,7 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
 		// just reload user
 		User user = null;
 		try {
-			user = this.findByEmail(email);
+			user = this.findByEmail(email.toLowerCase());
 		} catch (NotFoundException e) {
 			logger.info("User does not exist");
 		}
@@ -174,7 +174,7 @@ public class UserService extends GenericCrudServiceBase<User, UserRepository> {
 		UserDto userDto = new UserDto();
 		userDto.setFirstName(firstName);
 		userDto.setLastName(lastName);
-		userDto.setEmailAddress(email);
+		userDto.setEmailAddress(email.toLowerCase());
 		userDto.setRole(Role.User);
 		String hashedPass = HashUtil.sha1(password);
 		userDto.setPassword(hashedPass);
