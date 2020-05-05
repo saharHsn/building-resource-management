@@ -25,8 +25,15 @@ butttons -->
     </div>
 </div>
 
- <highcharts-chart
- [Highcharts]="highcharts"
- [options]="chartOptions"
- style="width: 100%; height: 300px; display: block;">
-</highcharts-chart>
+
+<div  *ngIf="!loadingBar">
+  <highcharts-chart
+  [Highcharts]="highcharts"
+  [options]="chartOptions"
+  style="width: 100%; height: 300px; display: block;">
+  </highcharts-chart> 
+</div>
+<div class="progress_bar" *ngIf="loadingBar">
+
+  <mat-progress-bar mode="indeterminate"  ></mat-progress-bar>
+</div>
