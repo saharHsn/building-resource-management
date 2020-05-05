@@ -101,6 +101,8 @@ import {ResetPasswordComponent} from './login/reset-password/reset-password.comp
 import {BulletChartComponent} from './charts/report/bullet-chart/bullet-chart.component';
 import {DailyElectricityComponent} from './charts/cost/daily-electricity/daily-electricity.component';
 import {RemoveUnderlinePipe} from './pipes/remove-underline.pipe';
+import {AdminPanelComponent} from './admin/admin-panel/admin-panel.component';
+import {BuildingDetailsAdminComponent} from './building/building-details-admin/building-details-admin.component';
 
 // tslint:disable-next-line:max-line-length
 
@@ -145,6 +147,8 @@ import {RemoveUnderlinePipe} from './pipes/remove-underline.pipe';
     AppComponent,
     HomeComponent,
     LoginComponent,
+    AdminPanelComponent,
+    BuildingDetailsAdminComponent,
     RegisterComponent,
     UserListComponent,
     UserDetailsComponent,

@@ -5,9 +5,9 @@
 export const environment = {
   production: true,
   environmentName: 'DEVELOP',
-  apiUrl: 'http://localhost:5000/builtrix/v1'
+  // apiUrl: 'http://localhost:5000/builtrix/v1'
   // apiUrl: 'https://dashboard.builtrix.tech/builtrix/v1'
-  // apiUrl: 'http://metricsserverpilot-env-1.us-east-1.elasticbeanstalk.com/builtrix/v1'
+  apiUrl: 'http://metricsserverpilot-env-1.us-east-1.elasticbeanstalk.com/builtrix/v1'
 
 };
 
