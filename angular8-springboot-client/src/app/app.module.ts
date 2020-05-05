@@ -92,7 +92,6 @@ import {BuildingComponent} from './charts/profile/building/building.component';
 import {ProfileViewComponent} from './charts/profile/profile-view/profile-view.component';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatDialogModule} from '@angular/material/dialog';
-import {NotificationsComponent} from './default/notifications/notifications.component'
 import {MatMenuModule} from '@angular/material/menu';
 import {PanelComponent} from './notification_panel/panel/panel.component';
 import {DownloadComponent} from './building/download/download.component';
@@ -102,18 +101,9 @@ import {ResetPasswordComponent} from './login/reset-password/reset-password.comp
 import {BulletChartComponent} from './charts/report/bullet-chart/bullet-chart.component';
 import {DailyElectricityComponent} from './charts/cost/daily-electricity/daily-electricity.component';
 import {RemoveUnderlinePipe} from './pipes/remove-underline.pipe';
-import {AdminPanelComponent} from './admin/admin-panel/admin-panel.component';
-import {BuildingDetailsAdminComponent} from './building/building-details-admin/building-details-admin.component'
+
 // tslint:disable-next-line:max-line-length
-  ;
 
-;
-;
-;
-
-// import { AngularWeatherWidgetModule, WeatherApiName } from 'angular-weather-widget';
-// import {HighchartsChartComponent} from 'highcharts-angular';
-// angular material
 
 @NgModule({
   imports: [
@@ -179,7 +169,6 @@ import {BuildingDetailsAdminComponent} from './building/building-details-admin/b
     ProfileViewComponent,
     BuildingComponent,
     GeneralComponent,
-    NotificationsComponent,
     // HighchartsChartComponent,
     ReportBeScoreComponent,
     CostPieChartComponent,
@@ -210,25 +199,16 @@ import {BuildingDetailsAdminComponent} from './building/building-details-admin/b
     ColorEnergyComponent,
     DownloadComponent,
     DailyConsumptionComponent,
-    DailyElectricityComponent
-    ,
-    ResetPasswordComponent
-    ,
+    DailyElectricityComponent,
+    ResetPasswordComponent,
     BulletChartComponent,
     DailyElectricityComponent,
     RemoveUnderlinePipe
-    ,
-    AdminPanelComponent,
-    BuildingDetailsAdminComponent
   ],
 
-  entryComponents:[ NotificationsComponent,DownloadComponent]
+  entryComponents: [DownloadComponent]
 
-     ],
-
-entryComponents:[ DownloadComponent]
-
-,
+  ,
 
   providers: [
     GoogleAnalyticsService,

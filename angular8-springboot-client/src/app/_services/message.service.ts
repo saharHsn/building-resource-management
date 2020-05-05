@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {AuthenticationService} from '../_services';
-import {BuildingUpdateService} from '../_services/building-update.service';
+import {BuildingUpdateService} from './building-update.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +21,6 @@ export class MessageService {
     this.baseUrl = this.environmentUrl + '/messages';
   }
 
-
   private callService(restUrl: string) {
     const idcurrentBuilding = this.buildingUpdateService.getIdBuilding();
     let headers;
@@ -33,18 +32,14 @@ export class MessageService {
         .set('Accept', '*/*')
         .set('Content-Type', 'application/json');
     }
-    const objectObservable = this.http.get(`${restUrl}/${idcurrentBuilding}`, {headers});
-    return objectObservable;
+    return this.http.get(`${restUrl}/${idcurrentBuilding}`, {headers});
   }
-
 
   getMessages(): Observable<any> {
     return this.callService(`${this.baseUrl}`);
   }
 
   readMessages(idMessage) {
-    console.log(idMessage);
-    const idBuilding = this.buildingUpdateService.getIdBuilding();
     let headers;
     const message = idMessage;
 
@@ -61,5 +56,4 @@ export class MessageService {
     return this.http.post(`${this.baseUrl}/updateReadStatus`,
       params, {headers});
   }
-
 }
