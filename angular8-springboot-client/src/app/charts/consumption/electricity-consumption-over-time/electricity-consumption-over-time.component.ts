@@ -86,42 +86,50 @@ export class ElectricityConsumptionOverTimeComponent implements OnInit {
                  data: data.content.powerInPeakValues,
                  color: '#ff6666'
                },*/
+         /*    1 = purple;
+               2 = orange;
+               3 = light red;
+               4 = light green;
+               5 = dark green; */
               {
                 name: 'Reactive\nPower',
                 // data: [9.34, 9.32, 10.21, 10.56, 13.36, 16.35, 9.78, 6.43, 6.4, 9.37, 12.25, 6.02],
                 data: data.content.reactivePowerValues,
-                color: ' #FF5630'
+                color: '#6554C0'//purple
+                
               },
               {
                 name: 'Normal\nHours',
                 // data: [1844.74, 1932.34, 1715.54, 1833.96, 1538.25, 1451.76, 1729.1, 878.35, 1743.17, 1881.22, 1728.28, 1834.11],
                 data: data.content.normalValues,
-                color: '#FFAB00'
+                
+                color: '#FFAB00'//yellow
               },
               {
                 name: 'Peak\nHours',
                 // data: [878.11, 944.15, 829.95, 690.54, 473.42, 429.33, 513.55, 547.49, 481.35, 527.35, 695.46, 865.32],
                 data: data.content.peakValues,
-                color: ' #36B37E'
+                color: ' #FF5630'//ligth red
+                
               },
               {
                 name: 'Free\nHours',
                 // data: [437.62, 402.36, 467.34, 460.2, 369.59, 414.66, 368.28, 406.59, 453.63, 397.01, 427.34, 556.36],
                 data: data.content.freeValues,
-                color: '#6554C0'
+                color: ' #55E27C'//green
               },
               {
                 name: 'Off\nHours',
                 // data: [265.96, 282.73, 238.51, 250.71, 211.15, 209.45, 209, 228.47, 227.03, 220.12, 245.33, 310.36],
                 data: data.content.offValues,
-                color: ' #3A9AFC'
+                color: '#219653'//dark green
               },
               {
                 type: 'spline',
                 name: 'Baseline',
                 // data: [1844.74, 1932.34, 1715.54, 1833.96, 1538.25, 1451.76, 1729.1, 878.35, 1743.17, 1881.22, 1728.28, 1834.11],
                 data: data.content.baseLineValues,
-                color: '#4C5E81'
+                color: '#4C5E81' //dark
               }
             ]
             ,

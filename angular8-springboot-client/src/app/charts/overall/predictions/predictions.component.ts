@@ -4,7 +4,6 @@ import {Router} from '@angular/router';
 
 import {ChartService} from '../../chartService';
 import {Building} from '../../../building/model/building';
-import {first} from 'rxjs/operators';
 
 @Component({
   selector: 'app-predictions',
@@ -15,21 +14,15 @@ export class PredictionsComponent implements OnInit {
   loading = true;
   Highcharts: any;
   chartOptions: any;
-
-  xValues: string[];
-  costYValues: number[];
-  savingYValues: number[];
   building: Building;
   highcharts = Highcharts;
 
   constructor(private chartService: ChartService,
               private router: Router) {
-
   }
 
   ngOnInit() {
     this.chartService.predict()
-      .pipe(first())
       .subscribe(
         data => {
           // this.chartOptions.series = [{
@@ -77,13 +70,13 @@ export class PredictionsComponent implements OnInit {
               valueSuffix: ' €'
             },
             series: [/* {
-              name: 'Saving',
-              // data: [321, 420, 360]
-              data: data.content.savingYValues,
-              dashStyle: 'shortdot',
-              color: ''
+                          name: 'Saving',
+                          // data: [321, 420, 360]
+                          data: data.content.savingYValues,
+                          dashStyle: 'shortdot',
+                          color: ''
 
-            }, */
+                        }, */
               {
                 name: 'Cost',
                 // data: [6135.5, 7130.4, 6234.3]
@@ -98,4 +91,14 @@ export class PredictionsComponent implements OnInit {
         () => {
         });
   }
+
 }
+
+
+/* this.chartService.predict()
+.pipe(first())
+.subscribe(
+  data => {
+
+}
+); */

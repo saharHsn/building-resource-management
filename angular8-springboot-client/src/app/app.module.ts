@@ -224,6 +224,10 @@ import {BuildingDetailsAdminComponent} from './building/building-details-admin/b
 
   entryComponents:[ NotificationsComponent,DownloadComponent]
 
+     ],
+
+entryComponents:[ DownloadComponent]
+
 ,
 
   providers: [

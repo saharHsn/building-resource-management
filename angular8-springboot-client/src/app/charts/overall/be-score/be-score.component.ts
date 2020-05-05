@@ -24,11 +24,13 @@ export class BeScoreComponent implements OnInit, OnDestroy {
   public messageCount: number;
   public chart: any;
   private beScore: number;
+  id: any = 1;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
               private chartService: ChartService) {
     this.messageCount = 0;
+    // this.id=this.chartService.id;
   }
 
   ngOnInit(): void {
@@ -61,9 +63,9 @@ export class BeScoreComponent implements OnInit, OnDestroy {
         endAngle: 150,
         background: {
           backgroundColor: 'rgba(0,0,0,0)',
-         
-         
-      }
+
+
+        }
       },
       credits: {
         enabled: false
@@ -100,35 +102,23 @@ export class BeScoreComponent implements OnInit, OnDestroy {
             bold: true
           }
         },
-     /*    plotBands:  [{
+
+        plotBands: [{ // mark the weekend
+          color: {
+            linearGradient: [0, 0, 300, 0],
+            stops: [
+              [0.4, '#DF5353'],
+              [0.7, '#DDDF0D'],
+              [0.95, '#55BF3B'], // green
+              // yellow
+              // red
+            ]
+          },
           from: 0,
-          to: 40,
-          color: '#FF0000' // green
-      }, {
-          from: 40,
-          to: 80,
-          color: '#FFE600' // yellow
-      }, {
-          from: 80,
-          to: 100,
-          color: '#55E27C' // red
-      }] */
-      plotBands: [{ // mark the weekend
-        color: {
-linearGradient: [0, 0, 300, 0],
-stops: [ 
-   [0.4, '#DF5353'],
-   [0.7, '#DDDF0D'],
-   [0.95, '#55BF3B'], // green
-  // yellow
-  // red
-]
-},
-      from: 0,
-      to: 100
-  }]
-      },  
-        plotOptions: {
+          to: 100
+        }]
+      },
+      plotOptions: {
         gauge: {
           dataLabels: {
             y: 10,
@@ -138,27 +128,23 @@ stops: [
         }
       },
 
-    series: [{
-      name: 'Speed',
-      data: [this.beScore],
-      dataLabels: {
-        format:
+      series: [{
+        name: 'Speed',
+        data: [this.beScore],
+        dataLabels: {
+          format:
             '<div style="text-align:center">' +
             '<span style="font-size:30px">{y}</span><br/>' +
             '<span style="font-size:12px;opacity:0.4">' +
 
             '</span>' +
             '</div>'
-    }
-   
-     
-  }]
-
-
+        }
+      }]
     };
   }
 
-   private initChart(gaugeOptions: any) {
-     this.chart = Highcharts.chart('gauge-container', gaugeOptions);
+  private initChart(gaugeOptions: any) {
+    this.chart = Highcharts.chart('gauge-container', gaugeOptions);
   }
 }

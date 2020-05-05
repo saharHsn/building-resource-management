@@ -6,6 +6,7 @@ import {YearFilterType} from './consumption/consumption-average-tariff-cost/filt
 import {TimePeriodType} from './consumption/consumption-average-tariff-cost/filter-form/enum/TimePeriodType';
 import {DatePartType} from './consumption/consumption-average-tariff-cost/filter-form/enum/DatePartType';
 import {AuthenticationService} from '../_services';
+import {BuildingUpdateService} from '../_services/building-update.service';
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +38,8 @@ export class ChartService {
   headers: HttpHeaders;
 
   constructor(private http: HttpClient,
-              private authService: AuthenticationService) {
+              private authService: AuthenticationService, private buildingUpdateService: BuildingUpdateService) {
+
     this.environmentName = environment.environmentName;
     this.environmentUrl = environment.apiUrl;
     this.baseUrl = this.environmentUrl + '/reports';
@@ -67,6 +69,7 @@ export class ChartService {
 
   /* month:any,year:any */
   gethistoricalConsumption(month: string, year: string): Observable<any> {
+    const idBuilding = this.buildingUpdateService.getIdBuilding();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -79,35 +82,14 @@ export class ChartService {
     const params = new HttpParams()
       .set('year', year)
       .set('month', month);
-    return this.http.get(`${this.HistoricalConsumptionUrl}`,
+    return this.http.get(`${this.HistoricalConsumptionUrl}/${idBuilding}`,
       {headers, params}
     );
   }
 
-  /*historicalConsumption(): Observable<any> {
-    const year = 2020;
-    const month = 3;
 
-    let headers;
-    // @ts-ignore
-    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-    if (user && user.token) {
-      headers = new HttpHeaders()
-        .set('X-Session', user.token)
-        .set('Accept', '*!/!*')
-        .set('Content-Type', 'application/json');
-    }
-    const params = new HttpParams()
-      .set('year', String(year))
-      .set('month', String(month));
-    return this.http.get(`${this.HistoricalConsumptionUrl}`,
-      {headers, params}
-    );
-  }*/
-
-
-  gethistoricalCost(month: string, year: string): Observable<any> {
-
+  getHistoricalCost(month: string, year: string): Observable<any> {
+    const idBuilding = this.buildingUpdateService.getIdBuilding();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -120,17 +102,14 @@ export class ChartService {
     const params = new HttpParams()
       .set('year', year)
       .set('month', month);
-    return this.http.get(`${this.HistoricalCostUrl}`,
+    return this.http.get(`${this.HistoricalCostUrl}/${idBuilding}`,
       {headers, params}
     );
   }
 
-
-  predict(): Observable<any> {
-    return this.callService(`${this.predictUrl}`);
-  }
 
   private callService(restUrl: string) {
+    const idcurrentBuilding = this.buildingUpdateService.getIdBuilding();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -140,7 +119,7 @@ export class ChartService {
         .set('Accept', '*/*')
         .set('Content-Type', 'application/json');
     }
-    const objectObservable = this.http.get(restUrl, {headers});
+    const objectObservable = this.http.get(`${restUrl}/${idcurrentBuilding}`, {headers});
     return objectObservable;
   }
 
@@ -167,9 +146,6 @@ export class ChartService {
     return this.callService(`${this.currentMonthSummaryUrl}`);
   }
 
-  getBEScore(): Observable<any> {
-    return this.callService(`${this.beScoreUrl}`);
-  }
 
   costStackData(): Observable<any> {
     return this.callService(`${this.costStackUrl}`);
@@ -239,4 +215,14 @@ export class ChartService {
   getPropertyTarget(): Observable<any> {
     return this.callService(`${this.propertyTargetUrl}`);
   }
+
+  predict(): Observable<any> {
+    return this.callService(`${this.predictUrl}`);
+  }
+
+
+  getBEScore(): Observable<any> {
+    return this.callService(`${this.beScoreUrl}`);
+  }
+
 }

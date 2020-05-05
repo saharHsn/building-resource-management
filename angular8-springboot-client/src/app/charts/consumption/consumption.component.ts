@@ -14,6 +14,7 @@ export class ConsumptionComponent implements OnInit {
   }
 
   ngOnInit() {
+ 
   }
 
   /*getChangedSeries($event) {
