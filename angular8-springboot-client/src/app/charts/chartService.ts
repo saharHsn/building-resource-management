@@ -128,6 +128,7 @@ export class ChartService {
   }
 
   download(): Observable<any> {
+    const idcurrentBuilding = this.buildingUpdateService.getIdBuilding();
     /*.subscribe(response => this.downLoadFile(response, "application/ms-excel"))*/
     // return this.callService(`${this.downloadUrl}`);
     let headers;
@@ -138,7 +139,7 @@ export class ChartService {
         .set('X-Session', user.token)
         .set('Accept', '*/*');
     }
-    return this.http.get(`${this.downloadUrl}`, {responseType: 'arraybuffer', headers});
+    return this.http.get(`${this.downloadUrl}/${idcurrentBuilding}`, {responseType: 'arraybuffer', headers});
   }
 
 
