@@ -1,0 +1,13 @@
+
+
+<!-- <mat-select  (selectionChange)="select($event.value)">
+  <mat-option *ngFor="let building of buildings" [value]="building.id" >{{building.name}}</mat-option>
+</mat-select> -->
+
+  <mat-form-field>
+    <mat-label>Building</mat-label>
+    <mat-select (selectionChange)="select($event.value)">
+      <mat-option *ngFor="let building of buildings" [value]="building.id" >{{building.name}}</mat-option>
+    
+    </mat-select>
+  </mat-form-field>

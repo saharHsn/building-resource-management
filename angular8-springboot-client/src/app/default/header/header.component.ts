@@ -4,7 +4,7 @@ import {AuthenticationService} from '../../_services';
 import {UserService} from '../../user/user.service';
 import {Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
-
+import swal from 'sweetalert2';
 import {AppService} from 'src/app/_services/app.service';
 import {MessageService} from 'src/app/_services/message.service';
 
@@ -50,14 +50,23 @@ export class HeaderComponent implements OnInit {
     } */
 
   // reading message change the status
-  read(idmessage) {
+  read(idmessage,message) {
+
+     console.log(message);
+
+    swal.fire({
+      title: 'Notification',
+      text: message,
+      confirmButtonText: 'Ok'
+    })
+
     this.messages.readMessages(idmessage).subscribe(data => {
       console.log(data);
-       console.log('dentro de read method')
+    
        this.getMessages();
     });
     
-    this.router.navigateByUrl('/notifications');
+    /* this.router.navigateByUrl('/notifications');  */
 
   }
 

@@ -1,4 +1,24 @@
-<div class="container">
+  <div class="report_buttons">
+    <div>
+      <app-building-button></app-building-button>
+    </div>
+    <div>
+      <button mat-button (click)="download()">
+        <mat-icon>cloud_download</mat-icon>
+        Download
+      </button>
+      <button mat-button (click)="print()">
+        <mat-icon>print</mat-icon>
+        Print
+      </button>
+      <button mat-button (click)="downloadPdf()">
+        <mat-icon>share</mat-icon>
+        Share report
+      </button>
+    </div>
+  </div>
+
+<div class="container" id="content" #content>
   <div class="row">
     <div class="col h-50">
       <app-building-details></app-building-details>
@@ -13,16 +33,16 @@
     <p class="title">Be score: {{beScore}} <br>
       Property's Target: {{propertyTarget}} <br>
 
-      National Median :{{nationalMedian}}</p>
+      National Median:{{nationalMedian}}</p>
     </div>
-    <div class="col highcharts-container">
+  <!--   <div class="col highcharts-container">
       <app-be-breakdown></app-be-breakdown>
       <p class="title">Energy Efficiency: 95.0% <br>
         Engagement: 5.0% <br></p>
-    </div>
+    </div> -->
     <div class="col">
       <app-percentile></app-percentile>
-      <p class="title">Your Score is higher than 63% of Builtrix METRIC members <br>
+      <p class="title">Your Score is higher than 63% of Builtrix  members <br>
   </p>
     </div>
   </div>

@@ -10,6 +10,7 @@ import {BuildingUpdateService} from 'src/app/_services/building-update.service';
 import {PredictionsComponent} from './predictions/predictions.component';
 import {BeScoreComponent} from './be-score/be-score.component';
 import { MessageService } from 'src/app/_services/message.service';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   templateUrl: './overall.component.html',
@@ -29,22 +30,23 @@ export class OverallComponent implements OnInit {
               // private prediction: PredictionsComponent
   ) {
     this.currentUser = this.authService.currentUserValue;
-  
   }
-
+  
   id: number;
   currentMonthSummary: CurrentMonthSummary;
   currentUser: User;
   building: Building = new Building();
-
+  
   // gauge variables
-
+ 
   beScore: number;
   nationalMedian: number;
   propertyTarget: number;
   buildings: any;
-
+ 
+ 
   ngOnInit() {
+
     this.getBuildingUsers();
     this.initCharts();
   }
@@ -65,13 +67,23 @@ export class OverallComponent implements OnInit {
   getBuildingUsers() {
     this.buildingService.getBuildingUsersTest().subscribe(
       data => {
+
         this.buildings = data.content;
+        const id = data.content[0].id;
+        this.buildingUpdateService.setIdBuilding(id);
+       
+       
+        
+       /*  this.buildings = data.content;
+        console.log(this.buildings)
         if (this.buildingUpdateService.getIdBuilding() !== null) {
           return;
         } else {
           const id = data.content[0].id;
+          
+
           this.buildingUpdateService.setIdBuilding(id);
-        }
+        } */
       },
       error => console.log(error)
     );
@@ -102,4 +114,8 @@ export class OverallComponent implements OnInit {
         this.propertyTarget = data.content;
       }, error => console.log(error));
   }
+
+
+
+
 }
