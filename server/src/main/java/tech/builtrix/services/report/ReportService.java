@@ -455,6 +455,7 @@ public class ReportService {
         ReportIndex consumptionArea = getAreaIndexConsumptionData(buildingDto, last12MonthBills, lastBillDto);
         ReportIndex consumptionCap = getCapIndexConsumptionData(buildingDto, last12MonthBills, lastBillDto);
         ReportIndex cost = getIndexCostData(buildingDto, last12MonthBills, lastBillDto);
+        ReportIndex co2 = getIndexCo2Data(consumptionArea);
         ReportIndex energyEfficiencyLevel = new ReportIndex();
         //2019 :
         EnergyCertificate lastYearEnergyEfficiency = getEnergyEfficiency(buildingDto, lastYearBills);
@@ -463,7 +464,7 @@ public class ReportService {
         energyEfficiencyLevel.setThisMonthCert(getEnergyEfficiency(buildingDto, last12MonthBills));
         energyEfficiencyLevel.setPropertyTargetCert(ReportUtil.increaseEnergyCertificate(lastYearEnergyEfficiency));
         energyEfficiencyLevel.setNationalMedianCert(EnergyCertificate.F);
-        return Arrays.asList(consumptionArea, consumptionCap, cost, energyEfficiencyLevel);
+        return Arrays.asList(consumptionArea, consumptionCap, cost, co2, energyEfficiencyLevel);
     }
 
     public float calculateConsumptionAreaIndex(BuildingDto building, List<BillDto> dtoList) {
@@ -527,6 +528,16 @@ public class ReportService {
         return consumptionIndex;
     }
 
+    private ReportIndex getIndexCo2Data(ReportIndex consumptionArea) {
+        ReportIndex consumptionIndex = new ReportIndex();
+        float baseline = ReportUtil.roundDecimal(consumptionArea.getBaseline() * CO2_CONS);
+        consumptionIndex.setBaseline(baseline);
+        consumptionIndex.setThisMonth(ReportUtil.roundDecimal(consumptionArea.getThisMonth() * CO2_CONS));
+        consumptionIndex.setNationalMedian(12.5f);
+        consumptionIndex.setPropertiesTarget(ReportUtil.roundDecimal(PROPERTY_TARGET_COEFFICIENT * baseline));
+        return consumptionIndex;
+    }
+
     private ReportIndex getCapIndexConsumptionData(BuildingDto buildingDto,
                                                    List<BillDto> billDtos,
                                                    BillDto lastBillDto) {
@@ -567,6 +578,7 @@ public class ReportService {
         costIndex.setNationalMedian(1.1f);
         return costIndex;
     }
+
 
     private List<Float> calculateBaseLine(String buildingId) throws NotFoundException {
         List<BillDto> lastYearBills = this.billService.getBillsOfYear(buildingId, DateUtil.getCurrentYear() - 1, true);

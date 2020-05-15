@@ -173,7 +173,7 @@ public class ApplicationTests {
         List<ReportIndex> indexes;
         EnergyConsumptionIndexDto dto = null;
         indexes = this.reportService.getAllEnergyConsumptionIndexes(BUILDING_ID);
-        dto = new EnergyConsumptionIndexDto(indexes.get(0), indexes.get(1), indexes.get(2), indexes.get(3));
+        dto = new EnergyConsumptionIndexDto(indexes.get(0), indexes.get(1), indexes.get(2), indexes.get(3), indexes.get(4));
         return dto;
     }
 
