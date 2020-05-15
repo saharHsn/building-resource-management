@@ -6,7 +6,7 @@ import {User} from 'src/app/_models';
 import {Building} from 'src/app/building/model/building';
 import {BuildingService} from 'src/app/building/service/building.service';
 import {AuthenticationService} from 'src/app/_services';
-import {BuildingUpdateService} from 'src/app/_services/building-update.service';
+import {CurrentBuildingService} from 'src/app/_services/current-building.service';
 import {PredictionsComponent} from './predictions/predictions.component';
 import {BeScoreComponent} from './be-score/be-score.component';
 import {MessageService} from 'src/app/_services/message.service';
@@ -24,7 +24,7 @@ export class OverallComponent implements OnInit {
               private chartService: ChartService,
               private buildingService: BuildingService,
               private authService: AuthenticationService,
-              private buildingUpdateService: BuildingUpdateService,
+              private buildingUpdateService: CurrentBuildingService,
               private messages: MessageService
               // private prediction: PredictionsComponent
   ) {
@@ -66,18 +66,18 @@ export class OverallComponent implements OnInit {
     this.buildingService.getBuildingUsersTest().subscribe(
       data => {
         this.buildings = data.content;
-        if (this.buildingUpdateService.getIdBuilding() !== null) {
+        if (this.buildingUpdateService.getBuildingId() !== null) {
           return;
         } else {
           const id = data.content[0].id;
-          this.buildingUpdateService.setIdBuilding(id);
+          this.buildingUpdateService.setBuildingId(id);
         }
       },
       error => console.log(error)
     );
   }
   select(event) {
-    this.buildingUpdateService.setIdBuilding(event);
+    this.buildingUpdateService.setBuildingId(event);
     this.initCharts();
     this.predictionsComponent.ngOnInit();
     this.beScoreComponent.ngOnInit();

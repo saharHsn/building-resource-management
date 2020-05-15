@@ -24,7 +24,7 @@ export class BuildingService {
     this.baseUrl = this.environmentUrl + '/buildings';
   }
 
-  getBuilding(id: number): Observable<any> {
+  getBuilding(id: string): Observable<any> {
     const headers = this.authService.getHeaders();
     return this.http.get(`${this.baseUrl}/${id}`, {headers});
   }
@@ -95,7 +95,6 @@ export class BuildingService {
     return this.getBuildingByOwner(user);
   }
 
-// super user
   getBuildingUsersTest(): Observable<any> {
     const headers = this.authService.getHeaders();
     return this.http.get(`${this.baseUrl}/getAllUserBuildings`, {headers});
