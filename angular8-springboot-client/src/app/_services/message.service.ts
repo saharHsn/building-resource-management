@@ -22,7 +22,6 @@ export class MessageService {
   }
 
   private callService(restUrl: string) {
-    const currentBuildingId = this.buildingUpdateService.getBuildingId();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -32,11 +31,12 @@ export class MessageService {
         .set('Accept', '*/*')
         .set('Content-Type', 'application/json');
     }
-    return this.http.get(`${restUrl}/${currentBuildingId}`, {headers});
+    return this.http.get(`${restUrl}`, {headers});
   }
 
   getMessages(): Observable<any> {
-    return this.callService(`${this.baseUrl}`);
+    const currentBuildingId = this.buildingUpdateService.getBuildingId();
+    return this.callService(`${this.baseUrl}/${currentBuildingId}`);
   }
 
   readMessages(idMessage) {
@@ -55,5 +55,35 @@ export class MessageService {
       .set('readStatus', 'true');
     return this.http.post(`${this.baseUrl}/updateReadStatus`,
       params, {headers});
+  }
+
+  getBuildingMessageList(buildingId: string): Observable<any> {
+    return this.callService(`${this.baseUrl}/${buildingId}`);
+  }
+
+  deleteMessage(messageId: string): Observable<any> {
+    let headers;
+    // @ts-ignore
+    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
+    if (user && user.token) {
+      headers = new HttpHeaders()
+        .set('X-Session', user.token)
+        .set('Accept', '*/*')
+        .set('Content-Type', 'application/json');
+    }
+    return this.http.delete(`${this.baseUrl}/${messageId}`, {headers});
+  }
+
+  createNewMessage(messageBody: string, buildingId: string) {
+    let headers;
+    // @ts-ignore
+    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
+    if (user && user.token) {
+      headers = new HttpHeaders()
+        .set('X-Session', user.token)
+        .set('Accept', '*/*')
+        .set('Content-Type', 'application/json');
+    }
+    return this.http.post(`${this.baseUrl}/${buildingId}`, messageBody, {headers});
   }
 }

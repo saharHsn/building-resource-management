@@ -45,11 +45,11 @@ export class WizardFormComponent implements OnInit {
   waterFile: File;
   electricityFile: File;
 
-  @ViewChild('gasFile', null)
+  @ViewChild('gasFile', {static: false})
   gasFileVariable: ElementRef;
-  @ViewChild('waterFile', null)
+  @ViewChild('waterFile', {static: false})
   waterFileVariable: ElementRef;
-  @ViewChild('electricityFile', null)
+  @ViewChild('electricityFile', {static: false})
   electricityFileVariable: ElementRef;
 
   getUserInfo() {

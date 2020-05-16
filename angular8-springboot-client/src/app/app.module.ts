@@ -14,7 +14,6 @@ import {HomeComponent} from './home';
 import {LoginComponent} from './login';
 import {RegisterComponent} from './register';
 import {InvitationComponent} from './invitation';
-import {AlertComponent} from './_components';
 import {WizardFormComponent} from './wizard-form/wizard-form.component';
 import {ArchwizardModule} from 'angular-archwizard';
 import {BuildingUsageComponent} from './building/enums/building-usage-component';
@@ -71,6 +70,8 @@ import {GoogleAnalyticsService} from './_analytics/google-analytics.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HeaderComponent} from './default/header/header.component';
 import {SidebarComponent} from './default/sidebar/sidebar.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+
 import {
   MatBadgeModule,
   MatButtonModule,
@@ -103,6 +104,8 @@ import {DailyElectricityComponent} from './charts/cost/daily-electricity/daily-e
 import {RemoveUnderlinePipe} from './pipes/remove-underline.pipe';
 import {AdminPanelComponent} from './admin/admin-panel/admin-panel.component';
 import {BuildingDetailsAdminComponent} from './building/building-details-admin/building-details-admin.component';
+import {BuildingMessagesComponent} from './building-messages/building-messages.component';
+import {AlertModule} from "./_services/_alert/alert.module";
 
 // tslint:disable-next-line:max-line-length
 
@@ -140,8 +143,9 @@ import {BuildingDetailsAdminComponent} from './building/building-details-admin/b
     MatNativeDateModule,
     MatInputModule,
     MatSelectModule,
-    NgxPrintModule
-
+    NgxPrintModule,
+    NgbModule,
+    AlertModule
   ],
   declarations: [
     AppComponent,
@@ -156,7 +160,6 @@ import {BuildingDetailsAdminComponent} from './building/building-details-admin/b
     BuildingListComponent,
     CreateBuildingComponent,
     InvitationComponent,
-    AlertComponent,
     WizardFormComponent,
     BuildingUsageComponent,
     BuildingAgeComponent,
@@ -207,13 +210,9 @@ import {BuildingDetailsAdminComponent} from './building/building-details-admin/b
     ResetPasswordComponent,
     BulletChartComponent,
     DailyElectricityComponent,
-    RemoveUnderlinePipe
-  ],
-
-  entryComponents: [DownloadComponent]
-
-  ,
-
+    RemoveUnderlinePipe,
+    BuildingMessagesComponent],
+  entryComponents: [DownloadComponent],
   providers: [
     GoogleAnalyticsService,
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},

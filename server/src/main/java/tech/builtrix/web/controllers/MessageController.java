@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import tech.builtrix.Response;
 import tech.builtrix.base.ControllerBase;
+import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.user.User;
 import tech.builtrix.services.message.MessageService;
 import tech.builtrix.web.dtos.message.MessageDto;
@@ -23,7 +24,7 @@ public class MessageController extends ControllerBase {
 
     @ApiOperation(value = "Request for creating new message")
     @PostMapping(value = "{buildingId}")
-    public Response<MessageDto> create(@PathVariable("buildingId") String buildingId, @RequestParam String message) {
+    public Response<MessageDto> create(@PathVariable("buildingId") String buildingId, @RequestBody String message) {
         MessageDto messageDto;
         messageDto = messageService.save(buildingId, message);
         return Response.ok(messageDto);
@@ -43,5 +44,12 @@ public class MessageController extends ControllerBase {
         User user = this.requestContext.getUser();
         List<MessageDto> allBuildingMessages = this.messageService.getAll(user, buildingId);
         return Response.ok(allBuildingMessages);
+    }
+
+    @ApiOperation(value = "Request for deleting a specific message")
+    @DeleteMapping(value = "{messageId}")
+    public Response<Void> delete(@PathVariable("messageId") String messageId) throws NotFoundException {
+        this.messageService.delete(messageId);
+        return Response.ok();
     }
 }

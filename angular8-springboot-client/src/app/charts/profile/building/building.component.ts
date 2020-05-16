@@ -21,7 +21,7 @@ export class BuildingComponent implements OnInit {
   electricityFile: File;
   // @ts-ignore
   buildingInfo: BehaviorSubject<object> = new BehaviorSubject<object>(0);
-  @ViewChild('electricityFile', null)
+  @ViewChild('electricityFile', {static: false})
   electricityFileVariable: ElementRef;
 
   constructor(private buildingService: BuildingService,
