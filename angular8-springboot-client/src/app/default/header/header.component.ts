@@ -23,7 +23,8 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog,
     private appService: AppService,
-    private messages: MessageService
+    private messages: MessageService,
+
   ) {
     this.currentUser = this.authenticationService.currentUserValue;
 
@@ -36,18 +37,11 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     //getting messages
     this.getMessages();
+  
 
   }
 
-  // dialog component
-  /*   openDialog(): void {
-      const dialogRef = this.dialog.open(NotificationsComponent, {
-        width: '400px',
 
-      });
-
-
-    } */
 
   // reading message change the status
   read(idmessage,message) {
@@ -62,7 +56,6 @@ export class HeaderComponent implements OnInit {
 
     this.messages.readMessages(idmessage).subscribe(data => {
       console.log(data);
-    
        this.getMessages();
     });
     
@@ -108,4 +101,6 @@ export class HeaderComponent implements OnInit {
       );
     }, 300);
   }
+
+
 }

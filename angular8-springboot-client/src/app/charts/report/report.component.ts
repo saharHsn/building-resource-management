@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChartService } from '../chartService';
-import * as PDF from "jspdf";
 import * as html2pdf from 'html2pdf.js'
 @Component({
   selector: 'app-report',
@@ -9,7 +8,7 @@ import * as html2pdf from 'html2pdf.js'
   styleUrls: ['./report.component.css']
 })
 export class ReportComponent implements OnInit {
- /*  @ViewChild('content', { static: true }) content: ElementRef; */
+
   beScore: number;
   nationalMedian: number;
   propertyTarget: number;
@@ -68,5 +67,14 @@ export class ReportComponent implements OnInit {
   print(){
     window.print();
   }
+
+  loadPage():void{
+
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
+    this.router.navigate(['report']));
+   
+  }
+
+  
 }
  

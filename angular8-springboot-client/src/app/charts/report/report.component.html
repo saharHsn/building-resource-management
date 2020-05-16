@@ -1,6 +1,6 @@
   <div class="report_buttons">
     <div>
-      <app-building-button></app-building-button>
+      <app-building-button (loadPage)="loadPage()"></app-building-button>
     </div>
     <div>
       <button mat-button (click)="download()">
@@ -28,17 +28,14 @@
   
   <div class="row">
     <div class="col">
-    <!--   <app-report-be-score></app-report-be-score> -->
+  
     <app-be-score></app-be-score>
     <p class="title">Be score: {{beScore}} <br>
       Property's Target: {{propertyTarget}} <br>
 
       National Median:{{nationalMedian}}</p>
     </div>
-  <!--   <div class="col highcharts-container">
-      <app-be-breakdown></app-be-breakdown>
-      <p class="title">Energy Efficiency: 95.0% <br>
-        Engagement: 5.0% <br></p>
+ 
     </div> -->
     <div class="col">
       <app-percentile></app-percentile>
@@ -56,13 +53,10 @@
     <app-color-energy></app-color-energy>
   </div>
   
-    <!-- <div class="col">
-       <app-energy-efficiency-symbols></app-energy-efficiency-symbols>
-     </div>-->
+   
   </div>
 
 </div>
 <hr>
 
 
-<app-bullet-chart></app-bullet-chart>

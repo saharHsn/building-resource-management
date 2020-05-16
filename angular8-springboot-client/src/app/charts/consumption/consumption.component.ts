@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ChartService} from '../chartService';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-consumption',
@@ -10,7 +11,7 @@ export class ConsumptionComponent implements OnInit {
   chartOptions;
 
   // tslint:disable-next-line:variable-name
-  constructor(private _chartService: ChartService) {
+  constructor(private _chartService: ChartService,private router: Router) {
   }
 
   ngOnInit() {
@@ -28,8 +29,9 @@ export class ConsumptionComponent implements OnInit {
     console.log(this.chartOptions);
   }
 
-  /* getChangedAxis($event) {
-     this.xAxisCategories = $event;
-     // this.dynamicChart.reloadChart(null, this.xAxisCategories);
-   }*/
+  loadPage():void{
+    
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
+    this.router.navigate(['consumption-component']));
+  }
 }

@@ -6,6 +6,8 @@ import {first} from 'rxjs/operators';
 import {AlertService, AuthenticationService} from '../_services';
 import {AppService} from '../_services/app.service';
 import {GoogleAnalyticsService} from '../_analytics/google-analytics.service';
+import { BuildingService } from '../building/service/building.service';
+import { BuildingUpdateService } from '../_services/building-update.service';
 
 @Component({templateUrl: 'login.component.html'})
 export class LoginComponent implements OnInit {
@@ -21,7 +23,9 @@ export class LoginComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private appService: AppService,
     private alertService: AlertService,
-    private googleAnalyticsService: GoogleAnalyticsService
+    private googleAnalyticsService: GoogleAnalyticsService,
+    private buildingService:BuildingService,
+    private buildingUpdateService: BuildingUpdateService
   ) {
     // redirect to home if already logged in
     /*if (this.authenticationService.currentUserValue) {
@@ -63,7 +67,37 @@ export class LoginComponent implements OnInit {
           this.googleAnalyticsService.eventEmitter('user-login', 'user', 'login', 'login', 10);
           // this.router.navigate([this.returnUrl]);
           this.appService.setUserLoggedIn(true);
-          this.router.navigate(['/overall']);
+          //bring the buildings 
+          this.buildingService.getBuildingUsersTest().subscribe(
+            data => {
+     
+             /*  this.buildings = data.content; */
+              const id = data.content[0].id;
+              const name =data.content[0].name;
+            
+              this.buildingUpdateService.setIdBuilding(id);
+              
+             
+              
+             /*  this.buildings = data.content;
+              console.log(this.buildings)
+              if (this.buildingUpdateService.getIdBuilding() !== null) {
+                return;
+              } else {
+                const id = data.content[0].id;
+                
+      
+                this.buildingUpdateService.setIdBuilding(id);
+              } */
+              this.router.navigate(['/overall']);
+            },
+            error => console.log(error)
+          );
+
+
+        
+            
+
         },
         error => {
           this.alertService.error(error.error.message);
