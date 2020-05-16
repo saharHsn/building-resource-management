@@ -1,8 +1,7 @@
-import {Observable} from 'rxjs';
 import {BuildingService} from '../service/building.service';
 import {Building} from '../model/building';
 import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-building-list',
@@ -10,10 +9,10 @@ import {Router} from '@angular/router';
   styleUrls: ['./building-list.component.css']
 })
 export class BuildingListComponent implements OnInit {
-  buildings: Observable<Building[]>;
+  buildings: Building[];
 
   constructor(private buildingService: BuildingService,
-              private router: Router) {
+              private route: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -21,10 +20,16 @@ export class BuildingListComponent implements OnInit {
   }
 
   reloadData() {
-    this.buildings = this.buildingService.getBuildingsList();
+    this.buildingService.getBuildingsList().subscribe(data => {
+        this.buildings = data.content;
+        // this.alertService.success('Your dashboard will be rendered in a few minutes.\n', true);
+      }
+      , error => {
+        console.log(error);
+      });
   }
 
-  deleteBuilding(id: number) {
+  deleteBuilding(id: string) {
     this.buildingService.deleteBuilding(id)
       .subscribe(
         data => {
@@ -34,7 +39,7 @@ export class BuildingListComponent implements OnInit {
         error => console.log(error));
   }
 
-  buildingDetails(id: number) {
-    this.router.navigate(['details', id]);
+  buildingDetails(id: string) {
+    // this.route.(['/building-details-admin', id]);
   }
 }

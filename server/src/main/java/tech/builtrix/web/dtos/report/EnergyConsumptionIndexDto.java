@@ -15,5 +15,6 @@ public class EnergyConsumptionIndexDto {
     private ReportIndex consumptionArea;
     private ReportIndex consumptionCap;
     private ReportIndex cost;
+    private ReportIndex co2;
     private ReportIndex energyEfficiencyLevel;
 }

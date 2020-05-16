@@ -6,7 +6,7 @@ import {YearFilterType} from './consumption/consumption-average-tariff-cost/filt
 import {TimePeriodType} from './consumption/consumption-average-tariff-cost/filter-form/enum/TimePeriodType';
 import {DatePartType} from './consumption/consumption-average-tariff-cost/filter-form/enum/DatePartType';
 import {AuthenticationService} from '../_services';
-import {BuildingUpdateService} from '../_services/building-update.service';
+import {CurrentBuildingService} from '../_services/current-building.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,6 @@ import {BuildingUpdateService} from '../_services/building-update.service';
 export class ChartService {
   environmentName = '';
   environmentUrl = 'Debug api';
-
-
   private readonly baseUrl;
   private readonly predictUrl;
   private readonly savingUrl;
@@ -37,12 +35,10 @@ export class ChartService {
   private readonly downloadUrl;
   private readonly HistoricalConsumptionUrl;
   private readonly HistoricalCostUrl;
-
-
   headers: HttpHeaders;
 
   constructor(private http: HttpClient,
-              private authService: AuthenticationService, private buildingUpdateService: BuildingUpdateService) {
+              private authService: AuthenticationService, private buildingUpdateService: CurrentBuildingService) {
 
     this.environmentName = environment.environmentName;
     this.environmentUrl = environment.apiUrl;
@@ -67,15 +63,13 @@ export class ChartService {
     this.downloadUrl = this.baseUrl + '/download';
     this.HistoricalConsumptionUrl = this.baseUrl + '/historicalConsumption';
     this.HistoricalCostUrl = this.baseUrl + '/historicalCost';
-
     this.headers = this.authService.getHeaders();
-    console.log(this.predictUrl);
   }
 
 
   /* month:any,year:any */
   gethistoricalConsumption(month: string, year: string): Observable<any> {
-    const idBuilding = this.buildingUpdateService.getIdBuilding();
+    const buildingId = this.buildingUpdateService.getBuildingId();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -88,14 +82,14 @@ export class ChartService {
     const params = new HttpParams()
       .set('year', year)
       .set('month', month);
-    return this.http.get(`${this.HistoricalConsumptionUrl}/${idBuilding}`,
+    return this.http.get(`${this.HistoricalConsumptionUrl}/${buildingId}`,
       {headers, params}
     );
   }
 
 
   getHistoricalCost(month: string, year: string): Observable<any> {
-    const idBuilding = this.buildingUpdateService.getIdBuilding();
+    const buildingId = this.buildingUpdateService.getBuildingId();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -108,14 +102,14 @@ export class ChartService {
     const params = new HttpParams()
       .set('year', year)
       .set('month', month);
-    return this.http.get(`${this.HistoricalCostUrl}/${idBuilding}`,
+    return this.http.get(`${this.HistoricalCostUrl}/${buildingId}`,
       {headers, params}
     );
   }
 
 
   private callService(restUrl: string) {
-    const idcurrentBuilding = this.buildingUpdateService.getIdBuilding();
+    const idcurrentBuilding = this.buildingUpdateService.getBuildingId();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -134,6 +128,7 @@ export class ChartService {
   }
 
   download(): Observable<any> {
+    const idcurrentBuilding = this.buildingUpdateService.getBuildingId();
     /*.subscribe(response => this.downLoadFile(response, "application/ms-excel"))*/
     // return this.callService(`${this.downloadUrl}`);
     let headers;
@@ -144,7 +139,7 @@ export class ChartService {
         .set('X-Session', user.token)
         .set('Accept', '*/*');
     }
-    return this.http.get(`${this.downloadUrl}`, {responseType: 'arraybuffer', headers});
+    return this.http.get(`${this.downloadUrl}/${idcurrentBuilding}`, {responseType: 'arraybuffer', headers});
   }
 
 

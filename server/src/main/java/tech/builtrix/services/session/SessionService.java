@@ -31,11 +31,6 @@ public class SessionService extends GenericCrudServiceBase<Session, SessionRepos
         super(sessionRepository);
     }
 
-    @Override
-    public void delete(String id) throws NotFoundException {
-
-    }
-
     @Cacheable(cacheNames = "SessionService.getSession", key = "#sessionKey")
     public Session getSession(String sessionKey) throws NotFoundException {
         Session session = this.repository.findBySessionKey(sessionKey);

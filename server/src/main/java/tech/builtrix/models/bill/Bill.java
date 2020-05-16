@@ -57,10 +57,6 @@ public class Bill extends EntityBase<Bill> {
     private float averageDailyConsumption = 0f;
     @DynamoDBAttribute
     private float totalMonthlyConsumption = 0f;
-    // BillParameterInfo
-    @DynamoDBAttribute
-    private float activePower = 0f;
-    // active power (Energia Ativa) AE --> Energia Ativa
     // Super Vasio
     @DynamoDBAttribute(attributeName = "aEOffHours")
     private String aEOffHours;
@@ -86,6 +82,8 @@ public class Bill extends EntityBase<Bill> {
     // Cost of Power demand in peak hour : Potência Horas de Ponta
     @DynamoDBAttribute(attributeName = "rDPeakHours")
     private String rDPeakHours;
+    @DynamoDBAttribute(attributeName = "rDPowerPeakHours")
+    private String rDPowerPeakHours;
     // cost of contracted power: Potencia Contratada
     @DynamoDBAttribute(attributeName = "rDContractedPower")
     private String rDContractedPower;

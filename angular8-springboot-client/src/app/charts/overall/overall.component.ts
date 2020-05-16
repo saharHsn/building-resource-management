@@ -6,7 +6,7 @@ import {User} from 'src/app/_models';
 import {Building} from 'src/app/building/model/building';
 import {BuildingService} from 'src/app/building/service/building.service';
 import {AuthenticationService} from 'src/app/_services';
-import {BuildingUpdateService} from 'src/app/_services/building-update.service';
+import {CurrentBuildingService} from 'src/app/_services/current-building.service';
 import {PredictionsComponent} from './predictions/predictions.component';
 import {BeScoreComponent} from './be-score/be-score.component';
 import { MessageService } from 'src/app/_services/message.service';
@@ -25,8 +25,8 @@ export class OverallComponent implements OnInit {
               private chartService: ChartService,
               private buildingService: BuildingService,
               private authService: AuthenticationService,
-              private buildingUpdateService: BuildingUpdateService,
-              private messages:MessageService
+              private buildingUpdateService: CurrentBuildingService,
+              private messages: MessageService
               // private prediction: PredictionsComponent
   ) {
     this.currentUser = this.authService.currentUserValue;

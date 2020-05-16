@@ -5,6 +5,7 @@ import {environment} from '../../environments/environment';
 import {AuthenticationService} from '../_services';
 import {BuildingUpdateService} from '../_services/building-update.service';
 import { CurrentMonthSummary } from '../charts/overall/CurrentMonthSummary';
+import {CurrentBuildingService} from './current-building.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class MessageService {
   invokeFirstComponentFunction = new EventEmitter();    
   subsVar: Subscription; 
   constructor(private http: HttpClient,
-              private authService: AuthenticationService, private buildingUpdateService: BuildingUpdateService) {
+              private authService: AuthenticationService, private buildingUpdateService: CurrentBuildingService) {
 
     this.environmentName = environment.environmentName;
     this.environmentUrl = environment.apiUrl;
@@ -27,9 +28,8 @@ export class MessageService {
 
   }
 
-
   private callService(restUrl: string) {
-    const idcurrentBuilding = this.buildingUpdateService.getIdBuilding();
+    const currentBuildingId = this.buildingUpdateService.getBuildingId();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -39,18 +39,14 @@ export class MessageService {
         .set('Accept', '*/*')
         .set('Content-Type', 'application/json');
     }
-    const objectObservable = this.http.get(`${restUrl}/${idcurrentBuilding}`, {headers});
-    return objectObservable;
+    return this.http.get(`${restUrl}/${currentBuildingId}`, {headers});
   }
-
 
   getMessages(): Observable<any> {
     return this.callService(`${this.baseUrl}`);
   }
 
   readMessages(idMessage) {
-    console.log(idMessage);
-    const idBuilding = this.buildingUpdateService.getIdBuilding();
     let headers;
     const message = idMessage;
 

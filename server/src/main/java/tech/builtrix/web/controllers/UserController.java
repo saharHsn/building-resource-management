@@ -27,6 +27,7 @@ public class UserController extends ControllerBase {
 	@ApiOperation(value = "Request for creating new user")
 	@PostMapping
 	public Response<String> save(@RequestBody UserDto user) {
+		user.setEmailAddress(user.getEmailAddress().toLowerCase());
 		String userId = service.save(user).getId();
 		return Response.ok(userId);
 	}

@@ -8,6 +8,7 @@ import {MatDialog} from '@angular/material';
 import {DownloadComponent} from '../download/download.component';
 import {ChartService} from 'src/app/charts/chartService';
 import { MessageService } from '../../_services/message.service';
+import {CurrentBuildingService} from "../../_services/current-building.service";
 
 @Component({
   selector: 'app-building-details',
@@ -22,6 +23,7 @@ export class BuildingDetailsComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private buildingService: BuildingService,
+              private currentBuildingService: CurrentBuildingService,
               public dialog: MatDialog,
               private chartService: ChartService,
               private messages:MessageService) {
@@ -30,7 +32,8 @@ export class BuildingDetailsComponent implements OnInit {
   ngOnInit() {
     // this.building = new Building();
     this.id = this.route.snapshot.params.id;
-    this.buildingService.getCurrentBuilding()
+    const currentBuildingId = this.currentBuildingService.getBuildingId();
+    this.buildingService.getBuilding(currentBuildingId)
       .subscribe(data => {
         console.log('Building Info: ' + data);
         this.building = data.content;
@@ -52,7 +55,9 @@ export class BuildingDetailsComponent implements OnInit {
   /* list() {
      this.router.navigate(['buildings']);
    }*/
-  getBuiltIn(): string {
+  getBuiltIn()
+    :
+    string {
     const buildingAge = this.building.age;
     const currentYear = (new Date()).getFullYear();
     if (BuildingAge[buildingAge] === BuildingAge.LESS_THAN_5_YEARS) {
@@ -66,7 +71,9 @@ export class BuildingDetailsComponent implements OnInit {
     }
   }
 
-  getCurrentDate(): string {
+  getCurrentDate()
+    :
+    string {
     const currentDate = new Date();
     return currentDate.toDateString();
   }
@@ -78,7 +85,12 @@ export class BuildingDetailsComponent implements OnInit {
       });
   }
 
-  downLoadFile(data: any, type: string) {
+  downLoadFile(data
+                 :
+                 any, type
+                 :
+                 string
+  ) {
     const blob = new Blob([data], {type});
     // window.open(this.restUrl, "_blank");
     const url = window.URL.createObjectURL(blob);

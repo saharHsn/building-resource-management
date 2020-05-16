@@ -108,7 +108,8 @@ import { ResetPasswordComponent } from './login/reset-password/reset-password.co
   ;
 import { BulletChartComponent } from './charts/report/bullet-chart/bullet-chart.component';
 import { DailyElectricityComponent } from './charts/cost/daily-electricity/daily-electricity.component';;
-import { RemoveUnderlinePipe } from './pipes/remove-underline.pipe';
+import { RemoveUnderlinePipe } from './pipes/remove-underline.pipe'
+;
 import { BuildingButtonComponent } from './_components/building-button/building-button.component'
 
 
@@ -219,7 +220,8 @@ import { BuildingButtonComponent } from './_components/building-button/building-
     ,
     BulletChartComponent,
     DailyElectricityComponent,
-    RemoveUnderlinePipe,
+    RemoveUnderlinePipe
+,
     BuildingButtonComponent
 
   ],

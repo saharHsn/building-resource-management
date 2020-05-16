@@ -20,6 +20,10 @@
   <a class="nav-link" [routerLink]="['/profile']">
     <mat-icon>account_circle</mat-icon>
     Profile</a>
+
+  <a class="nav-link" *ngIf="isAdmin" [routerLink]="['/admin-panel']">
+    <mat-icon>account_circle</mat-icon>
+    Admin Panel</a>
 </mat-nav-list>
 
 

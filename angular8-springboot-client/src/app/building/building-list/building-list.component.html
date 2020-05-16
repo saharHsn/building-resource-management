@@ -6,21 +6,25 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Firstname</th>
-          <th>Lastname</th>
-          <th>Email</th>
-          <th>Actions</th>
+          <th>Building Name</th>
+          <th>Building Age</th>
+          <th>Building Address</th>
+          <th>Building usage</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let building of buildings | async">
-          <td>{{building.firstName}}</td>
-          <td>{{building.lastName}}</td>
-          <td>{{building.emailId}}</td>
-          <td><button (click)="deleteBuilding(building.id)" class="btn btn-danger">Delete</button>
-              <button (click)="buildingDetails(building.id)" class="btn btn-info" style="margin-left: 10px">Details</button>
-          </td>
-        </tr>
+      <tr *ngFor="let building of buildings">
+        <td>{{building.name}}</td>
+        <td>{{building.age}}</td>
+        <td>{{building.postalAddress}}</td>
+        <td>{{building.usage}}</td>
+        <td><!--
+        <button (click)="deleteBuilding(building.id)" class="btn btn-danger">Delete</button>
+        <button (click)="buildingDetails(building.id)" class="btn btn-info" style="margin-left: 10px">Details</button>
+          -->
+          <a [routerLink]="['/building-details-admin',building.id]">Details</a>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>

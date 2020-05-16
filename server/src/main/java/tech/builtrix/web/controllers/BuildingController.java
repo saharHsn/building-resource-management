@@ -53,19 +53,26 @@ public class BuildingController extends ControllerBase {
 		User user = this.requestContext.getUser();
 		BuildingDto building = buildingService.findByOwner(userId);
 		return Response.ok(building);
-	}
+    }
 
-	@ApiOperation(value = "Request for getting all buildings that belongs to the user or user can see them")
-	@GetMapping(value = "/getAllUserBuildings")
-	public Response<List<BuildingDto>> getAllUserBuildings() {
-		User user = this.requestContext.getUser();
-		List<BuildingDto> userBuildings = this.buildingService.getAllUserBuildings(user);
-		return Response.ok(userBuildings);
-	}
+    @ApiOperation(value = "Request for getting all buildings that belongs to the user or user can see them")
+    @GetMapping(value = "/getAllUserBuildings")
+    public Response<List<BuildingDto>> getAllUserBuildings() {
+        User user = this.requestContext.getUser();
+        List<BuildingDto> userBuildings = this.buildingService.getAllUserBuildings(user);
+        return Response.ok(userBuildings);
+    }
 
-	@ApiOperation(value = "Request for updating a specific building")
-	@PutMapping
-	public Response<BuildingDto> update(@ModelAttribute BuildingDto building)
+    @ApiOperation(value = "Request for getting all buildings")
+    @GetMapping(value = "/allBuildings")
+    public Response<List<BuildingDto>> getAllBuildings() {
+        List<BuildingDto> allBuildings = this.buildingService.getAll();
+        return Response.ok(allBuildings);
+    }
+
+    @ApiOperation(value = "Request for updating a specific building")
+    @PutMapping
+    public Response<BuildingDto> update(@ModelAttribute BuildingDto building)
 			throws ParseException, BillParseException, NotFoundException {
 		return Response.ok(this.buildingService.update(building));
 	}
@@ -74,6 +81,13 @@ public class BuildingController extends ControllerBase {
 	@DeleteMapping(value = "{buildingId}")
 	public Response<Void> deleteBuildingDetails(@PathVariable("buildingId") String buildingId) {
 		buildingService.delete(buildingId);
+		return Response.ok();
+	}
+
+	@ApiOperation(value = "Request for deleting a specific building")
+	@DeleteMapping(value = "/deleteAllBills/{buildingId}")
+	public Response<Void> deleteAllBills(@PathVariable("buildingId") String buildingId) throws NotFoundException {
+		buildingService.deleteAllBills(buildingId);
 		return Response.ok();
 	}
 

@@ -30,7 +30,7 @@ public class AuthenticationService {
 	public User loginByPassword(String email, String password) throws InvalidPasswordException, InactiveUserException {
 		User user;
 		try {
-			user = this.userService.findByEmail(email);
+			user = this.userService.findByEmail(email.toLowerCase());
 		} catch (NotFoundException ex) {
 			throw new InvalidPasswordException();
 		}

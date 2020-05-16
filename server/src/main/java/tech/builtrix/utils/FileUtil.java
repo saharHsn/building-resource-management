@@ -20,7 +20,7 @@ import java.util.UUID;
  * Created By sahar at 12/12/19
  */
 public class FileUtil {
-	public static void unzipMultipartFile(MultipartFile file, String destination) throws IOException {
+    public static void unzipMultipartFile(MultipartFile file, String destination) throws IOException {
 		/*
 		  save file to temp
 		 */
@@ -46,31 +46,31 @@ public class FileUtil {
 			 */
             zip.delete();
         }
-	}
+    }
 
-	public static List<File> getDirectoryFiles(File file) {
-		List<File> files = new ArrayList<>();
-		Iterator it = FileUtils.iterateFiles(file, null, true);
-		while (it.hasNext()) {
-			files.add((File) it.next());
-		}
-		return files;
-	}
+    public static List<File> getDirectoryFiles(File file) {
+        List<File> files = new ArrayList<>();
+        Iterator it = FileUtils.iterateFiles(file, null, true);
+        while (it.hasNext()) {
+            files.add((File) it.next());
+        }
+        return files;
+    }
 
-	public static MultipartFile createMultiPartFile(String fileName, String fullPath) throws IOException {
-		MultipartFile multipartFile = new MockMultipartFile(fileName, new FileInputStream(new File(fullPath)));
-		return multipartFile;
-	}
+    public static MultipartFile createMultiPartFile(String fileName, String fullPath) throws IOException {
+        MultipartFile multipartFile = new MockMultipartFile(fileName, fileName, null, new FileInputStream(new File(fullPath)));
+        return multipartFile;
+    }
 
-	public static void main(String[] args) throws IOException {
-		createMultiPartFile("uploadTest.zip",
-				"/Users/sahar/IdeaProjects/builtrix-metrics/server/src/main/resources/bills/uploadTest.zip");
-		File file = new File("test2");
-		// unzipMultipartFile(multipartFile, file.getAbsolutePath());
-		getDirectoryFiles(file);
-		// System.out.println(FileUtil.class.getClassLoader().getResource("relative
-		// path"));
+    public static void main(String[] args) throws IOException {
+        createMultiPartFile("uploadTest.zip",
+                "/Users/sahar/IdeaProjects/builtrix-metrics/server/src/main/resources/bills/uploadTest.zip");
+        File file = new File("test2");
+        // unzipMultipartFile(multipartFile, file.getAbsolutePath());
+        getDirectoryFiles(file);
+        // System.out.println(FileUtil.class.getClassLoader().getResource("relative
+        // path"));
 
-	}
+    }
 
 }

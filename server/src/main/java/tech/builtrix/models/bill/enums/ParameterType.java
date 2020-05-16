@@ -11,4 +11,5 @@ public enum ParameterType {
     RD_CONTRACTED_POWER,
     RD_REACTIVE_POWER,
     RD_PEAK_HOURS,
+    RD_POWER_PEAK_HOURS,
 }

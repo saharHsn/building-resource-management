@@ -24,7 +24,7 @@ export class BuildingService {
     this.baseUrl = this.environmentUrl + '/buildings';
   }
 
-  getBuilding(id: number): Observable<any> {
+  getBuilding(id: string): Observable<any> {
     const headers = this.authService.getHeaders();
     return this.http.get(`${this.baseUrl}/${id}`, {headers});
   }
@@ -72,14 +72,14 @@ export class BuildingService {
     return formData;
   }
 
-  deleteBuilding(id: number): Observable<any> {
+  deleteBuilding(id: string): Observable<any> {
     const headers = this.authService.getHeaders();
     return this.http.delete(`${this.baseUrl}/${id}`, {responseType: 'text', headers});
   }
 
   getBuildingsList(): Observable<any> {
     const headers = this.authService.getHeaders();
-    return this.http.get(`${this.baseUrl}`, {headers});
+    return this.http.get(`${this.baseUrl + '/allBuildings'}`, {headers});
   }
 
   getBuildingByOwner(user: User): Observable<any> {
@@ -94,11 +94,15 @@ export class BuildingService {
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
     return this.getBuildingByOwner(user);
   }
-//super user
+
   getBuildingUsersTest(): Observable<any> {
     const headers = this.authService.getHeaders();
     return this.http.get(`${this.baseUrl}/getAllUserBuildings`, {headers});
   }
-  
 
+
+  deleteAllBills(buildingId: string) {
+    const headers = this.authService.getHeaders();
+    return this.http.delete(`${this.baseUrl + '/deleteAllBills/' + buildingId}`, {headers});
+  }
 }

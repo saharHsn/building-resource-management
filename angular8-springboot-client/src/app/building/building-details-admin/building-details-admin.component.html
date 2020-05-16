@@ -1,0 +1,71 @@
+<mat-card class="card-1">
+  <mat-card-content>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <label><b>Property Name: </b></label> {{building.name}}
+        </div>
+        <div class="col">
+          <label><b>Property Function: </b></label> {{building.usage}}
+        </div>
+        <div class="col">
+          <label><b>Gross Floor Area (m2):</b></label> {{building.area}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label><b>Building Age:</b></label> {{building.builtIn}}
+        </div>
+        <div class="col">
+          <label><b>Property Address:</b></label> {{building.postalAddress}}
+        </div>
+        <div class="col">
+          <a [routerLink]="['/wizard',building.id]" class="btn btn-link">Update Form</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <label><b>Delete All Bills</b></label>
+          <div class="col">
+            <button (click)="deleteBuildingBills()" [disabled]="loading" class="btn btn-danger">Delete</button>
+            <br/>
+          </div>
+        </div>
+      </div>
+      <!--<div class="row">
+        <div class="form-group col-md-12">
+          Please upload Electricity bill(s) in zip or pdf format
+        </div>
+      </div>-->
+      <!--<div class="row">
+        <div class="form-group col-md-12">
+          <label class="col-md-2 control-lable" for="electricityFile">Electricity Bill</label>
+          <div class="col-md-6">
+            <input #electricityFile type="file" id="electricityFile" name="electricityFile" accept=".zip, .pdf"
+                   placeholder="Upload Electricity Bills Here."
+                   (change)="selectFile($event, 'Electricity')">
+            <br>
+            <button [hidden]="!electricityFile.value" class="remove-button"
+                    (click)="removeSelectedFile(electricityFile)">X
+            </button>
+
+            <br/>
+            <span class="btn-group">
+
+      <button type="submit" [disabled]="loading || (!electricityFile )"
+              class="btn btn-success" (click)="finishFunction()">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        Upload
+        <i class="fa fa-arrow-right"></i>
+      </button>
+    </span>
+          </div>
+        </div>
+      </div>-->
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<!--<div class="container">
+
+</div>-->

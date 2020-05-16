@@ -95,19 +95,44 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         if (rdPeakHoursDto != null) {
             rdPeakHours = this.billParameterService.save(rdPeakHoursDto);
         }
+        BillParameterDto rdPowerPeakHoursDto = billDto.getRDPowerPeakHours();
+        BillParameterInfo rdPowerPeakHours = null;
+        if (rdPowerPeakHoursDto != null) {
+            rdPowerPeakHours = this.billParameterService.save(rdPowerPeakHoursDto);
+        }
         BillParameterDto rdReactivePowerDto = billDto.getRDReactivePower();
         BillParameterInfo rdReactivePower = null;
         if (rdReactivePowerDto != null) {
             rdReactivePower = this.billParameterService.save(rdReactivePowerDto);
         }
+        BillParameterDto rdOffHoursDto = billDto.getRDOffHours();
+        BillParameterInfo rdOffHours = null;
+        if (rdOffHoursDto != null) {
+            rdOffHours = this.billParameterService.save(rdOffHoursDto);
+        }
+        BillParameterDto rdFreeHoursDto = billDto.getRDFreeHours();
+        BillParameterInfo rdFreeHours = null;
+        if (rdFreeHoursDto != null) {
+            rdFreeHours = this.billParameterService.save(rdFreeHoursDto);
+        }
+        BillParameterDto rdNormalHoursDto = billDto.getRDNormalHours();
+        BillParameterInfo rdNormalHours = null;
+        if (rdNormalHoursDto != null) {
+            rdNormalHours = this.billParameterService.save(rdNormalHoursDto);
+        }
         Bill bill = new Bill(billDto);
         bill.setAEPeakHours(aePeakHours != null ? aePeakHours.getId() : null);
         bill.setAEOffHours(aeOffHours != null ? aeOffHours.getId() : null);
+        bill.setRDOffHours(rdOffHours != null ? rdOffHours.getId() : null);
+        bill.setRDFreeHours(rdFreeHours != null ? rdFreeHours.getId() : null);
+        bill.setRDFreeHours(rdNormalHours != null ? rdNormalHours.getId() : null);
         bill.setAEFreeHours(aeFreeHours != null ? aeFreeHours.getId() : null);
         bill.setAENormalHours(aeNormalHours != null ? aeNormalHours.getId() : null);
         bill.setRDContractedPower(rdContractedPower != null ? rdContractedPower.getId() : null);
         bill.setRDPeakHours(rdPeakHours != null ? rdPeakHours.getId() : null);
         bill.setRDReactivePower(rdReactivePower != null ? rdReactivePower.getId() : null);
+        bill.setRDPowerPeakHours(rdPowerPeakHours != null ? rdPowerPeakHours.getId() : null);
+        bill.setRDNormalHours(rdNormalHours != null ? rdNormalHours.getId() : null);
         bill = this.repository.save(bill);
         return bill;
     }
@@ -417,6 +442,13 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
             BillParameterInfo rdPeak = this.billParameterService.findById(bill.getRDPeakHours());
             rdPeakDto = new BillParameterDto(rdPeak);
         }
+
+        BillParameterDto rdPowerPeakDto = null;
+        if (!StringUtils.isEmpty(bill.getRDPowerPeakHours())) {
+            BillParameterInfo rdPowerPeak = this.billParameterService.findById(bill.getRDPowerPeakHours());
+            rdPowerPeakDto = new BillParameterDto(rdPowerPeak);
+        }
+
         BillParameterDto rdFreeDto = null;
         if (!StringUtils.isEmpty(bill.getRDFreeHours())) {
             BillParameterInfo rdFree = this.billParameterService.findById(bill.getRDFreeHours());
@@ -461,6 +493,7 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
                 rdNormalDto,
                 aePeakDto,
                 rdPeakDto,
+                rdPowerPeakDto,
                 rdContractedDto,
                 rdReactiveDto
         );
@@ -484,8 +517,8 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
         return x;
     }
 
-    @Override
     public void delete(String id) throws NotFoundException {
+        logger.info("trying to delete bill number : " + id);
         Bill bill = findById(id);
         if (!StringUtils.isEmpty(bill.getRDReactivePower())) {
             this.billParameterService.delete(bill.getRDReactivePower());
@@ -518,5 +551,6 @@ public class BillService extends GenericCrudServiceBase<Bill, BillRepository> {
             this.billParameterService.delete(bill.getRDPeakHours());
         }
         this.repository.delete(bill);
+        logger.info("bill number : " + id + " was successfully deleted!");
     }
 }

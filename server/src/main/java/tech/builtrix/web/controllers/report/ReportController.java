@@ -198,7 +198,7 @@ public class ReportController extends ControllerBase {
         long l = System.currentTimeMillis();
         indexes = this.reportService.getAllEnergyConsumptionIndexes(buildingId);
         logger.info("After getAllEnergyConsumptionIndexes : " + (System.currentTimeMillis() - l) / 1000);
-        dto = new EnergyConsumptionIndexDto(indexes.get(0), indexes.get(1), indexes.get(2), indexes.get(3));
+        dto = new EnergyConsumptionIndexDto(indexes.get(0), indexes.get(1), indexes.get(2), indexes.get(3), indexes.get(4));
         return Response.ok(dto);
     }
 

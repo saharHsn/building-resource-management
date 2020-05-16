@@ -74,8 +74,7 @@ export class CostStackChartComponent implements OnInit {
 
             series: [
               {
-                name: 'Contracted Power' +
-                  'Power',
+                name: 'Contracted Power',
                 data: data.content.contractedPowerValues,
                 color: '#3A9AFC'
               },

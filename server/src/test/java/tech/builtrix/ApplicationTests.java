@@ -42,8 +42,12 @@ public class ApplicationTests {
     @Autowired
     private UserService userService;
 
+    //franklin
     private static String BUILDING_ID = "9d94dd4d-b789-4717-bdee-517a8de8ca6e";
+    //parede
     // private static String BUILDING_ID = "4f9e5bc1-471d-4b37-87ca-82f803898bb6";
+    //demo
+    // private static String BUILDING_ID = "fae0c9a2-ef89-477a-a073-a9e704e5ccb3";
     private Integer year = 2020;
     private TimePeriodType periodType = TimePeriodType.MONTHLY;
     private DatePartType datePartType = DatePartType.FREE_HOURS;
@@ -169,7 +173,7 @@ public class ApplicationTests {
         List<ReportIndex> indexes;
         EnergyConsumptionIndexDto dto = null;
         indexes = this.reportService.getAllEnergyConsumptionIndexes(BUILDING_ID);
-        dto = new EnergyConsumptionIndexDto(indexes.get(0), indexes.get(1), indexes.get(2), indexes.get(3));
+        dto = new EnergyConsumptionIndexDto(indexes.get(0), indexes.get(1), indexes.get(2), indexes.get(3), indexes.get(4));
         return dto;
     }
 
@@ -182,7 +186,7 @@ public class ApplicationTests {
     public void downloadS3File() throws IOException {
         // this.codeService.generateRandomNumber(33);
         // System.out.println();
-        this.hourlyDailyService.parseExcelData(BUILDING_ID);
+        this.hourlyDailyService.parseExcelData("", BUILDING_ID);
         // this.hourlyDailyService.copyDateData();
     }
 }

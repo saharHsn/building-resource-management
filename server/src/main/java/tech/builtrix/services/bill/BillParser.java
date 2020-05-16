@@ -16,7 +16,10 @@ import tech.builtrix.web.dtos.bill.BillDto;
 import tech.builtrix.web.dtos.bill.BillParameterDto;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,51 +30,70 @@ import java.util.regex.Pattern;
 @Component
 @Slf4j
 public class BillParser {
-    // private static final float CO2_PRODUCTION_RATE = 0.251f;
-    //kg/kWh;
-    private static Dictionary<String, String> PARAMS_DICTIONARY;
-    private static String SUPER_VAZIO = "Super Vazio (SV) ";
-    private static String REDES_SUPER_VAZIO = "Redes Super Vazio (SV) ";
-    private static String SUPER_VAZIO2 = "Vazio (SV) ";
-    private static String CONSUMO_ESTIMADO = "Simples - Consumo estimado ";
-    private static String VAZIO_NORMAL = "Vazio Normal (VN) ";
-    private static String VAZIO_CONSUMO_ESTIMADO = "Vazio – Consumo Estimado ";
-    private static String REDES_VAZIO_CONSUMO_ESTIMADO = "Redes Vazio – Consumo Estimado ";
-    private static String REDES_VAZIO_NORMAL = "Redes Vazio Normal (VN) ";
-    private static String VAZIO_NORMAL1 = "Vazio Norma (VN) ";
-    private static String VAZIO_NORMAL2 = "Norma (VN) ";
-    private static String SIMPLES_CONSUMO_JA_FACTURADO = "Simples Consumo ja facturado ";
-    private static String SIMPLES_CONSUMO_MEDIDO = "Simples Consumo medido ";
-    private static String SIMPLES_CONSUMO_ESTIMADO = "Simples - Consumo estimado ";
-    private static String SIMPLES_CONSUMO_ESTIMADO2 = "Simples Consumo estimado ";
-    private static String CHEIA = "Cheia (C) ";
-    private static String REDES_CHEIA = "Redes Cheia (C) ";
-    private static String CHEIA_CONSUMO_ESTIMADO = "Cheia - Consumo estimado ";
-    private static String REDES_CHEIA_CONSUMO_ESTIMADO = "Redes Cheia - Consumo estimado ";
-    private static String CHEIA1 = "(C) ";
-    private static String PONTA = "Ponta (P) ";
-    private static String REDES_PONTA = "Redes Ponta (P) ";
-    private static String PONTA_CONSUMO_ESTIMADO = "Ponta – Consumo Estimado ";
-    private static String REDES_PONTA_CONSUMO_ESTIMADO = "Redes Ponta - Consumo estimado ";
-    private static String POTENCIA_HORAS_DE_PONTA = "Potência Horas de Ponta";
-    private static String POTENCIA_HORAS_DE_PONTA_2 = "Horas de Ponta ";
+    private static final String SUPER_VAZIO = "Super Vazio (SV) ";
+    private static final String REDES_SUPER_VAZIO = "Redes Super Vazio (SV) ";
+
+    private static final String SUPER_VAZIO2 = "Vazio (SV) ";
+    private static final String CONSUMO_ESTIMADO = "Simples - Consumo estimado ";
+
+    private static final String VAZIO_NORMAL = "Vazio Normal (VN) ";
+    private static final String REDES_VAZIO_NORMAL = "Redes Vazio Normal (VN) ";
+
+    private static final String VAZIO_CONSUMO_ESTIMADO = "Vazio – Consumo Estimado ";
+    private static final String REDES_VAZIO_CONSUMO_ESTIMADO = "Redes Vazio – Consumo Estimado ";
+
+    private static final String VAZIO_NORMAL1 = "Vazio Norma (VN) ";
+    private static final String VAZIO_NORMAL2 = "Norma (VN) ";
+    private static final String SIMPLES_CONSUMO_JA_FACTURADO = "Simples Consumo ja facturado ";
+    private static final String SIMPLES_CONSUMO_MEDIDO = "Simples Consumo medido ";
+
+    private static final String SIMPLES_CONSUMO_ESTIMADO = "Simples - Consumo estimado ";
+    private static final String SIMPLES_CONSUMO_ESTIMADO2 = "Simples Consumo estimado ";
+
+    //Type1
+    private static final String CHEIA = "Cheia (C) ";
+    private static final String REDES_CHEIA = "Redes Cheia (C) ";
+    //Type2
+    private static final String CHEIA_CONSUMO_ESTIMADO = "Cheia - Consumo estimado ";
+    private static final String REDES_CHEIA_CONSUMO_ESTIMADO = "Redes Cheia - Consumo estimado ";
+
+    private static final String CHEIA1 = "(C) ";
+
+    //Type1
+    private static final String PONTA = "Ponta (P) ";
+    private static final String REDES_PONTA = "Redes Ponta (P) ";
+    //Type2
+    private static final String PONTA_CONSUMO_ESTIMADO = "Ponta – Consumo Estimado ";
+    private static final String REDES_PONTA_CONSUMO_ESTIMADO = "Redes Ponta - Consumo estimado ";
+
+    // private static final String POTENCIA_HORAS_DE_PONTA = "Potência Horas de Ponta";
+    private static final String POTENCIA_HORAS_DE_PONTA = "Potencia Horas de Ponta ";
+
+    private static final String POTENCIA_HORAS_DE_PONTA_2 = "Horas de Ponta ";
     // private static String POTENCIA_CONTRATADA_ = "Potencia Contratada ";
-    private static String CONTRACTED_POWER_0 = "Contratada ";
-    private String CONTRACTED_POWER = "Potência Contratada";
-    private static String REATIVA_FORNECIDA_NO_VAZIO = "Reativa Fornecida no vazio (Vz) ";
-    private static String REATIVA_FORNECIDA_NO_VAZIO2 = "Fornecida no vazio (Vz) ";
+    private static final String CONTRACTED_POWER_0 = "Contratada ";
+
+    // private static final String CONTRACTED_POWER = "Potência Contratada ";
+    private static final String CONTRACTED_POWER = "Potencia Contratada ";
+    //Type 2 : Potência Contratada - 41,40
+    //Type 3 : Potência Contratada - 20,7
+
+    private static final String REATIVA_FORNECIDA_NO_VAZIO = "Reativa Fornecida no vazio (Vz) ";
+
+    private static final String REATIVA_FORNECIDA_NO_VAZIO2 = "Fornecida no vazio (Vz) ";
+
+    private static final String PERIODO_DE_FATURACAO_ = "PERIODO DE FATURACAO ";
+    private static final String TOTAL_A_PAGAR = "Total a pagar: (ELETRICIDADE) ";
+    private static final String ENERGIA_ATIVA_ = "Energia Ativa ";
+    private static final String REDES_ = "Redes ";
+    private static final String ELECTRICITY_COUNTER_CODE = "CÓDIGO PONTO ENTREGA ELETRICIDADE";
+    private static final String COMPANY_TAX_NUMBER = "Numero ID. Fiscal: ";
+
     private final PdfParser pdfParser;
-    private String PERIODO_DE_FATURACAO_ = "PERIODO DE FATURACAO ";
-    private String TOTAL_A_PAGAR = "Total a pagar: (ELETRICIDADE) ";
-    private String ENERGIA_ATIVA_ = "Energia Ativa ";
-    private String REDES_ = "Redes ";
-    private String ELECTRICITY_COUNTER_CODE = "CÓDIGO PONTO ENTREGA ELETRICIDADE";
-    private String COMPANY_TAX_NUMBER = "Numero ID. Fiscal: ";
 
     @Autowired
     public BillParser(PdfParser pdfParser) {
         this.pdfParser = pdfParser;
-        // this.billService = billService;
     }
 
     public static void main(String[] args) {
@@ -94,33 +116,33 @@ public class BillParser {
             logger.error("Encounter error : " + e.getMessage() + " parsing bill : " + bucketName + "_" + fileName);
             throw new BillParseException();
         }
+
         Map<String, String> keyValueResult = tExtractDto.getKeyValueResult();
-        List<MyTable> tablesResult = tExtractDto.getTablesResult();
-
         String electricityCounterCode = keyValueResult.get(ELECTRICITY_COUNTER_CODE);
-
         String billPeriod = keyValueResult.get(PERIODO_DE_FATURACAO_);
         String[] periods = billPeriod.trim().split("a");
         Date fromDate = DateUtil.getDateFromStr(periods[0], "dd/MM/yyyy");// 18/04/2018 a 17/05/2018
         Date toDate = DateUtil.getDateFromStr(periods[1], "dd/MM/yyyy");
-        //TODO check if totalPayable is negative value or not in order to notify user about it
-        MyTable firstTable = findTableWithRowHeaders(tablesResult, ENERGIA_ATIVA_, REDES_);
-        List<String> energyAtiviaValues = firstTable.getColumn_value().get(ENERGIA_ATIVA_);
-        List<String> redesValues = firstTable.getColumn_value().get(REDES_);
-        //String totalPayableStr = keyValueResult.get(ENERGIA_ATIVA_) + keyValueResult.get(REDES_);
-        Float totalPayable = getAmount(energyAtiviaValues.get(0)) + getAmount(redesValues.get(0));
-
         String companyTaxNumberStr = keyValueResult.get(COMPANY_TAX_NUMBER);
+        //TODO check if totalPayable is negative value or not in order to notify user about it
 
+        List<MyTable> tablesResult = tExtractDto.getTablesResult();
+        MyTable firstTable = findTableWithRowHeaders(tablesResult, ENERGIA_ATIVA_, REDES_);
+        List<String> energyAtiviaValues = null;
+        float totalPayable = 0f;
+        if (firstTable != null) {
+            energyAtiviaValues = firstTable.getColumn_value().get(ENERGIA_ATIVA_);
+            List<String> redesValues = firstTable.getColumn_value().get(REDES_);
+            //String totalPayableStr = keyValueResult.get(ENERGIA_ATIVA_) + keyValueResult.get(REDES_);
+            totalPayable = getAmount(energyAtiviaValues.get(0)) + getAmount(redesValues.get(0));
+        }
 
-        String address = "";
         float averageDailyConsumption = 0f;
-
         float totalMonthlyConsumption = 0;
         MyTable table = findTableWithRowHeaders(tablesResult, SUPER_VAZIO, SUPER_VAZIO2, CONSUMO_ESTIMADO);
         Map<String, List<String>> column_value = table != null ? table.getColumn_value() : null;
         String energia_ativa_ = "0";
-        List<String> energyActive = column_value != null ? column_value.get(this.ENERGIA_ATIVA_) : null;
+        List<String> energyActive = column_value != null ? column_value.get(ENERGIA_ATIVA_) : null;
         if (energyActive != null) {
             if (energyActive.size() >= 7) {
                 energia_ativa_ = energyActive.get(6);
@@ -131,7 +153,7 @@ public class BillParser {
             energia_ativa_ = "3.426,42 E";
         }
         Float activeEnergyCost = getAmount(energia_ativa_);
-        List<String> redes = column_value != null ? column_value.get(this.REDES_) : null;
+        List<String> redes = column_value != null ? column_value.get(REDES_) : null;
         String redes_;
         if (redes != null) {
             redes_ = redes.get(6);
@@ -140,10 +162,11 @@ public class BillParser {
         }
         Float powerDemandCost = getAmount(redes_);
 
+        BillDto bill = makeBillDtoFromBillInfo(buildingId, electricityCounterCode, fromDate, toDate, totalPayable, companyTaxNumberStr, "", averageDailyConsumption, totalMonthlyConsumption, column_value, activeEnergyCost, powerDemandCost);
+        return bill;
+    }
 
-        ElectricityBillType electricityBillType;
-        electricityBillType = detectBillType(table);
-
+    private BillDto makeBillDtoFromBillInfo(String buildingId, String electricityCounterCode, Date fromDate, Date toDate, float totalPayable, String companyTaxNumberStr, String address, float averageDailyConsumption, float totalMonthlyConsumption, Map<String, List<String>> column_value, Float activeEnergyCost, Float powerDemandCost) throws ParseException {
         BillParameterDto aEFreeHours = null;
         BillParameterDto rDOffHours = null;
         BillParameterDto rDFreeHours = null;
@@ -151,43 +174,53 @@ public class BillParser {
         BillParameterDto rDNormalHours = null;
         BillParameterDto aEPeakHours = null;
         BillParameterDto rDPeakHours = null;
+        BillParameterDto rDPowerPeakHours = null;
         BillParameterDto rDContractedPower = null;
         BillParameterDto rDReactivePower = null;
         BillParameterDto aEOffHours = null;
         if (column_value != null) {
-            aEOffHours = getBillParameter(column_value, SUPER_VAZIO, ParameterType.AE_OFF_HOURS);
-            rDOffHours = getBillParameter(column_value, REDES_SUPER_VAZIO, ParameterType.RD_OFF_HOURS);
-            aEFreeHours = getBillParameter(column_value, VAZIO_NORMAL, ParameterType.AE_FREE_HOURS);
-            if (aEFreeHours == null) {
-                aEFreeHours = getBillParameter(column_value, VAZIO_CONSUMO_ESTIMADO, ParameterType.AE_FREE_HOURS);
-            }
+            //Contracted Power
+            rDContractedPower = getBillParameter(column_value, CONTRACTED_POWER, ParameterType.RD_CONTRACTED_POWER);
 
-            rDFreeHours = getBillParameter(column_value, REDES_VAZIO_NORMAL, ParameterType.RD_FREE_HOURS);
-            if (rDFreeHours == null) {
-                rDFreeHours = getBillParameter(column_value, REDES_VAZIO_CONSUMO_ESTIMADO, ParameterType.RD_FREE_HOURS);
-            }
+            //Power in Peak Hour
+            rDPowerPeakHours = getBillParameter(column_value, POTENCIA_HORAS_DE_PONTA, ParameterType.RD_POWER_PEAK_HOURS);
 
+            //Reactive Power
+            rDReactivePower = getBillParameter(column_value, REATIVA_FORNECIDA_NO_VAZIO, ParameterType.RD_REACTIVE_POWER);
+
+            //Normal Hour
             aENormalHours = getBillParameter(column_value, CHEIA, ParameterType.AE_NORMAL_HOURS);
             if (aENormalHours == null) {
                 aENormalHours = getBillParameter(column_value, CHEIA_CONSUMO_ESTIMADO, ParameterType.AE_NORMAL_HOURS);
             }
-
             rDNormalHours = getBillParameter(column_value, REDES_CHEIA, ParameterType.RD_NORMAL_HOURS);
             if (rDNormalHours == null) {
                 rDNormalHours = getBillParameter(column_value, REDES_CHEIA_CONSUMO_ESTIMADO, ParameterType.RD_NORMAL_HOURS);
             }
 
+            //Peak Hour
             aEPeakHours = getBillParameter(column_value, PONTA, ParameterType.AE_PEAK_HOURS);
             if (aEPeakHours == null) {
                 aEPeakHours = getBillParameter(column_value, PONTA_CONSUMO_ESTIMADO, ParameterType.AE_PEAK_HOURS);
             }
-
             rDPeakHours = getBillParameter(column_value, REDES_PONTA, ParameterType.RD_PEAK_HOURS);
             if (rDPeakHours == null) {
                 rDPeakHours = getBillParameter(column_value, REDES_PONTA_CONSUMO_ESTIMADO, ParameterType.RD_PEAK_HOURS);
             }
 
-            rDContractedPower = getBillParameter(column_value, REATIVA_FORNECIDA_NO_VAZIO, ParameterType.RD_REACTIVE_POWER);
+            //Free Hour
+            aEFreeHours = getBillParameter(column_value, VAZIO_NORMAL, ParameterType.AE_FREE_HOURS);
+            if (aEFreeHours == null) {
+                aEFreeHours = getBillParameter(column_value, VAZIO_CONSUMO_ESTIMADO, ParameterType.AE_FREE_HOURS);
+            }
+            rDFreeHours = getBillParameter(column_value, REDES_VAZIO_NORMAL, ParameterType.RD_FREE_HOURS);
+            if (rDFreeHours == null) {
+                rDFreeHours = getBillParameter(column_value, REDES_VAZIO_CONSUMO_ESTIMADO, ParameterType.RD_FREE_HOURS);
+            }
+
+            //Off Hours
+            aEOffHours = getBillParameter(column_value, SUPER_VAZIO, ParameterType.AE_OFF_HOURS);
+            rDOffHours = getBillParameter(column_value, REDES_SUPER_VAZIO, ParameterType.RD_OFF_HOURS);
 
             totalMonthlyConsumption = getTotalConsumptionValue(column_value);
 
@@ -197,7 +230,7 @@ public class BillParser {
         float CO2_PRODUCTION_RATE = getCO2ProductionRate(year);
         float producedCo2 = totalMonthlyConsumption * CO2_PRODUCTION_RATE;
 
-        BillDto bill = new BillDto(buildingId,
+        return new BillDto(buildingId,
                 electricityCounterCode,
                 companyTaxNumberStr,
                 address,
@@ -219,10 +252,10 @@ public class BillParser {
                 rDNormalHours,
                 aEPeakHours,
                 rDPeakHours,
+                rDPowerPeakHours,
                 rDContractedPower,
                 rDReactivePower
         );
-        return bill;
     }
 
     private Float getCO2ProductionRate(int year) {

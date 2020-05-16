@@ -80,11 +80,6 @@ public class HistoricalConsumptionService extends GenericCrudServiceBase<Histori
         return historicalConsumptionDtos;
     }
 
-    @Override
-    public void delete(String id) throws NotFoundException {
-
-    }
-
     public HistoricalConsumptionDto getHistoricalConsumption(String buildingId, Integer year, Integer month, DataType dataType) {
         //make date from first day of month and another for last day of month
         String monthStr = month.toString().length() == 1 ? "0" + month : month.toString();

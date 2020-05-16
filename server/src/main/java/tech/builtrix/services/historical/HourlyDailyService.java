@@ -8,6 +8,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import tech.builtrix.models.historical.HistoricalConsumption;
 import tech.builtrix.models.historical.enums.HourPeriod;
 import tech.builtrix.models.historical.enums.Season;
@@ -53,11 +54,13 @@ public class HourlyDailyService {
         this.consumptionService = consumptionService;
     }
 
-    public void parseExcelData(String buildingId) throws IOException {
+    public void parseExcelData(String fileName, String buildingId) throws IOException {
         // building-9d94dd4d-b789-4717-bdee-517a8de8ca6e.xlsx
-        String fileName = "building-" + buildingId + ".xlsx";
-        S3ObjectInputStream inputStream = this.s3FileService.downloadFile(HISTORICAL_ENERGY_CONSUMPTION_BUCKET, fileName);
-        Files.copy(inputStream, Paths.get(fileName), StandardCopyOption.REPLACE_EXISTING);
+        if (StringUtils.isEmpty(fileName)) {
+            fileName = "building-" + buildingId + ".xlsx";
+            S3ObjectInputStream inputStream = this.s3FileService.downloadFile(HISTORICAL_ENERGY_CONSUMPTION_BUCKET, fileName);
+            Files.copy(inputStream, Paths.get(fileName), StandardCopyOption.REPLACE_EXISTING);
+        }
         try {
             FileInputStream file = new FileInputStream(new File(fileName));
             XSSFWorkbook workbook = new XSSFWorkbook(file);
@@ -67,7 +70,6 @@ public class HourlyDailyService {
             List<HistoricalConsumption> consumptionList = new ArrayList<>();
             for (Row row : sheet) {
                 HistoricalConsumption consumption = new HistoricalConsumption(buildingId);
-                out.println("Row Number : " + ++rowNum);
                 Iterator<Cell> cellIterator = row.cellIterator();
                 while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
@@ -93,6 +95,10 @@ public class HourlyDailyService {
                             // out.println("Cons Number : " + ++consNum);
                         } catch (Exception ignored) {
                         }
+                    } else if (cell.getCellTypeEnum() == CellType.NUMERIC) {
+                        double consDouble = cell.getNumericCellValue();
+                        float numericCellValue = (float) consDouble;
+                        consumption.setConsumption(numericCellValue);
                     }
                 }
                 if (consumption.getReportDate() != null) {
@@ -120,7 +126,7 @@ public class HourlyDailyService {
                         consumption.setCost(consumption.getConsumption() * CHEIA_COST_COEFFICIENT);
                         break;
                 }
-                // this.consumptionService.save(consumption);
+                this.consumptionService.save(consumption);
                 logger.info("row " + row + " was saved successfully in : " + (System.currentTimeMillis() - l) + "milliSeconds");
             }
 
