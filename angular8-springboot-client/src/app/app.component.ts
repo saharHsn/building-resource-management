@@ -1,7 +1,7 @@
 ﻿import {Component, ViewChild} from '@angular/core';
 import {NavigationEnd, Router} from '@angular/router';
 
-import {AuthenticationService} from './_services';
+import {AlertService, AuthenticationService} from './_services';
 import {User} from './_models';
 import {BsModalRef, BsModalService, ModalDirective} from 'ngx-bootstrap/modal';
 
@@ -43,7 +43,8 @@ export class AppComponent {
   constructor(private idle: Idle, private keepalive: Keepalive,
               private router: Router, private modalService: BsModalService,
               private authenticationService: AuthenticationService,
-              private appService: AppService) {
+              private appService: AppService,
+              public alertService: AlertService) {
     const navEndEvent$ = router.events.pipe(
       filter(e => e instanceof NavigationEnd)
     );

@@ -3,6 +3,7 @@ package tech.builtrix.services.message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import tech.builtrix.base.GenericCrudServiceBase;
+import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.message.Message;
 import tech.builtrix.models.user.User;
 import tech.builtrix.repositories.message.MessageRepository;
@@ -23,7 +24,7 @@ public class MessageService extends GenericCrudServiceBase<Message, MessageRepos
         for (Message message : allBuildingMessages) {
             MessageDto dto = new MessageDto();
             Map<String, Boolean> usersStatus = message.getUsersStatus();
-            dto.setMessage(message.getBody());
+            dto.setBody(message.getBody());
             dto.setId(message.getId());
             if (usersStatus.containsKey(user.getId())) {
                 dto.setRead(usersStatus.get(user.getId()));
@@ -52,5 +53,9 @@ public class MessageService extends GenericCrudServiceBase<Message, MessageRepos
             message.getUsersStatus().put(user.getId(), readStatus);
             this.repository.save(message);
         }
+    }
+
+    public void delete(String messageId) throws NotFoundException {
+        this.repository.delete(getById(messageId));
     }
 }

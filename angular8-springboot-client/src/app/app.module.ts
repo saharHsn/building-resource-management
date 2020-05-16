@@ -14,7 +14,7 @@ import { HomeComponent } from './home';
 import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
 import { InvitationComponent } from './invitation';
-import { AlertComponent } from './_components';
+
 import { WizardFormComponent } from './wizard-form/wizard-form.component';
 import { ArchwizardModule } from 'angular-archwizard';
 import { BuildingUsageComponent } from './building/enums/building-usage-component';
@@ -34,6 +34,9 @@ import { CarbonSplineChartComponent } from './charts/carbon-foot-print/carbon-sp
 import { CarbonPieChartComponent } from './charts/carbon-foot-print/carbon-pie-chart/carbon-pie-chart.component';
 // tslint:disable-next-line:max-line-length
 import { ConsumptionDynamicBarChartComponent } from './charts/consumption/consumption-average-tariff-cost/consumption-dynamic-bar-chart/consumption-dynamic-bar-chart.component';
+
+
+
 // tslint:disable-next-line:max-line-length
 import { AverageTariffFilterComponent } from './charts/consumption/consumption-average-tariff-cost/filter-form/average-tariff-filter-component';
 import { YearFilterComponent } from './charts/consumption/consumption-average-tariff-cost/filter-form/enum-components/year-filter-component';
@@ -58,20 +61,24 @@ import { CarbonComponent } from './charts/report/carbon/carbon.component';
 import { BeScoreComponent } from './charts/overall/be-score/be-score.component';
 import { ReportComponent } from './charts/report/report.component';
 // tslint:disable-next-line:max-line-length
-import { EnergyEfficiencySymbolsComponent } from './charts/report/energy-efficiency/energy_efficiency_symbols/energy-efficiency-symbols.component';
-import { TooltipModule } from 'ng2-tooltip-directive';
-import { UserListComponent } from './user/user-list/user-list.component';
-import { UserDetailsComponent } from './user/user-details/user-details.component';
-import { BuildingListComponent } from './building/building-list/building-list.component';
-import { CreateBuildingComponent } from './building/create-building/create-building.component';
-import { CreateUserComponent } from './user/create-user/create-user.component';
-import { HighchartsChartModule } from 'highcharts-angular';
+
 
 import { GoogleAnalyticsService } from './_analytics/google-analytics.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HeaderComponent } from './default/header/header.component';
 import { SidebarComponent } from './default/sidebar/sidebar.component';
 // tslint:disable-next-line:max-line-length
+import {EnergyEfficiencySymbolsComponent} from './charts/report/energy-efficiency/energy_efficiency_symbols/energy-efficiency-symbols.component';
+import {TooltipModule} from 'ng2-tooltip-directive';
+import {UserListComponent} from './user/user-list/user-list.component';
+import {UserDetailsComponent} from './user/user-details/user-details.component';
+import {BuildingListComponent} from './building/building-list/building-list.component';
+import {CreateBuildingComponent} from './building/create-building/create-building.component';
+import {CreateUserComponent} from './user/create-user/create-user.component';
+import {HighchartsChartModule} from 'highcharts-angular';
+
+
+
 
 import {
   MatSelectModule,
@@ -88,14 +95,18 @@ import {
   MatInputModule,
   MatProgressBarModule
 } from '@angular/material';
-import { MatCardModule } from '@angular/material/card';
-import { ColorEnergyComponent } from './charts/report/color-energy/color-energy.component';
-import { GeneralComponent } from './charts/profile/general/general.component';
-import { BuildingComponent } from './charts/profile/building/building.component';
-import { ProfileViewComponent } from './charts/profile/profile-view/profile-view.component';
-import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
-import { MatDialogModule } from '@angular/material/dialog';;
-import { } from '@angular/material/progress-bar';
+import {MatCardModule} from '@angular/material/card';
+import {ColorEnergyComponent} from './charts/report/color-energy/color-energy.component';
+import {GeneralComponent} from './charts/profile/general/general.component';
+import {BuildingComponent} from './charts/profile/building/building.component';
+import {ProfileViewComponent} from './charts/profile/profile-view/profile-view.component';
+import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
+import {MatDialogModule} from '@angular/material/dialog';
+
+import {AdminPanelComponent} from './admin/admin-panel/admin-panel.component';
+import {BuildingDetailsAdminComponent} from './building/building-details-admin/building-details-admin.component';
+import {BuildingMessagesComponent} from './building-messages/building-messages.component';
+import {AlertModule} from "./_services/_alert/alert.module";
 
 import { MatMenuModule } from '@angular/material/menu';
 import { PanelComponent } from './notification_panel/panel/panel.component';
@@ -151,9 +162,9 @@ import { BuildingButtonComponent } from './_components/building-button/building-
     MatNativeDateModule,
     MatInputModule,
     MatSelectModule,
-    MatProgressBarModule,
-    NgxPrintModule
-
+    NgxPrintModule,
+   
+    AlertModule
   ],
   declarations: [
     AppComponent,
@@ -166,7 +177,6 @@ import { BuildingButtonComponent } from './_components/building-button/building-
     BuildingListComponent,
     CreateBuildingComponent,
     InvitationComponent,
-    AlertComponent,
     WizardFormComponent,
     BuildingUsageComponent,
     BuildingAgeComponent,

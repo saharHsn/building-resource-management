@@ -5,12 +5,12 @@
   <div class="panel-body">
     <table class="table table-striped">
       <thead>
-        <tr>
-          <th>Building Name</th>
-          <th>Building Age</th>
-          <th>Building Address</th>
-          <th>Building usage</th>
-        </tr>
+      <tr>
+        <th>Building Name</th>
+        <th>Building Age</th>
+        <th>Building Address</th>
+        <th>Building usage</th>
+      </tr>
       </thead>
       <tbody>
       <tr *ngFor="let building of buildings">
@@ -18,10 +18,7 @@
         <td>{{building.age}}</td>
         <td>{{building.postalAddress}}</td>
         <td>{{building.usage}}</td>
-        <td><!--
-        <button (click)="deleteBuilding(building.id)" class="btn btn-danger">Delete</button>
-        <button (click)="buildingDetails(building.id)" class="btn btn-info" style="margin-left: 10px">Details</button>
-          -->
+        <td>
           <a [routerLink]="['/building-details-admin',building.id]">Details</a>
         </td>
       </tr>

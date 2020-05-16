@@ -11,11 +11,11 @@ import tech.builtrix.web.dtos.EntityDtoBase;
 @NoArgsConstructor
 public class MessageDto extends EntityDtoBase {
     String id;
-    String message;
+    String body;
     boolean isRead;
 
     public MessageDto(Message message) {
         this.id = message.getId();
-        this.message = message.getBody();
+        this.body = message.getBody();
     }
 }

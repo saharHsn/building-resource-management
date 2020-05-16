@@ -1,0 +1,28 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h5>Building Message List</h5>
+  </div>
+  <div class="panel-body">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Message Body</th>
+        <th>Delete</th>
+        <th>Modify</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let message of messages">
+        <td>{{message.body}}</td>
+        <!--<a [routerLink]="['/building-details-admin',building.id]">Details</a>-->
+        <td>
+          <button class="alert-danger" (click)="deleteMessage(message.id)">DELETE</button>
+        </td>
+        <td>
+          <a [routerLink]="['/building-details-admin',message.id]">MODIFY</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
