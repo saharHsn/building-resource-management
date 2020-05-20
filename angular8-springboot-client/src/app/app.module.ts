@@ -14,7 +14,7 @@ import {HomeComponent} from './home';
 import {LoginComponent} from './login';
 import {RegisterComponent} from './register';
 import {InvitationComponent} from './invitation';
-import { AlertComponent } from './_components';
+
 import {WizardFormComponent} from './wizard-form/wizard-form.component';
 import {ArchwizardModule} from 'angular-archwizard';
 import {BuildingUsageComponent} from './building/enums/building-usage-component';
@@ -184,7 +184,7 @@ import { AlertComponent } from './_services/_alert/alert.component';
     ProfileViewComponent,
     BuildingComponent,
     GeneralComponent,
-    AlertComponent,
+  /*   AlertComponent, */
      
     // HighchartsChartComponent,
     ReportBeScoreComponent,
