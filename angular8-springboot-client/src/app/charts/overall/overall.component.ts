@@ -9,7 +9,8 @@ import {AuthenticationService} from 'src/app/_services';
 import {CurrentBuildingService} from 'src/app/_services/current-building.service';
 import {PredictionsComponent} from './predictions/predictions.component';
 import {BeScoreComponent} from './be-score/be-score.component';
-import {MessageService} from 'src/app/_services/message.service';
+import { MessageService } from 'src/app/_services/message.service';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   templateUrl: './overall.component.html',
@@ -29,24 +30,25 @@ export class OverallComponent implements OnInit {
               // private prediction: PredictionsComponent
   ) {
     this.currentUser = this.authService.currentUserValue;
-
   }
-
+  
   id: number;
   currentMonthSummary: CurrentMonthSummary;
   currentUser: User;
   building: Building = new Building();
-
+  
   // gauge variables
-
+  monthSummary:any;
   beScore: number;
   nationalMedian: number;
   propertyTarget: number;
   buildings: any;
-
+ 
+ 
   ngOnInit() {
-    this.getBuildingUsers();
-    this.initCharts();
+   this.monthSummary=this.messages.getMonth();
+   this.initCharts();
+  
   }
 
   list() {
@@ -65,23 +67,24 @@ export class OverallComponent implements OnInit {
   getBuildingUsers() {
     this.buildingService.getBuildingUsersTest().subscribe(
       data => {
-        this.buildings = data.content;
-        if (this.buildingUpdateService.getBuildingId() !== null) {
-          return;
-        } else {
-          const id = data.content[0].id;
-          this.buildingUpdateService.setBuildingId(id);
-        }
+
+       this.buildings = data.content;
+       /*  const id = data.content[0].id;
+        this.buildingUpdateService.setIdBuilding(id);  */
+       
+     
+        console.log(this.buildings)
+     
       },
       error => console.log(error)
     );
   }
-  select(event) {
-    this.buildingUpdateService.setBuildingId(event);
+/*   select(event) {
+    this.buildingUpdateService.setIdBuilding(event); 
     this.initCharts();
     this.predictionsComponent.ngOnInit();
     this.beScoreComponent.ngOnInit();
-  }
+  } */
 
   initCharts() {
     this.id = this.route.snapshot.params.id;
@@ -102,4 +105,13 @@ export class OverallComponent implements OnInit {
         this.propertyTarget = data.content;
       }, error => console.log(error));
   }
+
+  loadPage():void{
+    
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
+    this.router.navigate(['overall']))
+   
+  }
+
+
 }

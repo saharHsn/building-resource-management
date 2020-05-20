@@ -35,6 +35,11 @@ export class PredictedWeatherVsRealComponent implements OnInit {
             title: {
               text: 'Predicted Consumption'
             },
+            legend: {
+                align: 'right',
+                verticalAlign: 'middle',
+                layout: 'vertical'
+            },
             xAxis: {
               categories: data.content.xvalues,
               labels: {

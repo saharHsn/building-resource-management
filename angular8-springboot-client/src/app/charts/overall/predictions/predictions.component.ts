@@ -41,6 +41,11 @@ export class PredictionsComponent implements OnInit {
             title: {
               text: 'Predicted cost'
             },
+            legend: {
+                align: 'right',
+                verticalAlign: 'middle',
+                layout: 'vertical'
+            },
             xAxis: {
               // categories: ['Oct-2019', 'Nov-2019', 'Dec-2019'],
               categories: data.content.xvalues,

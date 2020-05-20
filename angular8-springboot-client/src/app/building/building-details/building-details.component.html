@@ -1,33 +1,5 @@
+<hr/>
 
-<!-- <h5 align="center">Building Details</h5>
-<br>
-<div class="container" *ngIf="building">
-  <div hidden>
-    {{building.id}}
-  </div>
-  <div class="row">
-    <div class="col">
-      <label><b>Property Function: </b></label> Office
-    </div>
-    <div class="col">
-      <label><b>Gross Floor Area (m2):</b></label> {{building.area}}
-    </div>
-    <div class="col">
-      <label><b>Building Age:</b></label> {{building.builtIn}}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <label><b>Date of Report Generation:</b></label> Aug-21-2019
-    </div>
-    <div class="col">
-      <label><b>Property Address:</b></label> {{building.postalAddress}}
-    </div>
-    <div class="col">
-      <a routerLink="/wizard" class="btn btn-link">Update Form</a>
-    </div>
-  </div>
-</div> -->
 
 <div hidden>
   {{building.id}}
@@ -42,20 +14,7 @@
     </div>
 
     <!--  (click)="openDialog() -->
-    <div class="example-button-row col col-auto">
-      <button mat-button (click)="download()">
-        <mat-icon>cloud_download</mat-icon>
-        Download
-      </button>
-      <button mat-button color="Disabled">
-        <mat-icon>print</mat-icon>
-        Print
-      </button>
-      <button mat-button color="Disabled">
-        <mat-icon>share</mat-icon>
-        Share report
-      </button>
-    </div>
+  
   </div>
 </div>
 
@@ -63,7 +22,7 @@
   <mat-card-header>
     <div mat-card-avatar class="example-header-image"></div>
 
-    <mat-card-title id="title-color-card">March Summary</mat-card-title>
+    <mat-card-title id="title-color-card"> {{monthSummary[0].viewValue}} Summary</mat-card-title>
 
 
 

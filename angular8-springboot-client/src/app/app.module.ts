@@ -1,4 +1,4 @@
-﻿import {NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
@@ -14,6 +14,7 @@ import {HomeComponent} from './home';
 import {LoginComponent} from './login';
 import {RegisterComponent} from './register';
 import {InvitationComponent} from './invitation';
+import { AlertComponent } from './_components';
 import {WizardFormComponent} from './wizard-form/wizard-form.component';
 import {ArchwizardModule} from 'angular-archwizard';
 import {BuildingUsageComponent} from './building/enums/building-usage-component';
@@ -84,7 +85,9 @@ import {
   MatSelectModule,
   MatSidenavModule,
   MatTabsModule,
-  MatToolbarModule
+  MatToolbarModule,
+  MatProgressBarModule
+  
 } from '@angular/material';
 import {MatCardModule} from '@angular/material/card';
 import {ColorEnergyComponent} from './charts/report/color-energy/color-energy.component';
@@ -106,6 +109,8 @@ import {AdminPanelComponent} from './admin/admin-panel/admin-panel.component';
 import {BuildingDetailsAdminComponent} from './building/building-details-admin/building-details-admin.component';
 import {BuildingMessagesComponent} from './building-messages/building-messages.component';
 import {AlertModule} from "./_services/_alert/alert.module";
+import { BuildingButtonComponent } from './_components/building-button/building-button.component';
+import { AlertComponent } from './_services/_alert/alert.component';
 
 // tslint:disable-next-line:max-line-length
 
@@ -145,9 +150,12 @@ import {AlertModule} from "./_services/_alert/alert.module";
     MatSelectModule,
     NgxPrintModule,
     NgbModule,
-    AlertModule
+    AlertModule,
+   MatProgressBarModule,
+   NgxPrintModule
   ],
   declarations: [
+    
     AppComponent,
     HomeComponent,
     LoginComponent,
@@ -176,6 +184,8 @@ import {AlertModule} from "./_services/_alert/alert.module";
     ProfileViewComponent,
     BuildingComponent,
     GeneralComponent,
+    AlertComponent,
+     
     // HighchartsChartComponent,
     ReportBeScoreComponent,
     CostPieChartComponent,
@@ -211,7 +221,8 @@ import {AlertModule} from "./_services/_alert/alert.module";
     BulletChartComponent,
     DailyElectricityComponent,
     RemoveUnderlinePipe,
-    BuildingMessagesComponent],
+    BuildingMessagesComponent,
+    BuildingButtonComponent],
   entryComponents: [DownloadComponent],
   providers: [
     GoogleAnalyticsService,
@@ -224,3 +235,5 @@ import {AlertModule} from "./_services/_alert/alert.module";
 })
 export class AppModule {
 }
+
+

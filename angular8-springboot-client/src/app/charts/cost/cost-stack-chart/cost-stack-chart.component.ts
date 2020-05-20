@@ -36,7 +36,7 @@ export class CostStackChartComponent implements OnInit {
                  height: 400 */
             },
             title: {
-              text: 'Cost of Electricity Over Time'
+              text: 'Monthly electricity cost'
             },
             xAxis: {
               // TODO check errors

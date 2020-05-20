@@ -12,6 +12,15 @@ export class CostComponent implements OnInit {
   }
 
   ngOnInit() {
+ 
   }
 
+
+//recharge page, this function is sent to child component
+  loadPage():void{
+
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
+    this.router.navigate(['cost']))
+   
+  }
 }
