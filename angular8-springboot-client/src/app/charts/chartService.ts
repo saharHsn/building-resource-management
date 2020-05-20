@@ -7,6 +7,8 @@ import {TimePeriodType} from './consumption/consumption-average-tariff-cost/filt
 import {DatePartType} from './consumption/consumption-average-tariff-cost/filter-form/enum/DatePartType';
 import {AuthenticationService} from '../_services';
 import {CurrentBuildingService} from '../_services/current-building.service';
+import { BuildingService } from '../building/service/building.service';
+import { BuildingUpdateService } from '../_services/building-update.service';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +40,7 @@ export class ChartService {
   headers: HttpHeaders;
 
   constructor(private http: HttpClient,
-              private authService: AuthenticationService, private buildingUpdateService: CurrentBuildingService) {
+              private authService: AuthenticationService, private buildingUpdateService:BuildingUpdateService ) {
 
     this.environmentName = environment.environmentName;
     this.environmentUrl = environment.apiUrl;
@@ -69,7 +71,7 @@ export class ChartService {
 
   /* month:any,year:any */
   gethistoricalConsumption(month: string, year: string): Observable<any> {
-    const buildingId = this.buildingUpdateService.getBuildingId();
+    const buildingId = this.buildingUpdateService.getIdBuilding();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -89,7 +91,7 @@ export class ChartService {
 
 
   getHistoricalCost(month: string, year: string): Observable<any> {
-    const buildingId = this.buildingUpdateService.getBuildingId();
+    const buildingId = this.buildingUpdateService.getIdBuilding
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -109,7 +111,7 @@ export class ChartService {
 
 
   private callService(restUrl: string) {
-    const idcurrentBuilding = this.buildingUpdateService.getBuildingId();
+    const idcurrentBuilding = this.buildingUpdateService.getIdBuilding();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -128,7 +130,7 @@ export class ChartService {
   }
 
   download(): Observable<any> {
-    const idcurrentBuilding = this.buildingUpdateService.getBuildingId();
+    const idcurrentBuilding = this.buildingUpdateService.getIdBuilding();
     /*.subscribe(response => this.downLoadFile(response, "application/ms-excel"))*/
     // return this.callService(`${this.downloadUrl}`);
     let headers;

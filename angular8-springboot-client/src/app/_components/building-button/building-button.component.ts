@@ -6,6 +6,7 @@ import { AuthenticationService } from '../../_services/authentication.service';
 import { BuildingUpdateService } from '../../_services/building-update.service';
 import { MessageService } from '../../_services/message.service';
 import { HeaderComponent } from '../../default/header/header.component';
+import { CurrentBuildingService } from '../../_services/current-building.service';
 
 @Component({
   selector: 'app-building-button',
@@ -20,7 +21,7 @@ export class BuildingButtonComponent implements OnInit {
     private chartService: ChartService,
     private buildingService: BuildingService,
     private authService: AuthenticationService,
-    private buildingUpdateService: BuildingUpdateService,
+    private buildingUpdateService:BuildingUpdateService,
     private messages: MessageService,
 
     ) {
@@ -51,8 +52,8 @@ export class BuildingButtonComponent implements OnInit {
   selected(event) {
     console.log(event);
      this.buildingUpdateService.setIdBuilding(event);
-    
-     this.messages.updateHeaderMessage();
+     //active subscription in header
+     this.messages.activeMessage();
      this.init.emit();
      
    

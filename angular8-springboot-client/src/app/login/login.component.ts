@@ -77,18 +77,6 @@ export class LoginComponent implements OnInit {
             
               this.buildingUpdateService.setIdBuilding(id);
               
-             
-              
-             /*  this.buildings = data.content;
-              console.log(this.buildings)
-              if (this.buildingUpdateService.getIdBuilding() !== null) {
-                return;
-              } else {
-                const id = data.content[0].id;
-                
-      
-                this.buildingUpdateService.setIdBuilding(id);
-              } */
               this.router.navigate(['/overall']);
             },
             error => console.log(error)

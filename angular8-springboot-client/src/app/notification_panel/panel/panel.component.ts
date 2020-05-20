@@ -8,19 +8,20 @@ import { fadeInItems } from '@angular/material';
   styleUrls: ['./panel.component.css']
 })
 export class PanelComponent implements OnInit {
-listMessages:any[];
-  constructor(private _message:MessageService) { }
+  listMessages: any[];
+  constructor(private _message: MessageService) { }
 
   ngOnInit() {
-this.init();
-  
+    this.init();
   }
-init(){
 
-  this._message.getMessages().subscribe(data=>{
-    this.listMessages=data.content;
-    console.log(this.listMessages);
-  })
 
-}
+  init() {
+
+    this._message.getMessages().subscribe(data => {
+      this.listMessages = data.content;
+      console.log(this.listMessages);
+    })
+
+  }
 }

@@ -27,7 +27,11 @@ export class HeaderComponent implements OnInit {
 
   ) {
     this.currentUser = this.authenticationService.currentUserValue;
-
+    this.messages.listen().subscribe((m:any)=>{
+      
+    //listening changes at button-building 
+      this.getMessages();
+   })
   }
 
   listNotifications: any;
@@ -37,7 +41,10 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     //getting messages
     this.getMessages();
-  
+
+
+    //read
+  /* this.read('5c6e04ce-558a-4d50-b147-0fa6308023b6','hello'); */
 
   }
 
@@ -70,7 +77,7 @@ export class HeaderComponent implements OnInit {
         return read.read === false;
       });
 
-      /*this.listNotifications = data.content;*/
+      //if the read message is 0 do not show messages
       if( this.listNotifications.length===0){
         this.matBadge=null;
       }

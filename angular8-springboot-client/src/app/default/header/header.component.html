@@ -17,13 +17,11 @@
         <!-- <span>Notifications</span> -->
         <button mat-menu-item *ngFor="let item of listNotifications" (click)="read(item.id,item.message)" class="header__notification-button">{{item.message | slice : 0  : 50 }}...</button>
         <!--  link to notifications -->
-        <a mat-menu-item class="nav-link" href="#" routerLink="/notifications" style="color: #3A9AFC;">
+        <a mat-menu-item class="nav-link" href="#" routerLink="/notifications"  style="color: #3A9AFC;">
           <mat-icon>more_horiz</mat-icon>
           Show all notifications</a>
       </mat-menu>
 
-  
-    
       <span id="saludo">Hi {{currentUser.firstName}}!</span>
 
       <!--  menu to log out -->
