@@ -9,6 +9,7 @@ import {DownloadComponent} from '../download/download.component';
 import {ChartService} from 'src/app/charts/chartService';
 import {CurrentBuildingService} from "../../_services/current-building.service";
 import { MessageService } from '../../_services/message.service';
+import { BuildingUpdateService } from '../../_services/building-update.service';
 
 @Component({
   selector: 'app-building-details',
@@ -23,7 +24,7 @@ export class BuildingDetailsComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private buildingService: BuildingService,
-              private currentBuildingService: CurrentBuildingService,
+              private currentBuildingService: BuildingUpdateService,
               public dialog: MatDialog,
               private chartService: ChartService,
               private messages:MessageService) {
@@ -32,7 +33,7 @@ export class BuildingDetailsComponent implements OnInit {
   ngOnInit() {
     // this.building = new Building();
     this.id = this.route.snapshot.params.id;
-    const currentBuildingId = this.currentBuildingService.getBuildingId();
+    const currentBuildingId = this.currentBuildingService.getIdBuilding();
     this.buildingService.getBuilding(currentBuildingId)
       .subscribe(data => {
         console.log('Building Info: ' + data);
