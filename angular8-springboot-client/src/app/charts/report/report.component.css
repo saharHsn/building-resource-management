@@ -17,3 +17,69 @@ table-energy{
   align-items: center;
   padding:  0 50px;
 }
+.report_section-table{
+  display: flex;
+  justify-content: space-between;
+
+}
+.report__bullet{
+  display: flex;
+}
+.report__bullet .legend{
+display: flex;
+
+
+}
+.report__legend ul li{
+  text-decoration: none;
+  list-style: none;
+  margin: -15px 0;
+ 
+ 
+ 
+}
+
+.report_second-section{
+  display: flex;
+}
+.report__legend {
+ 
+ display: flex;
+ flex-direction: column-reverse;
+ 
+}
+#lista{
+  margin-bottom: 30px;
+}
+#table{
+  flex-basis: 60%;
+}
+#charts{
+  flex-basis: 40%;
+}
+
+
+
+
+
+/* legend square */
+#target:before{
+    content: '\025a0';
+    color:#000;
+    font-size: 30px;
+    
+   
+
+}
+#current:before{
+  content: '\025a0';
+  color:#676666;
+  font-size: 30px;
+  
+}
+#lastyear:before{
+  content: '\025a0';
+  color:#D4D1D0;
+  font-size: 30px;
+
+}

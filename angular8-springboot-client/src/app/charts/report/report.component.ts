@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChartService } from '../chartService';
 import * as html2pdf from 'html2pdf.js'
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
@@ -9,26 +10,25 @@ import * as html2pdf from 'html2pdf.js'
 })
 export class ReportComponent implements OnInit {
 
+
+//bullet values
+energyBullet: any;
+target:number;
+/* target:number; */
+currentEnergy:number;
+lastEnergy:number;
+
   beScore: number;
   nationalMedian: number;
   propertyTarget: number;
   constructor(private route: ActivatedRoute, private router: Router,
     private chartService: ChartService) {
+     
+      this.initchart();
   }
 
   ngOnInit() {
-    this.chartService.getBEScore()
-      .subscribe(data => {
-        this.beScore = data.content;
-      }, error => console.log(error));
-    this.chartService.getNationalMedian()
-      .subscribe(data => {
-        this.nationalMedian = data.content;
-      }, error => console.log(error));
-    this.chartService.getPropertyTarget()
-      .subscribe(data => {
-        this.propertyTarget = data.content;
-      }, error => console.log(error));
+   
   }
   download() {
     this.chartService.download()
@@ -74,6 +74,62 @@ export class ReportComponent implements OnInit {
     this.router.navigate(['report']));
    
   }
+
+setBulletValues(arg):number{
+  let value;
+
+  switch (arg) {
+    case 'APlus':
+      value = 7.5;
+      break;
+    case 'A':
+      value = 6.5;
+      break;
+    case 'B':
+      value = 5.5;
+      break;
+    case 'BMinus':
+      value = 4.5;
+      break;
+    case 'C':
+      value = 3.5;
+      break;
+    case 'D':
+      value = 2.5;
+      break;
+    case 'E':
+      value = 1.5;
+      break;
+    case 'F':
+      value = .5;
+      break;
+    default:
+      value = 0;
+      break;
+
+  }
+  return value;
+  
+
+
+}
+
+initchart(){
+  this.chartService.getBEScore()
+  .subscribe(data => {
+    this.beScore = data.content;
+  }, error => console.log(error));
+this.chartService.getNationalMedian()
+  .subscribe(data => {
+    this.nationalMedian = data.content;
+  }, error => console.log(error));
+this.chartService.getPropertyTarget()
+  .subscribe(data => {
+    this.propertyTarget = data.content;
+  }, error => console.log(error));
+ /*  */
+}
+
 
   
 }

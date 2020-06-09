@@ -1,4 +1,4 @@
-<table *ngIf="energyIndex" class="table table-bordered table-striped table-hover table-responsive-sm">
+<table *ngIf="energyIndex" class="table table-bordered table-striped table-hover table-responsive-sm" >
   <thead class="thead-dark">
   <tr>
     <th scope="col">Electricity</th>
@@ -31,11 +31,12 @@
     <td>{{energyIndex.cost.nationalMedian}}</td>
   </tr>
   <tr class="th-color text-center">
-    <th scope="row" >Energy Efficiency Level</th>
-    <td>{{energyIndex.energyEfficiencyLevel.baseLineCert}}</td>
-    <td>{{energyIndex.energyEfficiencyLevel.thisMonthCert}}</td>
-    <td>{{energyIndex.energyEfficiencyLevel.propertyTargetCert}}</td>
-    <td>{{energyIndex.energyEfficiencyLevel.nationalMedianCert}}</td>
+    <th scope="row" >C02 index(kg/m2)</th>
+    <td>{{energyIndex.co2.baseline}}</td>
+    <td>{{energyIndex.co2.thisMonth}}</td>
+    <td>{{energyIndex.co2.propertiesTarget}}</td>
+    //this value is the same than national median 
+    <td>{{energyIndex.co2.nationalMedian}}</td>
   </tr>
   </tbody>
 </table>

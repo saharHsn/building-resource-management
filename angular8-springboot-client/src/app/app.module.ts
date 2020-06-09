@@ -14,7 +14,14 @@ import {HomeComponent} from './home';
 import {LoginComponent} from './login';
 import {RegisterComponent} from './register';
 import {InvitationComponent} from './invitation';
+// Import FusionCharts library and chart modules
+import * as FusionCharts from "fusioncharts";
+import * as charts from "fusioncharts/fusioncharts.charts";
+import * as widgets from "fusioncharts/fusioncharts.widgets";
+import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
 
+// Pass the fusioncharts library and chart modules
+FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme,widgets);
 import {WizardFormComponent} from './wizard-form/wizard-form.component';
 import {ArchwizardModule} from 'angular-archwizard';
 import {BuildingUsageComponent} from './building/enums/building-usage-component';
@@ -72,6 +79,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HeaderComponent} from './default/header/header.component';
 import {SidebarComponent} from './default/sidebar/sidebar.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { FusionChartsModule } from "angular-fusioncharts";
+
 
 import {
   MatBadgeModule,
@@ -111,6 +120,7 @@ import {BuildingMessagesComponent} from './building-messages/building-messages.c
 import {AlertModule} from "./_services/_alert/alert.module";
 import { BuildingButtonComponent } from './_components/building-button/building-button.component';
 import { AlertComponent } from './_services/_alert/alert.component';
+import { TestbulletComponent } from './charts/report/testbullet/testbullet.component';
 
 // tslint:disable-next-line:max-line-length
 
@@ -130,7 +140,7 @@ import { AlertComponent } from './_services/_alert/alert.component';
     TooltipModule,
     HighchartsChartModule,
     ModalModule.forRoot(),
-
+    FusionChartsModule,
     BrowserAnimationsModule,
     MatToolbarModule,
     MatButtonModule,
@@ -222,7 +232,8 @@ import { AlertComponent } from './_services/_alert/alert.component';
     DailyElectricityComponent,
     RemoveUnderlinePipe,
     BuildingMessagesComponent,
-    BuildingButtonComponent],
+    BuildingButtonComponent,
+    TestbulletComponent],
   entryComponents: [DownloadComponent],
   providers: [
     GoogleAnalyticsService,

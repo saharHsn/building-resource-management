@@ -1,6 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import * as Highcharts from 'highcharts';
+import { Component, OnInit, Input } from '@angular/core';
+import * as FusionCharts from "fusioncharts";
 
+import { ChartService } from '../../chartService';
 
 @Component({
   selector: 'app-bullet-chart',
@@ -8,72 +9,106 @@ import * as Highcharts from 'highcharts';
   styleUrls: ['./bullet-chart.component.css']
 })
 export class BulletChartComponent implements OnInit {
-  Highcharts = Highcharts;
-  chartOptions = {};
-
-  constructor() {
-  }
+  dataSource: any;
+  type: string;
+  width: number;
+  height: number;
+  dataFormat: string;
+   target:number;
+   monthEnergy:number;
+  constructor(private chartService: ChartService) {}
 
   ngOnInit() {
-    this.chartOptions = {
-      chart: {
-        inverted: true,
-        marginLeft: 135,
-        type: 'bullet'
-      },
-      title: {
-        text: null
-      },
-      legend: {
-        enabled: false
-      },
-      xAxis: {
-        categories: ['<span class="hc-cat-title">Revenue</span><br/>U.S. $ (1,000s)']
-      },
-      yAxis: {
-        plotBands: [{
-          from: 0,
-          to: 150,
-          color: '#666'
-        }, {
-          from: 150,
-          to: 225,
-          color: '#999'
-        }, {
-          from: 225,
-          to: 9e9,
-          color: '#bbb'
-        }],
-        title: null
-      },
-      plotOptions: {
-        series: {
-          pointPadding: 0.25,
-          borderWidth: 0,
-          color: '#000',
-          targetOptions: {
-            width: '200%'
-          }
-        }
-      }, series: [{
-        data: [{
-          y: 22,
-          target: 27
-        }]
-      }],
-      tooltip: {
-        pointFormat: '<b>{point.y}</b> (with target at {point.target})'
-      }
-      ,
-      credits: {
-        enabled: false
-      },
-      exporting: {
-        enabled: false
-      }
-    };
+
+    this.initChart();
+    
   }
+
+  initChart() {
+    this.chartService.getAllEnergyConsumptionIndexes()
+    .subscribe((data:any) => {
+    
+     
+      this.target=this.setvalues(data.content.energyEfficiencyLevel.propertyTargetCert);
+      this.monthEnergy=this.setvalues(data.content.energyEfficiencyLevel.thisMonthCert); 
+      this.dataSource = {
+        chart: {
+          caption: null,
+          theme: "fusion",
+          ticksonright: "1",
+          plottooltext: "this Month",
+          targettooltext: "Target : <b>$llll</b>",
+          showTickValues: '0',
+          showLimits: '0',
+          showTickMarks: '0',
+          showValue: '0',
+          bgColor: '#fafafa'
+        },
+
+  
+        colorrange: {
+          color: [
+            {
+              minvalue: "0",
+              maxvalue: "8",
+              code: "#fafafa"
+            }
+          ]
+        },
+        value: this.monthEnergy,
+        target:this.target,
+      /*   showLabels: '0',
+        labelDisplay: "none" */
+      };
+      this.width = 100;
+      this.height = 320;
+      this.type = "vbullet";
+      this.dataFormat = "json";
+
+    }, error => console.log(error));
+   
+  }
+
+  //get the number value
+  setvalues(arg) {
+
+    let value;
+
+    switch (arg) {
+      case 'APlus':
+        value = 7.5;
+        break;
+      case 'A':
+        value = 6.5;
+        break;
+      case 'B':
+        value = 5.5;
+        break;
+      case 'BMinus':
+        value = 4.5;
+        break;
+      case 'C':
+        value = 3.5;
+        break;
+      case 'D':
+        value = 2.5;
+        break;
+      case 'E':
+        value = 1.5;
+        break;
+      case 'F':
+        value = .5;
+        break;
+      default:
+        value = 0;
+        break;
+
+    }
+    return value;
+  }
+
 }
+
 
 
 
