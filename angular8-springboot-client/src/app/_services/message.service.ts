@@ -26,7 +26,7 @@ export class MessageService {
     this.environmentUrl = environment.apiUrl;
     this.baseUrl = this.environmentUrl + '/messages';
     this.month= new Date().getMonth()+1;
-      
+    
   }
  
 
@@ -84,7 +84,8 @@ export class MessageService {
         .set('Accept', '*/*')
         .set('Content-Type', 'application/json');
     }
-    return this.http.delete(`${this.baseUrl}/${messageId}`, {headers});
+     return this.http.delete(`${this.baseUrl}/${messageId}`, {headers}); 
+    
   }
 
   createNewMessage(messageBody: string, buildingId: string) {
