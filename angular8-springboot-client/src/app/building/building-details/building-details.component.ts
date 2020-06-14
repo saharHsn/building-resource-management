@@ -7,9 +7,8 @@ import {BuildingAge} from '../enums/buildingAge';
 import {MatDialog} from '@angular/material';
 import {DownloadComponent} from '../download/download.component';
 import {ChartService} from 'src/app/charts/chartService';
-import {CurrentBuildingService} from "../../_services/current-building.service";
 import { MessageService } from '../../_services/message.service';
-import { BuildingUpdateService } from '../../_services/building-update.service';
+import {CurrentBuildingService} from "../../_services/current-building.service";
 
 @Component({
   selector: 'app-building-details',
@@ -24,7 +23,7 @@ export class BuildingDetailsComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private buildingService: BuildingService,
-              private currentBuildingService: BuildingUpdateService,
+              private currentBuildingService: CurrentBuildingService,
               public dialog: MatDialog,
               private chartService: ChartService,
               private messages:MessageService) {
@@ -33,7 +32,7 @@ export class BuildingDetailsComponent implements OnInit {
   ngOnInit() {
     // this.building = new Building();
     this.id = this.route.snapshot.params.id;
-    const currentBuildingId = this.currentBuildingService.getIdBuilding();
+    const currentBuildingId = this.currentBuildingService.getBuildingId();
     this.buildingService.getBuilding(currentBuildingId)
       .subscribe(data => {
         console.log('Building Info: ' + data);
