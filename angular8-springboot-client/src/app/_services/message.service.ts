@@ -1,17 +1,17 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, Subject } from 'rxjs';
 import {environment} from '../../environments/environment';
 import {AuthenticationService} from '../_services';
+import {CurrentBuildingService} from './current-building.service';
 import {BuildingUpdateService} from '../_services/building-update.service';
 import { CurrentMonthSummary } from '../charts/overall/CurrentMonthSummary';
-import {CurrentBuildingService} from './current-building.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
-  
+  private _listners = new Subject<any>();
   month:number;
   environmentName = '';
   environmentUrl = 'Debug api';
@@ -19,14 +19,19 @@ export class MessageService {
   invokeFirstComponentFunction = new EventEmitter();    
   subsVar: Subscription; 
   constructor(private http: HttpClient,
-              private authService: AuthenticationService, private buildingUpdateService: CurrentBuildingService) {
+              private authService: AuthenticationService, 
+              private buildingUpdateService: BuildingUpdateService) {
 
     this.environmentName = environment.environmentName;
     this.environmentUrl = environment.apiUrl;
     this.baseUrl = this.environmentUrl + '/messages';
     this.month= new Date().getMonth()+1;
-
+    
   }
+ 
+
+
+
 
   private callService(restUrl: string) {
     let headers;
@@ -42,7 +47,8 @@ export class MessageService {
   }
 
   getMessages(): Observable<any> {
-    const currentBuildingId = this.buildingUpdateService.getBuildingId();
+    let currentBuildingId = this.buildingUpdateService.getIdBuilding();
+    console.log(`mensajes llamados desde getmessages ${currentBuildingId}`)
     return this.callService(`${this.baseUrl}/${currentBuildingId}`);
   }
 
@@ -64,9 +70,37 @@ export class MessageService {
       params, {headers});
   }
 
-  updateHeaderMessage(){
-  this.invokeFirstComponentFunction.emit();
+  getBuildingMessageList(buildingId: string): Observable<any> {
+    return this.callService(`${this.baseUrl}/${buildingId}`);
   }
+
+  deleteMessage(messageId: string): Observable<any> {
+    let headers;
+    // @ts-ignore
+    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
+    if (user && user.token) {
+      headers = new HttpHeaders()
+        .set('X-Session', user.token)
+        .set('Accept', '*/*')
+        .set('Content-Type', 'application/json');
+    }
+     return this.http.delete(`${this.baseUrl}/${messageId}`, {headers}); 
+    
+  }
+
+  createNewMessage(messageBody: string, buildingId: string) {
+    let headers;
+    // @ts-ignore
+    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
+    if (user && user.token) {
+      headers = new HttpHeaders()
+        .set('X-Session', user.token)
+        .set('Accept', '*/*')
+        .set('Content-Type', 'application/json');
+    }
+    return this.http.post(`${this.baseUrl}/${buildingId}`, messageBody, {headers});
+  }
+
 
   getMonth(){
     
@@ -94,34 +128,12 @@ export class MessageService {
         return currentMonth;
 
   }
-
-  getBuildingMessageList(buildingId: string): Observable<any> {
-    return this.callService(`${this.baseUrl}/${buildingId}`);
+//this return an observable 
+  listen():Observable<any>{
+  return  this._listners.asObservable();
   }
+  activeMessage() {
+    this._listners.next();
+ }
 
-  deleteMessage(messageId: string): Observable<any> {
-    let headers;
-    // @ts-ignore
-    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-    if (user && user.token) {
-      headers = new HttpHeaders()
-        .set('X-Session', user.token)
-        .set('Accept', '*/*')
-        .set('Content-Type', 'application/json');
-    }
-    return this.http.delete(`${this.baseUrl}/${messageId}`, {headers});
-  }
-
-  createNewMessage(messageBody: string, buildingId: string) {
-    let headers;
-    // @ts-ignore
-    const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
-    if (user && user.token) {
-      headers = new HttpHeaders()
-        .set('X-Session', user.token)
-        .set('Accept', '*/*')
-        .set('Content-Type', 'application/json');
-    }
-    return this.http.post(`${this.baseUrl}/${buildingId}`, messageBody, {headers});
-  }
 }

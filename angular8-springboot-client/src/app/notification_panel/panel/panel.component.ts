@@ -19,8 +19,11 @@ export class PanelComponent implements OnInit {
   init() {
 
     this._message.getMessages().subscribe(data => {
+      console.log(data.content);
       this.listMessages = data.content;
       console.log(this.listMessages);
+      
+
     })
 
   }

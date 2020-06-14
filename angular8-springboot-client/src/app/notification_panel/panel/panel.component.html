@@ -3,7 +3,7 @@
 <hr>
 
  <div *ngFor="let item of listMessages">
-   <div [ngStyle]="item.read?{ 'border-bottom': '1px solid  #919EAA'} : {'border-bottom': '1px solid #3A9AFC','background':'rgba(244, 249, 255, 0.973)'}" class="notification-panel">{{item.message}}</div>
+   <div [ngStyle]="item.read?{ 'border-bottom': '1px solid  #919EAA'} : {'border-bottom': '1px solid #3A9AFC','background':'rgba(244, 249, 255, 0.973)'}" class="notification-panel">{{item.body}}</div>
  </div>
- 
+
 </div>

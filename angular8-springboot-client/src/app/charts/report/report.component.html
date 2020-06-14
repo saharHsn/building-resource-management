@@ -33,30 +33,43 @@
     <p class="title">Be score: {{beScore}} <br>
       Property's Target: {{propertyTarget}} <br>
 
-      National Median:{{nationalMedian}}</p>
+      National Median: {{nationalMedian}}</p>
     </div>
     <div class="col">
       <app-percentile></app-percentile>
-      <p class="title">Your Score is higher than 63% of Builtrix  members <br>
+      <p class="title">Your Score is higher than 63% <br>of Builtrix  members 
   </p>
     </div>
     </div> 
+    <mat-card class="report_section-table container">
+  
+      <div class="mr-2" id="table">
+        <app-energy-efficiency ></app-energy-efficiency>
+      </div>
+  
+    <div id="charts">
+      <div class="report__bullet">
+      <img src="assets/images/Efficiency.png" alt="" style="height: 300px;">
+       <app-testbullet></app-testbullet>
+       <div class="report__legend">
+        
+          <ul id="lista">
+            <li id="target">Target</li>
+            <li id="current">Current</li>
+            <li id="lastyear">Last year</li>
+          </ul>
+       </div>
+      </div>
+    </div>
+  
+  </mat-card>
+  
+    
+  <hr>
+  
+  
+  
  
   </div>
   <br>
-  <div class="row">
-  
-    <div class="col-9 ">
-      <app-energy-efficiency></app-energy-efficiency>
-    </div>
-  <div class="col-3 ">
-    <app-color-energy></app-color-energy>
-  </div>
-  
-   
-  </div>
-
-
-<hr>
-
-
+ 
