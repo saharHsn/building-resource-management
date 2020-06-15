@@ -1,0 +1,64 @@
+<h2 align="center">demo</h2>
+<form [formGroup]="demoForm" (ngSubmit)="onSubmit()">
+  <div class="container>">
+    <div class="row justify-content-md-center">
+      <div class="col-sm-3">
+        <div class="form-group">
+          <label for="firstName">FirstName</label>
+          <input type="text" id="firstName" formControlName="firstName" class="form-control"
+                 placeholder="Enter your first name." [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }"/>
+          <div
+            *ngIf="(submitted && f.firstName.errors) || (f.firstName.invalid && (f.firstName.dirty || f.firstName.touched))"
+            class="alert alert-danger">
+            <div *ngIf="f.firstName.errors.required">
+              First name is required
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-md-center">
+      <div class="col-sm-3">
+        <div class="form-group">
+          <label for="lastName">LastName</label>
+          <input type="text" id="lastName" formControlName="lastName" class="form-control"
+                 placeholder="Enter your last name." [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }"/>
+          <div
+            *ngIf="(submitted && f.lastName.errors) || (f.lastName.invalid && (f.lastName.dirty || f.lastName.touched))"
+            class="alert alert-danger">
+            <div *ngIf="f.lastName.errors.required">
+              Last name is required
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-md-center">
+      <div class="col-sm-3">
+        <div class="form-group">
+          <label for="emailAddress">Email</label>
+          <input type="text" id="emailAddress" formControlName="emailAddress" class="form-control" [email]="true"
+                 placeholder="Enter your email address."
+                 [ngClass]="{ 'is-invalid': submitted && f.emailAddress.errors }"/>
+          <div
+            *ngIf="(submitted && f.emailAddress.errors) || (f.emailAddress.invalid && (f.emailAddress.dirty || f.emailAddress.touched))"
+            class="alert alert-danger">
+            <div *ngIf="f.emailAddress.errors.required">Email is required</div>
+            <div *ngIf="f.emailAddress.errors.email">Email Address is invalid.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-md-center">
+      <div class="col-sm-3">
+        <div class="form-group">
+          <button [disabled]="loading" class="btn btn-primary">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            Register
+          </button>
+          <a routerLink="/login" class="btn btn-link">Cancel</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
