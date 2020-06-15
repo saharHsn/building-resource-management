@@ -22,7 +22,8 @@ import {PanelComponent} from './notification_panel/panel/panel.component';
 import {ResetPasswordComponent} from './login/reset-password/reset-password.component';
 import {AdminPanelComponent} from './admin/admin-panel/admin-panel.component';
 import {BuildingDetailsAdminComponent} from './building/building-details-admin/building-details-admin.component';
-import {BuildingMessagesComponent} from "./building-messages/building-messages.component";
+import {BuildingMessagesComponent} from './building-messages/building-messages.component';
+import {DemoComponent} from './demo/demo.component';
 
 
 const routes: Routes = [
@@ -49,6 +50,7 @@ const routes: Routes = [
   {path: 'building-details', component: BuildingDetailsComponent},
   {path: 'building-details-admin/:buildingId', component: BuildingDetailsAdminComponent},
   {path: 'app-building-messages/:buildingId', component: BuildingMessagesComponent},
+  {path: 'demo', component: DemoComponent},
 
   // otherwise redirect to home
   {path: '**', redirectTo: ''}

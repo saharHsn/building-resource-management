@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+﻿import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
@@ -15,13 +15,10 @@ import {LoginComponent} from './login';
 import {RegisterComponent} from './register';
 import {InvitationComponent} from './invitation';
 // Import FusionCharts library and chart modules
-import * as FusionCharts from "fusioncharts";
-import * as charts from "fusioncharts/fusioncharts.charts";
-import * as widgets from "fusioncharts/fusioncharts.widgets";
-import * as FusionTheme from "fusioncharts/themes/fusioncharts.theme.fusion";
-
-// Pass the fusioncharts library and chart modules
-FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme,widgets);
+import * as FusionCharts from 'fusioncharts';
+import * as charts from 'fusioncharts/fusioncharts.charts';
+import * as widgets from 'fusioncharts/fusioncharts.widgets';
+import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
 import {WizardFormComponent} from './wizard-form/wizard-form.component';
 import {ArchwizardModule} from 'angular-archwizard';
 import {BuildingUsageComponent} from './building/enums/building-usage-component';
@@ -79,7 +76,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HeaderComponent} from './default/header/header.component';
 import {SidebarComponent} from './default/sidebar/sidebar.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import { FusionChartsModule } from "angular-fusioncharts";
+import {FusionChartsModule} from 'angular-fusioncharts';
 
 
 import {
@@ -91,12 +88,11 @@ import {
   MatInputModule,
   MatListModule,
   MatNativeDateModule,
+  MatProgressBarModule,
   MatSelectModule,
   MatSidenavModule,
   MatTabsModule,
-  MatToolbarModule,
-  MatProgressBarModule
-  
+  MatToolbarModule
 } from '@angular/material';
 import {MatCardModule} from '@angular/material/card';
 import {ColorEnergyComponent} from './charts/report/color-energy/color-energy.component';
@@ -117,10 +113,13 @@ import {RemoveUnderlinePipe} from './pipes/remove-underline.pipe';
 import {AdminPanelComponent} from './admin/admin-panel/admin-panel.component';
 import {BuildingDetailsAdminComponent} from './building/building-details-admin/building-details-admin.component';
 import {BuildingMessagesComponent} from './building-messages/building-messages.component';
-import {AlertModule} from "./_services/_alert/alert.module";
-import { BuildingButtonComponent } from './_components/building-button/building-button.component';
-import { AlertComponent } from './_services/_alert/alert.component';
-import { TestbulletComponent } from './charts/report/testbullet/testbullet.component';
+import {AlertModule} from './_services/_alert/alert.module';
+import {BuildingButtonComponent} from './_components/building-button/building-button.component';
+import {TestbulletComponent} from './charts/report/testbullet/testbullet.component';
+import {DemoComponent} from './demo/demo.component';
+
+// Pass the fusioncharts library and chart modules
+FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme, widgets);
 
 // tslint:disable-next-line:max-line-length
 
@@ -165,7 +164,7 @@ import { TestbulletComponent } from './charts/report/testbullet/testbullet.compo
    NgxPrintModule
   ],
   declarations: [
-    
+
     AppComponent,
     HomeComponent,
     LoginComponent,
@@ -195,7 +194,7 @@ import { TestbulletComponent } from './charts/report/testbullet/testbullet.compo
     BuildingComponent,
     GeneralComponent,
   /*   AlertComponent, */
-     
+
     // HighchartsChartComponent,
     ReportBeScoreComponent,
     CostPieChartComponent,
@@ -233,7 +232,9 @@ import { TestbulletComponent } from './charts/report/testbullet/testbullet.compo
     RemoveUnderlinePipe,
     BuildingMessagesComponent,
     BuildingButtonComponent,
-    TestbulletComponent],
+    TestbulletComponent,
+    DemoComponent,
+  ],
   entryComponents: [DownloadComponent],
   providers: [
     GoogleAnalyticsService,

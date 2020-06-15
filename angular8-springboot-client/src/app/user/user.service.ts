@@ -58,4 +58,8 @@ export class UserService {
   getUsersList(): Observable<any> {
     return this.http.get(`${this.baseUrl}`);
   }
+
+  registerDemoUser(user: User) {
+    return this.http.post(`${this.baseUrl}/registerDemoUser`, user);
+  }
 }

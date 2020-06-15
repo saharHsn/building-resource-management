@@ -59,7 +59,7 @@ public class SpringbootAwsDynamoDBTests {
 		 * KeySchemaElement("id", KeyType.HASH)), Collections.singletonList(new
 		 * AttributeDefinition("id", ScalarAttributeType.S)), new
 		 * ProvisionedThroughput(10L, 10L)); table.waitForActive();
-         */
+		 */
 		/*createTable("User");
 		createTable("Building");
 		createTable("Address");
@@ -69,9 +69,10 @@ public class SpringbootAwsDynamoDBTests {
 		createTable("Verification_Token");
 		createTable("Session");
 		createTable("Internal_Messages");*/
-        createTable("Bill_Parameter_Info");
-        createTable("Bill");
-    }
+		// createTable("Bill_Parameter_Info");
+		// createTable("Bill");
+		createTable("Demo_User");
+	}
 
 	private void createTable(String tableName) {
 		dynamoDBConfig.getDynamoDB().createTable(
