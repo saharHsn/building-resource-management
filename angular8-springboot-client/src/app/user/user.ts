@@ -10,4 +10,7 @@ export class User {
   token: string;
   job: string;
   role: Role;
+  jobTitle: string;
+  interest: string;
+  subscribe: boolean;
 }

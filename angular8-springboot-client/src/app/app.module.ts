@@ -117,6 +117,7 @@ import {AlertModule} from './_services/_alert/alert.module';
 import {BuildingButtonComponent} from './_components/building-button/building-button.component';
 import {TestbulletComponent} from './charts/report/testbullet/testbullet.component';
 import {DemoComponent} from './demo/demo.component';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 // Pass the fusioncharts library and chart modules
 FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme, widgets);
@@ -160,8 +161,9 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme, widgets);
     NgxPrintModule,
     NgbModule,
     AlertModule,
-   MatProgressBarModule,
-   NgxPrintModule
+    MatProgressBarModule,
+    NgxPrintModule,
+    MatCheckboxModule
   ],
   declarations: [
 

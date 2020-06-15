@@ -6,7 +6,7 @@
 
     <groupId>tech.builtrix</groupId>
     <artifactId>metrics</artifactId>
-    <version>3.2.0-RELEASE</version>
+    <version>3.2.2-RELEASE</version>
     <packaging>jar</packaging>
 
     <name>metrics</name>

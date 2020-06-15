@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AlertService, AuthenticationService} from '../_services';
 import {UserService} from '../user/user.service';
@@ -17,6 +17,10 @@ export class DemoComponent implements OnInit {
   demoForm: FormGroup;
   loading = false;
   submitted = false;
+  checked = false;
+  subscribeList: any = [
+    {id: 1, name: 'I would like to receive information and offers from Builtrix'}
+  ];
 
   constructor(private formBuilder: FormBuilder,
               private router: Router,
@@ -33,7 +37,10 @@ export class DemoComponent implements OnInit {
     this.demoForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      emailAddress: ['', Validators.required]
+      emailAddress: ['', Validators.required],
+      jobTitle: ['', Validators.required],
+      interest: ['', null],
+      subscription: ['', null]
     });
   }
 
@@ -67,7 +74,7 @@ export class DemoComponent implements OnInit {
               const name = data.content[0].name;
 
               this.buildingUpdateService.setIdBuilding(id);
-              this.userService.registerDemoUser(this.demoForm.value)
+              this.userService.registerDemoUser(this.demoForm.value, this.checked)
                 .pipe(first())
                 .subscribe(
                   data1 => {
@@ -92,5 +99,18 @@ export class DemoComponent implements OnInit {
           this.alertService.error(error.error.message);
           this.loading = false;
         });
+  }
+
+  onCheckboxChange(e) {
+    const subs: FormArray = this.demoForm.get('subscription') as FormArray;
+    if (e.target.checked) {
+      // subs.push(new FormControl(e.target.value));
+      // this.f.subscription.setValue(true);
+      this.checked = true;
+    } else {
+      const index = subs.controls.findIndex(x => x.value === e.target.value);
+      // subs.removeAt(index);
+      this.checked = false;
+    }
   }
 }

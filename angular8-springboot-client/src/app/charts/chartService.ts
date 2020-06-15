@@ -6,9 +6,7 @@ import {YearFilterType} from './consumption/consumption-average-tariff-cost/filt
 import {TimePeriodType} from './consumption/consumption-average-tariff-cost/filter-form/enum/TimePeriodType';
 import {DatePartType} from './consumption/consumption-average-tariff-cost/filter-form/enum/DatePartType';
 import {AuthenticationService} from '../_services';
-import {CurrentBuildingService} from '../_services/current-building.service';
-import { BuildingService } from '../building/service/building.service';
-import { BuildingUpdateService } from '../_services/building-update.service';
+import {BuildingUpdateService} from '../_services/building-update.service';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +38,7 @@ export class ChartService {
   headers: HttpHeaders;
 
   constructor(private http: HttpClient,
-              private authService: AuthenticationService, private buildingUpdateService:BuildingUpdateService ) {
+              private authService: AuthenticationService, private buildingUpdateService: BuildingUpdateService) {
 
     this.environmentName = environment.environmentName;
     this.environmentUrl = environment.apiUrl;
@@ -91,7 +89,7 @@ export class ChartService {
 
 
   getHistoricalCost(month: string, year: string): Observable<any> {
-    const buildingId = this.buildingUpdateService.getIdBuilding
+    const buildingId = this.buildingUpdateService.getIdBuilding();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;

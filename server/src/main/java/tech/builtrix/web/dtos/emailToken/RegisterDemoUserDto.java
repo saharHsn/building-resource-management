@@ -18,8 +18,11 @@ public class RegisterDemoUserDto {
     @NotNull
     @Size(min = 1, message = "{Size.userDto.lastName}")
     private String lastName;
-
     @NotNull
     @ValidEmail
     private String emailAddress;
+    @NotNull
+    private String jobTitle;
+    private String interest;
+    private boolean subscribe;
 }

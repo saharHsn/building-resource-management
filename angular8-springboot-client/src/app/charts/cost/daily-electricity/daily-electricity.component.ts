@@ -18,7 +18,7 @@ export class DailyElectricityComponent implements OnInit {
   highcharts = Highcharts;
   chartOptions: any;
   loading = true;
-  loadingBar=false; 
+  loadingBar = false;
 
   // select values
   months: Select[] = [
@@ -44,6 +44,7 @@ export class DailyElectricityComponent implements OnInit {
   yearChart: any;
   monthChart: any;
 
+  // tslint:disable-next-line:variable-name
   constructor(private _chartService: ChartService) {
     this.yearChart = String(new Date().getFullYear().toString());
     this.monthChart = String(new Date().getMonth());
@@ -54,16 +55,15 @@ export class DailyElectricityComponent implements OnInit {
   }
 
   create() {
-    this.loadingBar=true;
+    this.loadingBar = true;
     this.initChart(this.monthChart, this.yearChart);
 
   }
 
   initChart(month, year) {
-
     this._chartService.getHistoricalCost(month, year).pipe(first()).subscribe(
       data => {
-        this.loadingBar=false;
+        this.loadingBar = false;
         this.highcharts = Highcharts;
         this.chartOptions = {
           chart: {

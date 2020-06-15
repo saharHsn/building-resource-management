@@ -16,4 +16,10 @@ public class DemoUser extends EntityBase<DemoUser> {
     private String lastName;
     @DynamoDBAttribute
     private String emailAddress;
+    @DynamoDBAttribute
+    private String jobTitle;
+    @DynamoDBAttribute
+    private String interest;
+    @DynamoDBAttribute
+    private boolean subscribe;
 }

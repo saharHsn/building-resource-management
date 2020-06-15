@@ -15,8 +15,8 @@ export class BuildingUpdateService {
     return localStorage.getItem('idBuilding');
   }
 
-  setIdBuilding(id:string) {
+  setIdBuilding(id: string) {
     localStorage.setItem('idBuilding', id);
-  /*   localStorage.setItem('nameBuilding', name); */
+    /*   localStorage.setItem('nameBuilding', name); */
   }
 }
