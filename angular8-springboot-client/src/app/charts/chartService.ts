@@ -69,7 +69,7 @@ export class ChartService {
 
   /* month:any,year:any */
   gethistoricalConsumption(month: string, year: string): Observable<any> {
-    const buildingId = this.buildingUpdateService.getIdBuilding();
+    const buildingId = this.buildingUpdateService.getBuildingId();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -89,7 +89,7 @@ export class ChartService {
 
 
   getHistoricalCost(month: string, year: string): Observable<any> {
-    const buildingId = this.buildingUpdateService.getIdBuilding();
+    const buildingId = this.buildingUpdateService.getBuildingId();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -109,7 +109,7 @@ export class ChartService {
 
 
   private callService(restUrl: string) {
-    const idcurrentBuilding = this.buildingUpdateService.getIdBuilding();
+    const idcurrentBuilding = this.buildingUpdateService.getBuildingId();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -128,7 +128,7 @@ export class ChartService {
   }
 
   download(): Observable<any> {
-    const idcurrentBuilding = this.buildingUpdateService.getIdBuilding();
+    const idcurrentBuilding = this.buildingUpdateService.getBuildingId();
     /*.subscribe(response => this.downLoadFile(response, "application/ms-excel"))*/
     // return this.callService(`${this.downloadUrl}`);
     let headers;

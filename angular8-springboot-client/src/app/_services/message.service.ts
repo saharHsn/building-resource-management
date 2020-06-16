@@ -9,7 +9,7 @@ import {BuildingUpdateService} from '../_services/building-update.service';
   providedIn: 'root'
 })
 export class MessageService {
-  private _listners = new Subject<any>();
+  private listeners = new Subject<any>();
   month: number;
   environmentName = '';
   environmentUrl = 'Debug api';
@@ -28,10 +28,6 @@ export class MessageService {
 
   }
 
-
-
-
-
   private callService(restUrl: string) {
     let headers;
     // @ts-ignore
@@ -46,8 +42,7 @@ export class MessageService {
   }
 
   getMessages(): Observable<any> {
-    const currentBuildingId = this.buildingUpdateService.getIdBuilding();
-    // console.log(`mensajes llamados desde getmessages ${currentBuildingId}`)
+    const currentBuildingId = this.buildingUpdateService.getBuildingId();
     return this.callService(`${this.baseUrl}/${currentBuildingId}`);
   }
 
@@ -102,8 +97,6 @@ export class MessageService {
 
 
   getMonth() {
-
-
     const months = [
       {value: 1, viewValue: 'January'},
       {value: 2, viewValue: 'February'},
@@ -130,11 +123,11 @@ export class MessageService {
 
 // this return an observable
   listen(): Observable<any> {
-    return this._listners.asObservable();
+    return this.listeners.asObservable();
   }
 
   activeMessage() {
-    this._listners.next();
+    this.listeners.next();
   }
 
 }

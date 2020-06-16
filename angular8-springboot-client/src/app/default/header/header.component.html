@@ -15,7 +15,9 @@
       </button>
       <mat-menu #menu="matMenu" xPosition="before" class="notifications-menu">
         <!-- <span>Notifications</span> -->
-        <button mat-menu-item *ngFor="let item of listNotifications" (click)="read(item.id,item.body)" class="header__notification-button">{{item.message | slice : 0  : 50 }}...</button>
+        <button mat-menu-item *ngFor="let item of listNotifications" (click)="read(item.id,item.body)"
+                class="header__notification-button">{{item.body | slice : 0  : 50 }}...
+        </button>
         <!--  link to notifications -->
         <a mat-menu-item class="nav-link" href="#" routerLink="/notifications"  style="color: #3A9AFC;">
           <mat-icon>more_horiz</mat-icon>

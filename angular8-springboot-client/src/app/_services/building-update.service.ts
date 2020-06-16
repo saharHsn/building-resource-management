@@ -10,7 +10,7 @@ export class BuildingUpdateService {
     this.idBuilding = localStorage.getItem('idBuilding');
   }
 
-  getIdBuilding() {
+  getBuildingId() {
     // return this.idBuilding;
     return localStorage.getItem('idBuilding');
   }

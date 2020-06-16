@@ -7,8 +7,8 @@ import {BuildingAge} from '../enums/buildingAge';
 import {MatDialog} from '@angular/material';
 import {DownloadComponent} from '../download/download.component';
 import {ChartService} from 'src/app/charts/chartService';
-import { MessageService } from '../../_services/message.service';
-import {CurrentBuildingService} from "../../_services/current-building.service";
+import {MessageService} from '../../_services/message.service';
+import {CurrentBuildingService} from '../../_services/current-building.service';
 
 @Component({
   selector: 'app-building-details',
@@ -19,14 +19,15 @@ export class BuildingDetailsComponent implements OnInit {
 
   id: number;
   building: Building;
-  monthSummary:any;
+  monthSummary: any;
+
   constructor(private route: ActivatedRoute,
               private router: Router,
               private buildingService: BuildingService,
               private currentBuildingService: CurrentBuildingService,
               public dialog: MatDialog,
               private chartService: ChartService,
-              private messages:MessageService) {
+              private messages: MessageService) {
   }
 
   ngOnInit() {
@@ -44,7 +45,7 @@ export class BuildingDetailsComponent implements OnInit {
         }
       }, error => console.log(error));
 
-      this.monthSummary=this.messages.getMonth();
+    this.monthSummary = this.messages.getMonth();
   }
 
 
@@ -85,12 +86,7 @@ export class BuildingDetailsComponent implements OnInit {
       });
   }
 
-  downLoadFile(data
-                 :
-                 any, type
-                 :
-                 string
-  ) {
+  downLoadFile(data: any, type: string) {
     const blob = new Blob([data], {type});
     // window.open(this.restUrl, "_blank");
     const url = window.URL.createObjectURL(blob);

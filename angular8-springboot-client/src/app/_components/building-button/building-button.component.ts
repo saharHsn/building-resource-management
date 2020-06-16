@@ -1,12 +1,10 @@
-import { Component, OnInit,Output,EventEmitter,ViewChild} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ChartService } from '../../charts/chartService';
-import { BuildingService } from '../../building/service/building.service';
-import { AuthenticationService } from '../../_services/authentication.service';
-import { BuildingUpdateService } from '../../_services/building-update.service';
-import { MessageService } from '../../_services/message.service';
-import { HeaderComponent } from '../../default/header/header.component';
-import { CurrentBuildingService } from '../../_services/current-building.service';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ChartService} from '../../charts/chartService';
+import {BuildingService} from '../../building/service/building.service';
+import {AuthenticationService} from '../../_services/authentication.service';
+import {BuildingUpdateService} from '../../_services/building-update.service';
+import {MessageService} from '../../_services/message.service';
 
 @Component({
   selector: 'app-building-button',
@@ -14,9 +12,11 @@ import { CurrentBuildingService } from '../../_services/current-building.service
   styleUrls: ['./building-button.component.css']
 })
 export class BuildingButtonComponent implements OnInit {
-  currentBuildingName:any;
-/*   @ViewChild(HeaderComponent, {static: true}) headerComponent: HeaderComponent;
- */  constructor(private route: ActivatedRoute,
+  currentBuildingName: any;
+
+  /*   @ViewChild(HeaderComponent, {static: true}) headerComponent: HeaderComponent;
+   */
+  constructor(private route: ActivatedRoute,
     private router: Router,
     private chartService: ChartService,
     private buildingService: BuildingService,
@@ -25,24 +25,24 @@ export class BuildingButtonComponent implements OnInit {
     private messages: MessageService,
 
     ) {
-      
+
   }
- 
+
   buildings: any;
   id: number;
-  
-  
+
+
   @Output("loadPage") init: EventEmitter<any> = new EventEmitter();
- 
+
   ngOnInit() {
-   
+
     this.buildingService.getBuildingUsersTest().subscribe(
       data => {
-         this.buildings = data.content; 
-       
-         this.currentBuildingName=this.buildingUpdateService.getIdBuilding();
-          console.log(this.currentBuildingName)
- 
+        this.buildings = data.content;
+
+        this.currentBuildingName = this.buildingUpdateService.getBuildingId();
+        console.log(this.currentBuildingName)
+
       },
       error => console.log(error)
     );
@@ -55,28 +55,22 @@ export class BuildingButtonComponent implements OnInit {
      //active subscription in header
      this.messages.activeMessage();
      this.init.emit();
-     
-   
-        
+
+
   }
 
-
-  
-  
 
   getBuildingUsers() {
     this.buildingService.getBuildingUsersTest().subscribe(
       data => {
-       
-         this.buildings = data.content; 
-      
-    /*     const id = data.content[0].id;
-        const name=data.content[0].name; */
-        //local storage
-       
-       /*  this.buildingUpdateService.setIdBuilding(id);  */
 
-     
+        this.buildings = data.content;
+
+        /*     const id = data.content[0].id;
+            const name=data.content[0].name; */
+        //local storage
+
+        /*  this.buildingUpdateService.setIdBuilding(id);  */
 
 
         /*  this.buildings = data.content;
@@ -85,15 +79,14 @@ export class BuildingButtonComponent implements OnInit {
            return;
          } else {
            const id = data.content[0].id;
-           
- 
+
+
            this.buildingUpdateService.setIdBuilding(id);
          } */
       },
       error => console.log(error)
     );
- 
- 
-  
+
+
   }
 }
