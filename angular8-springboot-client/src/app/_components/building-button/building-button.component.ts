@@ -17,14 +17,13 @@ export class BuildingButtonComponent implements OnInit {
   /*   @ViewChild(HeaderComponent, {static: true}) headerComponent: HeaderComponent;
    */
   constructor(private route: ActivatedRoute,
-    private router: Router,
-    private chartService: ChartService,
-    private buildingService: BuildingService,
-    private authService: AuthenticationService,
-    private buildingUpdateService:BuildingUpdateService,
-    private messages: MessageService,
-
-    ) {
+              private router: Router,
+              private chartService: ChartService,
+              private buildingService: BuildingService,
+              private authService: AuthenticationService,
+              private buildingUpdateService: BuildingUpdateService,
+              private messages: MessageService,
+  ) {
 
   }
 
@@ -32,7 +31,8 @@ export class BuildingButtonComponent implements OnInit {
   id: number;
 
 
-  @Output("loadPage") init: EventEmitter<any> = new EventEmitter();
+  // tslint:disable-next-line:no-output-rename
+  @Output('loadPage') init: EventEmitter<any> = new EventEmitter();
 
   ngOnInit() {
 
@@ -41,7 +41,7 @@ export class BuildingButtonComponent implements OnInit {
         this.buildings = data.content;
 
         this.currentBuildingName = this.buildingUpdateService.getBuildingId();
-        console.log(this.currentBuildingName)
+        console.log(this.currentBuildingName);
 
       },
       error => console.log(error)
@@ -51,28 +51,23 @@ export class BuildingButtonComponent implements OnInit {
 
   selected(event) {
     console.log(event);
-     this.buildingUpdateService.setIdBuilding(event);
-     //active subscription in header
-     this.messages.activeMessage();
-     this.init.emit();
-
-
+    this.buildingUpdateService.setIdBuilding(event);
+    // active subscription in header
+    this.messages.activeMessage();
+    this.init.emit();
   }
 
 
   getBuildingUsers() {
     this.buildingService.getBuildingUsersTest().subscribe(
       data => {
-
         this.buildings = data.content;
 
         /*     const id = data.content[0].id;
             const name=data.content[0].name; */
-        //local storage
+        // local storage
 
         /*  this.buildingUpdateService.setIdBuilding(id);  */
-
-
         /*  this.buildings = data.content;
          console.log(this.buildings)
          if (this.buildingUpdateService.getIdBuilding() !== null) {
@@ -86,7 +81,5 @@ export class BuildingButtonComponent implements OnInit {
       },
       error => console.log(error)
     );
-
-
   }
 }

@@ -1,5 +1,4 @@
 ﻿import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
@@ -7,7 +6,6 @@ import {appRoutingModule} from './app.routing';
 import {JwtInterceptor} from './_helpers';
 // tslint:disable-next-line:max-line-length
 import {NgIdleKeepaliveModule} from '@ng-idle/keepalive'; // this includes the core NgIdleModule but includes keepalive providers for easy wireup
-import {MomentModule} from 'angular2-moment'; // optional, provides moment-style pipes for date formatting
 import {ModalModule} from 'ngx-bootstrap/modal';
 import {AppComponent} from './app.component';
 import {HomeComponent} from './home';
@@ -15,10 +13,9 @@ import {LoginComponent} from './login';
 import {RegisterComponent} from './register';
 import {InvitationComponent} from './invitation';
 // Import FusionCharts library and chart modules
-import * as FusionCharts from 'fusioncharts';
-import * as charts from 'fusioncharts/fusioncharts.charts';
+/*import * as charts from 'fusioncharts/fusioncharts.charts';
 import * as widgets from 'fusioncharts/fusioncharts.widgets';
-import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
+import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';*/
 import {WizardFormComponent} from './wizard-form/wizard-form.component';
 import {ArchwizardModule} from 'angular-archwizard';
 import {BuildingUsageComponent} from './building/enums/building-usage-component';
@@ -63,7 +60,7 @@ import {BeScoreComponent} from './charts/overall/be-score/be-score.component';
 import {ReportComponent} from './charts/report/report.component';
 // tslint:disable-next-line:max-line-length
 import {EnergyEfficiencySymbolsComponent} from './charts/report/energy-efficiency/energy_efficiency_symbols/energy-efficiency-symbols.component';
-import {TooltipModule} from 'ng2-tooltip-directive';
+// import {TooltipModule} from 'ng2-tooltip-directive';
 import {UserListComponent} from './user/user-list/user-list.component';
 import {UserDetailsComponent} from './user/user-details/user-details.component';
 import {BuildingListComponent} from './building/building-list/building-list.component';
@@ -72,11 +69,10 @@ import {CreateUserComponent} from './user/create-user/create-user.component';
 import {HighchartsChartModule} from 'highcharts-angular';
 
 import {GoogleAnalyticsService} from './_analytics/google-analytics.service';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+// import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HeaderComponent} from './default/header/header.component';
 import {SidebarComponent} from './default/sidebar/sidebar.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {FusionChartsModule} from 'angular-fusioncharts';
 
 
 import {
@@ -88,7 +84,6 @@ import {
   MatInputModule,
   MatListModule,
   MatNativeDateModule,
-  MatProgressBarModule,
   MatSelectModule,
   MatSidenavModule,
   MatTabsModule,
@@ -100,11 +95,9 @@ import {GeneralComponent} from './charts/profile/general/general.component';
 import {BuildingComponent} from './charts/profile/building/building.component';
 import {ProfileViewComponent} from './charts/profile/profile-view/profile-view.component';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
-import {MatDialogModule} from '@angular/material/dialog';
 import {MatMenuModule} from '@angular/material/menu';
 import {PanelComponent} from './notification_panel/panel/panel.component';
 import {DownloadComponent} from './building/download/download.component';
-import {NgxPrintModule} from 'ngx-print';
 import {DailyConsumptionComponent} from './charts/consumption/daily-consumption/daily-consumption.component';
 import {ResetPasswordComponent} from './login/reset-password/reset-password.component';
 import {BulletChartComponent} from './charts/report/bullet-chart/bullet-chart.component';
@@ -118,21 +111,24 @@ import {BuildingButtonComponent} from './_components/building-button/building-bu
 import {TestbulletComponent} from './charts/report/testbullet/testbullet.component';
 import {DemoComponent} from './demo/demo.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {TooltipModule} from 'ng2-tooltip-directive';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+// import {TooltipModule} from "ng2-tooltip-directive";
 
 // Pass the fusioncharts library and chart modules
-FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme, widgets);
+// FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme, widgets);
 
 // tslint:disable-next-line:max-line-length
 
 
 @NgModule({
   imports: [
-    BrowserModule,
+    // BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
     appRoutingModule,
     NgIdleKeepaliveModule.forRoot(),
-    MomentModule,
+    // MomentModule,
     FormsModule,
     ArchwizardModule,
     CommonModule,
@@ -140,7 +136,7 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme, widgets);
     TooltipModule,
     HighchartsChartModule,
     ModalModule.forRoot(),
-    FusionChartsModule,
+    // FusionChartsModule,
     BrowserAnimationsModule,
     MatToolbarModule,
     MatButtonModule,
@@ -151,18 +147,18 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme, widgets);
     MatBadgeModule,
     MatTabsModule,
     MatBottomSheetModule,
-    MatDialogModule,
+    // MatDialogModule,
     MatFormFieldModule,
     MatMenuModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatInputModule,
     MatSelectModule,
-    NgxPrintModule,
+    // NgxPrintModule,
     NgbModule,
     AlertModule,
-    MatProgressBarModule,
-    NgxPrintModule,
+    // MatProgressBarModule,
+    // NgxPrintModule,
     MatCheckboxModule
   ],
   declarations: [
@@ -195,7 +191,7 @@ FusionChartsModule.fcRoot(FusionCharts, charts, FusionTheme, widgets);
     ProfileViewComponent,
     BuildingComponent,
     GeneralComponent,
-  /*   AlertComponent, */
+    /*   AlertComponent, */
 
     // HighchartsChartComponent,
     ReportBeScoreComponent,

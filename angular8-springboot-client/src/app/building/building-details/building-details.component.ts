@@ -8,7 +8,7 @@ import {MatDialog} from '@angular/material';
 import {DownloadComponent} from '../download/download.component';
 import {ChartService} from 'src/app/charts/chartService';
 import {MessageService} from '../../_services/message.service';
-import {CurrentBuildingService} from '../../_services/current-building.service';
+import {BuildingUpdateService} from '../../_services/building-update.service';
 
 @Component({
   selector: 'app-building-details',
@@ -24,16 +24,16 @@ export class BuildingDetailsComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private buildingService: BuildingService,
-              private currentBuildingService: CurrentBuildingService,
               public dialog: MatDialog,
               private chartService: ChartService,
-              private messages: MessageService) {
+              private messages: MessageService,
+              private buildingUpdateService: BuildingUpdateService) {
   }
 
   ngOnInit() {
     // this.building = new Building();
     this.id = this.route.snapshot.params.id;
-    const currentBuildingId = this.currentBuildingService.getBuildingId();
+    const currentBuildingId = this.buildingUpdateService.getBuildingId();
     this.buildingService.getBuilding(currentBuildingId)
       .subscribe(data => {
         console.log('Building Info: ' + data);

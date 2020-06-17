@@ -6,11 +6,9 @@ import {User} from 'src/app/_models';
 import {Building} from 'src/app/building/model/building';
 import {BuildingService} from 'src/app/building/service/building.service';
 import {AuthenticationService} from 'src/app/_services';
-import {CurrentBuildingService} from 'src/app/_services/current-building.service';
 import {PredictionsComponent} from './predictions/predictions.component';
 import {BeScoreComponent} from './be-score/be-score.component';
-import { MessageService } from 'src/app/_services/message.service';
-import { FormGroup } from '@angular/forms';
+import {MessageService} from 'src/app/_services/message.service';
 
 @Component({
   templateUrl: './overall.component.html',
@@ -25,30 +23,29 @@ export class OverallComponent implements OnInit {
               private chartService: ChartService,
               private buildingService: BuildingService,
               private authService: AuthenticationService,
-              private buildingUpdateService: CurrentBuildingService,
               private messages: MessageService
               // private prediction: PredictionsComponent
   ) {
     this.currentUser = this.authService.currentUserValue;
   }
-  
+
   id: number;
   currentMonthSummary: CurrentMonthSummary;
   currentUser: User;
   building: Building = new Building();
-  
+
   // gauge variables
-  monthSummary:any;
+  monthSummary: any;
   beScore: number;
   nationalMedian: number;
   propertyTarget: number;
   buildings: any;
- 
- 
+
+
   ngOnInit() {
-   this.monthSummary=this.messages.getMonth();
-   this.initCharts();
-  
+    this.monthSummary = this.messages.getMonth();
+    this.initCharts();
+
   }
 
   list() {
@@ -67,24 +64,11 @@ export class OverallComponent implements OnInit {
   getBuildingUsers() {
     this.buildingService.getBuildingUsersTest().subscribe(
       data => {
-
-       this.buildings = data.content;
-       /*  const id = data.content[0].id;
-        this.buildingUpdateService.setIdBuilding(id);  */
-       
-     
-        console.log(this.buildings)
-     
+        this.buildings = data.content;
       },
       error => console.log(error)
     );
   }
-/*   select(event) {
-    this.buildingUpdateService.setIdBuilding(event); 
-    this.initCharts();
-    this.predictionsComponent.ngOnInit();
-    this.beScoreComponent.ngOnInit();
-  } */
 
   initCharts() {
     this.id = this.route.snapshot.params.id;
@@ -106,11 +90,11 @@ export class OverallComponent implements OnInit {
       }, error => console.log(error));
   }
 
-  loadPage():void{
-    
-    this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
-    this.router.navigate(['overall']))
-   
+  loadPage(): void {
+
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+      this.router.navigate(['overall']));
+
   }
 
 

@@ -110,6 +110,7 @@ export class ChartService {
 
   private callService(restUrl: string) {
     const idcurrentBuilding = this.buildingUpdateService.getBuildingId();
+    console.log('Curr Buil Id:' + idcurrentBuilding);
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;

@@ -1,22 +1,22 @@
-  <div class="report_buttons">
-    <div>
-      <app-building-button (loadPage)="loadPage()"></app-building-button>
-    </div>
-    <div>
-      <button mat-button (click)="download()">
-        <mat-icon>cloud_download</mat-icon>
-        Download
-      </button>
-      <button mat-button (click)="print()">
-        <mat-icon>print</mat-icon>
-        Print
-      </button>
-      <button mat-button (click)="downloadPdf()">
-        <mat-icon>share</mat-icon>
-        Share report
-      </button>
-    </div>
+<div class="report_buttons">
+  <div>
+    <app-building-button (loadPage)="loadPage()"></app-building-button>
   </div>
+  <div>
+    <button mat-button (click)="download()">
+      <mat-icon>cloud_download</mat-icon>
+      Download
+    </button>
+    <button mat-button (click)="print()">
+      <mat-icon>print</mat-icon>
+      Print
+    </button>
+    <button mat-button (click)="downloadPdf()">
+      <mat-icon>share</mat-icon>
+      Share report
+    </button>
+  </div>
+</div>
 
 <div class="container" id="content" #content>
   <div class="row">
@@ -25,51 +25,39 @@
     </div>
   </div>
   <br>
-  
+
   <div class="row">
     <div class="col">
-  
-    <app-be-score></app-be-score>
-    <p class="title">Be score: {{beScore}} <br>
-      Property's Target: {{propertyTarget}} <br>
+      <app-be-score></app-be-score>
+      <p class="title">Be score: {{beScore}} <br>
+        Property's Target: {{propertyTarget}} <br>
 
-      National Median: {{nationalMedian}}</p>
+        National Median: {{nationalMedian}}</p>
     </div>
     <div class="col">
       <app-percentile></app-percentile>
-      <p class="title">Your Score is higher than 63% <br>of Builtrix  members 
-  </p>
+      <p class="title">Your Score is higher than 63% <br>of Builtrix members
+      </p>
     </div>
-    </div> 
-    <mat-card class="report_section-table container">
-  
-      <div class="mr-2" id="table">
-        <app-energy-efficiency ></app-energy-efficiency>
-      </div>
-  
+  </div>
+  <mat-card class="report_section-table container">
+    <div class="mr-2" id="table">
+      <app-energy-efficiency></app-energy-efficiency>
+    </div>
     <div id="charts">
       <div class="report__bullet">
-      <img src="assets/images/Efficiency.png" alt="" style="height: 300px;">
-       <app-testbullet></app-testbullet>
-       <div class="report__legend">
-        
+        <img src="assets/images/Efficiency.png" alt="" style="height: 300px;">
+        <app-testbullet></app-testbullet>
+        <div class="report__legend">
           <ul id="lista">
             <li id="target">Target</li>
             <li id="current">Current</li>
             <li id="lastyear">Last year</li>
           </ul>
-       </div>
+        </div>
       </div>
     </div>
-  
   </mat-card>
-  
-    
   <hr>
-  
-  
-  
- 
-  </div>
-  <br>
- 
+</div>
+<br>
