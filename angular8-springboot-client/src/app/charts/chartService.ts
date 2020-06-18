@@ -33,8 +33,8 @@ export class ChartService {
   private readonly nationalMedianUrl;
   private readonly propertyTargetUrl;
   private readonly downloadUrl;
-  private readonly HistoricalConsumptionUrl;
-  private readonly HistoricalCostUrl;
+  private readonly historicalConsumptionUrl;
+  private readonly historicalCostUrl;
   headers: HttpHeaders;
 
   constructor(private http: HttpClient,
@@ -61,8 +61,8 @@ export class ChartService {
     this.nationalMedianUrl = this.baseUrl + '/nationalMedian';
     this.propertyTargetUrl = this.baseUrl + '/propertyTarget';
     this.downloadUrl = this.baseUrl + '/download';
-    this.HistoricalConsumptionUrl = this.baseUrl + '/historicalConsumption';
-    this.HistoricalCostUrl = this.baseUrl + '/historicalCost';
+    this.historicalConsumptionUrl = this.baseUrl + '/historicalConsumption';
+    this.historicalCostUrl = this.baseUrl + '/historicalCost';
     this.headers = this.authService.getHeaders();
   }
 
@@ -82,7 +82,7 @@ export class ChartService {
     const params = new HttpParams()
       .set('year', year)
       .set('month', month);
-    return this.http.get(`${this.HistoricalConsumptionUrl}/${buildingId}`,
+    return this.http.get(`${this.historicalConsumptionUrl}/${buildingId}`,
       {headers, params}
     );
   }
@@ -102,7 +102,7 @@ export class ChartService {
     const params = new HttpParams()
       .set('year', year)
       .set('month', month);
-    return this.http.get(`${this.HistoricalCostUrl}/${buildingId}`,
+    return this.http.get(`${this.historicalCostUrl}/${buildingId}`,
       {headers, params}
     );
   }
@@ -110,7 +110,6 @@ export class ChartService {
 
   private callService(restUrl: string) {
     const idcurrentBuilding = this.buildingUpdateService.getBuildingId();
-    console.log('Curr Buil Id:' + idcurrentBuilding);
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;

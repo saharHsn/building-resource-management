@@ -35,8 +35,7 @@ export class DemoComponent implements OnInit {
 
   ngOnInit(): void {
     this.demoForm = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      fullName: ['', Validators.required],
       emailAddress: ['', Validators.required],
       jobTitle: ['', Validators.required],
       interest: ['', null],

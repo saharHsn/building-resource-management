@@ -14,10 +14,7 @@ import javax.validation.constraints.Size;
 public class RegisterDemoUserDto {
     @NotNull
     @Size(min = 1, message = "{Size.userDto.firstName}")
-    private String firstName;
-    @NotNull
-    @Size(min = 1, message = "{Size.userDto.lastName}")
-    private String lastName;
+    private String fullName;
     @NotNull
     @ValidEmail
     private String emailAddress;

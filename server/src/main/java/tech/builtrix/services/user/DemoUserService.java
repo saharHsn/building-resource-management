@@ -24,8 +24,7 @@ public class DemoUserService extends GenericCrudServiceBase<DemoUser, DemoUserRe
             return demoUsers.get(0);
         }
         final DemoUser user = new DemoUser();
-        user.setFirstName(registerUserDto.getFirstName());
-        user.setLastName(registerUserDto.getLastName());
+        user.setFullName(registerUserDto.getFullName());
         user.setEmailAddress(registerUserDto.getEmailAddress());
         return repository.save(user);
     }

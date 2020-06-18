@@ -11,9 +11,7 @@ import tech.builtrix.base.EntityBase;
 @Getter
 public class DemoUser extends EntityBase<DemoUser> {
     @DynamoDBAttribute
-    private String firstName;
-    @DynamoDBAttribute
-    private String lastName;
+    private String fullName;
     @DynamoDBAttribute
     private String emailAddress;
     @DynamoDBAttribute

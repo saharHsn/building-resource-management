@@ -5,6 +5,7 @@ export class User {
   emailAddress: string;
   password: string;
   confirmPassword: string;
+  fullName: string;
   firstName: string;
   lastName: string;
   token: string;
