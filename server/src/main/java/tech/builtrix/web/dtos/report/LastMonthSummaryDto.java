@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 @JsonInclude
 @Data
 @NoArgsConstructor
-public class CurrentMonthSummaryDto {
+public class LastMonthSummaryDto {
     private Float consumption;
     private Float cost;
     private Float environmental;
+    private String lastMonth;
 }

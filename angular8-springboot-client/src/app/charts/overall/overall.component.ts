@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ChartService} from '../chartService';
-import {CurrentMonthSummary} from './CurrentMonthSummary';
+import {LastMonthSummary} from './LastMonthSummary';
 import {User} from 'src/app/_models';
 import {Building} from 'src/app/building/model/building';
 import {BuildingService} from 'src/app/building/service/building.service';
@@ -30,7 +30,7 @@ export class OverallComponent implements OnInit {
   }
 
   id: number;
-  currentMonthSummary: CurrentMonthSummary;
+  lastMonthSummary: LastMonthSummary;
   currentUser: User;
   building: Building = new Building();
 
@@ -45,7 +45,6 @@ export class OverallComponent implements OnInit {
   ngOnInit() {
     this.monthSummary = this.messages.getMonth();
     this.initCharts();
-
   }
 
   list() {
@@ -72,13 +71,14 @@ export class OverallComponent implements OnInit {
 
   initCharts() {
     this.id = this.route.snapshot.params.id;
-    this.currentMonthSummary = new CurrentMonthSummary();
+    this.lastMonthSummary = new LastMonthSummary();
     this.reloadData();
-    this.chartService.currentMonthSummary()
+    this.chartService.lastMonthSummary()
       .subscribe(data => {
-        this.currentMonthSummary.consumption = data.content.consumption;
-        this.currentMonthSummary.cost = data.content.cost;
-        this.currentMonthSummary.environmental = data.content.environmental;
+        this.lastMonthSummary.consumption = data.content.consumption;
+        this.lastMonthSummary.cost = data.content.cost;
+        this.lastMonthSummary.environmental = data.content.environmental;
+        this.lastMonthSummary.lastMonth = data.content.lastMonth;
       }, error => console.log(error));
     this.chartService.getNationalMedian()
       .subscribe(data => {
@@ -91,11 +91,8 @@ export class OverallComponent implements OnInit {
   }
 
   loadPage(): void {
-
     this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
       this.router.navigate(['overall']));
 
   }
-
-
 }

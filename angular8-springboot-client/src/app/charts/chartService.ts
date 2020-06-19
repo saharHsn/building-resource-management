@@ -18,7 +18,7 @@ export class ChartService {
   private readonly predictUrl;
   private readonly savingUrl;
   private readonly beScoreUrl;
-  private readonly currentMonthSummaryUrl;
+  private readonly lastMonthSummaryUrl;
   private readonly costStackUrl;
   private readonly costPieUrl;
   private readonly consumptionUrl;
@@ -45,7 +45,7 @@ export class ChartService {
     this.baseUrl = this.environmentUrl + '/reports';
     this.predictUrl = this.baseUrl + '/prediction';
     this.savingUrl = this.baseUrl + '/saving';
-    this.currentMonthSummaryUrl = this.baseUrl + '/currentMonthSummary';
+    this.lastMonthSummaryUrl = this.baseUrl + '/lastMonthSummary';
     this.beScoreUrl = this.baseUrl + '/beScore';
     this.costStackUrl = this.baseUrl + '/costStack';
     this.costPieUrl = this.baseUrl + '/costPie';
@@ -143,8 +143,8 @@ export class ChartService {
   }
 
 
-  currentMonthSummary(): Observable<any> {
-    return this.callService(`${this.currentMonthSummaryUrl}`);
+  lastMonthSummary(): Observable<any> {
+    return this.callService(`${this.lastMonthSummaryUrl}`);
   }
 
 

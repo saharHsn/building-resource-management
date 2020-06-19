@@ -55,11 +55,11 @@ public class ReportController extends ControllerBase {
         this.hourlyDailyService = hourlyDailyService;
     }
 
-    @ApiOperation(value = "Request for getting current Month Summary")
-    @GetMapping(value = "/currentMonthSummary/{buildingId}")
-    public Response<CurrentMonthSummaryDto> currentMonthSummary(@PathVariable("buildingId") String buildingId) throws NotFoundException {
-        CurrentMonthSummaryDto currentMonthSummaryDto;
-        currentMonthSummaryDto = this.reportService.currentMonthSummary(buildingId);
+    @ApiOperation(value = "Request for getting last Month Summary")
+    @GetMapping(value = "/lastMonthSummary/{buildingId}")
+    public Response<LastMonthSummaryDto> lastMonthSummary(@PathVariable("buildingId") String buildingId) throws NotFoundException {
+        LastMonthSummaryDto currentMonthSummaryDto;
+        currentMonthSummaryDto = this.reportService.lastMonthSummary(buildingId);
         return Response.ok(currentMonthSummaryDto);
     }
 

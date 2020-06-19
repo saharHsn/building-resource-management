@@ -420,15 +420,17 @@ public class ReportService {
         return ReportUtil.roundDecimal(nationalMedianBEScore);
     }
 
-    public CurrentMonthSummaryDto currentMonthSummary(String buildingId) throws NotFoundException {
+    public LastMonthSummaryDto lastMonthSummary(String buildingId) throws NotFoundException {
         Bill lastBill = billService.getLastBill(buildingId);
-        CurrentMonthSummaryDto dto = new CurrentMonthSummaryDto();
+        LastMonthSummaryDto dto = new LastMonthSummaryDto();
         float consumption = lastBill.getTotalMonthlyConsumption();
         dto.setConsumption(ReportUtil.roundDecimal(consumption));
         float cost = lastBill.getTotalPayable();
         dto.setCost(ReportUtil.roundDecimal(cost));
         float environmental = lastBill.getProducedCO2();
         dto.setEnvironmental(ReportUtil.roundDecimal(environmental));
+        int lastMonth = lastBill.getFromMonth();
+        dto.setLastMonth(DateUtil.getMonth(lastMonth));
         return dto;
     }
 

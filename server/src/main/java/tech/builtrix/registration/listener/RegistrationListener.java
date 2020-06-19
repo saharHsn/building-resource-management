@@ -2,7 +2,6 @@ package tech.builtrix.registration.listener;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.SimpleMailMessage;
@@ -19,21 +18,20 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Objects;
 import java.util.Scanner;
 
 @Component
 @Slf4j
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
 	private final CodeService codeService;
-	private final MessageSource messages;
 	private final EmailSender mailSender;
 	private final Environment env;
 	private final ResourceLoader res;
 
-	public RegistrationListener(CodeService codeService, MessageSource messages, EmailSender mailSender,
-			Environment env, ResourceLoader res) {
+	public RegistrationListener(CodeService codeService, EmailSender mailSender,
+								Environment env, ResourceLoader res) {
 		this.codeService = codeService;
-		this.messages = messages;
 		this.mailSender = mailSender;
 		this.env = env;
 		this.res = res;
@@ -61,8 +59,8 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 		mailSender.sendEmail(email);
 	}
 
-	private final SimpleMailMessage constructEmailMessage(final OnRegistrationCompleteEvent event, final User user,
-			final String token) {
+	private SimpleMailMessage constructEmailMessage(final OnRegistrationCompleteEvent event, final User user,
+													final String token) {
 		String template = null;
 		try {
 			InputStream inputStream = res.getResource("classpath:/templates/email/registration.confirmation.template")
@@ -82,7 +80,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 		email.setText(
 				template != null ? template.replace("{555}", confirmationUrl).replace("{user}", user.getFirstName())
 						: null);
-		email.setFrom(env.getProperty("support.email"));
+		email.setFrom(Objects.requireNonNull(env.getProperty("support.email")));
 		return email;
 	}
 

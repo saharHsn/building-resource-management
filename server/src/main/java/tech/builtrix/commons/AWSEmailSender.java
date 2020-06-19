@@ -16,6 +16,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
+import java.util.Objects;
 import java.util.Properties;
 
 @Component
@@ -50,8 +51,8 @@ public class AWSEmailSender implements EmailSender {
 	@Override
 	public void sendEmail(SimpleMailMessage email)
 			throws UnsupportedEncodingException, MessagingException, InternalServerException {
-		this.sendEmail(email.getFrom(), email.getTo()[0], email.getSubject(), email.getText(), true);
-	}
+        this.sendEmail(email.getFrom(), Objects.requireNonNull(email.getTo())[0], email.getSubject(), email.getText(), true);
+    }
 
 	void sendMail(String fromUserEmail, String toEmail, String subject, String body) throws InternalServerException {
 		try {
