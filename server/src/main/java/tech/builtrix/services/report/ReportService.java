@@ -535,7 +535,7 @@ public class ReportService {
         float baseline = ReportUtil.roundDecimal(consumptionArea.getBaseline() * CO2_CONS);
         consumptionIndex.setBaseline(baseline);
         consumptionIndex.setThisMonth(ReportUtil.roundDecimal(consumptionArea.getThisMonth() * CO2_CONS));
-        consumptionIndex.setNationalMedian(12.5f);
+        consumptionIndex.setNationalMedian(12.5f * CO2_CONS);
         consumptionIndex.setPropertiesTarget(ReportUtil.roundDecimal(PROPERTY_TARGET_COEFFICIENT * baseline));
         return consumptionIndex;
     }

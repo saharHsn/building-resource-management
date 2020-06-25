@@ -2,9 +2,46 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <!-- <div class="card card-signin my-5">-->
+        <div class="card-body animated lato">
+          <br> <br> <br> <br>
+          <h4 class="card-title text-center lato">
+            Try a Free Demo
+          </h4>
+          <h5 style="color: #0e3074" class="lato">
+            “Unlock the Full Potential of Your Buildings”
+          </h5>
+          <br>
+          <div class="lato">
+            Builtrix Helps Companies to Uncover Energy Saving Opportunities and Save Operational Time by Analyzing
+            Their
+            Energy Data and Providing Actionable Insights.
+            <br>
+            <br>
+            See how other companies use Builtrix services to achieve their energy efficiency goals and save lots of
+            their operational times.
+            <br>
+            <br>
+            By using Builtrix services you can achieve:
+            <br>
+            <br>
+            1. <a href="https://builtrix.tech/Solution.html#EB">Energy Benchmarking</a>
+            <br>
+            2. <a href="https://builtrix.tech/Solution.html#EDA"> Energy data Analysis</a>
+            <br>
+            3. <a href="https://builtrix.tech/Solution.html#CP">Energy Cost Prediction</a>
+            <br>
+            4. <a href="https://builtrix.tech/Solution.html#RE">Recommendation to improve Energy Efficiency</a>
+          </div>
+
+        </div>
+        <!-- </div>-->
+      </div>
+
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
         <div class="card card-signin my-5">
           <div class="card-body animated">
-            <h5 class="card-title text-center">
+            <h5 class="card-title text-center lato">
               <a href="https://www.builtrix.tech/">
                 <img src="../../assets/images/bafa157a-cb70-4b75-9b84-670ea85efb19.png"
                      style="width:170px;height: 100px" alt="#">
@@ -14,7 +51,7 @@
             <form [formGroup]="demoForm" (ngSubmit)="onSubmit()">
               <div>
                 <div class="form-group">
-                  <label for="fullName">Full Name</label>
+                  <label style="font-family: Lato,serif" for="fullName">Full Name</label>
                   <span class="required">*</span>
                   <input type="text" id="fullName" formControlName="fullName" class="form-control"
                          placeholder="Enter your full name."
@@ -30,7 +67,7 @@
               </div>
               <div>
                 <div class="form-group">
-                  <label for="emailAddress">Email</label>
+                  <label style="font-family: Lato,serif" for="emailAddress">Email</label>
                   <span class="required">*</span>
                   <input type="text" id="emailAddress" formControlName="emailAddress" class="form-control"
                          [email]="true"
@@ -46,7 +83,7 @@
               </div>
               <div>
                 <div class="form-group">
-                  <label for="jobTitle">Job Title</label>
+                  <label style="font-family: Lato,serif" for="jobTitle">Job Title</label>
                   <span class="required">*</span>
                   <input type="text" id="jobTitle" formControlName="jobTitle" class="form-control"
                          placeholder="Enter your job title."
@@ -62,16 +99,17 @@
               </div>
               <div>
                 <div class="form-group">
-                  <label for="interest">What are you interested in learning about?</label>
-                  <input type="text" id="interest" formControlName="interest" class="form-control"
-                         placeholder="Enter your interest"/>
+                  <label style="font-family: Lato,serif" for="interest">What are you interested in learning
+                    about?</label>
+                  <textarea rows="5" id="interest" formControlName="interest" class="form-control"
+                            placeholder="Enter your interest"></textarea>
                 </div>
               </div>
               <div>
                 <div class="form-group">
-                  <label for="subscription"></label>
+                  <label style="font-family: Lato,serif" for="subscription"></label>
                   <div *ngFor="let subscribe of subscribeList">
-                    <label>
+                    <label style="font-family: Lato,serif">
                       <input id="subscription" type="checkbox" [value]="subscribe.id"
                              (change)="onCheckboxChange($event)"/>
                       {{subscribe.name}}
@@ -81,10 +119,11 @@
                   <div>
                     <div class="form-group">
                       <button [disabled]="loading" class="btn btn-primary">
-                        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                        Register
+                        <span *ngIf="loading" style="font-family: Lato,serif"
+                              class="spinner-border spinner-border-sm mr-1"></span>
+                        Try a Demo
                       </button>
-                      <a routerLink="/login" class="btn btn-link">Cancel</a>
+                      <a routerLink="/login" style="font-family: Lato,serif" class="btn btn-link">Cancel</a>
                     </div>
                   </div>
                 </div>
