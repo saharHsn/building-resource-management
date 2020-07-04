@@ -16,10 +16,7 @@ import tech.builtrix.services.report.WeekDayInfo;
 import tech.builtrix.web.dtos.bill.BillDto;
 import tech.builtrix.web.dtos.bill.BuildingDto;
 import tech.builtrix.web.dtos.historical.HistoricalEnergyConsumptionDto;
-import tech.builtrix.web.dtos.report.ConsumptionDto;
-import tech.builtrix.web.dtos.report.ConsumptionDynamicDto;
-import tech.builtrix.web.dtos.report.CostStackDto;
-import tech.builtrix.web.dtos.report.HistoricalConsumptionDto;
+import tech.builtrix.web.dtos.report.*;
 
 import java.text.DecimalFormat;
 import java.util.*;
@@ -356,16 +353,9 @@ public class ReportUtil {
 
     public static HistoricalConsumptionDto getHistoricalConsumption(List<HistoricalEnergyConsumptionDto> dtoList,
                                                                     DataType dataType) {
-        List<Integer> xValues = new ArrayList<>();
         HistoricalConsumptionDto dto = new HistoricalConsumptionDto();
 
-        for (HistoricalEnergyConsumptionDto consumptionDto : dtoList) {
-            Integer dayOfMonth = DateUtil.getDayOfMonth(consumptionDto.getDate());
-            if (!xValues.contains(dayOfMonth)) {
-                xValues.add(dayOfMonth);
-            }
-        }
-        Collections.sort(xValues);
+        List<Integer> xValues = getMonthDays(dtoList);
         int numOfDaysOMonth = xValues.size();
         dto.setXValues(xValues);
         List<Float> normalValues = new ArrayList<>(Collections.nCopies(numOfDaysOMonth, 0f));
@@ -383,9 +373,19 @@ public class ReportUtil {
         dto.setOffValues(offValues);
         dto.setPeakValues(peakValues);
         dto.setNormalValues(normalValues);
-        // TODO refine later
-
         return dto;
+    }
+
+    private static List<Integer> getMonthDays(List<HistoricalEnergyConsumptionDto> dtoList) {
+        List<Integer> xValues = new ArrayList<>();
+        for (HistoricalEnergyConsumptionDto consumptionDto : dtoList) {
+            Integer dayOfMonth = DateUtil.getDayOfMonth(consumptionDto.getDate());
+            if (!xValues.contains(dayOfMonth)) {
+                xValues.add(dayOfMonth);
+            }
+        }
+        Collections.sort(xValues);
+        return xValues;
     }
 
 
@@ -753,6 +753,27 @@ public class ReportUtil {
         cell2.setCellValue(String.valueOf(value));
         metaDataSheet.autoSizeColumn(1);
         cell2.setCellStyle(style);
+    }
+
+    public static HeatMapHourlyDto getHeatMapHourlyConsumption(List<HistoricalEnergyConsumptionDto> dtoList, DataType dataType) {
+        List<Integer> xValues = getMonthDays(dtoList);
+        int numOfDaysOMonth = xValues.size();
+        HeatMapHourlyDto dto = new HeatMapHourlyDto();
+        dto.setXValues(xValues);
+        dto.setYValues(getDayHours());
+        List<int[]> data = new ArrayList<>();
+        for (HistoricalEnergyConsumptionDto historicalDto : dtoList) {
+            int dayOfMonth = DateUtil.getDayOfMonth(historicalDto.getDate());
+            int consumption = dataType.equals(DataType.CONSUMPTION) ? (int) historicalDto.getConsumption() : (int) historicalDto.getCost();
+            int[] dataArray = new int[]{dayOfMonth, (int) historicalDto.getHour(), consumption};
+            data.add(dataArray);
+        }
+        dto.setDataMatrix(data);
+        return dto;
+    }
+
+    private static List<Integer> getDayHours() {
+        return Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24);
     }
 
 

@@ -7,6 +7,9 @@ import com.amazonaws.services.dynamodbv2.datamodeling.marshallers.DateToStringMa
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import tech.builtrix.base.GenericCrudServiceBase;
@@ -17,8 +20,13 @@ import tech.builtrix.services.report.DataType;
 import tech.builtrix.utils.DateUtil;
 import tech.builtrix.utils.ReportUtil;
 import tech.builtrix.web.dtos.historical.HistoricalEnergyConsumptionDto;
+import tech.builtrix.web.dtos.report.DailyMatrix;
+import tech.builtrix.web.dtos.report.HeatMapDailyDto;
+import tech.builtrix.web.dtos.report.HeatMapHourlyDto;
 import tech.builtrix.web.dtos.report.HistoricalConsumptionDto;
 
+import java.time.DayOfWeek;
+import java.time.Month;
 import java.util.*;
 
 @Component
@@ -81,6 +89,69 @@ public class HistoricalConsumptionService extends GenericCrudServiceBase<Histori
     }
 
     public HistoricalConsumptionDto getHistoricalConsumption(String buildingId, Integer year, Integer month, DataType dataType) {
+        List<HistoricalEnergyConsumptionDto> historicalEnergyConsumptionDtos = getHistoricalEnergyConsumptionDtos(buildingId, year, month);
+        return ReportUtil.getHistoricalConsumption(historicalEnergyConsumptionDtos, dataType);
+    }
+
+    public HeatMapHourlyDto getHeatMapHourlyConsumption(String buildingId, Integer year, Integer month, DataType dataType) {
+        List<HistoricalEnergyConsumptionDto> historicalEnergyConsumptionDtos = getHistoricalEnergyConsumptionDtos(buildingId, year, month);
+        return ReportUtil.getHeatMapHourlyConsumption(historicalEnergyConsumptionDtos, dataType);
+    }
+
+
+    public HeatMapDailyDto getHeatMapDailyConsumption(String buildingId, int year, DataType consumption) {
+        List<HistoricalEnergyConsumptionDto> historicalEnergyConsumptionDtos = getHistoricalEnergyConsumptionDtos(buildingId, year);
+        Map<Integer, List<DailyHeatMapProp>> monthAverage = new HashMap<>();
+        for (HistoricalEnergyConsumptionDto dto : historicalEnergyConsumptionDtos) {
+            Date date = dto.getDate();
+            int weekDay = DateUtil.getWeekDay(date);
+            int month = DateUtil.getMonth(date);
+            if (monthAverage.containsKey(month)) {
+                List<DailyHeatMapProp> dailyHeatMapProps = monthAverage.get(month);
+                boolean weekDayExist = false;
+                for (DailyHeatMapProp dailyHeatMapProp : dailyHeatMapProps) {
+                    if (dailyHeatMapProp.getWeekDay() == weekDay) {
+                        int weekDayCount = dailyHeatMapProp.getWeekDayCount() + 1;
+                        dailyHeatMapProp.setConsumption((dailyHeatMapProp.getConsumption() + dto.getConsumption()));
+                        dailyHeatMapProp.setWeekDayCount(weekDayCount);
+                        weekDayExist = true;
+                        break;
+                    }
+                }
+                if (!weekDayExist) {
+                    monthAverage.get(month).add(new DailyHeatMapProp(weekDay, dto.getConsumption(), 1));
+                }
+            } else {
+                List<DailyHeatMapProp> list = new ArrayList<>();
+                list.add(new DailyHeatMapProp(weekDay, dto.getConsumption(), 1));
+                monthAverage.put(month, list);
+            }
+        }
+        HeatMapDailyDto heatMapDailyDto = new HeatMapDailyDto();
+        heatMapDailyDto.setXValues(Arrays.asList(Month.values()));
+        heatMapDailyDto.setYValues(Arrays.asList(DayOfWeek.values()));
+        monthAverage.keySet().forEach(month -> {
+            monthAverage.get(month).forEach(dailyHeatMapProp -> {
+                float cons = dailyHeatMapProp.getConsumption() / dailyHeatMapProp.getWeekDayCount();
+                DailyMatrix dailyMatrix = new DailyMatrix(DayOfWeek.of(dailyHeatMapProp.getWeekDay()),
+                        Month.of(month), cons);
+                heatMapDailyDto.getDataMatrix().add(dailyMatrix);
+            });
+        });
+        return heatMapDailyDto;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    private class DailyHeatMapProp {
+        int weekDay;
+        float consumption;
+        int weekDayCount;
+    }
+
+
+    private List<HistoricalEnergyConsumptionDto> getHistoricalEnergyConsumptionDtos(String buildingId, Integer year, Integer month) {
         //make date from first day of month and another for last day of month
         String monthStr = month.toString().length() == 1 ? "0" + month : month.toString();
         String dateStr = year + "-" + monthStr + "-" + "01T" + "00:00:00";
@@ -89,8 +160,19 @@ public class HistoricalConsumptionService extends GenericCrudServiceBase<Histori
         Date from = DateUtil.getDateFromPattern(dateStr, pattern);
         String dateStr1 = year + "-" + monthStr + "-" + DateUtil.getNumOfDaysOfMonth(year, month) + "T23:59:59";
         Date to = DateUtil.getDateFromPattern(dateStr1, pattern);
-        List<HistoricalEnergyConsumptionDto> historicalEnergyConsumptionDtos = filterByDate(buildingId, from, to);
-        return ReportUtil.getHistoricalConsumption(historicalEnergyConsumptionDtos, dataType);
+        return filterByDate(buildingId, from, to);
+    }
+
+    private List<HistoricalEnergyConsumptionDto> getHistoricalEnergyConsumptionDtos(String buildingId, int year) {
+        //make date from first day of month and another for last day of month
+        // String monthStr = month.toString().length() == 1 ? "0" + month : month.toString();
+        String dateStr = year + "-" + "01" + "-" + "01T" + "00:00:00";
+        String pattern = "yyyy-MM-dd'T'HH:mm:ss";
+        //"2010-05-23T09:01:02"
+        Date from = DateUtil.getDateFromPattern(dateStr, pattern);
+        String dateStr1 = year + "-" + "12" + "-" + DateUtil.getNumOfDaysOfMonth(year, 12) + "T23:59:59";
+        Date to = DateUtil.getDateFromPattern(dateStr1, pattern);
+        return filterByDate(buildingId, from, to);
     }
 
     public List<HistoricalConsumption> findAll() {
@@ -99,7 +181,7 @@ public class HistoricalConsumptionService extends GenericCrudServiceBase<Histori
     }
 
     public static void main(String[] args) {
-        TimeZone timeZone = TimeZone.getTimeZone("Europe/Copenhagen");
+       /* TimeZone timeZone = TimeZone.getTimeZone("Europe/Copenhagen");
         Integer year = 2020;
         Integer month = 3;
         String monthStr = month.toString().length() == 1 ? "0" + month : month.toString();
@@ -111,7 +193,7 @@ public class HistoricalConsumptionService extends GenericCrudServiceBase<Histori
         Date to = DateUtil.getDateFromPattern(dateStr1, pattern);
         AttributeValue start = DateToStringMarshaller.instance().marshall(from);
         AttributeValue end = DateToStringMarshaller.instance().marshall(to);
-        System.out.println();
+        System.out.println();*/
     }
 
     public void update(HistoricalConsumption consumption) {

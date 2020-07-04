@@ -12,9 +12,7 @@ import tech.builtrix.Response;
 import tech.builtrix.base.ControllerBase;
 import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.services.bill.BillService;
-import tech.builtrix.services.building.BuildingService;
 import tech.builtrix.services.historical.HistoricalConsumptionService;
-import tech.builtrix.services.historical.HourlyDailyService;
 import tech.builtrix.services.report.DataType;
 import tech.builtrix.services.report.ReportService;
 import tech.builtrix.web.dtos.bill.BillDto;
@@ -39,20 +37,16 @@ import java.util.List;
 public class ReportController extends ControllerBase {
 
     private final ReportService reportService;
-    private final BuildingService buildingService;
     private final BillService billService;
     private final HistoricalConsumptionService historicalConsumptionService;
-    private final HourlyDailyService hourlyDailyService;
 
     @Autowired
-    public ReportController(ReportService reportService, BuildingService buildingService,
+    public ReportController(ReportService reportService,
                             BillService billService,
-                            HistoricalConsumptionService historicalConsumptionService, HourlyDailyService hourlyDailyService) {
+                            HistoricalConsumptionService historicalConsumptionService) {
         this.reportService = reportService;
-        this.buildingService = buildingService;
         this.billService = billService;
         this.historicalConsumptionService = historicalConsumptionService;
-        this.hourlyDailyService = hourlyDailyService;
     }
 
     @ApiOperation(value = "Request for getting last Month Summary")
@@ -234,6 +228,23 @@ public class ReportController extends ControllerBase {
                                                                 @RequestParam(value = "year") int year,
                                                                 @RequestParam(value = "month") int month) {
         HistoricalConsumptionDto dto = this.historicalConsumptionService.getHistoricalConsumption(buildingId, year, month, DataType.COST);
+        return Response.ok(dto);
+    }
+
+    @ApiOperation(value = "Request for getHeatMapHourlyConsumption")
+    @GetMapping(value = "/heatMapHourlyCons/{buildingId}")
+    public Response<HeatMapHourlyDto> getHeatMapHourlyConsumption(@PathVariable("buildingId") String buildingId,
+                                                                  @RequestParam(value = "year") int year,
+                                                                  @RequestParam(value = "month") int month) {
+        HeatMapHourlyDto dto = this.historicalConsumptionService.getHeatMapHourlyConsumption(buildingId, year, month, DataType.CONSUMPTION);
+        return Response.ok(dto);
+    }
+
+    @ApiOperation(value = "Request for getHeatMapDailyConsumption")
+    @GetMapping(value = "/heatMapDailyCons/{buildingId}")
+    public Response<HeatMapDailyDto> getHeatMapDailyConsumption(@PathVariable("buildingId") String buildingId,
+                                                                @RequestParam(value = "year") int year) {
+        HeatMapDailyDto dto = this.historicalConsumptionService.getHeatMapDailyConsumption(buildingId, year, DataType.CONSUMPTION);
         return Response.ok(dto);
     }
 
