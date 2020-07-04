@@ -69,11 +69,10 @@ import {CreateUserComponent} from './user/create-user/create-user.component';
 import {HighchartsChartModule} from 'highcharts-angular';
 
 import {GoogleAnalyticsService} from './_analytics/google-analytics.service';
-// import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HeaderComponent} from './default/header/header.component';
 import {SidebarComponent} from './default/sidebar/sidebar.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-
 
 import {
   MatBadgeModule,
@@ -112,7 +111,6 @@ import {TestbulletComponent} from './charts/report/testbullet/testbullet.compone
 import {DemoComponent} from './demo/demo.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {TooltipModule} from 'ng2-tooltip-directive';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 // import {TooltipModule} from "ng2-tooltip-directive";
 
 // Pass the fusioncharts library and chart modules
