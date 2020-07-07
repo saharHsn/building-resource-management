@@ -248,6 +248,22 @@ public class ReportController extends ControllerBase {
         return Response.ok(dto);
     }
 
+    @ApiOperation(value = "Request for getHeatMapDailyConsumption")
+    @GetMapping(value = "/solarSaving/{buildingId}")
+    public Response<Float> getSolarSaving(@PathVariable("buildingId") String buildingId,
+                                          @RequestParam(value = "year") int year) throws NotFoundException {
+        float saving = this.reportService.getPossibleSolarSaving(buildingId, year);
+        return Response.ok(saving);
+    }
+
+    @ApiOperation(value = "Request for getHeatMapDailyConsumption")
+    @GetMapping(value = "/averageSolarReq/{buildingId}")
+    public Response<Float> getAverageSolarRequirement(@PathVariable("buildingId") String buildingId,
+                                                      @RequestParam(value = "year") int year) throws NotFoundException {
+        float averageSolarReq = this.reportService.getSolarReq(buildingId, year);
+        return Response.ok(averageSolarReq);
+    }
+
     /*  @ApiOperation(value = "Request for ")
       @GetMapping(value = "/persistHistorical")
       @NoSession

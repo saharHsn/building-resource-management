@@ -43,11 +43,11 @@ public class ApplicationTests {
     private UserService userService;
 
     //franklin
-    // private static String BUILDING_ID = "9d94dd4d-b789-4717-bdee-517a8de8ca6e";
+    private static String BUILDING_ID = "9d94dd4d-b789-4717-bdee-517a8de8ca6e";
     //parede
     // private static String BUILDING_ID = "4f9e5bc1-471d-4b37-87ca-82f803898bb6";
     //demo
-    private static String BUILDING_ID = "fae0c9a2-ef89-477a-a073-a9e704e5ccb3";
+    // private static String BUILDING_ID = "fae0c9a2-ef89-477a-a073-a9e704e5ccb3";
     private Integer year = 2020;
     private TimePeriodType periodType = TimePeriodType.MONTHLY;
     private DatePartType datePartType = DatePartType.FREE_HOURS;
@@ -188,5 +188,13 @@ public class ApplicationTests {
         // System.out.println();
         this.hourlyDailyService.parseExcelData("", BUILDING_ID);
         // this.hourlyDailyService.copyDateData();
+    }
+
+    @Test
+    public void solarPanel() throws NotFoundException {
+        float saving = this.reportService.getPossibleSolarSaving(BUILDING_ID, 2019);
+        System.out.println("saving: " + saving);
+        float sonarReq = this.reportService.getSolarReq(BUILDING_ID, 2019);
+        System.out.println("sonarReq: " + sonarReq);
     }
 }

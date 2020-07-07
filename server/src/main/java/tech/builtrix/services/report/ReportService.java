@@ -29,6 +29,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.time.Month;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -505,6 +506,62 @@ public class ReportService {
         return new ByteArrayInputStream(out.toByteArray());
     }
 
+
+    public float getPossibleSolarSaving(String buildingId, int year) throws NotFoundException {
+        Map<Month, Float> dailyHoursFullSunAveMap = getDailyHoursFullSunMap();
+        float solarReq = getSolarReq(buildingId, year, dailyHoursFullSunAveMap);
+        float possibleSavingPerYear = 0;
+        for (Month month : Month.values()) {
+            float savingPerDay = dailyHoursFullSunAveMap.get(month) * solarReq;
+            possibleSavingPerYear += savingPerDay * 0.08 * 30;
+        }
+        return possibleSavingPerYear;
+    }
+
+    private float getSolarReq(String buildingId, int year, Map<Month, Float> dailyHoursFullSunAveMap) throws NotFoundException {
+        List<BillDto> billsOfYear = this.billService.getBillsOfYear(buildingId, year, true);
+        Map<Month, Float> consumptionPerMonth = getConsumptionPerMonths(billsOfYear);
+        float powerOutputAve = 0f;
+        for (Month month : consumptionPerMonth.keySet()) {
+            powerOutputAve += consumptionPerMonth.get(month) / 30 / dailyHoursFullSunAveMap.get(month);
+        }
+        powerOutputAve = powerOutputAve / 12;
+        return powerOutputAve / 0.8f;
+    }
+
+    public float getSolarReq(String buildingId, int year) throws NotFoundException {
+        return getSolarReq(buildingId, year, getDailyHoursFullSunMap());
+
+    }
+
+    private Map<Month, Float> getDailyHoursFullSunMap() {
+        Map<Month, Float> dailyHoursFullSunAveMap = new HashMap<>();
+        dailyHoursFullSunAveMap.put(Month.JANUARY, 2.38f);
+        dailyHoursFullSunAveMap.put(Month.FEBRUARY, 3.22f);
+        dailyHoursFullSunAveMap.put(Month.MARCH, 4.67f);
+        dailyHoursFullSunAveMap.put(Month.APRIL, 5.97f);
+        dailyHoursFullSunAveMap.put(Month.MAY, 6.78f);
+        dailyHoursFullSunAveMap.put(Month.JUNE, 7.2f);
+        dailyHoursFullSunAveMap.put(Month.JULY, 7.2f);
+        dailyHoursFullSunAveMap.put(Month.AUGUST, 6.68f);
+        dailyHoursFullSunAveMap.put(Month.SEPTEMBER, 5.31f);
+        dailyHoursFullSunAveMap.put(Month.OCTOBER, 3.78f);
+        dailyHoursFullSunAveMap.put(Month.NOVEMBER, 2.56f);
+        dailyHoursFullSunAveMap.put(Month.DECEMBER, 2f);
+        return dailyHoursFullSunAveMap;
+    }
+
+    private Map<Month, Float> getConsumptionPerMonths(List<BillDto> billsOfYear) {
+        Map<Month, Float> consumptionPerMonth = new HashMap<>();
+        for (BillDto billDto : billsOfYear) {
+            float sv = billDto.getAEOffHours().getConsumption();
+            float vn = billDto.getAEFreeHours().getConsumption();
+            float p = billDto.getAEPeakHours().getConsumption();
+            float c = billDto.getAENormalHours().getConsumption();
+            consumptionPerMonth.put(Month.of(billDto.getFromMonth()), (sv + vn + p + c));
+        }
+        return consumptionPerMonth;
+    }
 
     //--------------------------------- Private part ---------------------------------------------
 
