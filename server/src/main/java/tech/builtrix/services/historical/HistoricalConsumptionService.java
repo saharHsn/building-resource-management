@@ -3,7 +3,6 @@ package tech.builtrix.services.historical;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.marshallers.DateToStringMarshaller;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
@@ -55,14 +54,14 @@ public class HistoricalConsumptionService extends GenericCrudServiceBase<Histori
         return historicalConsumption;
     }
 
-    public List<HistoricalEnergyConsumptionDto> filterByDate(String buildingId, Date startDate, Date endDate) {
-        AttributeValue start = DateToStringMarshaller.instance().marshall(startDate);
-        AttributeValue end = DateToStringMarshaller.instance().marshall(endDate);
+    public List<HistoricalEnergyConsumptionDto> filterByDate(String buildingId, String startDate, String endDate) {
+        //AttributeValue start = DateToStringMarshaller.instance().marshall(startDate);
+        //AttributeValue end = DateToStringMarshaller.instance().marshall(endDate);
 
         Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
         expressionAttributeValues.put(":buildingId", new AttributeValue(buildingId));
-        expressionAttributeValues.put(":start", start);
-        expressionAttributeValues.put(":end", end);
+        expressionAttributeValues.put(":start", new AttributeValue(startDate));
+        expressionAttributeValues.put(":end", new AttributeValue(endDate));
 
         ScanRequest scanRequest = new ScanRequest().withTableName("Historical_Energy_Consumption")
                 .withFilterExpression("buildingId = :buildingId and reportDate >= :start and reportDate < :end")
@@ -94,15 +93,31 @@ public class HistoricalConsumptionService extends GenericCrudServiceBase<Histori
     }
 
     public HeatMapHourlyDto getHeatMapHourlyConsumption(String buildingId, Integer year, Integer month, DataType dataType) {
-        List<HistoricalEnergyConsumptionDto> historicalEnergyConsumptionDtos = getHistoricalEnergyConsumptionDtos(buildingId, year, month);
-        return ReportUtil.getHeatMapHourlyConsumption(historicalEnergyConsumptionDtos, dataType);
+        List<HistoricalEnergyConsumptionDto> dtoList = getHistoricalEnergyConsumptionDtos(buildingId, year, month);
+        //dtoList = removeDuplicates(dtoList);
+        return ReportUtil.getHeatMapHourlyConsumption(dtoList, dataType);
     }
 
 
+    private static List<HistoricalEnergyConsumptionDto> removeDuplicates(List<HistoricalEnergyConsumptionDto> dtoList) {
+        long l = System.currentTimeMillis();
+        List<HistoricalEnergyConsumptionDto> uniqueList = new ArrayList<>();
+        dtoList.forEach(historicalEnergyConsumptionDto -> {
+            if (!uniqueList.contains(historicalEnergyConsumptionDto)) {
+                uniqueList.add(historicalEnergyConsumptionDto);
+            } /*else {
+                System.out.println("Find duplicate");
+            }*/
+        });
+        logger.info("removing duplicates : " + (System.currentTimeMillis() - l));
+        return uniqueList;
+    }
+
     public HeatMapDailyDto getHeatMapDailyConsumption(String buildingId, int year, DataType consumption) {
-        List<HistoricalEnergyConsumptionDto> historicalEnergyConsumptionDtos = getHistoricalEnergyConsumptionDtos(buildingId, year);
+        List<HistoricalEnergyConsumptionDto> dtoList = getHistoricalEnergyConsumptionDtos(buildingId, year);
+        //dtoList = removeDuplicates(dtoList);
         Map<Integer, List<DailyHeatMapProp>> monthAverage = new HashMap<>();
-        for (HistoricalEnergyConsumptionDto dto : historicalEnergyConsumptionDtos) {
+        for (HistoricalEnergyConsumptionDto dto : dtoList) {
             Date date = dto.getDate();
             int weekDay = DateUtil.getWeekDay(date);
             int month = DateUtil.getMonth(date);
@@ -138,6 +153,7 @@ public class HistoricalConsumptionService extends GenericCrudServiceBase<Histori
                 heatMapDailyDto.getDataMatrix().add(dailyMatrix);
             });
         });
+        Collections.sort(heatMapDailyDto.getDataMatrix());
         return heatMapDailyDto;
     }
 
@@ -154,30 +170,36 @@ public class HistoricalConsumptionService extends GenericCrudServiceBase<Histori
     private List<HistoricalEnergyConsumptionDto> getHistoricalEnergyConsumptionDtos(String buildingId, Integer year, Integer month) {
         //make date from first day of month and another for last day of month
         String monthStr = month.toString().length() == 1 ? "0" + month : month.toString();
-        String dateStr = year + "-" + monthStr + "-" + "01T" + "00:00:00";
+        String dateStr = year + "-" + monthStr + "-" + "01T" + "00:00:00.000Z";
         String pattern = "yyyy-MM-dd'T'HH:mm:ss";
         //"2010-05-23T09:01:02"
-        Date from = DateUtil.getDateFromPattern(dateStr, pattern);
-        String dateStr1 = year + "-" + monthStr + "-" + DateUtil.getNumOfDaysOfMonth(year, month) + "T23:59:59";
-        Date to = DateUtil.getDateFromPattern(dateStr1, pattern);
-        return filterByDate(buildingId, from, to);
+        // Date from = DateUtil.getDateFromPattern(dateStr, pattern);
+        String dateStr1 = year + "-" + monthStr + "-" + DateUtil.getNumOfDaysOfMonth(year, month) + "T23:59:59.000Z";
+        // Date to = DateUtil.getDateFromPattern(dateStr1, pattern);
+        return filterByDate(buildingId, dateStr, dateStr1);
     }
 
     private List<HistoricalEnergyConsumptionDto> getHistoricalEnergyConsumptionDtos(String buildingId, int year) {
         //make date from first day of month and another for last day of month
         // String monthStr = month.toString().length() == 1 ? "0" + month : month.toString();
-        String dateStr = year + "-" + "01" + "-" + "01T" + "00:00:00";
+        //"2020-03-01T00:00:00.000Z"
+        String dateStr = year + "-" + "01" + "-" + "01T" + "00:00:00.000Z";
         String pattern = "yyyy-MM-dd'T'HH:mm:ss";
         //"2010-05-23T09:01:02"
-        Date from = DateUtil.getDateFromPattern(dateStr, pattern);
-        String dateStr1 = year + "-" + "12" + "-" + DateUtil.getNumOfDaysOfMonth(year, 12) + "T23:59:59";
-        Date to = DateUtil.getDateFromPattern(dateStr1, pattern);
-        return filterByDate(buildingId, from, to);
+        //Date from = DateUtil.getDateFromPattern(dateStr, pattern);
+        String dateStr1 = year + "-" + "12" + "-" + DateUtil.getNumOfDaysOfMonth(year, 12) + "T23:59:59.000Z";
+        //Date to = DateUtil.getDateFromPattern(dateStr1, pattern);
+        return filterByDate(buildingId, dateStr, dateStr1);
     }
 
     public List<HistoricalConsumption> findAll() {
         Iterable<HistoricalConsumption> all = this.repository.findAll();
         return (List<HistoricalConsumption>) all;
+    }
+
+    public void delete(String id) {
+        Optional<HistoricalConsumption> consumption = this.repository.findById(id);
+        consumption.ifPresent(historicalConsumption -> repository.delete(historicalConsumption));
     }
 
     public static void main(String[] args) {
