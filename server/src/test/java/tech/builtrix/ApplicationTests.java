@@ -11,17 +11,23 @@ import tech.builtrix.exceptions.NotFoundException;
 import tech.builtrix.models.user.enums.Role;
 import tech.builtrix.services.authenticate.CodeService;
 import tech.builtrix.services.bill.BillService;
+import tech.builtrix.services.historical.HistoricalConsumptionService;
 import tech.builtrix.services.historical.HourlyDailyService;
+import tech.builtrix.services.report.DataType;
 import tech.builtrix.services.report.ReportService;
 import tech.builtrix.services.user.UserService;
+import tech.builtrix.utils.DateUtil;
 import tech.builtrix.web.dtos.bill.BillDto;
 import tech.builtrix.web.dtos.bill.ReportIndex;
+import tech.builtrix.web.dtos.historical.HistoricalEnergyConsumptionDto;
 import tech.builtrix.web.dtos.report.*;
 import tech.builtrix.web.dtos.report.enums.DatePartType;
 import tech.builtrix.web.dtos.report.enums.TimePeriodType;
 import tech.builtrix.web.dtos.user.UserDto;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -42,12 +48,15 @@ public class ApplicationTests {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private HistoricalConsumptionService historicalConsumptionService;
+
     //franklin
-    private static String BUILDING_ID = "9d94dd4d-b789-4717-bdee-517a8de8ca6e";
+    //private static String BUILDING_ID = "9d94dd4d-b789-4717-bdee-517a8de8ca6e";
     //parede
     // private static String BUILDING_ID = "4f9e5bc1-471d-4b37-87ca-82f803898bb6";
     //demo
-    // private static String BUILDING_ID = "fae0c9a2-ef89-477a-a073-a9e704e5ccb3";
+    private static String BUILDING_ID = "fae0c9a2-ef89-477a-a073-a9e704e5ccb3";
     private Integer year = 2020;
     private TimePeriodType periodType = TimePeriodType.MONTHLY;
     private DatePartType datePartType = DatePartType.FREE_HOURS;
@@ -196,5 +205,59 @@ public class ApplicationTests {
         System.out.println("saving: " + saving);
         float sonarReq = this.reportService.getSolarReq(BUILDING_ID, 2019);
         System.out.println("sonarReq: " + sonarReq);
+    }
+
+    @Test
+    public void heatMapHourly() {
+        HeatMapHourlyDto dto = this.historicalConsumptionService.getHeatMapHourlyConsumption(BUILDING_ID, year, 3, DataType.CONSUMPTION);
+        int i = 0;
+        for (Object[] dataMatrix : dto.getDataMatrix()) {
+            if (i == 24) {
+                i = 0;
+                System.out.println("\n");
+            } else {
+                i++;
+            }
+            System.out.print(Arrays.toString(dataMatrix) + ",");
+        }
+    }
+
+    @Test
+    public void heatMapDaily() {
+        HeatMapDailyDto dto = this.historicalConsumptionService.getHeatMapDailyConsumption(BUILDING_ID, year, DataType.CONSUMPTION);
+        int i = 0;
+        for (DailyMatrix dataMatrix : dto.getDataMatrix()) {
+            if (i == 24) {
+                i = 0;
+                System.out.println("\n");
+            } else {
+                i++;
+            }
+            System.out.print(dataMatrix + ",");
+        }
+    }
+
+    @Test
+    public void removeHistoricalDuplicates() {
+        removeDuplicates();
+    }
+
+    private List<HistoricalEnergyConsumptionDto> removeDuplicates() {
+        String dateStr = year + "-" + "01" + "-" + "01T" + "00:00:00.000Z";
+        String dateStr1 = year + "-" + "06" + "-" + DateUtil.getNumOfDaysOfMonth(year, 3) + "T23:59:59.000Z";
+        List<HistoricalEnergyConsumptionDto> dtoList = this.historicalConsumptionService.filterByDate(BUILDING_ID, dateStr, dateStr1);
+        long l = System.currentTimeMillis();
+
+        List<HistoricalEnergyConsumptionDto> uniqueList = new ArrayList<>();
+        dtoList.forEach(historicalEnergyConsumptionDto -> {
+            if (!uniqueList.contains(historicalEnergyConsumptionDto)) {
+                uniqueList.add(historicalEnergyConsumptionDto);
+            } else {
+                System.out.println("Find duplicate for date : " + DateUtil.removeTime(historicalEnergyConsumptionDto.getDate()) + " and hour : " + historicalEnergyConsumptionDto.getHour());
+                this.historicalConsumptionService.delete(historicalEnergyConsumptionDto.getId());
+            }
+        });
+        // logger.info("removing duplicates : " + (System.currentTimeMillis() - l));
+        return uniqueList;
     }
 }

@@ -7,7 +7,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.YearMonth;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Created By sahar at 12/3/19
@@ -97,9 +99,9 @@ public class DateUtil {
 
     public static Date getDateFromPattern(String dateStr, String pattern) {
         try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, Locale.ENGLISH);
-            TimeZone tz = TimeZone.getTimeZone("UTC");
-            simpleDateFormat.setTimeZone(tz);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+            /*TimeZone tz = TimeZone.getTimeZone("UTC");
+            simpleDateFormat.setTimeZone(tz);*/
             return simpleDateFormat.parse(dateStr);
         } catch (ParseException e) {
             return null;
@@ -111,11 +113,12 @@ public class DateUtil {
         return calendar.getTime();
     }
 
-    public static void removeTime(Date date) {
+    public static Date removeTime(Date date) {
         date = removeTime(date, DateType.HOUR);
         date = removeTime(date, DateType.MINUTE);
         date = removeTime(date, DateType.SECOND);
         date = removeTime(date, DateType.MILLI_SECOND);
+        return date;
     }
 
     public static Date removeTime(Date date, DateType dateType) {
@@ -288,10 +291,31 @@ public class DateUtil {
 
     public static void main(String[] args) throws ParseException {
         SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        // isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date date = isoFormat.parse("2010-05-23T09:01:02");
         AttributeValue start = DateToStringMarshaller.instance().marshall(date);
-        System.out.println();
+        System.out.println(date);
+       /* DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter
+                .ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
+        //Date string with offset information
+        String dateString = 2020 + "-" + "12" + "-" + DateUtil.getNumOfDaysOfMonth(2020, 12) + "T23:59:59";
+
+        //Instance with given offset
+        OffsetDateTime odtInstanceAtOffset = OffsetDateTime.parse(dateString, DATE_TIME_FORMATTER);
+
+        //Instance in UTC
+        OffsetDateTime odtInstanceAtUTC = odtInstanceAtOffset.withOffsetSameInstant(ZoneOffset.UTC);
+
+        //Formatting to string
+        String dateStringInUTC = odtInstanceAtUTC.format(DATE_TIME_FORMATTER);
+
+        System.out.println(odtInstanceAtOffset);
+        System.out.println(odtInstanceAtUTC);
+        System.out.println(dateStringInUTC);
+
+        //Convert OffsetDateTime to instant which is in UTC
+        System.out.println(odtInstanceAtOffset.toInstant());*/
     }
 
 }
