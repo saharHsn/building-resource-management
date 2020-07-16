@@ -757,23 +757,30 @@ public class ReportUtil {
 
     public static HeatMapHourlyDto getHeatMapHourlyConsumption(List<HistoricalEnergyConsumptionDto> dtoList, DataType dataType) {
         List<Integer> xValues = getMonthDays(dtoList);
-        int numOfDaysOMonth = xValues.size();
         HeatMapHourlyDto dto = new HeatMapHourlyDto();
         dto.setXValues(xValues);
         dto.setYValues(getDayHours());
-        List<int[]> data = new ArrayList<>();
+        List<Object[]> data = new ArrayList<>();
         for (HistoricalEnergyConsumptionDto historicalDto : dtoList) {
             int dayOfMonth = DateUtil.getDayOfMonth(historicalDto.getDate());
-            int consumption = dataType.equals(DataType.CONSUMPTION) ? (int) historicalDto.getConsumption() : (int) historicalDto.getCost();
-            int[] dataArray = new int[]{dayOfMonth, (int) historicalDto.getHour(), consumption};
+            float consumption = dataType.equals(DataType.CONSUMPTION) ? historicalDto.getConsumption() : historicalDto.getCost();
+            Object[] dataArray = new Object[]{dayOfMonth, (int) historicalDto.getHour(), consumption};
             data.add(dataArray);
         }
+        data.sort((o1, o2) -> {
+            if (o1[0] == o2[0]) {
+                return Integer.compare((Integer) o1[1], (Integer) o2[1]);
+            } else {
+                return Integer.compare((Integer) o1[0], (Integer) o2[0]);
+            }
+        });
         dto.setDataMatrix(data);
         return dto;
     }
 
+
     private static List<Integer> getDayHours() {
-        return Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24);
+        return Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23);
     }
 
 

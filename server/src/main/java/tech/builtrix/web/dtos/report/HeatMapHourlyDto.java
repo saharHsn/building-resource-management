@@ -12,5 +12,5 @@ import java.util.List;
 public class HeatMapHourlyDto {
     List<Integer> xValues;
     List<Integer> yValues;
-    List<int[]> dataMatrix;
+    List<Object[]> dataMatrix;
 }
