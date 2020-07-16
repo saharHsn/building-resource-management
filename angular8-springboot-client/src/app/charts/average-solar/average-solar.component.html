@@ -1,0 +1,64 @@
+<!-- <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col" style="background-color:rgba(43, 132, 240, 0.1)">Average Solar Capacity (kW):</th>
+        <th scope="col" style="background-color:rgba(43, 132, 240, 0.1)">{{averageSolarReq}}</th>
+        <th scope="col" style="background-color:rgba(43, 132, 240, 0.1)"></th>
+        <th scope="col" style="background-color:rgba(43, 132, 240, 0.1)"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row" style="background-color:rgba(43, 132, 240, 0.1)" rowspan="3">
+          Possible Saving (€/year):
+  </th>
+        <td style="background-color:rgba(43, 132, 240, 0.1)">{{solarSaving}}</td>
+        <td style="background-color:rgba(43, 132, 240, 0.1)"></td>
+        <td style="background-color:rgba(43, 132, 240, 0.1)"></td>
+      </tr>
+      <tr>
+       
+      </tr>
+    
+    </tbody>
+  </table> -->
+
+
+
+
+
+
+<table class="table table-bordered">
+<!--   <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">First</th>
+      <th scope="col">Last</th>
+      <th scope="col">Handle</th>
+    </tr>
+  </thead> -->
+  <tbody>
+    <tr style="background-color:rgba(43, 132, 240, 0.1); color: #4C5E81;">
+      <th scope="row">Average Solar Capacity (kW):</th>
+      <td>{{averageSolarReq | number:'1.2-2'}}</td> 
+      <td></td>
+      <td></td>
+    </tr>
+    <tr style="background-color:rgba(43, 132, 240, 0.1); color: #4C5E81;">
+      <th scope="row">Possible Saving (€/year)</th>
+      <td>{{solarSaving | number:'1.2-2'}}</td>
+      <td></td>
+      <td></td>
+    </tr>
+ 
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+

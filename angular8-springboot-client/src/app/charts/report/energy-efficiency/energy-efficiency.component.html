@@ -11,32 +11,32 @@
   <tbody>
   <tr class="th-white text-center">
     <th scope="row" >Consumption Index (KWh / m2)</th>
-    <td>{{energyIndex.consumptionArea.baseline}}</td>
-    <td>{{energyIndex.consumptionArea.thisMonth}}</td>
-    <td>{{energyIndex.consumptionArea.propertiesTarget}}</td>
-    <td>{{energyIndex.consumptionArea.nationalMedian}}</td>
+    <td>{{energyIndex.consumptionArea.baseline | number:'1.2-2'}}</td>
+    <td>{{energyIndex.consumptionArea.thisMonth | number:'1.2-2'}}</td>
+    <td>{{energyIndex.consumptionArea.propertiesTarget | number:'1.2-2'}}</td>
+    <td>{{energyIndex.consumptionArea.nationalMedian | number:'1.2-2'}}</td>
   </tr>
   <tr  class="th-color text-center">
     <th scope="row">Consumption Index (KWh / cap)</th>
-    <td>{{energyIndex.consumptionCap.baseline}}</td>
-    <td>{{energyIndex.consumptionCap.thisMonth}}</td>
-    <td>{{energyIndex.consumptionCap.propertiesTarget}}</td>
-    <td>{{energyIndex.consumptionCap.nationalMedian}}</td>
+    <td>{{energyIndex.consumptionCap.baseline | number:'1.2-2'}}</td>
+    <td>{{energyIndex.consumptionCap.thisMonth | number:'1.2-2'}}</td>
+    <td>{{energyIndex.consumptionCap.propertiesTarget | number:'1.2-2'}}</td>
+    <td>{{energyIndex.consumptionCap.nationalMedian | number:'1.2-2'}}</td>
   </tr>
   <tr class="th-white text-center">
     <th scope="row">Cost Index (€ / m2)</th>
-    <td>{{energyIndex.cost.baseline}}</td>
-    <td>{{energyIndex.cost.thisMonth}}</td>
-    <td>{{energyIndex.cost.propertiesTarget}}</td>
-    <td>{{energyIndex.cost.nationalMedian}}</td>
+    <td>{{energyIndex.cost.baseline | number:'1.2-2'}}</td>
+    <td>{{energyIndex.cost.thisMonth | number:'1.2-2'}}</td>
+    <td>{{energyIndex.cost.propertiesTarget | number:'1.2-2'}}</td>
+    <td>{{energyIndex.cost.nationalMedian | number:'1.2-2'}}</td>
   </tr>
   <tr class="th-color text-center">
     <th scope="row" >C02 index(kg/m2)</th>
-    <td>{{energyIndex.co2.baseline}}</td>
-    <td>{{energyIndex.co2.thisMonth}}</td>
-    <td>{{energyIndex.co2.propertiesTarget}}</td>
+    <td>{{energyIndex.co2.baseline | number:'1.2-2'}}</td>
+    <td>{{energyIndex.co2.thisMonth | number:'1.2-2'}}</td>
+    <td>{{energyIndex.co2.propertiesTarget | number:'1.2-2'}}</td>
    
-    <td>{{energyIndex.co2.nationalMedian}}</td>
+    <td>{{energyIndex.co2.nationalMedian | number:'1.2-2'}}</td>
   </tr>
   </tbody>
 </table>

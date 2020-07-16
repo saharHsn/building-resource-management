@@ -18,6 +18,7 @@ export class EnergyEfficiencyComponent implements OnInit {
     // this.energyIndex = new EnergyConsumptionIndexDto();
     this.chartService.getAllEnergyConsumptionIndexes()
       .subscribe(data => {
+      
         this.energyIndex = data.content;
       }, error => console.log(error));
   }

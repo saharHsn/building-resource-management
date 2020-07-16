@@ -27,10 +27,11 @@ export class HeaderComponent implements OnInit {
 
   ) {
     this.currentUser = this.authenticationService.currentUserValue;
-    this.messages.listen().subscribe((m: any) => {
-      // listening changes at button-building
+    this.messages.listen().subscribe((m:any)=>{
+      
+    //listening changes at button-building 
       this.getMessages();
-    });
+   })
   }
 
   listNotifications: any;
@@ -38,23 +39,35 @@ export class HeaderComponent implements OnInit {
   listProfile = ['View profile', 'Log out'];
 
   ngOnInit() {
-    // getting messages
+    //getting messages
     this.getMessages();
-    // read
+
+
+    //read
 /*   this.read('aaa4c2ba-eb15-4553-b066-b8553e4f46dc','hello');    */
+
   }
 
+
+
   // reading message change the status
-  read(idmessage, message) {
+  read(idmessage,message) {
+
+     console.log(message);
+
     swal.fire({
       title: 'Notification',
       text: message,
       confirmButtonText: 'Ok'
-    });
+    })
+
     this.messages.readMessages(idmessage).subscribe(data => {
-      this.getMessages();
+      console.log(data);
+       this.getMessages();
     });
+    
     /* this.router.navigateByUrl('/notifications');  */
+
   }
 
   getMessages() {
@@ -63,14 +76,17 @@ export class HeaderComponent implements OnInit {
       this.listNotifications = data.content.filter(read => {
         return read.read === false;
       });
-      // if the read message is 0 do not show messages
-      if (this.listNotifications.length === 0) {
-        this.matBadge = null;
-      } else {
+
+      //if the read message is 0 do not show messages
+      if( this.listNotifications.length===0){
+        this.matBadge=null;
+      }
+      else{
         this.matBadge = this.listNotifications.length;
       }
-      /* console.log(this.listNotifications);
-       console.log(this.listNotifications.length);*/
+     
+      console.log(this.listNotifications);
+      console.log(this.listNotifications.length);
     });
   }
 
@@ -92,4 +108,6 @@ export class HeaderComponent implements OnInit {
       );
     }, 300);
   }
+
+
 }

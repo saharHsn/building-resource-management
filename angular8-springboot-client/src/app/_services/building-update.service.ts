@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+ import {Injectable} from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -10,13 +10,14 @@ export class BuildingUpdateService {
     this.idBuilding = localStorage.getItem('idBuilding');
   }
 
-  getBuildingId() {
+  getIdBuilding() {
     // return this.idBuilding;
     return localStorage.getItem('idBuilding');
   }
 
-  setIdBuilding(id: string) {
+  setIdBuilding(id:string) {
     localStorage.setItem('idBuilding', id);
-    /*   localStorage.setItem('nameBuilding', name); */
+  
   }
 }
+ 

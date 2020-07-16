@@ -1,5 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {MessageService} from 'src/app/_services/message.service';
+import { Component, OnInit } from '@angular/core';
+import { MessageService } from 'src/app/_services/message.service';
+import { fadeInItems } from '@angular/material';
 
 @Component({
   selector: 'app-panel',
@@ -8,17 +9,22 @@ import {MessageService} from 'src/app/_services/message.service';
 })
 export class PanelComponent implements OnInit {
   listMessages: any[];
-
-  constructor(private messageService: MessageService) {
-  }
+  constructor(private _message: MessageService) { }
 
   ngOnInit() {
     this.init();
   }
 
+
   init() {
-    this.messageService.getMessages().subscribe(data => {
+
+    this._message.getMessages().subscribe(data => {
+      console.log(data.content);
       this.listMessages = data.content;
-    });
+      console.log(this.listMessages);
+      
+
+    })
+
   }
 }

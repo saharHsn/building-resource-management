@@ -17,6 +17,19 @@ declare let gtag: Function;
 @Component({selector: 'app-root', templateUrl: 'app.component.html'})
 export class AppComponent {
   currentUser: User;
+
+  /* constructor(
+     private router: Router,
+     private authenticationService: AuthenticationService
+   ) {
+     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+   }
+
+   logout() {
+     this.authenticationService.logout();
+     this.router.navigate(['/login']);
+   }*/
+  // boolean to sidebar status
   sideBarOpen = true;
   idleState = 'Not started.';
   timedOut = false;
@@ -26,7 +39,6 @@ export class AppComponent {
   public modalRef: BsModalRef;
 
   @ViewChild('childModal', {static: false}) childModal: ModalDirective;
-  private demoMood: boolean;
 
   constructor(private idle: Idle, private keepalive: Keepalive,
               private router: Router, private modalService: BsModalService,
@@ -81,16 +93,10 @@ export class AppComponent {
 
     this.router.events
       .subscribe(event => {
-        if (event instanceof NavigationEnd) {
-          const url = (event as NavigationEnd).url;
-          if (url === '/demo') {
-            this.demoMood = true;
-            this.currentUser = null;
-          } else {
-            this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
-          }
-        }
         this.appService.setUserLoggedIn(!!this.authenticationService.currentUserValue);
+        /* if (!timeoutService.idleStarted) {
+           timeoutService.start();
+         }*/
       });
 
     this.appService.getUserLoggedIn().subscribe(userLoggedIn => {
@@ -101,6 +107,8 @@ export class AppComponent {
         idle.stop();
       }
     });
+    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+    // this.reset();
   }
 
   reset() {

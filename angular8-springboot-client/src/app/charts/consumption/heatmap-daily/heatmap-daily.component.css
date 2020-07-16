@@ -1,0 +1,5 @@
+.progress_bar{
+    display: flex;
+    align-items: center;
+    height: 500px;
+}

@@ -1,14 +1,16 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ChartService} from '../chartService';
-import {LastMonthSummary} from './LastMonthSummary';
+import {CurrentMonthSummary} from './CurrentMonthSummary';
 import {User} from 'src/app/_models';
 import {Building} from 'src/app/building/model/building';
 import {BuildingService} from 'src/app/building/service/building.service';
 import {AuthenticationService} from 'src/app/_services';
+import {CurrentBuildingService} from 'src/app/_services/current-building.service';
 import {PredictionsComponent} from './predictions/predictions.component';
 import {BeScoreComponent} from './be-score/be-score.component';
-import {MessageService} from 'src/app/_services/message.service';
+import { MessageService } from 'src/app/_services/message.service';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   templateUrl: './overall.component.html',
@@ -23,28 +25,30 @@ export class OverallComponent implements OnInit {
               private chartService: ChartService,
               private buildingService: BuildingService,
               private authService: AuthenticationService,
+              private buildingUpdateService: CurrentBuildingService,
               private messages: MessageService
               // private prediction: PredictionsComponent
   ) {
     this.currentUser = this.authService.currentUserValue;
   }
-
+  
   id: number;
-  lastMonthSummary: LastMonthSummary;
+  currentMonthSummary: CurrentMonthSummary;
   currentUser: User;
   building: Building = new Building();
-
+  
   // gauge variables
-  monthSummary: any;
+  monthSummary:any;
   beScore: number;
   nationalMedian: number;
   propertyTarget: number;
   buildings: any;
-
-
+ 
+ 
   ngOnInit() {
-    this.monthSummary = this.messages.getMonth();
-    this.initCharts();
+   this.monthSummary=this.messages.getMonth();
+   this.initCharts();
+  
   }
 
   list() {
@@ -63,22 +67,34 @@ export class OverallComponent implements OnInit {
   getBuildingUsers() {
     this.buildingService.getBuildingUsersTest().subscribe(
       data => {
-        this.buildings = data.content;
+
+       this.buildings = data.content;
+       /*  const id = data.content[0].id;
+        this.buildingUpdateService.setIdBuilding(id);  */
+       
+     
+        console.log(this.buildings)
+     
       },
       error => console.log(error)
     );
   }
+/*   select(event) {
+    this.buildingUpdateService.setIdBuilding(event); 
+    this.initCharts();
+    this.predictionsComponent.ngOnInit();
+    this.beScoreComponent.ngOnInit();
+  } */
 
   initCharts() {
     this.id = this.route.snapshot.params.id;
-    this.lastMonthSummary = new LastMonthSummary();
+    this.currentMonthSummary = new CurrentMonthSummary();
     this.reloadData();
-    this.chartService.lastMonthSummary()
+    this.chartService.currentMonthSummary()
       .subscribe(data => {
-        this.lastMonthSummary.consumption = data.content.consumption;
-        this.lastMonthSummary.cost = data.content.cost;
-        this.lastMonthSummary.environmental = data.content.environmental;
-        this.lastMonthSummary.lastMonth = data.content.lastMonth;
+        this.currentMonthSummary.consumption = data.content.consumption;
+        this.currentMonthSummary.cost = data.content.cost;
+        this.currentMonthSummary.environmental = data.content.environmental;
       }, error => console.log(error));
     this.chartService.getNationalMedian()
       .subscribe(data => {
@@ -90,9 +106,12 @@ export class OverallComponent implements OnInit {
       }, error => console.log(error));
   }
 
-  loadPage(): void {
-    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
-      this.router.navigate(['overall']));
-
+  loadPage():void{
+    
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
+    this.router.navigate(['overall']))
+   
   }
+
+
 }

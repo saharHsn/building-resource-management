@@ -1,16 +1,16 @@
 <!-- 
 butttons -->
 <div class="">
-    <div class=" text-right">
+    <div class="text-right">
    
-      <mat-form-field class="mr-1">
+        <mat-form-field class="mr-1">
         <mat-label>Month</mat-label>
         <mat-select [(ngModel)]="monthChart">
           <mat-option *ngFor="let month of months" [value]="month.value">
             {{month.viewValue}}
           </mat-option>
         </mat-select>
-      </mat-form-field>
+      </mat-form-field> 
         
       <mat-form-field class="mr-2">
         <mat-label>Year</mat-label>

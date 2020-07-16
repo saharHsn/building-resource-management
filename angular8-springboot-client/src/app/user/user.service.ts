@@ -58,9 +58,4 @@ export class UserService {
   getUsersList(): Observable<any> {
     return this.http.get(`${this.baseUrl}`);
   }
-
-  registerDemoUser(user: User, subscribe: boolean) {
-    user.subscribe = subscribe;
-    return this.http.post(`${this.baseUrl}/registerDemoUser`, user);
-  }
 }

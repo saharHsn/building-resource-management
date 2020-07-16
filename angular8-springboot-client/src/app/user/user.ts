@@ -5,13 +5,9 @@ export class User {
   emailAddress: string;
   password: string;
   confirmPassword: string;
-  fullName: string;
   firstName: string;
   lastName: string;
   token: string;
   job: string;
   role: Role;
-  jobTitle: string;
-  interest: string;
-  subscribe: boolean;
 }
