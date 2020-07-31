@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-normalized-consumption',
@@ -14,11 +14,11 @@ export class NormalizedConsumptionComponent implements OnInit {
   ngOnInit() {
   }
 
-  loadPage():void{
+  loadPage(): void {
 
-    this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
-    this.router.navigate(['normalized-consumption']))
-   
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+    this.router.navigate(['normalized-consumption']));
+
   }
 
 }

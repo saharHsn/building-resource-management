@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ChartService} from '../chartService';
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-consumption',
@@ -11,11 +11,11 @@ export class ConsumptionComponent implements OnInit {
   chartOptions;
 
   // tslint:disable-next-line:variable-name
-  constructor(private _chartService: ChartService,private router: Router) {
+  constructor(private _chartService: ChartService, private router: Router) {
   }
 
   ngOnInit() {
- 
+
   }
 
   /*getChangedSeries($event) {
@@ -29,9 +29,9 @@ export class ConsumptionComponent implements OnInit {
     console.log(this.chartOptions);
   }
 
-  loadPage():void{
-    
-    this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
+  loadPage(): void {
+
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
     this.router.navigate(['consumption-component']));
   }
 }

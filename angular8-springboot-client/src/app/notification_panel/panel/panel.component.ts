@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MessageService } from 'src/app/_services/message.service';
-import { fadeInItems } from '@angular/material';
+import {Component, OnInit} from '@angular/core';
+import {MessageService} from 'src/app/_services/message.service';
 
 @Component({
   selector: 'app-panel',
@@ -22,9 +21,9 @@ export class PanelComponent implements OnInit {
       console.log(data.content);
       this.listMessages = data.content;
       console.log(this.listMessages);
-      
 
-    })
+
+    });
 
   }
 }

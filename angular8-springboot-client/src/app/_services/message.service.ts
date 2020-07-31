@@ -1,34 +1,32 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import { Observable, Subscription, Subject } from 'rxjs';
+import {Observable, Subject, Subscription} from 'rxjs';
 import {environment} from '../../environments/environment';
 import {AuthenticationService} from '../_services';
-import {CurrentBuildingService} from './current-building.service';
 import {BuildingUpdateService} from '../_services/building-update.service';
-import { CurrentMonthSummary } from '../charts/overall/CurrentMonthSummary';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
   private _listners = new Subject<any>();
-  month:number;
+  month: number;
   environmentName = '';
   environmentUrl = 'Debug api';
   private readonly baseUrl;
-  invokeFirstComponentFunction = new EventEmitter();    
-  subsVar: Subscription; 
+  invokeFirstComponentFunction = new EventEmitter();
+  subsVar: Subscription;
   constructor(private http: HttpClient,
-              private authService: AuthenticationService, 
+              private authService: AuthenticationService,
               private buildingUpdateService: BuildingUpdateService) {
 
     this.environmentName = environment.environmentName;
     this.environmentUrl = environment.apiUrl;
     this.baseUrl = this.environmentUrl + '/messages';
-    this.month= new Date().getMonth()+1;
-    
+    this.month = new Date().getMonth() + 1;
+
   }
- 
+
 
 
 
@@ -47,8 +45,8 @@ export class MessageService {
   }
 
   getMessages(): Observable<any> {
-    let currentBuildingId = this.buildingUpdateService.getIdBuilding();
-    console.log(`mensajes llamados desde getmessages ${currentBuildingId}`)
+    const currentBuildingId = this.buildingUpdateService.getIdBuilding();
+    console.log(`mensajes llamados desde getmessages ${currentBuildingId}`);
     return this.callService(`${this.baseUrl}/${currentBuildingId}`);
   }
 
@@ -84,8 +82,8 @@ export class MessageService {
         .set('Accept', '*/*')
         .set('Content-Type', 'application/json');
     }
-     return this.http.delete(`${this.baseUrl}/${messageId}`, {headers}); 
-    
+    return this.http.delete(`${this.baseUrl}/${messageId}`, {headers});
+
   }
 
   createNewMessage(messageBody: string, buildingId: string) {
@@ -102,8 +100,8 @@ export class MessageService {
   }
 
 
-  getMonth(){
-    
+  getMonth() {
+
 
     const months = [
       {value: 1, viewValue: 'January'},
@@ -120,16 +118,16 @@ export class MessageService {
       {value: 12, viewValue: 'December'},
     ];
 
-      const  currentMonth=months.filter(data=>{
-        return data.value===this.month;
+    const  currentMonth = months.filter(data => {
+        return data.value === this.month;
 
-      })
-      console.log(currentMonth);
-        return currentMonth;
+      });
+    console.log(currentMonth);
+    return currentMonth;
 
   }
-//this return an observable 
-  listen():Observable<any>{
+// this return an observable
+  listen(): Observable<any> {
   return  this._listners.asObservable();
   }
   activeMessage() {

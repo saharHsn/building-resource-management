@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import * as Highcharts from 'highcharts';
 
 import HC_map from 'highcharts/modules/map';
+import {ChartService} from '../../chartService';
+import {TimeServicesService} from '../../../_services/time-services.service';
+
 HC_map(Highcharts);
-import { first } from 'rxjs/operators';
-import { ChartService } from '../../chartService';
-import { Router } from '@angular/router';
-import { TimeServicesService } from '../../../_services/time-services.service';
+
 @Component({
     selector: 'app-heatmap-hourly',
     templateUrl: './heatmap-hourly.component.html',
@@ -18,34 +18,34 @@ export class HeatmapHourlyComponent implements OnInit {
     Highcharts = Highcharts;
     loading = true;
     chartOptions: any;
-    data:any;
-    loadingBar:boolean=false; 
+    data: any;
+    loadingBar = false;
     months: any = this._timeServices.getMonths();
-    years:any= this._timeServices.getYears();
-    monthChart=this._timeServices.currentMonth();
-    yearChart=this._timeServices.currentYear();
+    years: any = this._timeServices.getYears();
+    monthChart = this._timeServices.currentMonth();
+    yearChart = this._timeServices.currentYear();
 
 
-    constructor(private chartService:ChartService,private _timeServices:TimeServicesService) { 
-     
+    constructor(private chartService: ChartService, private _timeServices: TimeServicesService) {
 
-    
+
+
     }
 
     ngOnInit(): void {
-      this.initChart(this.monthChart,this.yearChart);
+      this.initChart(this.monthChart, this.yearChart);
     }
 
 
     create() {
-        this.loadingBar=true;
+        this.loadingBar = true;
         this.initChart(this.monthChart, this.yearChart);
-      } 
+      }
 
-    initChart(month,year){
-        this.chartService.getHeatMapHourly(month,year).subscribe(data=>{
-            this.data=data.content.dataMatrix;
-            this.loadingBar=false;
+    initChart(month, year) {
+        this.chartService.getHeatMapHourly(month, year).subscribe(data => {
+            this.data = data.content.dataMatrix;
+            this.loadingBar = false;
             this.chartOptions = {
              chart: {
                type: 'heatmap',
@@ -62,8 +62,8 @@ export class HeatmapHourlyComponent implements OnInit {
 
            xAxis: {
                categories: [
-              
-               ],title: {
+
+               ], title: {
                    text: 'Days'
                }
            },
@@ -92,7 +92,7 @@ export class HeatmapHourlyComponent implements OnInit {
                    '21',
                    '22',
                    '23',
-                   '24',], title: {
+                   '24', ], title: {
                        text: 'Hours'
                    },
 
@@ -101,7 +101,7 @@ export class HeatmapHourlyComponent implements OnInit {
                startOnTick: false,
                endOnTick: false,
            },
-           /* 
+           /*
                accessibility: {
                    point: {
                        descriptionFormatter: function (point) {
@@ -134,12 +134,12 @@ export class HeatmapHourlyComponent implements OnInit {
                y: 25,
                symbolHeight: 280
            },
-         
+
            tooltip: {
             headerFormat: '<b>{series.name}</b><br>',
             pointFormat: ' Day {point.x} ,Hour {point.y} Value {point.value}',
-         
-        }, 
+
+        },
            credits: {
                enabled: false
            },
@@ -161,7 +161,7 @@ export class HeatmapHourlyComponent implements OnInit {
                    chartOptions: {
                        yAxis: {
                            labels: {
-                               formatter: function () {
+                               formatter() {
                                    return this.value.charAt(0);
                                }
                            }
@@ -170,7 +170,7 @@ export class HeatmapHourlyComponent implements OnInit {
                }]
            }
 
-       }
+       };
      });
     }
 }

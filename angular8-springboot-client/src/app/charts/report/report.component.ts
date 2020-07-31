@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ChartService } from '../chartService';
-import * as html2pdf from 'html2pdf.js'
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ChartService} from '../chartService';
+import * as html2pdf from 'html2pdf.js';
+
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
@@ -11,24 +11,24 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 export class ReportComponent implements OnInit {
 
 
-//bullet values
+// bullet values
 energyBullet: any;
-target:number;
+target: number;
 /* target:number; */
-currentEnergy:number;
-lastEnergy:number;
+currentEnergy: number;
+lastEnergy: number;
 
   beScore: number;
   nationalMedian: number;
   propertyTarget: number;
   constructor(private route: ActivatedRoute, private router: Router,
-    private chartService: ChartService) {
-     
+              private chartService: ChartService) {
+
       this.initchart();
   }
 
   ngOnInit() {
-   
+
   }
   download() {
     this.chartService.download()
@@ -47,16 +47,16 @@ lastEnergy:number;
     }
   }
 
-  //module npm used for this html2pdf.js 
-  downloadPdf(){
-    const options={
-      filename:'report.pdf',
-      image:{type:'png'},//png 
-      html2canvas:{},
-      jsPDF:{format: 'a2',orientation:'portrait'}
+  // module npm used for this html2pdf.js
+  downloadPdf() {
+    const options = {
+      filename: 'report.pdf',
+      image: {type: 'png'}, // png
+      html2canvas: {},
+      jsPDF: {format: 'a2', orientation: 'portrait'}
 
     };
-    const content:Element=document.getElementById('content');
+    const content: Element = document.getElementById('content');
 
     html2pdf()
     .from(content)
@@ -64,18 +64,18 @@ lastEnergy:number;
     .save();
   }
 
-  print(){
+  print() {
     window.print();
   }
 
-  loadPage():void{
+  loadPage(): void {
 
-    this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
     this.router.navigate(['report']));
-   
+
   }
 
-setBulletValues(arg):number{
+setBulletValues(arg): number {
   let value;
 
   switch (arg) {
@@ -109,21 +109,21 @@ setBulletValues(arg):number{
 
   }
   return value;
-  
+
 
 
 }
 
-initchart(){
+initchart() {
   this.chartService.getBEScore()
   .subscribe(data => {
     this.beScore = data.content;
   }, error => console.log(error));
-this.chartService.getNationalMedian()
+  this.chartService.getNationalMedian()
   .subscribe(data => {
     this.nationalMedian = data.content;
   }, error => console.log(error));
-this.chartService.getPropertyTarget()
+  this.chartService.getPropertyTarget()
   .subscribe(data => {
     this.propertyTarget = data.content;
   }, error => console.log(error));
@@ -131,6 +131,6 @@ this.chartService.getPropertyTarget()
 }
 
 
-  
+
 }
- 
+

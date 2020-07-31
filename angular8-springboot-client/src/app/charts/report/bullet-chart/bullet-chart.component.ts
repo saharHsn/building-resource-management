@@ -1,6 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
-import { ChartService } from '../../chartService';
+import {ChartService} from '../../chartService';
 
 @Component({
   selector: 'app-bullet-chart',
@@ -13,30 +13,30 @@ export class BulletChartComponent implements OnInit {
   width: number;
   height: number;
   dataFormat: string;
-   target:number;
-   monthEnergy:number;
+   target: number;
+   monthEnergy: number;
   constructor(private chartService: ChartService) {}
 
   ngOnInit() {
 
     this.initChart();
-    
+
   }
 
   initChart() {
     this.chartService.getAllEnergyConsumptionIndexes()
-    .subscribe((data:any) => {
-    
-     
-      this.target=this.setvalues(data.content.energyEfficiencyLevel.propertyTargetCert);
-      this.monthEnergy=this.setvalues(data.content.energyEfficiencyLevel.thisMonthCert); 
+    .subscribe((data: any) => {
+
+
+      this.target = this.setvalues(data.content.energyEfficiencyLevel.propertyTargetCert);
+      this.monthEnergy = this.setvalues(data.content.energyEfficiencyLevel.thisMonthCert);
       this.dataSource = {
         chart: {
           caption: null,
-          theme: "fusion",
-          ticksonright: "1",
-          plottooltext: "this Month",
-          targettooltext: "Target : <b>$llll</b>",
+          theme: 'fusion',
+          ticksonright: '1',
+          plottooltext: 'this Month',
+          targettooltext: 'Target : <b>$llll</b>',
           showTickValues: '0',
           showLimits: '0',
           showTickMarks: '0',
@@ -44,31 +44,31 @@ export class BulletChartComponent implements OnInit {
           bgColor: '#fafafa'
         },
 
-  
+
         colorrange: {
           color: [
             {
-              minvalue: "0",
-              maxvalue: "8",
-              code: "#fafafa"
+              minvalue: '0',
+              maxvalue: '8',
+              code: '#fafafa'
             }
           ]
         },
         value: this.monthEnergy,
-        target:this.target,
+        target: this.target,
       /*   showLabels: '0',
         labelDisplay: "none" */
       };
       this.width = 100;
       this.height = 320;
-      this.type = "vbullet";
-      this.dataFormat = "json";
+      this.type = 'vbullet';
+      this.dataFormat = 'json';
 
     }, error => console.log(error));
-   
+
   }
 
-  //get the number value
+  // get the number value
   setvalues(arg) {
 
     let value;

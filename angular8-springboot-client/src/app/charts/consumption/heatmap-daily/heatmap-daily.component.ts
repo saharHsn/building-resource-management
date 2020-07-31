@@ -1,15 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import * as Highcharts from 'highcharts';
 
 import HC_map from 'highcharts/modules/map';
 import acce from 'highcharts/modules/accessibility';
+import {ChartService} from '../../chartService';
+import {TimeServicesService} from '../../../_services/time-services.service';
+
 HC_map(Highcharts);
-acce(Highcharts)
-import { first } from 'rxjs/operators';
-import { ChartService } from '../../chartService';
-import { Router } from '@angular/router';
-import { TimeServicesService } from '../../../_services/time-services.service';
+acce(Highcharts);
 
 @Component({
     selector: 'app-heatmap-daily',
@@ -27,7 +26,7 @@ export class HeatmapDailyComponent implements OnInit {
     years: any = this._timeServices.getYears();
     monthChart = this._timeServices.currentMonth();
     yearChart = this._timeServices.currentYear();
-    loadingBar:boolean=false; 
+    loadingBar = false;
     private getIndexOfWeekDay(dayOfWeek: any) {
         switch (dayOfWeek) {
             case 'MONDAY':
@@ -89,19 +88,19 @@ export class HeatmapDailyComponent implements OnInit {
 
 
     create() {
-        this.loadingBar=true;
+        this.loadingBar = true;
         this.initChart(this.yearChart);
-      } 
+      }
 
     initChart(year): void {
         this.chartService.getHeatMapDaily(year).subscribe(data => {
 
-            
+
             for (const datum of data) {
                 this.matrixData.push([this.getIndexOfMonth(datum.month), this.getIndexOfWeekDay(datum.dayOfWeek), datum.consumption]);
             }
-            this.loadingBar=false;
-            
+            this.loadingBar = false;
+
             this.chartOptions = {
                 chart: {
                     type: 'heatmap',
@@ -135,8 +134,8 @@ export class HeatmapDailyComponent implements OnInit {
 
                 accessibility: {
                     point: {
-                        descriptionFormatter: function (point) {
-                            var ix = point.index + 1,
+                        descriptionFormatter(point) {
+                            let ix = point.index + 1,
                                 xName = this.getPointCategoryName(point, 'x'),
                                 yName = this.getPointCategoryName(point, 'y'),
                                 val = point.value;
@@ -200,7 +199,7 @@ export class HeatmapDailyComponent implements OnInit {
                       }]
                   } */
 
-            }
+            };
         });
     }
 }

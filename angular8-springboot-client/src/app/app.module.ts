@@ -14,11 +14,6 @@ import {HomeComponent} from './home';
 import {LoginComponent} from './login';
 import {RegisterComponent} from './register';
 import {InvitationComponent} from './invitation';
-// Import FusionCharts library and chart modules
-
-
-// Pass the fusioncharts library and chart modules
-
 import {WizardFormComponent} from './wizard-form/wizard-form.component';
 import {ArchwizardModule} from 'angular-archwizard';
 import {BuildingUsageComponent} from './building/enums/building-usage-component';
@@ -78,7 +73,6 @@ import {SidebarComponent} from './default/sidebar/sidebar.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 
-
 import {
   MatBadgeModule,
   MatButtonModule,
@@ -88,12 +82,11 @@ import {
   MatInputModule,
   MatListModule,
   MatNativeDateModule,
+  MatProgressBarModule,
   MatSelectModule,
   MatSidenavModule,
   MatTabsModule,
-  MatToolbarModule,
-  MatProgressBarModule
-  
+  MatToolbarModule
 } from '@angular/material';
 import {MatCardModule} from '@angular/material/card';
 import {ColorEnergyComponent} from './charts/report/color-energy/color-energy.component';
@@ -114,13 +107,17 @@ import {RemoveUnderlinePipe} from './pipes/remove-underline.pipe';
 import {AdminPanelComponent} from './admin/admin-panel/admin-panel.component';
 import {BuildingDetailsAdminComponent} from './building/building-details-admin/building-details-admin.component';
 import {BuildingMessagesComponent} from './building-messages/building-messages.component';
-import {AlertModule} from "./_services/_alert/alert.module";
-import { BuildingButtonComponent } from './_components/building-button/building-button.component';
-import { AlertComponent } from './_services/_alert/alert.component';
-import { TestbulletComponent } from './charts/report/testbullet/testbullet.component';
-import { HeatmapHourlyComponent } from './charts/consumption/heatmap-hourly/heatmap-hourly.component';
-import { HeatmapDailyComponent } from './charts/consumption/heatmap-daily/heatmap-daily.component';
-import { AverageSolarComponent } from './charts/average-solar/average-solar.component';
+import {AlertModule} from './_services/_alert/alert.module';
+import {BuildingButtonComponent} from './_components/building-button/building-button.component';
+import {TestbulletComponent} from './charts/report/testbullet/testbullet.component';
+import {HeatmapHourlyComponent} from './charts/consumption/heatmap-hourly/heatmap-hourly.component';
+import {HeatmapDailyComponent} from './charts/consumption/heatmap-daily/heatmap-daily.component';
+import {AverageSolarComponent} from './charts/average-solar/average-solar.component';
+import {DemoComponent} from './demo/demo.component';
+// Import FusionCharts library and chart modules
+
+
+// Pass the fusioncharts library and chart modules
 
 // tslint:disable-next-line:max-line-length
 
@@ -132,7 +129,7 @@ import { AverageSolarComponent } from './charts/average-solar/average-solar.comp
     HttpClientModule,
     appRoutingModule,
     NgIdleKeepaliveModule.forRoot(),
-  
+
     FormsModule,
     ArchwizardModule,
     CommonModule,
@@ -140,7 +137,7 @@ import { AverageSolarComponent } from './charts/average-solar/average-solar.comp
     TooltipModule,
     HighchartsChartModule,
     ModalModule.forRoot(),
-  
+
     BrowserAnimationsModule,
     MatToolbarModule,
     MatButtonModule,
@@ -158,14 +155,14 @@ import { AverageSolarComponent } from './charts/average-solar/average-solar.comp
     MatNativeDateModule,
     MatInputModule,
     MatSelectModule,
- 
+
     NgbModule,
     AlertModule,
    MatProgressBarModule,
- 
+
   ],
   declarations: [
-    
+
     AppComponent,
     HomeComponent,
     LoginComponent,
@@ -195,7 +192,7 @@ import { AverageSolarComponent } from './charts/average-solar/average-solar.comp
     BuildingComponent,
     GeneralComponent,
   /*   AlertComponent, */
-     
+
     // HighchartsChartComponent,
     ReportBeScoreComponent,
     CostPieChartComponent,
@@ -234,6 +231,7 @@ import { AverageSolarComponent } from './charts/average-solar/average-solar.comp
     BuildingMessagesComponent,
     BuildingButtonComponent,
     TestbulletComponent,
+    DemoComponent,
     HeatmapHourlyComponent,
     HeatmapDailyComponent,
     AverageSolarComponent],

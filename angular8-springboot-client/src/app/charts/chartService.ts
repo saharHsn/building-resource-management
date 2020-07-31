@@ -6,11 +6,9 @@ import {YearFilterType} from './consumption/consumption-average-tariff-cost/filt
 import {TimePeriodType} from './consumption/consumption-average-tariff-cost/filter-form/enum/TimePeriodType';
 import {DatePartType} from './consumption/consumption-average-tariff-cost/filter-form/enum/DatePartType';
 import {AuthenticationService} from '../_services';
-import {CurrentBuildingService} from '../_services/current-building.service';
-import { BuildingService } from '../building/service/building.service';
-import { BuildingUpdateService } from '../_services/building-update.service';
-import {map} from 'rxjs/operators'
-import { Content } from '@angular/compiler/src/render3/r3_ast';
+import {BuildingUpdateService} from '../_services/building-update.service';
+import {map} from 'rxjs/operators';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -45,7 +43,7 @@ export class ChartService {
   headers: HttpHeaders;
 
   constructor(private http: HttpClient,
-              private authService: AuthenticationService, private buildingUpdateService:BuildingUpdateService ) {
+              private authService: AuthenticationService, private buildingUpdateService: BuildingUpdateService ) {
 
     this.environmentName = environment.environmentName;
     this.environmentUrl = environment.apiUrl;
@@ -72,8 +70,8 @@ export class ChartService {
     this.HistoricalCostUrl = this.baseUrl + '/historicalCost';
     this.HeatMapHourly = this.baseUrl + '/heatMapHourlyCons';
     this.HeatMapDaily = this.baseUrl + '/heatMapDailyCons';
-    this.solarSaving=this.baseUrl+'/solarSaving';
-    this.averageSolarReq=this.baseUrl+'/averageSolarReq';
+    this.solarSaving = this.baseUrl + '/solarSaving';
+    this.averageSolarReq = this.baseUrl + '/averageSolarReq';
     this.headers = this.authService.getHeaders();
   }
 
@@ -100,7 +98,7 @@ export class ChartService {
 
 
   getHistoricalCost(month: string, year: string): Observable<any> {
-    const buildingId = this.buildingUpdateService.getIdBuilding()
+    const buildingId = this.buildingUpdateService.getIdBuilding();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -119,7 +117,7 @@ export class ChartService {
   }
 
   getHeatMapHourly(month: string, year: string): Observable<any> {
-    const buildingId = this.buildingUpdateService.getIdBuilding()
+    const buildingId = this.buildingUpdateService.getIdBuilding();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -137,7 +135,7 @@ export class ChartService {
     );
   }
    getHeatMapDaily(year: string): Observable<any> {
-    const buildingId = this.buildingUpdateService.getIdBuilding()
+    const buildingId = this.buildingUpdateService.getIdBuilding();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -148,11 +146,11 @@ export class ChartService {
         .set('Content-Type', 'application/json');
     }
     const params = new HttpParams()
-      .set('year', year)
-     
+      .set('year', year);
+
     return this.http.get(`${this.HeatMapDaily}/${buildingId}`,
       {headers, params}
-    ).pipe(map((data:any)=>{
+    ).pipe(map((data: any) => {
 
       return data.content.dataMatrix;
     }));
@@ -164,7 +162,7 @@ export class ChartService {
 
 
   getSolarSaving(year: string): Observable<any> {
-    const buildingId = this.buildingUpdateService.getIdBuilding()
+    const buildingId = this.buildingUpdateService.getIdBuilding();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -175,17 +173,17 @@ export class ChartService {
         .set('Content-Type', 'application/json');
     }
     const params = new HttpParams()
-      .set('year', year)
-     
+      .set('year', year);
+
     return this.http.get(`${this.solarSaving}/${buildingId}`,
       {headers, params}
-    ).pipe(map((data:any)=>{
+    ).pipe(map((data: any) => {
 
       return data.content;
     }));
   }
   getAverageSolarReq(year: string): Observable<any> {
-    const buildingId = this.buildingUpdateService.getIdBuilding()
+    const buildingId = this.buildingUpdateService.getIdBuilding();
     let headers;
     // @ts-ignore
     const user = this.authService.currentUserValue.id ? this.authService.currentUserValue : this.authService.currentUserValue.content.user;
@@ -196,11 +194,11 @@ export class ChartService {
         .set('Content-Type', 'application/json');
     }
     const params = new HttpParams()
-      .set('year', year)
-     
+      .set('year', year);
+
     return this.http.get(`${this.averageSolarReq}/${buildingId}`,
       {headers, params}
-    ).pipe(map((data:any)=>{
+    ).pipe(map((data: any) => {
 
       return data.content;
     }));
@@ -321,7 +319,7 @@ export class ChartService {
   predict(): Observable<any> {
     return this.callService(`${this.predictUrl}`);
   }
-/* 
+/*
   getHeatMapHourly(): Observable<any> {
     return this.callService(`${this.predictUrl}`);
   }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 
 interface Select {
@@ -10,10 +10,10 @@ interface Select {
 })
 export class TimeServicesService {
 
-  months:any;
-  years:any;
-  year:string;
-  month:string;
+  months: any;
+  years: any;
+  year: string;
+  month: string;
 
 
   constructor() {

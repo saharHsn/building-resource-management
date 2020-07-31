@@ -9,8 +9,7 @@ import {AuthenticationService} from 'src/app/_services';
 import {CurrentBuildingService} from 'src/app/_services/current-building.service';
 import {PredictionsComponent} from './predictions/predictions.component';
 import {BeScoreComponent} from './be-score/be-score.component';
-import { MessageService } from 'src/app/_services/message.service';
-import { FormGroup } from '@angular/forms';
+import {MessageService} from 'src/app/_services/message.service';
 
 @Component({
   templateUrl: './overall.component.html',
@@ -31,24 +30,24 @@ export class OverallComponent implements OnInit {
   ) {
     this.currentUser = this.authService.currentUserValue;
   }
-  
+
   id: number;
   currentMonthSummary: CurrentMonthSummary;
   currentUser: User;
   building: Building = new Building();
-  
+
   // gauge variables
-  monthSummary:any;
+  monthSummary: any;
   beScore: number;
   nationalMedian: number;
   propertyTarget: number;
   buildings: any;
- 
- 
+
+
   ngOnInit() {
-   this.monthSummary=this.messages.getMonth();
+   this.monthSummary = this.messages.getMonth();
    this.initCharts();
-  
+
   }
 
   list() {
@@ -71,16 +70,16 @@ export class OverallComponent implements OnInit {
        this.buildings = data.content;
        /*  const id = data.content[0].id;
         this.buildingUpdateService.setIdBuilding(id);  */
-       
-     
-        console.log(this.buildings)
-     
+
+
+       console.log(this.buildings);
+
       },
       error => console.log(error)
     );
   }
 /*   select(event) {
-    this.buildingUpdateService.setIdBuilding(event); 
+    this.buildingUpdateService.setIdBuilding(event);
     this.initCharts();
     this.predictionsComponent.ngOnInit();
     this.beScoreComponent.ngOnInit();
@@ -106,11 +105,11 @@ export class OverallComponent implements OnInit {
       }, error => console.log(error));
   }
 
-  loadPage():void{
-    
-    this.router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
-    this.router.navigate(['overall']))
-   
+  loadPage(): void {
+
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+    this.router.navigate(['overall']));
+
   }
 
 

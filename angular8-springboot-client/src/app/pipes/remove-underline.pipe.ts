@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'removeUnderline'
@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class RemoveUnderlinePipe implements PipeTransform {
 
   transform(value: any, args?: any): any {
-    return value.replace(/_/g, " ");
+    return value.replace(/_/g, ' ');
   }
 
 }
